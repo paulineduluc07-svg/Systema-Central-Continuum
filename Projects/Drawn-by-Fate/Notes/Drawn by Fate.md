@@ -1,53 +1,31 @@
 Type : #context
-Subject : #business
+Subject : #business #ai
 Status : #inprogress
 Date : 2026-03-08
 
-# PROJET — Systema Agency
+# PROJET — Drawn by Fate
 
 ## Ligne d'arrivée
-App de productivité opérationnelle — live, testée, bugs critiques corrigés.
+MVP fonctionnel déployé et accessible.
 
 ## C'est quoi
-Dashboard RPG de productivité pour neurodivergents.
-Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme un menu de jeu.
+Application web de tarot. Expérience interactive basée sur le tirage de cartes.
 
 ## Infos techniques
-- Stack : React 19 + Tailwind + shadcn/ui + Framer Motion
-- Tout le code est dans SCC-IPARA/Projects/Systema-Agency/Code/
-- Live : https://systema-agency.vercel.app
+- Stack : TypeScript + Vite + Drizzle ORM
+- Tout le code actif est dans SCC-IPARA/Projects/Drawn-by-Fate/Code/
+- Live : (à ajouter une fois déployé)
 
-## Design retenu : Cozy Gaming UI / Kawaii Tech
-- Boutons avec volume, ombres portées, effet d'enfoncement au clic
-- Navigation par onglets (Missions, Resources, House, Map)
-- Palette Candy & Pastel : Rose bonbon, Jaune or, Cyan
-- Édition directe — tout texte modifiable au clic
-- Police : Fredoka One / Nunito (titres), Quicksand (corps)
+## Design retenu
+Style visuel : Glassmorphism 3D, rose/mauve #fe5dd3, fond sombre, Pacifico
 
-## Ce qui marche (v actuelle)
-- [x] Dashboard avec avatar RPG
-- [x] Widgets draggables/resizables
-- [x] Systeme de tabs
-- [x] Tasks, Notes, Sticky notes, Whiteboard
-- [x] Dark/Light mode, Export PDF, Mode offline
-- [x] Auth + base de données cloud
-
-## Bugs connus
-| Bug | Fichier | Priorité |
-|---|---|---|
-| URL hardcodée forge.butterfly-effect.dev | Map.tsx:92 | Moyenne |
-| Canvas vide (outils tldraw non chargés) | — | Haute |
-| CSS @import order warning | index.css | Basse |
+## État actuel
+- Bug CardFace corrigé
+- Doublons supprimés
+- Code actif transféré dans SCC-IPARA
 
 ## Prochaines étapes
-- Fix Map.tsx:92
-- Fix canvas tldraw vide
-- Widgets déplaçables librement
-- Sticky notes volantes
-- Widgets personnalisés par onglet
-- Avatar lumineux et déplaçable
-- Tester export PDF
-- Configurer domaine custom
+- À définir avec Paw
 
 ## Notes de session
 [2026-03-08] Transfert complet depuis backup SCC.
