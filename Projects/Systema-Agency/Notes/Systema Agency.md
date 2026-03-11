@@ -17,8 +17,6 @@ Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme u
 ## Infos techniques
 
 - **Stack :** React 19 + Tailwind + shadcn/ui + Framer Motion
-- **Local :** `C:\Users\pauli\systema.agency` (dans `client/src/`)
-- **GitHub :** `paulineduluc07-svg/systema.agency`
 - **Live :** https://systema-agency.vercel.app
 - **Dev local :** `pnpm dev` → http://localhost:3000
 

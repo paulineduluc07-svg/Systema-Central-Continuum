@@ -9,8 +9,6 @@
 
 **Systema Agency** — Agence systèmes numériques + PromptVault.
 **Stack :** TypeScript + Vite (client) + Vercel Functions (api/) + Neon PostgreSQL
-**Repo code :** `github.com/paulineduluc07-svg/systema.agency`
-**Local :** `C:\Users\pauli\CODE\systema.agency`
 **Déployé :** `systema-agency.vercel.app`
 
 ---
