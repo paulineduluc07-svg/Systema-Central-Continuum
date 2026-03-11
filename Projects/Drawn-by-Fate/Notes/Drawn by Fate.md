@@ -1,40 +1,55 @@
 Type : #context
-Subject : #business #ai
+Subject : #business
 Status : #inprogress
 Date : 2026-03-08
 
-# PROJET — Drawn by Fate
+# PROJET — Systema Agency
 
 ## Ligne d'arrivée
-
-MVP fonctionnel déployé et accessible.
+App de productivité opérationnelle — live, testée, bugs critiques corrigés.
 
 ## C'est quoi
-
-Application web de tarot. Expérience interactive basée sur le tirage de cartes.
+Dashboard RPG de productivité pour neurodivergents.
+Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme un menu de jeu.
 
 ## Infos techniques
+- Stack : React 19 + Tailwind + shadcn/ui + Framer Motion
+- Tout le code est dans SCC-IPARA/Projects/Systema-Agency/Code/
+- Live : https://systema-agency.vercel.app
 
-- **Stack :** TypeScript, Vite, Drizzle ORM
-- **Local :** `C:\Users\pauli\drawn-by-fate` (code actif dans `src/` uniquement)
-- **GitHub :** `paulineduluc07-svg/drawn-by-fate`
-- **Dev local :** lancer depuis `C:\Users\pauli\drawn-by-fate`
+## Design retenu : Cozy Gaming UI / Kawaii Tech
+- Boutons avec volume, ombres portées, effet d'enfoncement au clic
+- Navigation par onglets (Missions, Resources, House, Map)
+- Palette Candy & Pastel : Rose bonbon, Jaune or, Cyan
+- Édition directe — tout texte modifiable au clic
+- Police : Fredoka One / Nunito (titres), Quicksand (corps)
 
-## État actuel (après nettoyage 2026-03-07)
+## Ce qui marche (v actuelle)
+- [x] Dashboard avec avatar RPG
+- [x] Widgets draggables/resizables
+- [x] Systeme de tabs
+- [x] Tasks, Notes, Sticky notes, Whiteboard
+- [x] Dark/Light mode, Export PDF, Mode offline
+- [x] Auth + base de données cloud
 
-- Bug CardFace (prop `size`) corrigé — débordait sur le texte
-- Doublons supprimés : `client/`, `drawn-by-fate-standalone/`
-- Fichiers mal placés de systema.agency supprimés
-- README.md corrigé (pointait vers systema.agency par erreur)
-- Code actif = `src/` uniquement ✅
+## Bugs connus
+| Bug | Fichier | Priorité |
+|---|---|---|
+| URL hardcodée forge.butterfly-effect.dev | Map.tsx:92 | Moyenne |
+| Canvas vide (outils tldraw non chargés) | — | Haute |
+| CSS @import order warning | index.css | Basse |
 
 ## Prochaines étapes
-
-- [ ] Définir en session de travail
+- Fix Map.tsx:92
+- Fix canvas tldraw vide
+- Widgets déplaçables librement
+- Sticky notes volantes
+- Widgets personnalisés par onglet
+- Avatar lumineux et déplaçable
+- Tester export PDF
+- Configurer domaine custom
 
 ## Notes de session
+[2026-03-08] Transfert complet depuis backup SCC.
 
-```
-[2026-03-08] [Claude Code Terminal]
-Tâche : Transfert depuis session1.txt du backup SCC — résumé du nettoyage 2026-03-07.
-```
+*Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
