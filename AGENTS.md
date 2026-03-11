@@ -1,59 +1,43 @@
-# AGENTS.md — SCC-IPARA
+# AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
 
-> Règles de collaboration pour tous les agents IA travaillant dans ce repo.
-> Toujours lire ce fichier avant toute intervention.
+**Instructions spécifiques pour tous les agents travaillant sur ce projet**
 
----
+Ce fichier complète AGENTS.md (racine) et Multi-Agent-Collaboration.md.  
+Toujours les lire en premier.
 
-## Règles fondamentales
+## Contexte du projet
+(À remplir par Paw ou le premier agent)
+- Objectif principal : 
+- État actuel :
+- Stack tech :
+- Deadline / Priorités :
 
-Voir → `Resources/Systeme/Multi-Agent-Collaboration.md`
+## Règles de collaboration (obligatoires)
+1. **Collaboration totale autorisée** : plusieurs agents peuvent travailler sur le même projet en même temps.
+2. **Priorité absolue = Amélioration continue**  
+   → Détecte bugs, mauvaises pratiques, optimisations → propose et améliore.
+3. **Protection des notes** (règle critique)  
+   - Fichiers `Notes/`, `Notes-Perso/`, logs de réflexion → **AJOUT UNIQUEMENT**.  
+     Jamais modifier ou supprimer le contenu d’un autre agent.  
+     Ajoute toujours en bas avec : `### [NomAgent] - JJ-MM-AAAA`
+   - Code, Prompts, Todo.md, Roadmap.md → modification libre pour améliorer.
+4. **Demande toujours à Paw avant** :  
+   - Toute suppression de fichier  
+   - Toute modification importante (refactor, changement d’architecture)  
+   - Toute correction majeure ou nouvelle feature
 
----
+## Structure recommandée du projetCode/                                          Code source (agents modifient librement)
+Notes/         ← Notes de tous les agents (ajout seulement)
+Notes-Perso/   ← Tes notes personnelles (intouchables par les agents)
+Prompts/       ← Tous les prompts utilisés
+Assets/        ← Images, screenshots, fichiers temporaires
+Todo.md
+Roadmap.md
+text## Format de commit (obligatoire)
+[NomAgent] [NomDuProjet] : Description courte et claire
+Exemple :
+[Claude Code] [Drawn-by-Fate] : Amélioration auth + ajout note Grok sur UX
+text**Règle finale** : Ce projet fait partie du SCC-IPARA = seule source de vérité.  
+Tout doit rester ici. Aucune copie locale permanente.
 
-## Agents autorisés
-
-| Agent | Outil | Rôle |
-|---|---|---|
-| Claude Code | Terminal | Développement, organisation, fichiers locaux |
-| Claude Projects | Browser | Projets spécifiques, contexte long |
-| Claude Cowork | Browser | Sessions de travail collaboratives |
-| ChatGPT | Browser | Tâches ponctuelles |
-| Gemini | Browser | Recherche, vérification |
-| Grok | Browser | Recherche alternative |
-| Perplexity | Browser | Recherche web |
-
----
-
-## Protocole d'intervention
-
-1. Lire `AGENTS.md` (ce fichier)
-2. Lire `Resources/Systeme/Multi-Agent-Collaboration.md`
-3. Lire le `AGENT-INSTRUCTIONS.md` du projet concerné
-4. Identifier le contexte actuel via `Resources/Systeme/Carte-Globale.md`
-5. Travailler — commits clairs — jamais écraser sans validation
-
----
-
-## Format commit
-
-```
-[Agent] [Projet] : Description courte
-
-Exemples :
-[Claude Code] [Systema-Agency] : Fix migration Neon + Vercel build
-[Claude Code] [SCC-IPARA] : Migration initiale + règles multi-agents
-```
-
----
-
-## Ce que AUCUN agent ne fait sans validation de Paw
-
-- Supprimer des fichiers
-- Modifier du contenu existant (ajouter = OK, modifier = non)
-- Appliquer une correction détectée automatiquement
-- Pousser sur une branche autre que main sans accord
-
----
-
-*Mis à jour : 2026-03-11*
+*Créé/Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
