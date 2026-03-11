@@ -1,0 +1,23 @@
+# SCC-IPARA .gitignore
+
+# Obsidian
+.obsidian/
+
+# Claude
+.claude/
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.temp
+null
+
+# Données sensibles (jamais dans ce repo)
+**/Therapie/
+**/Sante/
+**/Finances/
+**/Famille/
+**/*perso*
+**/*prive*
