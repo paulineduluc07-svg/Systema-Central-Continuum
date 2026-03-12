@@ -6,35 +6,28 @@ Date : 2026-03-08
 # PROJET — Drawn by Fate
 
 ## Ligne d'arrivée
-
 MVP fonctionnel déployé et accessible.
 
 ## C'est quoi
-
 Application web de tarot. Expérience interactive basée sur le tirage de cartes.
 
 ## Infos techniques
+- Stack : TypeScript + Vite + Drizzle ORM
+- Tout le code actif est dans SCC-IPARA/Projects/Drawn-by-Fate/Code/
+- Live : (à ajouter une fois déployé)
 
-- **Stack :** TypeScript, Vite, Drizzle ORM
-- **Local :** `C:\Users\pauli\drawn-by-fate` (code actif dans `src/` uniquement)
-- **GitHub :** `paulineduluc07-svg/drawn-by-fate`
-- **Dev local :** lancer depuis `C:\Users\pauli\drawn-by-fate`
+## Design retenu
+Style visuel : Glassmorphism 3D, rose/mauve #fe5dd3, fond sombre, Pacifico
 
-## État actuel (après nettoyage 2026-03-07)
-
-- Bug CardFace (prop `size`) corrigé — débordait sur le texte
-- Doublons supprimés : `client/`, `drawn-by-fate-standalone/`
-- Fichiers mal placés de systema.agency supprimés
-- README.md corrigé (pointait vers systema.agency par erreur)
-- Code actif = `src/` uniquement ✅
+## État actuel
+- Bug CardFace corrigé
+- Doublons supprimés
+- Code actif transféré dans SCC-IPARA
 
 ## Prochaines étapes
-
-- [ ] Définir en session de travail
+- À définir avec Paw
 
 ## Notes de session
+[2026-03-08] Transfert complet depuis backup SCC.
 
-```
-[2026-03-08] [Claude Code Terminal]
-Tâche : Transfert depuis session1.txt du backup SCC — résumé du nettoyage 2026-03-07.
-```
+*Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*

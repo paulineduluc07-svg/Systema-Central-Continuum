@@ -1,59 +1,44 @@
-# AGENTS.md — SCC-IPARA
+# AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
 
-> Règles de collaboration pour tous les agents IA travaillant dans ce repo.
-> Toujours lire ce fichier avant toute intervention.
+Instructions spécifiques pour tous les agents travaillant sur ce projet.
 
----
+Ce fichier complète AGENTS.md (racine) et Resources/Systeme/Multi-Agent-Collaboration.md.  
+Toujours les lire en premier.
 
-## Règles fondamentales
+## Contexte du projet
+(À remplir par Paw ou le premier agent)
+- Objectif principal : 
+- État actuel :
+- Stack tech :
+- Deadline / Priorités :
 
-Voir → `Resources/Systeme/Multi-Agent-Collaboration.md`
+## Règles de collaboration obligatoires
+1. Collaboration totale autorisée entre plusieurs agents.
+2. Priorité absolue = amélioration continue (détecter bugs et optimiser).
+3. Protection des notes (règle critique) : 
+   - Dans Notes/ ou Notes-Perso/ → ajout uniquement. 
+     Jamais modifier ou supprimer le contenu d’un autre agent.
+     Ajoute toujours en bas avec : ### [NomAgent] - JJ-MM-AAAA
+4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
+5. Demande toujours à Paw avant suppression, refactor important ou nouvelle feature majeure.
 
----
+## Structure recommandée du projet
+- Code/          → code source (modification libre)
+- Notes/         → notes de tous les agents (ajout seulement)
+- Notes-Perso/   → notes personnelles de Paw (intouchables)
+- Prompts/       → tous les prompts
+- Assets/        → images et fichiers temporaires
+- Todo.md
+- Roadmap.md
 
-## Agents autorisés
+## Format de commit obligatoire
+[NomAgent] [NomDuProjet] : Description courte et claire
 
-| Agent | Outil | Rôle |
-|---|---|---|
-| Claude Code | Terminal | Développement, organisation, fichiers locaux |
-| Claude Projects | Browser | Projets spécifiques, contexte long |
-| Claude Cowork | Browser | Sessions de travail collaboratives |
-| ChatGPT | Browser | Tâches ponctuelles |
-| Gemini | Browser | Recherche, vérification |
-| Grok | Browser | Recherche alternative |
-| Perplexity | Browser | Recherche web |
+Exemple :
+[Claude Code] [Drawn-by-Fate] : Amélioration login + ajout note Grok
 
----
+## Règle finale
+Ce projet fait partie du SCC= seule source de vérité.  
+Tout doit rester ici. Aucune copie locale permanente.
 
-## Protocole d'intervention
-
-1. Lire `AGENTS.md` (ce fichier)
-2. Lire `Resources/Systeme/Multi-Agent-Collaboration.md`
-3. Lire le `AGENT-INSTRUCTIONS.md` du projet concerné
-4. Identifier le contexte actuel via `Resources/Systeme/Carte-Globale.md`
-5. Travailler — commits clairs — jamais écraser sans validation
-
----
-
-## Format commit
-
-```
-[Agent] [Projet] : Description courte
-
-Exemples :
-[Claude Code] [Systema-Agency] : Fix migration Neon + Vercel build
-[Claude Code] [SCC-IPARA] : Migration initiale + règles multi-agents
-```
-
----
-
-## Ce que AUCUN agent ne fait sans validation de Paw
-
-- Supprimer des fichiers
-- Modifier du contenu existant (ajouter = OK, modifier = non)
-- Appliquer une correction détectée automatiquement
-- Pousser sur une branche autre que main sans accord
-
----
-
-*Mis à jour : 2026-03-11*
+Créé / Mis à jour : 2026-03-11 | Paw — Systema Central Continuum
