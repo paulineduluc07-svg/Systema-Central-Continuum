@@ -38,7 +38,7 @@ Exemple :
 [Claude Code] [Drawn-by-Fate] : Amélioration login + ajout note Grok
 
 ## Règle finale
-Ce projet fait partie du SCC-IPARA = seule source de vérité.  
+Ce projet fait partie du SCC= seule source de vérité.  
 Tout doit rester ici. Aucune copie locale permanente.
 
 Créé / Mis à jour : 2026-03-11 | Paw — Systema Central Continuum
