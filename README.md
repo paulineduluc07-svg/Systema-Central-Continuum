@@ -1,4 +1,4 @@
-# SCC-IPARA — Systema Central Continuum
+# SCC-Systema Central Continuum
 
 **Repo GitHub privé — Single Source of Truth**  
 Ceci est mon cerveau IA central.  
@@ -26,7 +26,5 @@ Ceci est mon cerveau IA central.
 3. Tout le code actif va **directement dans** `Projects/NomDuProjet/Code/`.
 4. Plusieurs agents peuvent travailler sur les mêmes dossiers (voir Multi-Agent-Collaboration.md).
 5. Les agents me demandent toujours avant toute modification ou amélioration.
-
-**Données très sensibles** (Thérapie, Santé, Finances, Famille) restent en dehors de ce repo.
 
 Créé : 2026-03-11 | Paw — Systema Central Continuum
