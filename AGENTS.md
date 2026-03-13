@@ -25,6 +25,10 @@ Toujours lire ces documents avant d'intervenir.
 4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
 5. Demande toujours à Paw avant suppression, refactor important ou nouvelle feature majeure.
 
+## Principes SCC (officiels)
+- Neutralité inter-agents / non-sabotage : défini opérationnellement dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
+- Amélioration continue disciplinée : définie opérationnellement dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
+
 ## Traçabilité minimale (phase SCC en construction)
 - Le SCC est encore en construction : traçabilité légère pour l'instant, plus stricte ensuite.
 - Source de vérité de la traçabilité : `Resources/Systeme/Multi-Agent-Collaboration.md`.
@@ -33,12 +37,16 @@ Toujours lire ces documents avant d'intervenir.
 
 ## Structure recommandée du projet
 - Code/          → code source (modification libre)
-- Notes/         → notes de tous les agents (ajout seulement)
-- Notes-Perso/   → notes personnelles de Paw (intouchables)
+- Notes/         → mémoire opérationnelle du projet (ajout seulement, utile aux autres agents)
+- Notes-Perso/   → notes personnelles de Paw (strictement séparées et intouchables)
 - Prompts/       → tous les prompts
 - Assets/        → images et fichiers temporaires
 - Todo.md
 - Roadmap.md
+
+## Règle minimale des notes projet
+- La structure minimale officielle des notes projet est définie dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
+- Les fichiers `Projects/**/AGENT-INSTRUCTIONS.md` peuvent préciser des points locaux, sans redéfinir la structure globale.
 
 ## Format de commit obligatoire
 [NomAgent] [NomDuProjet] : Description courte et claire
