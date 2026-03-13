@@ -1,3 +1,5 @@
+> **Note de rôle (temporaire)** : ce fichier sert actuellement de template de base pour les instructions projet et devra être clarifié/renommé plus tard.
+
 # AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
 
 Instructions spécifiques pour tous les agents travaillant sur ce projet.

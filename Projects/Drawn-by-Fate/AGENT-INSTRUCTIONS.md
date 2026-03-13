@@ -4,7 +4,7 @@ Lire avant toute intervention sur ce projet.
 Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
 
 ## Contexte du projet
-**Drawn by Fate** — Application web de tarot (tout est dans SCC-IPARA).
+**Drawn by Fate** — Application web de tarot (tout est dans Systema Central Continuum, organisation IPARA).
 Stack : TypeScript + Vite + Drizzle.
 
 ## Ce dossier contient

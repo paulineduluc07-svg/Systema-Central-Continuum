@@ -13,7 +13,7 @@ Application web de tarot. Expérience interactive basée sur le tirage de cartes
 
 ## Infos techniques
 - Stack : TypeScript + Vite + Drizzle ORM
-- Tout le code actif est dans SCC-IPARA/Projects/Drawn-by-Fate/Code/
+- Tout le code actif est dans Projects/Drawn-by-Fate/Code/
 - Live : (à ajouter une fois déployé)
 
 ## Design retenu
@@ -22,7 +22,7 @@ Style visuel : Glassmorphism 3D, rose/mauve #fe5dd3, fond sombre, Pacifico
 ## État actuel
 - Bug CardFace corrigé
 - Doublons supprimés
-- Code actif transféré dans SCC-IPARA
+- Code actif transféré dans Systema Central Continuum
 
 ## Prochaines étapes
 - À définir avec Paw

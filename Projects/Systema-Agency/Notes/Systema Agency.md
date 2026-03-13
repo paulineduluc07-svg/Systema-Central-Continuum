@@ -14,7 +14,7 @@ Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme u
 
 ## Infos techniques
 - Stack : React 19 + Tailwind + shadcn/ui + Framer Motion
-- Tout le code est dans SCC-IPARA/Projects/Systema-Agency/Code/
+- Tout le code est dans Projects/Systema-Agency/Code/
 - Live : https://systema-agency.vercel.app
 
 ## Design retenu : Cozy Gaming UI / Kawaii Tech

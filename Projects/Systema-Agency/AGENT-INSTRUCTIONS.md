@@ -4,7 +4,7 @@ Lire avant toute intervention sur ce projet.
 Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
 
 ## Contexte du projet
-**Systema Agency** — Agence systèmes numériques + PromptVault (tout est dans SCC-IPARA).
+**Systema Agency** — Agence systèmes numériques + PromptVault (tout est dans Systema Central Continuum, organisation IPARA).
 Stack : TypeScript + Vite + Vercel Functions + Neon PostgreSQL.
 Déployé : systema-agency.vercel.app
 
