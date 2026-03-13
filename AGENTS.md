@@ -2,10 +2,11 @@
 
 # AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
 
-Instructions spécifiques pour tous les agents travaillant sur ce projet.
+Ce fichier racine définit la base commune des règles pour le SCC (Systema Central Continuum).
+Chaque fichier `Projects/**/AGENT-INSTRUCTIONS.md` complète ensuite cette base avec le contexte et les consignes propres au projet.
 
-Ce fichier complète AGENTS.md (racine) et Resources/Systeme/Multi-Agent-Collaboration.md.  
-Toujours les lire en premier.
+Ce fichier racine est complété par `Resources/Systeme/Multi-Agent-Collaboration.md` et par chaque `Projects/**/AGENT-INSTRUCTIONS.md`.
+Toujours lire ces documents avant d'intervenir.
 
 ## Contexte du projet
 (À remplir par Paw ou le premier agent)

@@ -2,6 +2,7 @@
 
 Lire avant toute intervention sur ce projet.
 Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Ce fichier ajoute uniquement le contexte et les consignes spécifiques à ce projet.
 
 ## Contexte du projet
 **Drawn by Fate** — Application web de tarot (tout est dans Systema Central Continuum, organisation IPARA).
