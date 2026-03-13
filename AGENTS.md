@@ -29,6 +29,7 @@ Toujours lire ces documents avant d'intervenir.
 - Le SCC est encore en construction : traçabilité légère pour l'instant, plus stricte ensuite.
 - Source de vérité de la traçabilité : `Resources/Systeme/Multi-Agent-Collaboration.md`.
 - Les fichiers projet `Projects/**/AGENT-INSTRUCTIONS.md` peuvent préciser *où* noter dans le projet, sans redéfinir toute la politique.
+- Structure minimale officielle des traces : définie dans `Resources/Systeme/Multi-Agent-Collaboration.md` (types + format + anti-duplication).
 
 ## Structure recommandée du projet
 - Code/          → code source (modification libre)
