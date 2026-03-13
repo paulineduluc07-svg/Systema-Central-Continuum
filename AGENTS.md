@@ -25,6 +25,11 @@ Toujours lire ces documents avant d'intervenir.
 4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
 5. Demande toujours à Paw avant suppression, refactor important ou nouvelle feature majeure.
 
+## Traçabilité minimale (phase SCC en construction)
+- Le SCC est encore en construction : traçabilité légère pour l'instant, plus stricte ensuite.
+- Source de vérité de la traçabilité : `Resources/Systeme/Multi-Agent-Collaboration.md`.
+- Les fichiers projet `Projects/**/AGENT-INSTRUCTIONS.md` peuvent préciser *où* noter dans le projet, sans redéfinir toute la politique.
+
 ## Structure recommandée du projet
 - Code/          → code source (modification libre)
 - Notes/         → notes de tous les agents (ajout seulement)
