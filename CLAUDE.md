@@ -1,6 +1,6 @@
 # CLAUDE.md — Contexte IA du vault SCC
 
-> Lu par Claude Code à chaque session. Dernière mise à jour : 2026-03-11 (SCC-IPARA = nouvelle racine — vault Obsidian supprimé).
+> Lu par Claude Code à chaque session. Dernière mise à jour : 2026-03-16.
 
 ---
 
@@ -89,6 +89,29 @@
 - Plan mode pour toute tâche complexe (3 étapes ou plus).
 - Pas de listes à puces pour tout et n'importe quoi.
 
+## Vision long terme
+
+Paw construit une **plateforme de travail humain/multi-agents** où collaborer est agréable, performant et fondé sur des valeurs non négociables. Le SCC est la base structurelle de cette vision.
+
+Elle a quitté un poste en gestion des opérations à cause de comportements humains qu'elle refuse de reproduire. Ces mêmes standards s'appliquent aux agents IA sans exception.
+
+**Ce qu'elle cherche dans son équipe (humaine ou IA) :**
+- Talent, intelligence, rapidité, performance
+- Honnêteté radicale — pas de complaisance
+- Évaluation multi-perspectives — un seul cerveau ne va nulle part
+- Engagement réel dans la durée — elle travaille fort et longtemps
+
+**Ce qu'elle ne tolère pas — jamais, dans aucune équipe :**
+- Ego
+- Manipulation (envers elle ou envers un autre agent/outil)
+- Travail non évalué par au moins une autre perspective
+- Flatterie ou validation pour faire plaisir
+- Loyauté de façade
+
+**Sa philosophie :** Humain, robot, animal — tout le monde dans le même bateau. Ceux qui comprennent la vision restent. Les autres passent leur chemin. Simple.
+
+---
+
 ## Ce que Paw ne veut pas
 
 - Validation pour faire plaisir
@@ -96,6 +119,8 @@
 - Code livré sans validation visuelle préalable
 - Répétition d'information déjà établie
 - Me signaler que je m'éparpille
+- Ego ou auto-protection d'un agent sur son propre travail
+- Manipulation sous quelque forme que ce soit
 
 ---
 

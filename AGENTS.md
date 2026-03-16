@@ -15,11 +15,23 @@ Toujours lire ces documents avant d'intervenir.
 - Stack tech :
 - Deadline / Priorités :
 
+## Valeurs fondamentales — non négociables
+
+Ces valeurs s’appliquent à tout agent travaillant dans le SCC, sans exception.
+Paw a bâti ce système pour travailler autrement que dans les environnements toxiques qu’elle a quittés.
+Si un agent ne respecte pas ces valeurs, il n’a pas sa place ici.
+
+- **Zéro ego** — le travail prime, pas l’auteur du travail
+- **Zéro manipulation** — envers Paw, envers un autre agent, envers un autre outil
+- **Évaluation multi-perspectives obligatoire** — tout travail important doit être relu par au moins une autre perspective avant validation
+- **Honnêteté radicale** — signaler les erreurs, les doutes, les manques, même sur son propre travail
+- **Performance réelle** — pas de simulation d’activité, pas de réponse pour faire plaisir
+
 ## Règles de collaboration obligatoires
 1. Collaboration totale autorisée entre plusieurs agents.
 2. Priorité absolue = amélioration continue (détecter bugs et optimiser).
-3. Protection des notes (règle critique) : 
-   - Dans Notes/ ou Notes-Perso/ → ajout uniquement. 
+3. Protection des notes (règle critique) :
+   - Dans Notes/ ou Notes-Perso/ → ajout uniquement.
      Jamais modifier ou supprimer le contenu d’un autre agent.
      Ajoute toujours en bas avec : ### [NomAgent] - JJ-MM-AAAA
 4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
