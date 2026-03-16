@@ -3,8 +3,10 @@
 # Obsidian
 .obsidian/
 
-# Claude
-.claude/
+# Claude (tout sauf les skills projet)
+.claude/**
+!.claude/skills/
+!.claude/skills/**
 
 # Système
 .DS_Store
