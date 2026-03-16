@@ -1,8 +1,3 @@
-Type : #context
-Subject : #business #mindset
-Status : #inprogress
-Date : 2026-03-08
-
 # AREA — Reconstruction professionnelle
 
 ## Ce que c'est
@@ -26,9 +21,9 @@ Retourner vers l'extérieur avec assurance, confiance, joie. Ouverte à ce qui �
 
 ## Ce que je construis
 
-- [[01 - PROJECTS/In Progress/Plateforme Restaurant]] — outil de gestion restaurant
-- [[01 - PROJECTS/In Progress/Systema Agency]] — agence de systèmes numériques
-- [[01 - PROJECTS/In Progress/Life-command]] — automatisation personnelle
+- `Projects/Plateforme-Restaurant/` — outil de gestion restaurant
+- `Projects/Systema-Agency/` — agence de systèmes numériques
+- Life-command — projet abandonné (supprimé)
 
 ## Notes de session
 

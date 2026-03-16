@@ -4,7 +4,7 @@
 Ceci est mon cerveau IA central.  
 **Tout** le travail actif (notes, prompts, **code source**, roadmaps, réflexions) est ici.
 
-### Structure IPARA
+### Structure des dossiers
 | Dossier      | Contenu |
 |--------------|---------|
 | `Inbox/`     | Captures rapides à trier chaque semaine |

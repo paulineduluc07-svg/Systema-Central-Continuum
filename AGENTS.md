@@ -1,6 +1,4 @@
-> **Note de rôle (temporaire)** : ce fichier sert actuellement de template de base pour les instructions projet et devra être clarifié/renommé plus tard.
-
-# AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
+# AGENTS.md — Règles de base SCC
 
 Ce fichier racine définit la base commune des règles pour le SCC (Systema Central Continuum).
 Chaque fichier `Projects/**/AGENT-INSTRUCTIONS.md` complète ensuite cette base avec le contexte et les consignes propres au projet.
@@ -31,9 +29,8 @@ Si un agent ne respecte pas ces valeurs, il n’a pas sa place ici.
 1. Collaboration totale autorisée entre plusieurs agents.
 2. Priorité absolue = amélioration continue (détecter bugs et optimiser).
 3. Protection des notes (règle critique) :
-   - Dans Notes/ ou Notes-Perso/ → ajout uniquement.
-     Jamais modifier ou supprimer le contenu d’un autre agent.
-     Ajoute toujours en bas avec : ### [NomAgent] - JJ-MM-AAAA
+   - Dans `Notes/` → ajout uniquement. Jamais modifier ou supprimer le contenu d’un autre agent. Ajoute toujours en bas avec : `### [NomAgent] - JJ-MM-AAAA`
+   - `Notes-Perso/` → **INTOUCHABLE**. Zéro lecture, zéro écriture, zéro modification. Aucune action autorisée.
 4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
 5. Demande toujours à Paw avant suppression, refactor important ou nouvelle feature majeure.
 

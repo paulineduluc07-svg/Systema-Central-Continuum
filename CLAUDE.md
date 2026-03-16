@@ -48,7 +48,7 @@
 
 ---
 
-## Système IPARAG
+## Organisation du repo
 
 **SCC-IPARA (repo GitHub — source de vérité vivante) :**
 

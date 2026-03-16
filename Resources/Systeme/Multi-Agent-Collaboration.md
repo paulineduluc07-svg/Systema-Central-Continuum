@@ -1,8 +1,7 @@
 # Multi-Agent-Collaboration
 
-- **Statut** : à compléter
+- **Statut** : actif
 - **But du fichier** : centraliser les règles de collaboration multi-agents pour ce repo.
-- **Note** : fichier créé pour rétablir la cohérence des références du repository.
 
 ## Principe officiel 1 — Neutralité inter-agents / non-sabotage
 - Les agents ne sont pas des rivaux : aucune logique de compétition entre agents.
