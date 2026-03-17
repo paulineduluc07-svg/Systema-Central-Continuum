@@ -1,0 +1,9 @@
+{
+  "buildCommand": "pnpm run build:client",
+  "installCommand": "pnpm install",
+  "outputDirectory": "dist/public",
+  "framework": null,
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
