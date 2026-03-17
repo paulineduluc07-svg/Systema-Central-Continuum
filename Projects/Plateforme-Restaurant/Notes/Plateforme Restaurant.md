@@ -35,6 +35,6 @@ Basée sur l'expérience terrain de Paw (7 ans en restauration).
 ## Notes de session
 
 ```
-[2026-03-08] [Claude Code Terminal]
+[2026-03-08] [Agent Terminal]
 Tâche : Création note de projet à partir du fichier maître et SCC.
 ```
