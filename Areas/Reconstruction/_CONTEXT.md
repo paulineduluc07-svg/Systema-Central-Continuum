@@ -33,6 +33,6 @@ Retourner vers l'extérieur avec assurance, confiance, joie. Ouverte à ce qui �
 ## Notes de session
 
 ```
-[2026-03-08] [Claude Code Terminal]
+[2026-03-08] [Agent Terminal]
 Tâche : Création _CONTEXT à partir du fichier maître SCC.
 ```

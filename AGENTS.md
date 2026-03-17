@@ -5,7 +5,7 @@ Tous les autres documents doivent rester alignés avec ce fichier.
 
 ## Portée
 - Système multi-agent basé sur rôle + contexte.
-- Aucune règle spécifique à un modèle IA (Claude, ChatGPT, etc.).
+- Aucune règle spécifique à un modèle IA particulier.
 - Interdit de créer des fichiers de règles dédiés à une IA particulière (`CLAUDE.md`, équivalents).
 
 ## Ordre de lecture obligatoire
