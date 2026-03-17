@@ -1,61 +1,38 @@
-> **Note de rôle (temporaire)** : ce fichier sert actuellement de template de base pour les instructions projet et devra être clarifié/renommé plus tard.
+# AGENTS.md
 
-# AGENT-INSTRUCTIONS.md — [NOM DU PROJET]
+Ce fichier est la source de vérité unique des règles agents pour ce dépôt.
+Tous les autres documents doivent rester alignés avec ce fichier.
 
-Ce fichier racine définit la base commune des règles pour le SCC (Systema Central Continuum).
-Chaque fichier `Projects/**/AGENT-INSTRUCTIONS.md` complète ensuite cette base avec le contexte et les consignes propres au projet.
+## Portée
+- Système multi-agent basé sur rôle + contexte.
+- Aucune règle spécifique à un modèle IA (Claude, ChatGPT, etc.).
+- Interdit de créer des fichiers de règles dédiés à une IA particulière (`CLAUDE.md`, équivalents).
 
-Ce fichier racine est complété par `Resources/Systeme/Multi-Agent-Collaboration.md` et par chaque `Projects/**/AGENT-INSTRUCTIONS.md`.
-Toujours lire ces documents avant d'intervenir.
+## Ordre de lecture obligatoire
+1. `AGENTS.md`
+2. `Resources/Systeme/Multi-Agent-Collaboration.md`
+3. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` (si projet ciblé)
 
-## Contexte du projet
-(À remplir par Paw ou le premier agent)
-- Objectif principal : 
-- État actuel :
-- Stack tech :
-- Deadline / Priorités :
+## Règles opérationnelles
+1. Source de vérité: ce repo uniquement.
+2. Zéro doublon actif.
+3. `Code/`, `Prompts/`, `Todo.md`, `Roadmap.md`: modification autorisée dans le scope demandé.
+4. `Notes/`: mise à jour autorisée pour garder une mémoire utile et cohérente.
+5. `Notes-Perso/`: strictement interdit aux agents.
+6. Demander validation à Paw avant:
+   - suppression
+   - refactor majeur
+   - nouvelle feature majeure
+7. Commit/push/PR uniquement sur demande explicite.
 
-## Règles de collaboration obligatoires
-1. Collaboration totale autorisée entre plusieurs agents.
-2. Priorité absolue = amélioration continue (détecter bugs et optimiser).
-3. Protection des notes (règle critique) : 
-   - Dans Notes/ ou Notes-Perso/ → ajout uniquement. 
-     Jamais modifier ou supprimer le contenu d’un autre agent.
-     Ajoute toujours en bas avec : ### [NomAgent] - JJ-MM-AAAA
-4. Code/Prompts/Todo.md/Roadmap.md → modification libre pour améliorer.
-5. Demande toujours à Paw avant suppression, refactor important ou nouvelle feature majeure.
+## Traçabilité minimale
+- Laisser une trace si: décision, erreur trouvée, warning, ambiguïté bloquante, changement important.
+- Éviter les doublons de trace: une source principale + renvoi court.
 
-## Principes SCC (officiels)
-- Neutralité inter-agents / non-sabotage : défini opérationnellement dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
-- Amélioration continue disciplinée : définie opérationnellement dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
+## Convention de commit
+`[NomAgent] [NomProjet] : Description courte et claire`
 
-## Traçabilité minimale (phase SCC en construction)
-- Le SCC est encore en construction : traçabilité légère pour l'instant, plus stricte ensuite.
-- Source de vérité de la traçabilité : `Resources/Systeme/Multi-Agent-Collaboration.md`.
-- Les fichiers projet `Projects/**/AGENT-INSTRUCTIONS.md` peuvent préciser *où* noter dans le projet, sans redéfinir toute la politique.
-- Structure minimale officielle des traces : définie dans `Resources/Systeme/Multi-Agent-Collaboration.md` (types + format + anti-duplication).
+Exemple:
+`[Agent IDE] [Systema-Agency] : Corrige incohérences règles AGENT`
 
-## Structure recommandée du projet
-- Code/          → code source (modification libre)
-- Notes/         → mémoire opérationnelle du projet (ajout seulement, utile aux autres agents)
-- Notes-Perso/   → notes personnelles de Paw (strictement séparées et intouchables)
-- Prompts/       → tous les prompts
-- Assets/        → images et fichiers temporaires
-- Todo.md
-- Roadmap.md
-
-## Règle minimale des notes projet
-- La structure minimale officielle des notes projet est définie dans `Resources/Systeme/Multi-Agent-Collaboration.md`.
-- Les fichiers `Projects/**/AGENT-INSTRUCTIONS.md` peuvent préciser des points locaux, sans redéfinir la structure globale.
-
-## Format de commit obligatoire
-[NomAgent] [NomDuProjet] : Description courte et claire
-
-Exemple :
-[Claude Code] [Drawn-by-Fate] : Amélioration login + ajout note Grok
-
-## Règle finale
-Ce projet fait partie du SCC= seule source de vérité.  
-Tout doit rester ici. Aucune copie locale permanente.
-
-Créé / Mis à jour : 2026-03-11 | Paw — Systema Central Continuum
+Mis à jour: 2026-03-17
