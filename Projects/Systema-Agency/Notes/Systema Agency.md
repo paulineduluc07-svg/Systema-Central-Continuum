@@ -53,3 +53,8 @@ Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme u
 [2026-03-08] Transfert complet depuis backup SCC.
 
 *Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
+
+## Post-migration (2026-03-17)
+- Import GitHub -> SCC valide: 173/173 fichiers, 0 mismatch SHA.
+- Source active: Projects/Systema-Agency/Code/.
+- Ancien repo: conserver temporairement en lecture seule jusqu'a suppression validee.

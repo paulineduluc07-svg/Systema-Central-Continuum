@@ -31,3 +31,8 @@ Style visuel : Glassmorphism 3D, rose/mauve #fe5dd3, fond sombre, Pacifico
 [2026-03-08] Transfert complet depuis backup SCC.
 
 *Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
+
+## Post-migration (2026-03-17)
+- Import GitHub -> SCC valide: 27/27 fichiers, 0 mismatch SHA.
+- Source active: Projects/Drawn-by-Fate/Code/.
+- Ancien repo: conserver temporairement en lecture seule jusqu'a suppression validee.
