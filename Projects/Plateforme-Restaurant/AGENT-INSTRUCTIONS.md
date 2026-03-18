@@ -28,3 +28,5 @@ Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce proje
 - Formaliser la structure Airtable initiale avant execution
 
 *Mis a jour : 2026-03-17 | Paw -- Systema Central Continuum*
+## Garde-fou projet
+- Aucune implementation, automatisation ou construction de schema ne doit commencer tant que la source de donnees n'a pas ete validee explicitement par Paw.
