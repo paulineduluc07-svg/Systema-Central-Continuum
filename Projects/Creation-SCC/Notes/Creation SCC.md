@@ -24,3 +24,7 @@ Projet central de gouvernance et de maintenance du SCC.
 Le but est de concentrer la maintenance du SCC dans un seul projet pour limiter la dispersion et la charge de contexte.
 
 *Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
+## Bureau Codex
+- Un bureau operateur minimal pour Codex est maintenu dans `Projects/Creation-SCC/Agent-Bureaux/Codex/`.
+- Ce bureau sert uniquement a la personnalisation de la collaboration avec Codex.
+- Il n'override jamais `AGENTS.md` et ne remplace jamais les traces projet.

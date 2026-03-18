@@ -4,7 +4,7 @@
 
 ---
 
-- [x] Formaliser `Creation-SCC` comme projet de gouvernance SCC
+- [x] Formaliser `Creation-SCC` comme projet de gouvernance SCC`r`n- [x] Creer un bureau Codex minimal dans `Projects/Creation-SCC/Agent-Bureaux/Codex/`
 - [ ] Verifier periodiquement qu'aucune regle SCC n'est contredite dans le repo
 - [ ] Nettoyer periodiquement les informations mortes ou dupliquees dans le SCC
 - [ ] Maintenir des prompts SCC courts, constants et non ambigus

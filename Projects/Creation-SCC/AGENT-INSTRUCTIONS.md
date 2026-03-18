@@ -12,7 +12,7 @@ Ce projet centralise les travaux qui touchent aux regles globales, a l'organisat
 - `Notes/` -- memoire operationnelle du SCC et decisions de gouvernance
 - `Prompts/` -- prompts utilitaires SCC si necessaire
 - `Assets/` -- support visuel ou schemas si necessaire
-- `Livrables/` -- exports ou livrables transverses si necessaire
+- `Livrables/` -- exports ou livrables transverses si necessaire`r`n- `Agent-Bureaux/` -- bureaux operateurs minimaux reserves a la personnalisation de collaboration de certains agents
 - `Todo.md` -- actions SCC en cours
 - `Roadmap.md` -- priorites et evolution du SCC
 
