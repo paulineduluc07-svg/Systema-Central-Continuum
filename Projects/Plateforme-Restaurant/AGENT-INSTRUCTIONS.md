@@ -1,36 +1,30 @@
-# AGENT-INSTRUCTIONS — Plateforme Restaurant
+# AGENT-INSTRUCTIONS -- Plateforme Restaurant
 
-> Lire avant toute intervention sur ce projet.
-> Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
-> Ce fichier ajoute uniquement le contexte et les consignes spécifiques à ce projet.
-
----
+Lire avant toute intervention sur ce projet.
+Regles generales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
 
 ## Contexte du projet
-
-**Plateforme Restaurant** — Gestion resto V1.
+**Plateforme Restaurant** -- Gestion resto V1.
 **Stack :** Airtable + Make.com
-**Local :** Aucun repo code — tout dans Airtable
+**Local :** Aucun repo code -- tout est organise dans le SCC et les outils no-code cibles.
 
----
-
-## État actuel (2026-03-11)
-
-- Docs de gestion resto : inexistants en numérique (jamais créés ou supprimés)
-- Plateforme à construire from scratch
-- Source de données : à définir avec Paw
-
----
+## Etat actuel (2026-03-17)
+- Documentation numerique a construire
+- Plateforme a cadrer puis construire from scratch
+- Source de donnees non arretee : blocage a lever avant toute implementation
 
 ## Ce dossier contient
+- `Notes/` -- reflexions, structure Airtable, workflows
+- `Prompts/` -- prompts IA specifiques
+- `Assets/` -- exports, references
+- `Livrables/` -- livrables finaux
+- `Todo.md` -- taches en cours
+- `Roadmap.md` -- vision et etapes
 
-- `Notes/` — réflexions, structure Airtable, workflows
-- `Prompts/` — prompts IA spécifiques
-- `Assets/` — exports, références
-- `Livrables/` — livrables finaux
-- `Todo.md` — tâches en cours
-- `Roadmap.md` — vision et étapes
+## Priorite actuelle
+- Cadrer la source de donnees
+- Definir le perimetre exact de la V1
+- Formaliser la structure Airtable initiale avant execution
 
----
-
-*Mis à jour : 2026-03-11*
+*Mis a jour : 2026-03-17 | Paw -- Systema Central Continuum*

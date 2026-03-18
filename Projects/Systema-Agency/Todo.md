@@ -1,24 +1,22 @@
-# Todo — Systema Agency
+# Todo -- Systema Agency
 
-> Tâches actives. Mise à jour à chaque session.
-
----
-
-- [x] Migration code vers Projects/Systema-Agency/Code/ validee (SHA match).
-- [ ] Mettre ancien repo systema.agency en archive (lecture seule).
-- [ ] Supprimer ancien repo systema.agency apres validation finale Paw.
-
-## Checklist de decommission ancien repo
-- [ ] Implémenter auth (Option A : auto-connexion owner, ou Option B : email/password)
-- [ ] Redesign dashboard : sticky notes flottantes + onglets Santé/Finance/Carrière/Étude/Maison
-- [ ] Intégrer avatar Life Command dans le dashboard
-- [ ] Modifier suivi pilule (format à définir)
+> Taches actives. Mise a jour a chaque session.
 
 ---
 
-- [x] Migration code vers Projects/Systema-Agency/Code/ validee (SHA match).
-- [ ] Mettre ancien repo systema.agency en archive (lecture seule).
-- [ ] Supprimer ancien repo systema.agency apres validation finale Paw.
+- [x] Migration code vers `Projects/Systema-Agency/Code/` validee (SHA match).
+- [x] Ancien repo `systema.agency` archive en lecture seule.
+- [ ] Decider la suppression definitive de l'ancien repo apres stabilisation du SCC.
+- [ ] Implementer auth (Option A : auto-connexion owner, ou Option B : email/password)
+- [ ] Redesign dashboard : sticky notes flottantes + onglets Sante/Finance/Carriere/Etude/Maison
+- [ ] Integrer avatar Life Command dans le dashboard
+- [ ] Modifier suivi pilule (format a definir)
 
 ## Checklist de decommission ancien repo
-*Mis à jour : 2026-03-11*
+- [x] Code importe dans le SCC
+- [x] Ancien repo archive
+- [ ] Suppression definitive decidee
+
+---
+
+*Mis a jour : 2026-03-17*

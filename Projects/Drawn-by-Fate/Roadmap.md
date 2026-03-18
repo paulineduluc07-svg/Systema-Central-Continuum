@@ -1,6 +1,6 @@
-# Roadmap — Drawn by Fate
+# Roadmap -- Drawn by Fate
 
-> Vision et étapes du projet.
+> Vision et etapes du projet.
 
 ---
 
@@ -8,10 +8,13 @@
 
 Application web de tarot. Stack : TypeScript + Vite + Drizzle.
 
-## Étapes
+## Etapes
 
-- [ ] À définir avec Paw
+- [x] Centraliser le code actif dans le SCC
+- [ ] Verifier l'etat technique du code importe
+- [ ] Stabiliser le MVP post-migration
+- [ ] Clarifier les prochaines priorites produit
 
 ---
 
-*Mis à jour : 2026-03-11*
+*Mis a jour : 2026-03-17*

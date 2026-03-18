@@ -1,22 +1,25 @@
-# AGENT-INSTRUCTIONS — Drawn by Fate
+# AGENT-INSTRUCTIONS -- Drawn by Fate
 
 Lire avant toute intervention sur ce projet.
-Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
-Ce fichier ajoute uniquement le contexte et les consignes spécifiques à ce projet.
+Regles generales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
 
 ## Contexte du projet
-**Drawn by Fate** — Application web de tarot (tout est dans Systema Central Continuum, organisation IPARA).
+**Drawn by Fate** -- Application web de tarot.
 Stack : TypeScript + Vite + Drizzle.
+Le code actif est centralise dans `Projects/Drawn-by-Fate/Code/`.
 
 ## Ce dossier contient
-- Notes/ — réflexions, décisions, contexte
-- Prompts/ — prompts IA spécifiques au projet
-- Assets/ — mockups, références visuelles
-- Livrables/ — exports finaux
-- Todo.md — tâches en cours
-- Roadmap.md — vision et étapes
+- Notes/ -- reflexions, decisions, contexte
+- Prompts/ -- prompts IA specifiques au projet
+- Assets/ -- mockups, references visuelles
+- Livrables/ -- exports finaux
+- Todo.md -- taches en cours
+- Roadmap.md -- vision et etapes
 
-## Prochaines étapes
-- À définir avec Paw
+## Priorite actuelle
+- Stabiliser le code importe dans `Code/`
+- Verifier l'etat technique post-migration
+- Clarifier le backlog MVP post-migration dans `Todo.md` et `Roadmap.md`
 
-*Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
+*Mis a jour : 2026-03-17 | Paw -- Systema Central Continuum*

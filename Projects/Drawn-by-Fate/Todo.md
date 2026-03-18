@@ -1,21 +1,20 @@
-# Todo — Drawn by Fate
+# Todo -- Drawn by Fate
 
-> Tâches actives. Mise à jour à chaque session.
-
----
-
-- [x] Migration code vers Projects/Drawn-by-Fate/Code/ validee (SHA match).
-- [ ] Mettre ancien repo drawn-by-fate en archive (lecture seule).
-- [ ] Supprimer ancien repo drawn-by-fate apres validation finale Paw.
-
-## Checklist de decommission ancien repo
-- [ ] À définir avec Paw
+> Taches actives. Mise a jour a chaque session.
 
 ---
 
-- [x] Migration code vers Projects/Drawn-by-Fate/Code/ validee (SHA match).
-- [ ] Mettre ancien repo drawn-by-fate en archive (lecture seule).
-- [ ] Supprimer ancien repo drawn-by-fate apres validation finale Paw.
+- [x] Migration code vers `Projects/Drawn-by-Fate/Code/` validee (SHA match).
+- [x] Ancien repo `drawn-by-fate` archive en lecture seule.
+- [ ] Decider la suppression definitive de l'ancien repo apres stabilisation du SCC.
+- [ ] Faire un audit technique post-migration du code dans `Code/`.
+- [ ] Clarifier le backlog MVP post-migration.
 
 ## Checklist de decommission ancien repo
-*Mis à jour : 2026-03-11*
+- [x] Code importe dans le SCC
+- [x] Ancien repo archive
+- [ ] Suppression definitive decidee
+
+---
+
+*Mis a jour : 2026-03-17*
