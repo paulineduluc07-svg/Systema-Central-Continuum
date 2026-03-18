@@ -51,6 +51,11 @@
 - Maintenant : appliquer ce minimum, sans tracer chaque micro-action.
 - Plus tard : renforcer progressivement la couverture quand la structure SCC sera stabilisée.
 
+## Gouvernance du SCC
+- Le projet `Projects/Creation-SCC/` est la zone de travail principale pour la gouvernance, l'evolution, la verification et le nettoyage structurel du SCC.
+- Toute proposition de creation, modification ou suppression qui touche les regles globales, la structure du SCC, ou les mecanismes de controle du SCC doit etre traitee dans `Projects/Creation-SCC/`.
+- Les traces liees a ces travaux doivent rester minimales et centralisees dans `Projects/Creation-SCC/Notes/`, sauf si une regle officielle doit etre portee directement dans un fichier systeme deja source de verite.
+- Objectif de constance : garder la gouvernance SCC concentree dans un seul projet, pour limiter la dispersion et la charge de contexte.
 ## Structure minimale officielle des notes projet (SCC)
 - **Rôle de `Projects/<Projet>/Notes/`** : mémoire opérationnelle partagée du projet (contexte, état, décisions, blocages, prochaines étapes).
 - **Séparation obligatoire** :
