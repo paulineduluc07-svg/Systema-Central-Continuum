@@ -27,6 +27,7 @@
   - trace transversale SCC → ce fichier (`Resources/Systeme/Multi-Agent-Collaboration.md`)
 - **Quand aucune trace n'est requise** : micro-ajustement sans impact, action réversible évidente, ou simple exploration sans décision.
 - **Règle projet** : `Projects/**/AGENT-INSTRUCTIONS.md` peut préciser le point d'entrée local, mais ne doit pas redéfinir la politique globale.
+- **Règle de constance minimale** : si une information est déjà suffisamment portée par les fichiers modifiés eux-mêmes et par la note projet pertinente, ne pas créer de trace transverse supplémentaire dans `Resources/Systeme/`.
 
 ## Types minimaux de traces (officiels)
 - `decision`
