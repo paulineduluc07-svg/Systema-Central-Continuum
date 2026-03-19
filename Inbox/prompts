@@ -193,6 +193,6 @@ Regle simple :
 
 Regle de statut du bureau agent :
 - il est secondaire et subordonne aux regles globales du SCC
-- il n'override jamais `AGENTS.md`
+- il n'outrepasse jamais `AGENTS.md`
 - il ne remplace jamais les traces projet
 - il ne sert pas a stocker le travail metier
