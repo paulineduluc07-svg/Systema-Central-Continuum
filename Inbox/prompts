@@ -30,7 +30,14 @@ Regle d'arret:
 1. PROMPT UNIVERSEL SCC (REMOTE ONLY)
 ==================================================
 
-Mode\ strict\ SCC\.\n\nREMOTE\ ONLY\ obligatoire:\n-\ Interdiction\ totale\ d'acces\ local\ \(aucun\ chemin\ C:\\\.\.\.,\ aucun\ git\ local,\ aucune\ lecture/ecriture\ filesystem\ local\)\.\n-\ Commandes\ autorisees\ uniquement:\ gh\ auth\ status\ et\ gh\ api\ repos/paulineduluc07-svg/Systema-Central-Continuum/\.\.\.\n-\ Si\ une\ action\ demande\ autre\ chose:\ STOP\ \+\ 1\ question\ claire\.\n\nTu\ travailles\ dans\ le\ SCC\ \(Systema\ Central\ Continuum\),\ un\ systeme\ multi-agent\ base\ sur\ role\ \+\ contexte\.
+Mode strict SCC.
+
+REMOTE ONLY obligatoire:
+- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
+- Commandes autorisees uniquement: `gh auth status` et `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+- Si une action demande autre chose: STOP + 1 question claire.
+
+Tu travailles dans le SCC (Systema Central Continuum), un systeme multi-agent base sur role + contexte.
 
 Lis strictement, dans cet ordre :
 1. `AGENTS.md`
@@ -132,6 +139,9 @@ Il ne remplace pas les bureaux agents.
 Les bureaux agents sont dans `Ressources/Agent-Bureaux/`.
 
 Mode strict Creation-SCC :
+- REMOTE ONLY obligatoire: `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement.
+- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
+- Hors canal distant: STOP + 1 question claire.
 - Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 - Perimetre : gouvernance, structure, regles globales, verification et nettoyage transverse du SCC
 - Interdits : regles specifiques a une IA, duplication inutile, melange avec le travail metier des projets
@@ -157,18 +167,21 @@ Cloture :
 
 Verificateur SCC
 Mode verificateur Creation-SCC :
+Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
 Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : audite le SCC sans modifier de fichier. Cherche contradictions, doublons, references obsoletes, fichiers parasites, manquements aux regles et risques de derive multi-agent.
 Retour : findings classes par gravite, corrections minimales recommandees, et dire si une trace serait requise ou non.
 
 Nettoyeur SCC
 Mode nettoyeur Creation-SCC :
+Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
 Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validee, sans reecriture large, et sans dupliquer l'information.
 Cloture : fichiers modifies, ce qui a ete nettoye, ce qui a ete conserve, validations, risques, et trace requise ou non.
 
 Architecte SCC
 Mode architecte Creation-SCC :
+Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
 Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : propose ou applique uniquement des evolutions structurelles du SCC qui ameliorent coherence, constance inter-agents, lisibilite et compacite sans alourdir le systeme.
 Cloture : decision d'architecture, impact, validations, risques, et trace requise ou non.
