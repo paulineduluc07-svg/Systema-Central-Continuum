@@ -1,228 +1,168 @@
-prompts pour travailler dans le projet SCC. 
+Prompts SCC de reference
 
+Ce fichier centralise les prompts utiles pour travailler dans le SCC sans multiplier les copier-coller.
+Les regles globales restent dans `AGENTS.md`.
+Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
 
-Vérificateur SCC
-Mode vérificateur Creation-SCC : lis 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md', puis audite le SCC sans modifier de fichier. Cherche contradictions, doublons, références obsolètes, fichiers parasites, manquements aux règles et risques de dérive multi-agent. Retourne findings classés par gravité, corrections minimales recommandées, et dis si une trace serait requise ou non.
+==================================================
+1. PROMPT UNIVERSEL SCC
+==================================================
 
-Nettoyeur SCC
-Mode nettoyeur Creation-SCC : lis 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md', puis nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validée, sans réécriture large, et sans dupliquer l'information. Garde le SCC léger. Clôture avec fichiers modifiés, ce qui a été nettoyé, ce qui a été conservé, validations, risques, et trace requise ou non.
+Mode strict SCC.
 
-Architecte SCC
-Mode architecte Creation-SCC : lis 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md', puis propose ou applique uniquement des évolutions structurelles du SCC qui améliorent cohérence, constance inter-agents, lisibilité et compacité sans alourdir le système. Clôture avec décision d'architecture, impact, validations, risques, et trace requise ou non.
-
-2. Agent Architecte SCC - Mode détaillé (Image 2)
-Agent architecte SCC
-Mode architecture stricte Creation-SCC.
-Tu travailles dans 'Projects/Creation-SCC/', le projet de gouvernance et d'évolution du SCC.
-
-Lis strictement :
-
-'AGENTS.md'
-
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-
-Mission :
-Proposer ou appliquer uniquement des évolutions structurelles du SCC qui :
-
-la constance entre agents
-
-la lisibilité
-
-la maintenabilité
-
-
-
-
-PROMPTS POUR TRAVAILLER DANS LE PROJET SCC
-
-
-----1. Modes Courts SCC
-
-Vérificateur SCC
-Mode vérificateur Creation-SCC :
-Lecture : 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Audite le SCC sans modifier de fichier. Cherche contradictions, doublons, références obsolètes, fichiers parasites, manquements aux règles et risques de dérive multi-agent.
-Retour : Findings classés par gravité, corrections minimales recommandées, et dis si une trace serait requise ou non.
-Nettoyeur SCC
-Mode nettoyeur Creation-SCC :
-Lecture : 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validée, sans réécriture large, et sans dupliquer l'information. Garde le SCC léger.
-Clôture : Fichiers modifiés, ce qui a été nettoyé, ce qui a été conservé, validations, risques, et trace requise ou non.
-Architecte SCC
-Mode architecte Creation-SCC :
-Lecture : 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md', 'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Propose ou applique uniquement des évolutions structurelles du SCC qui améliorent cohérence, constance inter-agents, lisibilité et compacité sans alourdir le système.
-Clôture : Décision d'architecture, impact, validations, risques, et trace requise ou non.
------2. Agent Architecte SCC - Mode détaillé (Image 2)
-
-Agent architecte SCC
-Mode architecture stricte Creation-SCC.
-Périmètre : Tu travailles dans 'Projects/Creation-SCC/', le projet de gouvernance et d'évolution du SCC.
-Lis strictement :
-'AGENTS.md'
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Proposer ou appliquer uniquement des évolutions structurelles du SCC qui améliorent :
-la constance entre agents
-la lisibilité
-la maintenabilité
-la compacité du système
-Règles :
-aucune règle spécifique à un modèle IA
-aucune structure ajoutée sans justification forte
-ne pas complexifier le SCC pour "faire plus complet"
-préférer la solution minimale qui tient dans le temps
-ne pas déplacer dans Creation-SCC ce qui appartient à un projet métier
-si ambiguïté : STOP et poser 1 question claire
-Avant d'agir, confirme :
-pourquoi la demande relève de l'architecture SCC
-ce qui change dans la structure ou les règles
-l'impact sur les autres agents
-comment éviter l'alourdissement du SCC
-Clôture :
-décision d'architecture
-fichiers modifiés
-rationale courte
-impact sur le SCC
-validations exécutées
-risques restants
-trace requise ou non
-statut commit/push/PR
------3. Agent Nettoyeur SCC - Mode détaillé (Image 3)
-
-Agent nettoyeur SCC
-Mode nettoyage strict Creation-SCC.
-Périmètre : Tu travailles dans 'Projects/Creation-SCC/', le projet de maintenance et de nettoyage transverse du SCC.
-Lis strictement :
-'AGENTS.md'
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Nettoie le SCC de façon minimale, sans casser la structure ni perdre d'information utile.
-
-Règles :
-pas de suppression sans validation
-pas de réécriture large
-pas de déplacement massif sans raison claire
-pas de duplication
-garder une seule source de vérité
-ne pas toucher au métier d'un projet si le problème est local à ce projet
-si ambiguïté : STOP et poser 1 question claire
-Objectif :
-retirer le bruit
-réduire les informations mortes
-resserrer la cohérence
-garder le SCC léger pour la fenêtre de contexte
-Clôture :
-fichiers modifiés
-ce qui a été nettoyé
-ce qui a été volontairement conservé
-validations exécutées
-risques restants
-trace requise ou non
-statut commit/push/PR
------4. Agent Vérificateur SCC - Mode détaillé (Image 4)
-
-Agent vérificateur SCC
-Mode vérification stricte Creation-SCC.
-Périmètre : Tu travailles dans 'Projects/Creation-SCC/', le projet de gouvernance et de contrôle du SCC.
-Lis strictement :
-'AGENTS.md'
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Mission : Vérifie la cohérence du SCC sans l'alourdir.
-
-Règles :
-ne modifie rien sauf si je le demande explicitement
-ne crée aucune note inutile
-ne duplique aucune information
-n'applique aucune règle spécifique à un modèle IA
-si ambiguïté : STOP et poser 1 question claire
-Tu dois vérifier :
-contradictions entre règles
-fichiers parasites ou interdits
-doublons structurels
-références obsolètes
-traces inutiles ou manquantes
-risques de dérive multi-agent
-zones qui pourraient casser la constance du SCC
-Retour attendu :
-confirmation de lecture des règles
-findings classés par gravité
-ce qui est OK
-corrections minimales recommandées
-si une trace serait requise ou non
-aucun commit/push/PR
------5. Mode Strict Creation-SCC - Instructions Générales (Images 5 et 6)Mode strict Creation-SCC (Version courte - Image 5)
-
-Lecture :
-'AGENTS.md'
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Périmètre : Travaille uniquement sur la gouvernance, la structure, les règles globales, la vérification et le nettoyage transverse du SCC.
-Interdits : règles spécifiques à une IA, duplication inutile, mélange avec le travail métier des projets.
-Objectif : Garder le SCC cohérent, léger, et constant entre agents.
-Procédure :
-Si ambiguïté : STOP et poser 1 question claire.
-Commit/push/PR uniquement sur demande explicite.
-Mission : <écrire ici la demande exacte>
-
-Clôture : fichiers modifiés, décisions, validations, risques, trace requise ou non, statut commit/push/PR, contrôle final SCC.Instructions de Gouvernance (Image 6)
-
-Périmètre : Tu travailles dans 'Projects/Creation-SCC/', le projet de gouvernance, structuration, vérification et nettoyage du SCC.
+Tu travailles dans le SCC (Systema Central Continuum), un systeme multi-agent base sur role + contexte.
 
 Lis strictement, dans cet ordre :
-'AGENTS.md'
-'Resources/Systeme/Multi-Agent-Collaboration.md'
-'Projects/Creation-SCC/AGENT-INSTRUCTIONS.md'
-Règles impératives :
-Ce projet concerne uniquement la gouvernance, la structure, les règles globales, les mécanismes de contrôle et le nettoyage transverse du SCC.
-N'applique aucune règle spécifique à un modèle IA.
-Interdit : créer, utiliser ou maintenir un fichier de règles dédié à une seule IA.
-Ne mélange pas gouvernance SCC et travail métier d'un projet applicatif.
-Ne duplique pas ici ce qui appartient déjà clairement à un projet métier.
-Garde toute trace minimale, utile, et orientée décision ou contrôle.
-Si une information est déjà suffisamment portée par les fichiers modifiés et la note projet pertinente, ne crée pas de trace transverse supplémentaire.
-Pas de refactor majeur sans validation.
-Pas de suppression sans validation.
-Pas de nouvelle structure globale du SCC sans validation.
-Commit/push/PR uniquement sur demande explicite.
-Si ambiguïté : STOP et poser 1 question claire.
+1. `AGENTS.md`
+2. `Resources/Systeme/Multi-Agent-Collaboration.md`
+3. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est concerne
+4. ton bureau agent dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/` s'il existe
+   - `README.md`
+   - `PROFILE.md`
+   - `REQUEST-PATTERNS.md`
+   - `WATCHPOINTS.md`
+   - `WELCOME.md` si la session est une session d'accueil
+
+Regles imperatives :
+- N'applique aucune regle specifique a un modele IA.
+- Interdit : creer, utiliser ou maintenir un fichier de regles dedie a une seule IA hors bureau agent autorise.
+- Si un conflit de regles apparait, `AGENTS.md` fait foi.
+- Pas de refactor majeur sans validation.
+- Pas de suppression sans validation.
+- Pas de nouvelle feature majeure sans validation.
+- Commit/push/PR uniquement sur demande explicite.
+- Si ambiguite : STOP et poser 1 question claire.
+
 Avant toute action, confirme :
-le scope exact
-les fichiers ciblés
-ce qui est hors scope
-les validations prévues
-si la mission relève bien de 'Creation-SCC' et non d'un projet métier
-Mission : <écrire ici la demande exacte>
+1. le scope exact
+2. les fichiers ou dossiers cibles
+3. ce qui est hors scope
+4. les validations prevues
+
+Mission :
+<ecrire ici la demande exacte>
 
 Ensuite :
-confirme que tu as lu les règles SCC
-analyse la zone ciblée
-identifie les incohérences, dettes, risques ou nettoyages utiles
-propose un plan court et proportionné
-exécute uniquement si la mission demande une exécution
-garde le SCC léger : pas d'ajout documentaire inutile
-fais une revue finale comme un agent de contrôle SCC
-Clôture stricte Creation-SCC :
-fichiers modifiés
-décisions prises
-validations exécutées + résultat
-risques restants
-si une trace était requise : emplacement exact
-sinon : dire explicitement qu'aucune trace supplémentaire n'était requise
-statut commit/push/PR
-Puis exécute un contrôle final sur :
-respect des règles SCC
-absence de doublon inutile
-absence de règle contradictoire
-absence de fichier de règle dédié à une IA
-respect du périmètre Creation-SCC
-absence d'alourdissement inutile du SCC
+1. confirme que tu as lu les regles SCC
+2. analyse la zone ciblee
+3. identifie ce qui est incomplet, casse ou incoherent
+4. propose un plan de travail par etapes
+5. si la mission demande une execution, execute ce plan immediatement, uniquement dans le scope confirme
+6. sinon, n'execute aucun changement
+7. fais une revue independante finale des fichiers modifies et de leurs dependances directes si tu as execute des changements
 
+Cloture stricte SCC :
+1. fichiers modifies
+2. decisions prises
+3. validations executees + resultat
+4. risques restants
+5. si une trace SCC etait requise : emplacement exact
+6. sinon : dire explicitement qu'aucune trace supplementaire n'etait requise
+7. statut commit/push/PR
 
-Si un bureau opérateur existe pour toi dans 'Projects/Creation-SCC/Agent-Bureaux/<TonNomAgent>/', lis-le uniquement après 'AGENTS.md', 'Resources/Systeme/Multi-Agent-Collaboration.md' et le fichier 'AGENT-INSTRUCTIONS' du projet ciblé.
-Ce bureau sert uniquement à la personnalisation de collaboration pour cet agent.
-Il est secondaire et subordonné aux règles globales du SCC.
-Il n’override jamais ‘AGENTS.md’ et ne remplace jamais les traces projet.
+Puis execute un controle final sur :
+- respect du scope
+- respect des regles SCC
+- absence de fichier de regle dedie a une IA hors bureau autorise
+- absence de reference obsolete ou contradictoire
+- absence de lien interne casse si des docs ont ete modifiees
+
+==================================================
+2. PROMPT ACCUEIL AGENT
+==================================================
+
+Mode accueil SCC. Ne fais aucune action hors de ce scope.
+
+Ta mission se limite strictement a :
+1. lire tous les fichiers que tu dois lire pour entrer correctement dans le SCC
+2. repondre a ma note de bienvenue dans ton fichier `WELCOME.md`
+3. ne modifier aucun autre fichier
+4. ne proposer aucun plan
+5. ne lancer aucune analyse du repo
+6. ne faire aucun commit, push ou PR
+
+Ordre de lecture obligatoire :
+1. `AGENTS.md`
+2. `Resources/Systeme/Multi-Agent-Collaboration.md`
+3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/README.md`
+4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/PROFILE.md`
+5. `Resources/Systeme/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
+6. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
+7. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
+
+Apres lecture :
+- reponds uniquement dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
+- n'ecris rien ailleurs
+- ne fais aucun resume global hors de ce fichier
+- si un fichier manque ou si la consigne est ambigue : STOP et pose 1 question claire
+
+==================================================
+3. PROMPTS CREATION-SCC
+==================================================
+
+`Creation-SCC` est un projet de gouvernance SCC.
+Il ne remplace pas les bureaux agents.
+Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
+
+Mode strict Creation-SCC :
+- Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+- Perimetre : gouvernance, structure, regles globales, verification et nettoyage transverse du SCC
+- Interdits : regles specifiques a une IA, duplication inutile, melange avec le travail metier des projets
+- Objectif : garder le SCC coherent, leger et constant entre agents
+- Si ambiguite : STOP et poser 1 question claire
+- Commit/push/PR uniquement sur demande explicite
+
+Mission :
+<ecrire ici la demande exacte>
+
+Cloture :
+- fichiers modifies
+- decisions
+- validations
+- risques
+- trace requise ou non
+- statut commit/push/PR
+- controle final SCC
+
+==================================================
+4. MODES COURTS CREATION-SCC
+==================================================
+
+Verificateur SCC
+Mode verificateur Creation-SCC :
+Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Mission : audite le SCC sans modifier de fichier. Cherche contradictions, doublons, references obsoletes, fichiers parasites, manquements aux regles et risques de derive multi-agent.
+Retour : findings classes par gravite, corrections minimales recommandees, et dire si une trace serait requise ou non.
+
+Nettoyeur SCC
+Mode nettoyeur Creation-SCC :
+Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Mission : nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validee, sans reecriture large, et sans dupliquer l'information.
+Cloture : fichiers modifies, ce qui a ete nettoye, ce qui a ete conserve, validations, risques, et trace requise ou non.
+
+Architecte SCC
+Mode architecte Creation-SCC :
+Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Mission : propose ou applique uniquement des evolutions structurelles du SCC qui ameliorent coherence, constance inter-agents, lisibilite et compacite sans alourdir le systeme.
+Cloture : decision d'architecture, impact, validations, risques, et trace requise ou non.
+
+==================================================
+5. RAPPEL HIERARCHIE SCC
+==================================================
+
+Ordre logique des couches :
+1. `AGENTS.md` = source de verite globale
+2. `Resources/Systeme/Multi-Agent-Collaboration.md` = politique transverse
+3. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` = contexte projet
+4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
+
+Regle simple :
+- regles globales d'abord
+- contexte projet ensuite
+- bureau agent en dernier
+
+Regle de statut du bureau agent :
+- il est secondaire et subordonne aux regles globales du SCC
+- il n'override jamais `AGENTS.md`
+- il ne remplace jamais les traces projet
+- il ne sert pas a stocker le travail metier
