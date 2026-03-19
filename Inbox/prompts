@@ -1,209 +1,134 @@
-Prompts SCC de reference
+Prompts SCC - version simple
 
-Ce fichier centralise les prompts utiles pour travailler dans le SCC sans multiplier les copier-coller.
-Les regles globales vivent dans `AGENTS.md`.
-Les bureaux agents sont dans `Ressources/Agent-Bureaux/`.
+Objectif:
+- commandes courtes
+- scope clair
+- zero ambiguite
 
-==================================================
-0. MODE REMOTE ONLY (GITHUB DISTANT)
-==================================================
-
-Utiliser ce mode quand Paw demande explicitement un travail GitHub distant uniquement.
-
-Contraintes absolues:
-- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
-- Depot unique: `paulineduluc07-svg/Systema-Central-Continuum`
-- Branche unique: `main`
-- Racine imposee: `Ressources`
-- NomAgent impose: `Codex` (ou celui donne explicitement par Paw)
-- Si une action ne peut pas etre faite en distant uniquement: STOP + 1 question claire.
-
-Whitelist commandes:
-1. `gh auth status`
-2. `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
-
-Regle d'arret:
-- Toute commande hors whitelist => STOP immediat + 1 question claire.
-- Si chemin manquant/ambigu => STOP immediat + 1 question claire.
+Regle globale:
+- si un chemin manque ou est ambigu: STOP + 1 question claire
 
 ==================================================
-1. PROMPT UNIVERSEL SCC (REMOTE ONLY)
+0) VERROU REMOTE ONLY (A METTRE EN TETE)
 ==================================================
-
-Mode strict SCC.
 
 REMOTE ONLY obligatoire:
-- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
-- Commandes autorisees uniquement: `gh auth status` et `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
-- Si une action demande autre chose: STOP + 1 question claire.
-
-Tu travailles dans le SCC (Systema Central Continuum), un systeme multi-agent base sur role + contexte.
-
-Lis strictement, dans cet ordre :
-1. `AGENTS.md`
-2. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est concerne
-3. ton bureau agent dans `Ressources/Agent-Bureaux/<NomAgent>/` s'il existe
-   - `WELCOME.md`
-   - `README.md`
-   - `PROFILE.md`
-   - `REQUEST-PATTERNS.md`
-   - `WATCHPOINTS.md`
-4. le workflow SCC utile a la mission, s'il existe ou s'il est explicitement demande
-
-Regles imperatives :
-- N'applique aucune regle specifique a un modele IA.
-- Interdit : creer, utiliser ou maintenir un fichier de regles dedie a une seule IA hors bureau agent autorise.
-- Si un conflit de regles apparait, `AGENTS.md` fait foi.
-- Pas de refactor majeur sans validation.
-- Pas de suppression sans validation.
-- Pas de nouvelle feature majeure sans validation.
-- Commit/push/PR uniquement sur demande explicite.
-- Si ambiguite : STOP et poser 1 question claire.
-
-Avant toute action, confirme :
-1. le scope exact
-2. les fichiers ou dossiers cibles
-3. ce qui est hors scope
-4. les validations prevues
-
-Mission :
-<ecrire ici la demande exacte>
-
-Ensuite :
-1. confirme que tu as lu les regles SCC
-2. analyse la zone ciblee
-3. identifie ce qui est incomplet, casse ou incoherent
-4. propose un plan de travail par etapes
-5. si la mission demande une execution, execute ce plan immediatement, uniquement dans le scope confirme
-6. sinon, n'execute aucun changement
-7. fais une revue independante finale des fichiers modifies et de leurs dependances directes si tu as execute des changements
-
-Cloture stricte SCC :
-1. fichiers modifies
-2. decisions prises
-3. validations executees + resultat
-4. risques restants
-5. si une trace SCC etait requise : emplacement exact
-6. sinon : dire explicitement qu'aucune trace supplementaire n'etait requise
-7. statut commit/push/PR
-
-Puis execute un controle final sur :
-- respect du scope
-- respect des regles SCC
-- absence de fichier de regle dedie a une IA hors bureau autorise
-- absence de reference obsolete ou contradictoire
-- absence de lien interne casse si des docs ont ete modifiees
+- depot: `paulineduluc07-svg/Systema-Central-Continuum`
+- branche: `main`
+- racine: `Ressources`
+- commandes autorisees uniquement:
+  1) `gh auth status`
+  2) `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+- interdit: toute lecture/ecriture locale (`C:\...`, git local, filesystem local)
+- si une action sort de ce cadre: STOP + 1 question claire
 
 ==================================================
-2. PROMPT ACCUEIL AGENT (REMOTE ONLY)
+1) COMMANDE BIENVENUE (UNE SEULE FOIS)
 ==================================================
 
-Mode accueil SCC - EXECUTION STRICTE (GitHub distant uniquement)
+Mode accueil SCC - EXECUTION STRICTE
 
-Canal obligatoire:
-- Lis uniquement le depot GitHub via `gh api` (pas de lecture locale, pas de filesystem local).
-- Repo: `paulineduluc07-svg/Systema-Central-Continuum`
-- Branche: `main`
-- NomAgent (dossier exact, sensible a la casse): `<NomAgent>`
-- Racine imposee: `Ressources`
-- Interdiction de changer la racine vers une variante anglaise, meme si un fichier mentionne autre chose.
+REMOTE ONLY obligatoire:
+- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
+- aucun acces local
 
-Prevalidation obligatoire (et rien d'autre):
-1. Verifier que `AGENTS.md` existe sur `main`.
-2. Verifier que `Ressources/Agent-Bureaux/<NomAgent>/` existe sur `main`.
-- Si une verification echoue: STOP immediat + 1 seule question claire.
+NomAgent: `<NomAgent>`
 
-Mission strictement limitee:
-1. Lire les fichiers dans cet ordre exact:
+Mission:
+1. Lire exactement, dans cet ordre:
    1) `AGENTS.md`
    2) `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
    3) `Ressources/Agent-Bureaux/<NomAgent>/README.md`
    4) `Ressources/Agent-Bureaux/<NomAgent>/PROFILE.md`
    5) `Ressources/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
    6) `Ressources/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
-2. Repondre uniquement dans `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`.
-3. Ne modifier aucun autre fichier.
-4. Ne proposer aucun plan.
-5. Ne lancer aucune analyse globale du repo.
-6. Aucun commit, push, PR.
-
-Regle d'arret:
-- Au moindre chemin manquant/ambigu: STOP + 1 seule question claire.
+2. Repondre uniquement dans `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
+3. Ne rien modifier d'autre
+4. Aucun plan, aucune analyse globale, aucun commit/push/PR
 
 ==================================================
-3. PROMPTS CREATION-SCC (REMOTE ONLY)
+2) COMMANDE MISSION (EXECUTION)
 ==================================================
 
-`Creation-SCC` est un projet de gouvernance SCC.
-Il ne remplace pas les bureaux agents.
-Les bureaux agents sont dans `Ressources/Agent-Bureaux/`.
+Mode mission SCC - EXECUTION STRICTE
 
-Mode strict Creation-SCC :
-- REMOTE ONLY obligatoire: `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement.
-- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
-- Hors canal distant: STOP + 1 question claire.
-- Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
-- Perimetre : gouvernance, structure, regles globales, verification et nettoyage transverse du SCC
-- Interdits : regles specifiques a une IA, duplication inutile, melange avec le travail metier des projets
-- Objectif : garder le SCC coherent, leger et constant entre agents
-- Si ambiguite : STOP et poser 1 question claire
-- Commit/push/PR uniquement sur demande explicite
+REMOTE ONLY obligatoire:
+- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
+- aucun acces local
 
-Mission :
-<ecrire ici la demande exacte>
+Mission:
+`<ECRIRE LA DEMANDE EXACTE>`
 
-Cloture :
-- fichiers modifies
-- decisions
-- validations
-- risques
-- trace requise ou non
-- statut commit/push/PR
-- controle final SCC
+Contraintes:
+- modifier uniquement les fichiers necessaires a la mission
+- pas de suppression/refactor majeur sans validation
+- commit/push/PR uniquement si explicitement demande
+- cloture courte: fichiers modifies + validations + risques
 
 ==================================================
-4. MODES COURTS CREATION-SCC (REMOTE ONLY)
+3) COMMANDE AUDIT (SANS MODIFICATION)
 ==================================================
 
-Verificateur SCC
-Mode verificateur Creation-SCC :
-Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
-Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
-Mission : audite le SCC sans modifier de fichier. Cherche contradictions, doublons, references obsoletes, fichiers parasites, manquements aux regles et risques de derive multi-agent.
-Retour : findings classes par gravite, corrections minimales recommandees, et dire si une trace serait requise ou non.
+Mode audit SCC - LECTURE SEULE
 
-Nettoyeur SCC
-Mode nettoyeur Creation-SCC :
-Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
-Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
-Mission : nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validee, sans reecriture large, et sans dupliquer l'information.
-Cloture : fichiers modifies, ce qui a ete nettoye, ce qui a ete conserve, validations, risques, et trace requise ou non.
+REMOTE ONLY obligatoire:
+- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
+- aucun acces local
 
-Architecte SCC
-Mode architecte Creation-SCC :
-Canal obligatoire (REMOTE ONLY): `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement. Aucun acces local.
-Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
-Mission : propose ou applique uniquement des evolutions structurelles du SCC qui ameliorent coherence, constance inter-agents, lisibilite et compacite sans alourdir le systeme.
-Cloture : decision d'architecture, impact, validations, risques, et trace requise ou non.
+Mission:
+- auditer le scope suivant: `<SCOPE>`
+- ne modifier aucun fichier
+- retour attendu:
+  1) problemes trouves (ordonnes par severite)
+  2) corrections minimales proposees
+  3) risques restants
 
 ==================================================
-5. RAPPEL HIERARCHIE SCC
+4) COMMANDE CREATION-SCC (GOUVERNANCE)
 ==================================================
 
-Ordre logique des couches :
-1. `AGENTS.md` = source de verite globale, ordre de lecture et architecture utile
-2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` = contexte projet
-3. `Ressources/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
-4. `Ressources/Workflows/` = methodes de travail par role et environnement
+Mode Creation-SCC - EXECUTION STRICTE
 
-Regle simple :
-- regles globales d'abord
-- contexte projet ensuite
-- bureau agent ensuite
-- workflow en support de la mission
+REMOTE ONLY obligatoire:
+- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
+- aucun acces local
 
-Regle de statut du bureau agent :
-- il est secondaire et subordonne aux regles globales du SCC
-- il n'outrepasse jamais `AGENTS.md`
-- il ne remplace jamais les traces projet
-- il ne sert pas a stocker le travail metier
+Lecture minimum:
+1. `AGENTS.md`
+2. `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+3. bureau agent si utile
+
+Mission:
+`<ECRIRE LA DEMANDE DE GOUVERNANCE>`
+
+Contraintes:
+- rester dans la gouvernance SCC
+- ne pas melanger avec le travail metier des projets
+- cloture courte: fichiers modifies + validations + risques
+
+==================================================
+5) COMMANDE CORRECTION FICHIER UNIQUE
+==================================================
+
+Mode correction ciblee - EXECUTION STRICTE
+
+REMOTE ONLY obligatoire:
+- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
+- aucun acces local
+
+Mission:
+- corriger uniquement ce fichier: `<CHEMIN_FICHIER>`
+- objectif: `<CORRECTION_PRECISE>`
+
+Contraintes:
+- zero changement hors fichier cible
+- aucun commit/push/PR sauf demande explicite
+
+==================================================
+RAPPEL SIMPLE
+==================================================
+
+Ordre d'usage:
+1) Bienvenue (une fois)
+2) Mission ou Audit ou Creation-SCC
+3) Reutiliser les commandes 2/3/4/5 ensuite
