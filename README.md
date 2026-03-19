@@ -12,9 +12,8 @@ Repo GitHub de reference (single source of truth) pour les projets actifs et la 
 ## Fichiers cles
 - `AGENTS.md` : regles officielles des agents, ordre de lecture et architecture utile du SCC
 - `Projects/*/AGENT-INSTRUCTIONS.md` : contexte local par projet
-- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee aux regles globales
-- `Resources/Systeme/Workflows/` : methodes de travail par role et environnement
-- `Resources/Systeme/Multi-Agent-Collaboration.md` : rappel court, non source de verite
+- `Resources/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee aux regles globales
+- `Resources/Workflows/` : methodes de travail par role et environnement
 
 ## Regle d'alignement
 Si une contradiction apparait, `AGENTS.md` fait foi.

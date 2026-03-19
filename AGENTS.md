@@ -13,15 +13,15 @@ Les autres documents systeme ne doivent pas re-porter la meme gouvernance en dou
 ## Ordre de lecture obligatoire
 1. `AGENTS.md`
 2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` (si projet cible)
-3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
-4. `Resources/Systeme/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
+3. `Resources/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
+4. `Resources/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
 5. Tout autre fichier explicitement demande par la mission
 
 ## Architecture utile du SCC
 - `Projects/` : travail reel par projet.
 - `Projects/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC.
-- `Resources/Systeme/Workflows/` : methodes de travail par role et environnement.
-- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
+- `Resources/Workflows/` : methodes de travail par role et environnement.
+- `Resources/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
 - `Areas/` : contexte de responsabilites continues.
 - `Inbox/` : capture et transit, a garder legers.
 - `Archives/` : elements termines.
@@ -39,7 +39,7 @@ Les autres documents systeme ne doivent pas re-porter la meme gouvernance en dou
    - nouvelle feature majeure
 8. Commit/push/PR uniquement sur demande explicite.
 9. Les changements de gouvernance SCC se traitent dans `Projects/Creation-SCC/`.
-10. Les bureaux agents sont maintenus dans `Resources/Systeme/Agent-Bureaux/` et n'override jamais `AGENTS.md`.
+10. Les bureaux agents sont maintenus dans `Resources/Agent-Bureaux/` et n'override jamais `AGENTS.md`.
 11. Si une contradiction apparait, `AGENTS.md` fait foi.
 
 ## Amelioration continue disciplinee
@@ -66,9 +66,5 @@ Les autres documents systeme ne doivent pas re-porter la meme gouvernance en dou
 
 Exemple :
 `[Agent IDE] [Systema-Agency] : Clarifie gouvernance SCC`
-
-## Fichiers systeme secondaires
-- `Resources/Systeme/Multi-Agent-Collaboration.md` : rappel court, non source de verite.
-- `Resources/Systeme/Carte-Globale.md` : aide de reperage, non normative.
 
 Mis a jour: 2026-03-19

@@ -19,11 +19,11 @@ Projet central de gouvernance et de maintenance du SCC.
 - execution metier d'un projet applicatif
 - backlog produit d'un projet metier
 - details locaux qui doivent rester dans les notes du projet concerne
-- personnalisation des agents, qui vit dans `Resources/Systeme/Agent-Bureaux/`
+- personnalisation des agents, qui vit dans `Resources/Agent-Bureaux/`
 
 ## Note de gouvernance
 Le but est de concentrer la maintenance du SCC dans un seul projet pour limiter la dispersion et la charge de contexte.
-Les bureaux operateurs des agents SCC sont maintenus dans `Resources/Systeme/Agent-Bureaux/`.
+Les bureaux operateurs des agents SCC sont maintenus dans `Resources/Agent-Bureaux/`.
 Ils servent uniquement a la personnalisation de la collaboration avec chaque agent concerne et n'overrident jamais `AGENTS.md`.
 
 ## Notes de session

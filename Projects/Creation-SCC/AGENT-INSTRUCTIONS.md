@@ -21,7 +21,7 @@ Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce proje
 - Traiter les ajustements de gouvernance de facon minimale et claire
 
 ## Frontiere importante
-- Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
+- Les bureaux agents sont dans `Resources/Agent-Bureaux/`.
 - Les projets metier restent dans `Projects/`.
 - `Creation-SCC` ne doit pas absorber le travail metier ni la personnalisation agent.
 

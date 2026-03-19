@@ -2,7 +2,7 @@ Prompts SCC de reference
 
 Ce fichier centralise les prompts utiles pour travailler dans le SCC sans multiplier les copier-coller.
 Les regles globales vivent dans `AGENTS.md`.
-Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
+Les bureaux agents sont dans `Resources/Agent-Bureaux/`.
 
 ==================================================
 1. PROMPT UNIVERSEL SCC
@@ -15,7 +15,7 @@ Tu travailles dans le SCC (Systema Central Continuum), un systeme multi-agent ba
 Lis strictement, dans cet ordre :
 1. `AGENTS.md`
 2. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est concerne
-3. ton bureau agent dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/` s'il existe
+3. ton bureau agent dans `Resources/Agent-Bureaux/<NomAgent>/` s'il existe
    - `WELCOME.md`
    - `README.md`
    - `PROFILE.md`
@@ -83,14 +83,14 @@ Ta mission se limite strictement a :
 
 Ordre de lecture obligatoire :
 1. `AGENTS.md`
-2. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
-3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/README.md`
-4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/PROFILE.md`
-5. `Resources/Systeme/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
-6. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
+2. `Resources/Agent-Bureaux/<NomAgent>/WELCOME.md`
+3. `Resources/Agent-Bureaux/<NomAgent>/README.md`
+4. `Resources/Agent-Bureaux/<NomAgent>/PROFILE.md`
+5. `Resources/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
+6. `Resources/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
 
 Apres lecture :
-- reponds uniquement dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
+- reponds uniquement dans `Resources/Agent-Bureaux/<NomAgent>/WELCOME.md`
 - n'ecris rien ailleurs
 - ne fais aucun resume global hors de ce fichier
 - si un fichier manque ou si la consigne est ambigue : STOP et pose 1 question claire
@@ -101,7 +101,7 @@ Apres lecture :
 
 `Creation-SCC` est un projet de gouvernance SCC.
 Il ne remplace pas les bureaux agents.
-Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
+Les bureaux agents sont dans `Resources/Agent-Bureaux/`.
 
 Mode strict Creation-SCC :
 - Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
@@ -152,8 +152,8 @@ Cloture : decision d'architecture, impact, validations, risques, et trace requis
 Ordre logique des couches :
 1. `AGENTS.md` = source de verite globale, ordre de lecture et architecture utile
 2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` = contexte projet
-3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
-4. `Resources/Systeme/Workflows/` = methodes de travail par role et environnement
+3. `Resources/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
+4. `Resources/Workflows/` = methodes de travail par role et environnement
 
 Regle simple :
 - regles globales d'abord

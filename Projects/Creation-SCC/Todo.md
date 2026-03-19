@@ -5,7 +5,7 @@
 ---
 
 - [x] Formaliser `Creation-SCC` comme projet de gouvernance SCC
-- [x] Creer des bureaux operateurs minimaux pour `Codex`, `Gemini`, `Claude` et `Manus` dans `Resources/Systeme/Agent-Bureaux/`
+- [x] Creer des bureaux operateurs minimaux pour `Codex`, `Gemini`, `Claude` et `Manus` dans `Resources/Agent-Bureaux/`
 - [x] Mettre a jour `Inbox/prompts` avec la structure SCC actuelle
 - [ ] Verifier periodiquement qu'aucune regle SCC n'est contredite dans le repo
 - [ ] Nettoyer periodiquement les informations mortes ou dupliquees dans le SCC
