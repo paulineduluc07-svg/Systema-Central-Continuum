@@ -1,28 +1,18 @@
 # Carte-Globale
 
-- **Statut** : actif
-- **But du fichier** : documenter la vue d'ensemble actuelle du SCC.
+- **Statut** : secondaire
+- **But du fichier** : aide de reperage rapide du SCC.
+- **Autorite** : la structure officielle et l'ordre de lecture vivent dans `AGENTS.md`.
 
-## Architecture generale
-- `AGENTS.md` : source de verite globale des regles agents
-- `Resources/Systeme/Multi-Agent-Collaboration.md` : politique transverse du SCC
-- `Resources/Systeme/Workflows/` : methodes de travail par role et environnement
-- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee aux regles globales
+## Reperes rapides
 - `Projects/` : travail reel par projet
-- `Projects/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC
-- `Areas/` : contexte de responsabilites continues
-- `Inbox/` : zone de capture et de transit, a garder legere
+- `Projects/Creation-SCC/` : gouvernance et maintenance du SCC
+- `Resources/Systeme/Workflows/` : methodes de travail
+- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent
+- `Areas/` : responsabilites continues
+- `Inbox/` : capture et transit
 - `Archives/` : elements termines
 
-## Hierarchie de lecture
-1. `AGENTS.md`
-2. `Resources/Systeme/Multi-Agent-Collaboration.md`
-3. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible
-4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/` si un bureau existe pour l'agent concerne
+Si cette carte ne sert plus, elle peut etre supprimee plus tard sans impact sur les regles du SCC.
 
-## Regle de separation
-- Les regles globales vivent dans les fichiers systeme officiels.
-- Le travail projet et ses traces vivent dans le projet concerne.
-- Les bureaux agents ne remplacent ni les regles globales ni les traces projet.
-
-Mis a jour : 2026-03-18
+Mis a jour : 2026-03-19

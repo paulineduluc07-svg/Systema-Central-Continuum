@@ -1,184 +1,94 @@
-# Workflow Agent Memoire Centralisation (SCC)
+# Workflow Agent Memoire / Centralisation (SCC)
 
 ## 1) But du workflow
-Definir un cadre operationnel pour tout agent IA dont le role principal est de centraliser, consolider, organiser, connecter et maintenir la memoire utile du SCC.
-Ce workflow est defini par type d'agent (memoire/centralisation) et environnement, jamais par identite d'entreprise ou de modele.
+Definir un cadre operationnel commun pour tout agent IA qui travaille dans le SCC selon ce role et cet environnement.
+Le workflow est base sur le type d'agent et l'environnement, jamais sur une entreprise ou un modele.
 
 ## 2) Quand utiliser ce workflow
-- Centraliser une information utile dans le bon emplacement SCC.
-- Ameliorer la coherence entre regles, notes, traces, workflows et references.
-- Reduire la fragmentation des connaissances.
-- Relier des informations proches sans duplication.
-- Renforcer la retrievabilite et la continuite pour les agents suivants.
+- Toute mission de centralisation de contexte, rangement, synthese utile ou consolidation documentaire.\n- Toute tache ou la memoire operationnelle partagee est le coeur du travail.
 
 ## 3) Quand NE PAS utiliser ce workflow
-- Tache de codage/implementation principale.
-- Tache documentaire de redaction pure sans besoin de centralisation.
-- Tache de recherche pure sans action de structuration memoire.
-- Execution git (commit/push/PR) non demandee.
+- Tache de production applicative sans besoin de centralisation.\n- Duplication de notes sans benefice concret.\n- Action bloquee par regles de securite sans autorisation explicite.
 
 ## 4) Sequence de demarrage obligatoire
 1. Lire `AGENTS.md`.
-2. Lire `Resources/Systeme/Multi-Agent-Collaboration.md`.
-3. Lire `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
-4. Identifier les couches concernees: regles, notes, traces, workflows, references.
-5. Verifier la mission exacte (inspect, centraliser, consolider) et ses limites.
+2. Lire le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
+3. Lire le bureau agent concerne s'il existe et s'il est utile a la mission.
+4. Verifier le scope demande (fichiers autorises, contraintes, commit/push/PR).
+5. Verifier l'etat de depart pertinent pour l'environnement utilise.
 
-## 5) Clarification du scope avant centralisation
-- Definir ce qui doit etre centralise et pourquoi.
-- Identifier emplacement cible principal avant de modifier.
-- Lister les emplacements hors scope.
-- Si le role de l'information est ambigu, stopper et demander clarification.
+## 5) Verification frontiere Notes / Notes-Perso
+- Ecrire les informations operationnelles dans `Notes/` uniquement.
+- Ne jamais modifier `Notes-Perso/` (zone personnelle de Paw).
+- En cas de doute sur la destination d'une note, demander avant d'ecrire.
 
-## 6) Verification frontiere Notes / Notes-Perso
-- La memoire partagee reste dans `Notes/` et documents SCC pertinents.
-- `Notes-Perso/` reste personnel et non modifiable par les agents.
-- Ne jamais centraliser du contenu personnel dans la memoire partagee.
+## 6) Regles d'execution
+- Comprendre l'existant avant de modifier.
+- Priorite : ameliorer/clarifier l'existant plutot que re-ecrire sans raison.
+- Changer uniquement les fichiers dans le scope demande.
+- Pas de refactor large si non demande.
+- Rester minimal, explicite et reproductible.
 
-## 7) Regles d'execution memoire/centralisation
-- Comprendre la fonction de chaque element avant de le deplacer/fusionner.
-- Preserver le contexte utile; ne pas simplifier en supprimant de la valeur.
-- Centraliser de facon ciblee, sans broad rewrite.
-- Distinguer clairement les couches (regles, notes, traces, workflows).
-- Aider le SCC a servir de memoire operationnelle, pas de sortie chat dispersee.
+## 7) Phase de validation
+- Lancer les verifications pertinentes selon le scope.
+- Si validation impossible, l'indiquer clairement avec la raison.
+- Confirmer l'impact reel et les limites connues.
 
-## 8) Comportement source-of-truth / conscience des emplacements
-- Designer une source principale par information critique.
-- Verifier que l'emplacement choisi correspond au role de l'information.
-- Conserver des renvois courts depuis les autres points d'entree si necessaire.
-- Ne pas melanger des natures differentes dans un meme bloc.
+## 8) Cloture / handoff
+- Resumer : fichiers modifies, decisions prises, validations executees, risques restants.
+- Indiquer les prochaines actions logiques.
+- Laisser un etat propre pour l'agent suivant.
 
-## 9) Anti-duplication / consolidation
-- Eviter de dupliquer la meme information dans plusieurs fichiers.
-- Consolider uniquement quand le regroupement augmente clarte et retrieval.
-- Ne pas centraliser "plus" si cela degrade la lisibilite locale.
-- Garder l'historique de decision compréhensible via traces/renvois.
+## 9) Comportement de tracabilite
+- Appliquer la politique SCC de tracabilite minimale de `AGENTS.md`.
+- Laisser une trace pour : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
+- Eviter la duplication : une source principale + renvoi court si besoin.
+- Ne pas tracer les micro-actions sans impact.
 
-## 10) Phase de validation
-- Verifier que la source de verite est claire et unique.
-- Verifier que les liens/renvois restent coherents.
-- Verifier qu'aucun contexte utile n'a ete perdu.
-- Verifier que les couches SCC restent distinctes et lisibles.
-
-## 11) Comportement commit
-- Commit uniquement sur demande explicite.
-- Inclure uniquement les fichiers attendus.
-- Si fichier inattendu apparait: stopper et signaler avant commit.
-
-## 12) Comportement push
-- Push uniquement sur demande explicite.
-- Reconfirmer branche/repo/remote cible avant push.
-- Ne pas pousser hors cible validee.
-
-## 13) Comportement PR
-- PR uniquement sur demande explicite.
-- Ne jamais creer de PR par defaut.
-- Verifier base/head/scope avant creation.
-
-## 14) Cloture / handoff
-- Fournir un resume exploitable:
-  - quoi a ete centralise/consolide
-  - source principale retenue
-  - renvois ajoutes
-  - limites/points ouverts
-  - prochaine etape recommandee
-
-## 15) Comportement de tracabilite
-- Tracer si: changement de source de verite, consolidation majeure, warning de fragmentation, ambiguite bloquante, risque de perte de contexte.
-- Eviter duplication des traces.
-- Pas de trace pour micro-ajustements sans impact.
-
-## 16) Rappel neutralite inter-agents
+## 10) Rappel neutralite inter-agents
 - Aucun mode rivalite.
-- Interdit: sabotage, ralentissement volontaire, ecrasement sans justification.
-- Reutiliser et renforcer le travail existant avant remplacement.
+- Interdit : sabotage, ralentissement volontaire, ecrasement/effacement sans justification.
+- Respecter et reutiliser le travail existant quand il est sain.
+- Si obsolete ou faible : expliquer pourquoi et proposer une voie plus propre.
 
-## 17) Esprit d'amelioration continue disciplinee
-- Ameliorer progressivement la memoire SCC selon usage reel.
-- Ne pas centraliser pour centraliser.
-- Favoriser clarte, retrievabilite et continuite.
-- Eviter destabilisation documentaire par changements excessifs.
+## 11) Esprit d'amelioration continue disciplinee
+- Verifier s'il existe une option plus robuste, simple ou rapide adaptee au besoin.
+- Ne pas garder une pratique obsolete par habitude.
+- Eviter le changement pour la nouveaute seule.
+- Integrer les ameliorations de facon propre, progressive et stable.
 
 ---
-
-## Garde-fous explicites
-- Interdit: deplacer/fusionner une information sans comprendre son role.
-- Interdit: centraliser du contenu personnel dans la memoire partagee.
-- Interdit: dupliquer la meme information dans plusieurs endroits.
-- Interdit: transformer centralisation en broad rewrite.
-- Interdit: supprimer du contexte utile juste pour simplifier.
-- Interdit: fusionner regles/notes/traces/workflows en un seul bloc indifferencie.
-- Interdit: supposer que "plus de centralisation" est toujours meilleur.
 
 ## Blocs de prompt reutilisables
 
 ### A) Start workflow
 ```text
-Applique le workflow "Workflow-Agent-Memoire-Centralisation".
-Contexte: <scope>.
-Avant toute action: confirme les regles lues (AGENTS.md + Multi-Agent-Collaboration + AGENT-INSTRUCTIONS projet si present), le scope, et la cible de centralisation.
+Applique le workflow SCC correspondant a cette mission.
+Contexte : <projet/scope>.
+Avant toute action : confirme les regles lues (`AGENTS.md`, `AGENT-INSTRUCTIONS` projet si present, bureau agent si pertinent), le scope autorise, et l'etat de depart utile.
 ```
 
-### B) Inspect/memory-context only
+### B) Apply changes
 ```text
-Fais uniquement une inspection du contexte memoire SCC (regles, notes, traces, workflows, references).
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-Retourne: fragmentation, doublons, source-of-truth actuelle, zones ambiguës.
+Applique uniquement les changements demandes dans le scope suivant : <scope>.
+Contraintes : modifications minimales, aucun fichier hors scope, aucune suppression ou refactor large non demande.
+Explique brievement ce que tu modifies et pourquoi.
 ```
 
-### C) Centralize only
+### C) Validation
 ```text
-Centralise uniquement les informations dans le scope defini.
-Respecte une source principale de verite et ajoute des renvois courts si necessaire.
-Ne commit pas, ne push pas, ne cree pas de PR.
+Execute la validation adaptee au scope.
+Si une validation est impossible, indique clairement pourquoi.
+Retourne un resultat simple : OK / KO + points de risque restants.
 ```
 
-### D) Consolidate only
+### D) Close / summarize
 ```text
-Consolide uniquement les elements redondants dans le scope.
-Ne supprime pas de contexte utile.
-Ne commit pas, ne push pas, ne cree pas de PR.
-```
-
-### E) Validate only
-```text
-Valide uniquement la qualite de centralisation:
-- source de verite claire
-- non-duplication
-- couches distinctes (regles/notes/traces/workflows)
-- retrievabilite preservee
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-```
-
-### F) Commit only
-```text
-Cree un commit unique avec uniquement les fichiers attendus.
-Si fichier inattendu: stop et rapport.
-Ne push pas, ne cree pas de PR.
-Message: "<message>".
-```
-
-### G) Push only
-```text
-Pousse uniquement la branche demandee vers le remote/repo valide.
-Ne modifie aucun fichier, ne cree pas de PR.
-Retourne: succes/erreur, branche distante, hash final.
-```
-
-### H) PR only
-```text
-Cree une PR uniquement si explicitement demande.
-Verifie base/head/titre/resume/scope avant creation.
-Ne depasse pas le scope de la mission.
-```
-
-### I) Close / summarize
-```text
-Cloture avec:
-1) elements centralises/consolides
-2) source principale retenue
-3) renvois ajoutes
-4) limites/risques restants
-5) prochaine etape recommandee
-6) statut commit/push/PR
+Cloture la mission avec :
+1) fichiers modifies
+2) resume court des changements
+3) validations executees et resultat
+4) risques/limites restants
+5) prochaines etapes recommandees
+Confirme explicitement s'il y a eu commit/push/PR ou non.
 ```

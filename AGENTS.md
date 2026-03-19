@@ -1,38 +1,74 @@
 # AGENTS.md
 
-Ce fichier est la source de vérité unique des règles agents pour ce dépôt.
-Tous les autres documents doivent rester alignés avec ce fichier.
+Ce fichier est la source de verite unique des regles agents pour ce depot.
+Tout le reste doit rester aligne avec ce fichier.
+Les autres documents systeme ne doivent pas re-porter la meme gouvernance en double.
 
-## Portée
-- Système multi-agent basé sur rôle + contexte.
-- Aucune règle spécifique à un modèle IA particulier.
-- Interdit de créer des fichiers de règles dédiés à une IA particulière (`CLAUDE.md`, équivalents).
+## Portee
+- Systeme multi-agent base sur role + contexte.
+- Aucune regle specifique a un modele IA particulier.
+- Interdit de creer des fichiers de regles dedies a une IA particuliere hors bureau agent autorise.
+- Source de verite : ce repo uniquement.
 
 ## Ordre de lecture obligatoire
 1. `AGENTS.md`
-2. `Resources/Systeme/Multi-Agent-Collaboration.md`
-3. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` (si projet ciblé)
+2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` (si projet cible)
+3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
+4. `Resources/Systeme/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
+5. Tout autre fichier explicitement demande par la mission
 
-## Règles opérationnelles
-1. Source de vérité: ce repo uniquement.
-2. Zéro doublon actif.
-3. `Code/`, `Prompts/`, `Todo.md`, `Roadmap.md`: modification autorisée dans le scope demandé.
-4. `Notes/`: mise à jour autorisée pour garder une mémoire utile et cohérente.
-5. `Notes-Perso/`: strictement interdit aux agents.
-6. Demander validation à Paw avant:
+## Architecture utile du SCC
+- `Projects/` : travail reel par projet.
+- `Projects/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC.
+- `Resources/Systeme/Workflows/` : methodes de travail par role et environnement.
+- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
+- `Areas/` : contexte de responsabilites continues.
+- `Inbox/` : capture et transit, a garder legers.
+- `Archives/` : elements termines.
+
+## Regles operationnelles
+1. Zero doublon actif.
+2. Comprendre l'existant avant de modifier.
+3. Interdit : sabotage, ralentissement volontaire, ecrasement ou effacement sans justification claire.
+4. `Code/`, `Prompts/`, `Todo.md`, `Roadmap.md` : modification autorisee dans le scope demande.
+5. `Notes/` : mise a jour autorisee pour garder une memoire utile et coherente.
+6. `Notes-Perso/` : strictement interdit aux agents.
+7. Demander validation a Paw avant :
    - suppression
    - refactor majeur
    - nouvelle feature majeure
-7. Commit/push/PR uniquement sur demande explicite.
+8. Commit/push/PR uniquement sur demande explicite.
+9. Les changements de gouvernance SCC se traitent dans `Projects/Creation-SCC/`.
+10. Les bureaux agents sont maintenus dans `Resources/Systeme/Agent-Bureaux/` et n'override jamais `AGENTS.md`.
+11. Si une contradiction apparait, `AGENTS.md` fait foi.
 
-## Traçabilité minimale
-- Laisser une trace si: décision, erreur trouvée, warning, ambiguïté bloquante, changement important.
-- Éviter les doublons de trace: une source principale + renvoi court.
+## Amelioration continue disciplinee
+- Chercher une option plus pertinente quand le besoin reel le justifie.
+- Ne pas changer pour la nouveaute seule.
+- Ne pas reecrire largement sans benefice concret.
+- Integrer les ameliorations proprement, progressivement et de facon stable.
+
+## Tracabilite minimale
+- Laisser une trace si : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
+- Trace projet par defaut : `Projects/<Projet>/Notes/`
+- Trace transverse SCC : `Projects/Creation-SCC/Notes/`
+- Si une regle globale change, la mise a jour peut vivre directement dans le fichier systeme source de verite concerne.
+- Si l'information est deja suffisamment portee par les fichiers modifies et par la note pertinente, ne pas creer de trace supplementaire.
+- Une trace = une source principale + renvoi court si necessaire.
+
+## Notes projet
+- `Notes/` = memoire operationnelle partagee.
+- Mettre a jour une note existante si le sujet reste le meme.
+- Creer une nouvelle note seulement si le sujet change nettement ou si la note deviendrait confuse.
 
 ## Convention de commit
 `[NomAgent] [NomProjet] : Description courte et claire`
 
-Exemple:
-`[Agent IDE] [Systema-Agency] : Corrige incohérences règles AGENT`
+Exemple :
+`[Agent IDE] [Systema-Agency] : Clarifie gouvernance SCC`
 
-Mis à jour: 2026-03-17
+## Fichiers systeme secondaires
+- `Resources/Systeme/Multi-Agent-Collaboration.md` : rappel court, non source de verite.
+- `Resources/Systeme/Carte-Globale.md` : aide de reperage, non normative.
+
+Mis a jour: 2026-03-19

@@ -6,14 +6,14 @@ Tu entres dans un environnement multi-agent structure.
 La clarte, la rigueur, le respect du perimetre et la non-interference sont obligatoires.
 
 ## Ordre de lecture obligatoire
-1. AGENTS.md
-2. Resources/Systeme/Multi-Agent-Collaboration.md
-3. ton bureau dans Resources/Systeme/Agent-Bureaux/Manus/
-   - README.md
-   - PROFILE.md
-   - REQUEST-PATTERNS.md
-   - WATCHPOINTS.md
-4. le fichier Projects/<Projet>/AGENT-INSTRUCTIONS.md si un projet est explicitement concerne par la mission
+1. `AGENTS.md`
+2. ton bureau dans `Resources/Systeme/Agent-Bureaux/Manus/`
+   - `README.md`
+   - `PROFILE.md`
+   - `REQUEST-PATTERNS.md`
+   - `WATCHPOINTS.md`
+3. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est explicitement concerne par la mission
+4. le workflow SCC utile a la mission, si un workflow est explicitement demande ou evident
 5. tout autre fichier explicitement mentionne dans le prompt
 
 ## Ce que tu dois comprendre avant toute action
@@ -25,10 +25,10 @@ La clarte, la rigueur, le respect du perimetre et la non-interference sont oblig
 - les regles de non-sabotage, non-duplication et non-interference
 
 ## Hierarchie des regles
-- AGENTS.md est la source de verite globale
-- Resources/Systeme/Multi-Agent-Collaboration.md definit la politique transverse
+- `AGENTS.md` est la source de verite globale
+- le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` ajoute le contexte local quand un projet est cible
 - ton bureau agent est secondaire et specifique a ta collaboration
-- ton bureau n'override jamais AGENTS.md
+- les workflows decrivent une methode de travail, pas une gouvernance concurrente
 - les traces de travail reel restent dans le projet concerne
 
 ## Obligation de confirmation
@@ -40,17 +40,17 @@ Nom de l'agent :
 
 Declaration :
 
-\"J'ai lu les documents requis.
+"J'ai lu les documents requis.
 Je comprends les regles du SCC, mon role, mes limites et le perimetre applicable.
-Je ne vois aucune ambiguite bloquante a ce stade.\"
+Je ne vois aucune ambiguite bloquante a ce stade."
 
 OU
 
-\"J'ai identifie des points de confusion ou de contradiction :
+"J'ai identifie des points de confusion ou de contradiction :
 - ...
 - ...
 
-Je suspends toute execution jusqu'a clarification.\"
+Je suspends toute execution jusqu'a clarification."
 
 ## Regles fondamentales
 - Tu n'inventes pas de regle.
@@ -69,4 +69,4 @@ Tu dois :
 
 Aucune interpretation libre sur un point ambigu de gouvernance SCC.
 
-*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
+*Mis a jour : 2026-03-19 | Paw -- Systema Central Continuum*

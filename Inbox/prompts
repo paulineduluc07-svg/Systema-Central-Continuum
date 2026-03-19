@@ -1,7 +1,7 @@
 Prompts SCC de reference
 
 Ce fichier centralise les prompts utiles pour travailler dans le SCC sans multiplier les copier-coller.
-Les regles globales restent dans `AGENTS.md`.
+Les regles globales vivent dans `AGENTS.md`.
 Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
 
 ==================================================
@@ -14,14 +14,14 @@ Tu travailles dans le SCC (Systema Central Continuum), un systeme multi-agent ba
 
 Lis strictement, dans cet ordre :
 1. `AGENTS.md`
-2. `Resources/Systeme/Multi-Agent-Collaboration.md`
-3. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est concerne
-4. ton bureau agent dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/` s'il existe
+2. le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est concerne
+3. ton bureau agent dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/` s'il existe
+   - `WELCOME.md`
    - `README.md`
    - `PROFILE.md`
    - `REQUEST-PATTERNS.md`
    - `WATCHPOINTS.md`
-   - `WELCOME.md` si la session est une session d'accueil
+4. le workflow SCC utile a la mission, s'il existe ou s'il est explicitement demande
 
 Regles imperatives :
 - N'applique aucune regle specifique a un modele IA.
@@ -83,12 +83,11 @@ Ta mission se limite strictement a :
 
 Ordre de lecture obligatoire :
 1. `AGENTS.md`
-2. `Resources/Systeme/Multi-Agent-Collaboration.md`
+2. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
 3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/README.md`
 4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/PROFILE.md`
 5. `Resources/Systeme/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
 6. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
-7. `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
 
 Apres lecture :
 - reponds uniquement dans `Resources/Systeme/Agent-Bureaux/<NomAgent>/WELCOME.md`
@@ -105,7 +104,7 @@ Il ne remplace pas les bureaux agents.
 Les bureaux agents sont dans `Resources/Systeme/Agent-Bureaux/`.
 
 Mode strict Creation-SCC :
-- Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+- Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 - Perimetre : gouvernance, structure, regles globales, verification et nettoyage transverse du SCC
 - Interdits : regles specifiques a une IA, duplication inutile, melange avec le travail metier des projets
 - Objectif : garder le SCC coherent, leger et constant entre agents
@@ -130,19 +129,19 @@ Cloture :
 
 Verificateur SCC
 Mode verificateur Creation-SCC :
-Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : audite le SCC sans modifier de fichier. Cherche contradictions, doublons, references obsoletes, fichiers parasites, manquements aux regles et risques de derive multi-agent.
 Retour : findings classes par gravite, corrections minimales recommandees, et dire si une trace serait requise ou non.
 
 Nettoyeur SCC
 Mode nettoyeur Creation-SCC :
-Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : nettoie uniquement le bruit documentaire ou structurel du SCC sans suppression non validee, sans reecriture large, et sans dupliquer l'information.
 Cloture : fichiers modifies, ce qui a ete nettoye, ce qui a ete conserve, validations, risques, et trace requise ou non.
 
 Architecte SCC
 Mode architecte Creation-SCC :
-Lecture : `AGENTS.md`, `Resources/Systeme/Multi-Agent-Collaboration.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
+Lecture : `AGENTS.md`, `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`, puis bureau agent si pertinent
 Mission : propose ou applique uniquement des evolutions structurelles du SCC qui ameliorent coherence, constance inter-agents, lisibilite et compacite sans alourdir le systeme.
 Cloture : decision d'architecture, impact, validations, risques, et trace requise ou non.
 
@@ -151,15 +150,16 @@ Cloture : decision d'architecture, impact, validations, risques, et trace requis
 ==================================================
 
 Ordre logique des couches :
-1. `AGENTS.md` = source de verite globale
-2. `Resources/Systeme/Multi-Agent-Collaboration.md` = politique transverse
-3. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` = contexte projet
-4. `Resources/Systeme/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
+1. `AGENTS.md` = source de verite globale, ordre de lecture et architecture utile
+2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` = contexte projet
+3. `Resources/Systeme/Agent-Bureaux/<NomAgent>/` = personnalisation de collaboration pour un agent donne
+4. `Resources/Systeme/Workflows/` = methodes de travail par role et environnement
 
 Regle simple :
 - regles globales d'abord
 - contexte projet ensuite
-- bureau agent en dernier
+- bureau agent ensuite
+- workflow en support de la mission
 
 Regle de statut du bureau agent :
 - il est secondaire et subordonne aux regles globales du SCC

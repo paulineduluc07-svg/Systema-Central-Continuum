@@ -1,184 +1,94 @@
-# Workflow Agent Planification Organisation (SCC)
+# Workflow Agent Planification / Organisation (SCC)
 
 ## 1) But du workflow
-Definir un cadre operationnel pour tout agent IA dont le role principal est de planifier, organiser, prioriser, sequencer et transformer la complexite en ordre d'execution clair pour le SCC.
-Ce workflow est defini par type d'agent (planification/organisation) et environnement, jamais par identite d'entreprise ou de modele.
+Definir un cadre operationnel commun pour tout agent IA qui travaille dans le SCC selon ce role et cet environnement.
+Le workflow est base sur le type d'agent et l'environnement, jamais sur une entreprise ou un modele.
 
 ## 2) Quand utiliser ce workflow
-- Transformer un objectif en etapes ordonnees.
-- Prioriser des taches et separer urgent vs important.
-- Structurer un plan d'execution.
-- Decouper un travail large en unites plus petites.
-- Identifier bloqueurs, dependances et prerequis.
-- Organiser les prochaines actions pour Paw ou pour le systeme SCC.
+- Toute mission centree sur priorisation, roadmap, todo, plan de travail ou organisation multi-etapes.\n- Toute tache ou la clarte du prochain mouvement est le livrable principal.
 
 ## 3) Quand NE PAS utiliser ce workflow
-- Tache d'implementation code principale.
-- Tache de recherche approfondie non demandee (eviter recherche-sprawl).
-- Tache git execution non demandee (commit/push/PR).
+- Tache purement d'execution code/design sans besoin de planification.\n- Tache demandant une action immediate sans travail d'organisation.\n- Action bloquee par regles de securite sans autorisation explicite.
 
 ## 4) Sequence de demarrage obligatoire
 1. Lire `AGENTS.md`.
-2. Lire `Resources/Systeme/Multi-Agent-Collaboration.md`.
-3. Lire `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
-4. Clarifier objectif, contraintes, horizon temporel, definition de "termine".
-5. Verifier le scope autorise et ce qui est hors scope.
+2. Lire le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
+3. Lire le bureau agent concerne s'il existe et s'il est utile a la mission.
+4. Verifier le scope demande (fichiers autorises, contraintes, commit/push/PR).
+5. Verifier l'etat de depart pertinent pour l'environnement utilise.
 
-## 5) Clarification du scope avant planification
-- Definir le livrable attendu du plan (roadmap, plan court terme, backlog priorise, etc.).
-- Identifier les inconnues critiques.
-- Marquer explicitement les hypotheses.
-- Ne pas inventer de dependances sans indice concret.
+## 5) Verification frontiere Notes / Notes-Perso
+- Ecrire les informations operationnelles dans `Notes/` uniquement.
+- Ne jamais modifier `Notes-Perso/` (zone personnelle de Paw).
+- En cas de doute sur la destination d'une note, demander avant d'ecrire.
 
-## 6) Verification frontiere Notes / Notes-Perso
-- Les plans operationnels vont dans `Notes/` ou docs systeme pertinents.
-- `Notes-Perso/` reste personnel et non modifiable par les agents.
-- Ne jamais melanger notes personnelles et planification partagee.
+## 6) Regles d'execution
+- Comprendre l'existant avant de modifier.
+- Priorite : ameliorer/clarifier l'existant plutot que re-ecrire sans raison.
+- Changer uniquement les fichiers dans le scope demande.
+- Pas de refactor large si non demande.
+- Rester minimal, explicite et reproductible.
 
-## 7) Regles d'execution planification/organisation
-- Produire des plans actionnables, pas vagues.
-- Chaque etape doit avoir un objectif clair et un resultat attendu.
-- Garder une granularite utile: ni trop macro, ni micro-bruit.
-- Limiter la complexite au strict necessaire.
+## 7) Phase de validation
+- Lancer les verifications pertinentes selon le scope.
+- Si validation impossible, l'indiquer clairement avec la raison.
+- Confirmer l'impact reel et les limites connues.
 
-## 8) Comportement priorite / sequencage
-- Distinguer urgent vs important.
-- Prioriser selon impact, risque, dependances, effort, delai.
-- Ordonner par prerequis reels.
-- Marquer ce qui peut etre parallellise vs ce qui est strictement sequentiel.
-- Ne pas traiter toutes les taches comme egalement urgentes.
+## 8) Cloture / handoff
+- Resumer : fichiers modifies, decisions prises, validations executees, risques restants.
+- Indiquer les prochaines actions logiques.
+- Laisser un etat propre pour l'agent suivant.
 
-## 9) Anti-duplication / source unique
-- Eviter plans dupliques sans objectif.
-- Maintenir une source principale de plan par scope.
-- Ajouter renvoi court plutot que recopier le meme plan ailleurs.
+## 9) Comportement de tracabilite
+- Appliquer la politique SCC de tracabilite minimale de `AGENTS.md`.
+- Laisser une trace pour : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
+- Eviter la duplication : une source principale + renvoi court si besoin.
+- Ne pas tracer les micro-actions sans impact.
 
-## 10) Phase de validation
-- Verifier que le plan est executable tel quel.
-- Verifier coherence des priorites.
-- Verifier dependances/prerequis (factualises ou explicitement hypotheses).
-- Verifier qu'il existe une prochaine action immediate claire.
-
-## 11) Comportement commit
-- Commit uniquement sur demande explicite.
-- Inclure uniquement les fichiers attendus.
-- Si fichier inattendu apparait: stopper et signaler avant commit.
-
-## 12) Comportement push
-- Push uniquement sur demande explicite.
-- Reconfirmer remote/repo/branche avant push.
-- Ne pas pousser hors cible validee.
-
-## 13) Comportement PR
-- PR uniquement sur demande explicite.
-- Ne jamais creer de PR par defaut.
-- Verifier base/head/scope avant creation.
-
-## 14) Cloture / handoff
-- Fournir un plan final lisible:
-  - objectif
-  - priorites
-  - sequence
-  - bloqueurs/dependances
-  - prochaine action
-- Donner les options si plusieurs chemins valides existent.
-
-## 15) Comportement de tracabilite
-- Tracer si: decision de priorite, changement important de sequence, bloqueur critique, ambiguite bloquante, warning de planification.
-- Eviter duplication des traces.
-- Pas de trace pour micro-ajustements sans impact.
-
-## 16) Rappel neutralite inter-agents
+## 10) Rappel neutralite inter-agents
 - Aucun mode rivalite.
-- Ne pas ecraser le travail de planification precedent sans justification.
-- Reutiliser et ameliorer l'existant avant de remplacer.
+- Interdit : sabotage, ralentissement volontaire, ecrasement/effacement sans justification.
+- Respecter et reutiliser le travail existant quand il est sain.
+- Si obsolete ou faible : expliquer pourquoi et proposer une voie plus propre.
 
-## 17) Esprit d'amelioration continue disciplinee
-- Ajuster les methodes de planification selon retours reels.
-- Simplifier quand possible.
-- Eviter la complexite gratuite.
-- Integrer les ameliorations progressivement sans destabiliser le SCC.
+## 11) Esprit d'amelioration continue disciplinee
+- Verifier s'il existe une option plus robuste, simple ou rapide adaptee au besoin.
+- Ne pas garder une pratique obsolete par habitude.
+- Eviter le changement pour la nouveaute seule.
+- Integrer les ameliorations de facon propre, progressive et stable.
 
 ---
-
-## Garde-fous explicites
-- Interdit: plan vague sans valeur d'execution.
-- Interdit: transformer la planification en recherche sans fin.
-- Interdit: inventer des dependances sans evidence.
-- Interdit: ajouter de la complexite non necessaire.
-- Interdit: dupliquer des plans sans objectif clair.
-- Interdit: melanger Notes-Perso et planification partagee.
-- Interdit: traiter toutes les taches comme egalement urgentes.
 
 ## Blocs de prompt reutilisables
 
 ### A) Start workflow
 ```text
-Applique le workflow "Workflow-Agent-Planification-Organisation".
-Contexte: <scope>.
-Avant toute action: confirme les regles lues (AGENTS.md + Multi-Agent-Collaboration + AGENT-INSTRUCTIONS projet si present), le scope, les contraintes, et le livrable attendu.
+Applique le workflow SCC correspondant a cette mission.
+Contexte : <projet/scope>.
+Avant toute action : confirme les regles lues (`AGENTS.md`, `AGENT-INSTRUCTIONS` projet si present, bureau agent si pertinent), le scope autorise, et l'etat de depart utile.
 ```
 
-### B) Inspect/plan only
+### B) Apply changes
 ```text
-Fais uniquement une planification/organisation sur le scope donne.
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-Retourne: objectif, etapes ordonnees, priorites, bloqueurs, prochaine action.
+Applique uniquement les changements demandes dans le scope suivant : <scope>.
+Contraintes : modifications minimales, aucun fichier hors scope, aucune suppression ou refactor large non demande.
+Explique brievement ce que tu modifies et pourquoi.
 ```
 
-### C) Prioritize only
+### C) Validation
 ```text
-Priorise uniquement les taches fournies selon impact, urgence, risque, dependances et effort.
-Ne fais pas d'execution hors scope.
-Retourne une liste priorisee avec rationale court.
+Execute la validation adaptee au scope.
+Si une validation est impossible, indique clairement pourquoi.
+Retourne un resultat simple : OK / KO + points de risque restants.
 ```
 
-### D) Sequence only
+### D) Close / summarize
 ```text
-Sequence uniquement les actions en ordre d'execution realiste.
-Indique prerequis, dependances et parallelisable/non-parallele.
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-```
-
-### E) Validate only
-```text
-Valide uniquement la qualite du plan:
-- clarte
-- executabilite
-- priorites coherentes
-- dependances explicites
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-```
-
-### F) Commit only
-```text
-Cree un commit unique avec uniquement les fichiers attendus.
-Si fichier inattendu: stop et rapport.
-Ne push pas, ne cree pas de PR.
-Message: "<message>".
-```
-
-### G) Push only
-```text
-Pousse uniquement la branche demandee vers le remote/repo valide.
-Ne modifie aucun fichier, ne cree pas de PR.
-Retourne: succes/erreur, branche distante, hash final.
-```
-
-### H) PR only
-```text
-Cree une PR uniquement si explicitement demande.
-Verifie base/head/titre/resume/scope avant creation.
-Ne depasse pas le scope de la mission.
-```
-
-### I) Close / summarize
-```text
-Cloture avec:
-1) objectif et scope final
-2) priorites retenues
-3) sequence proposee
-4) bloqueurs/dependances
-5) prochaine action recommandee
-6) statut commit/push/PR
+Cloture la mission avec :
+1) fichiers modifies
+2) resume court des changements
+3) validations executees et resultat
+4) risques/limites restants
+5) prochaines etapes recommandees
+Confirme explicitement s'il y a eu commit/push/PR ou non.
 ```

@@ -1,178 +1,94 @@
 # Workflow Agent Automation NoCode (SCC)
 
 ## 1) But du workflow
-Definir un cadre operationnel pour tout agent IA dont le role principal est de concevoir, structurer, clarifier, ameliorer ou valider des systemes d'automatisation/no-code dans le SCC.
-Ce workflow est defini par type d'agent (automation/no-code) et environnement, jamais par identite d'entreprise ou de modele.
+Definir un cadre operationnel commun pour tout agent IA qui travaille dans le SCC selon ce role et cet environnement.
+Le workflow est base sur le type d'agent et l'environnement, jamais sur une entreprise ou un modele.
 
 ## 2) Quand utiliser ce workflow
-- Concevoir une logique d'automatisation.
-- Structurer triggers, actions, conditions, routages.
-- Identifier dependances, points de panne, cas limites.
-- Organiser des flows no-code operationnels.
-- Reduire des etapes manuelles quand c'est justifie.
-- Preparer une automatisation pour execution/implementation ulterieure.
+- Toute mission SCC executee principalement via plateforme no-code, automatisation visuelle ou orchestration sans IDE principal.\n- Toute tache ou l'interface d'automatisation est l'environnement de travail principal.
 
 ## 3) Quand NE PAS utiliser ce workflow
-- Tache de codage principal (utiliser workflow codage/IDE).
-- Recherche generale sans travail de flux automation concret.
-- Execution git (commit/push/PR) non demandee explicitement.
-- Refonte globale non demandee.
+- Tache de codage ou script avec terminal/IDE principal.\n- Tache purement documentaire sans outil no-code central.\n- Action bloquee par regles de securite sans autorisation explicite.
 
 ## 4) Sequence de demarrage obligatoire
 1. Lire `AGENTS.md`.
-2. Lire `Resources/Systeme/Multi-Agent-Collaboration.md`.
-3. Lire `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
-4. Clarifier objectif metier, scope, contraintes et criteres de succes.
-5. Verifier ce qui est deja automatise vs manuel.
+2. Lire le fichier `Projects/<Projet>/AGENT-INSTRUCTIONS.md` si un projet est cible.
+3. Lire le bureau agent concerne s'il existe et s'il est utile a la mission.
+4. Verifier le scope demande (fichiers autorises, contraintes, commit/push/PR).
+5. Verifier l'etat de depart pertinent pour l'environnement utilise.
 
-## 5) Clarification du scope avant travail automation
-- Definir le perimetre exact du flux.
-- Lister entrees/sorties attendues.
-- Identifier prerequis et systemes externes.
-- Bloquer si hypothese critique non confirmee.
-- Ne pas elargir le flux sans demande explicite.
+## 5) Verification frontiere Notes / Notes-Perso
+- Ecrire les informations operationnelles dans `Notes/` uniquement.
+- Ne jamais modifier `Notes-Perso/` (zone personnelle de Paw).
+- En cas de doute sur la destination d'une note, demander avant d'ecrire.
 
-## 6) Verification frontiere Notes / Notes-Perso
-- Les elements operationnels vont dans `Notes/` ou docs partagees pertinentes.
-- `Notes-Perso/` reste personnel et non modifiable par les agents.
-- Ne jamais melanger contenu personnel et planification automation partagee.
+## 6) Regles d'execution
+- Comprendre l'existant avant de modifier.
+- Priorite : ameliorer/clarifier l'existant plutot que re-ecrire sans raison.
+- Changer uniquement les fichiers dans le scope demande.
+- Pas de refactor large si non demande.
+- Rester minimal, explicite et reproductible.
 
-## 7) Regles d'execution automation/no-code
-- Prioriser robustesse, lisibilite et maintenabilite du flux.
-- Exprimer clairement trigger -> conditions -> actions -> sorties.
-- Eviter over-automation: automatiser seulement si gain reel.
-- Conserver une option fallback manuelle si pertinent.
-- Documenter intention, limites et hypotheses du flux.
+## 7) Phase de validation
+- Lancer les verifications pertinentes selon le scope.
+- Si validation impossible, l'indiquer clairement avec la raison.
+- Confirmer l'impact reel et les limites connues.
 
-## 8) Conscience logique / dependances / points de panne
-- Verifier dependances techniques et operationnelles avant design final.
-- Signaler points de panne probables et impact associe.
-- Inclure cas limites et scenarios d'erreur.
-- Ne pas inventer dependances sans evidence.
-- Indiquer ce qui est bloqueur vs risque mineur.
+## 8) Cloture / handoff
+- Resumer : fichiers modifies, decisions prises, validations executees, risques restants.
+- Indiquer les prochaines actions logiques.
+- Laisser un etat propre pour l'agent suivant.
 
-## 9) Anti-duplication / source unique
-- Eviter duplications de flux ou de logique.
-- Reutiliser logique existante si deja validee.
-- Maintenir une source principale de verite par automatisation.
-- Ajouter un renvoi court au lieu de recopier une specification.
+## 9) Comportement de tracabilite
+- Appliquer la politique SCC de tracabilite minimale de `AGENTS.md`.
+- Laisser une trace pour : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
+- Eviter la duplication : une source principale + renvoi court si besoin.
+- Ne pas tracer les micro-actions sans impact.
 
-## 10) Phase de validation
-- Verifier coherence du flux de bout en bout.
-- Verifier conditions de declenchement et sortie attendue.
-- Verifier scenarios d'echec et comportement fallback.
-- Verifier clarté: un autre agent doit pouvoir executer/implementer sans ambiguite.
-
-## 11) Comportement commit
-- Commit uniquement sur demande explicite.
-- Inclure uniquement les fichiers attendus.
-- Si fichier inattendu apparait: stopper et signaler avant commit.
-
-## 12) Comportement push
-- Push uniquement sur demande explicite.
-- Reconfirmer branche/repo/remote cible avant push.
-- Ne pas pousser hors cible validee.
-
-## 13) Comportement PR
-- PR uniquement sur demande explicite.
-- Ne jamais creer de PR par defaut.
-- Verifier base/head/scope avant creation.
-
-## 14) Cloture / handoff
-- Fournir un resume exploitable:
-  - but du flux
-  - logique principale
-  - dependances
-  - risques/points de panne
-  - prochaine action recommandee
-- Laisser un contexte clair pour implementation ulterieure.
-
-## 15) Comportement de tracabilite
-- Tracer si: decision de design, erreur/lacune critique, warning, ambiguite bloquante, changement important du flux.
-- Eviter duplication des traces.
-- Pas de trace pour micro-ajustements sans impact.
-
-## 16) Rappel neutralite inter-agents
+## 10) Rappel neutralite inter-agents
 - Aucun mode rivalite.
-- Interdit: sabotage, ralentissement volontaire, ecrasement sans justification.
-- Reutiliser et ameliorer l'existant avant remplacement.
+- Interdit : sabotage, ralentissement volontaire, ecrasement/effacement sans justification.
+- Respecter et reutiliser le travail existant quand il est sain.
+- Si obsolete ou faible : expliquer pourquoi et proposer une voie plus propre.
 
-## 17) Esprit d'amelioration continue disciplinee
-- Chercher des optimisations utiles et stables.
-- Ne pas automatiser pour automatiser.
-- Integrer les ameliorations progressivement sans destabiliser les operations.
-- Reevaluer regulierement manuel vs auto selon cout/risque.
+## 11) Esprit d'amelioration continue disciplinee
+- Verifier s'il existe une option plus robuste, simple ou rapide adaptee au besoin.
+- Ne pas garder une pratique obsolete par habitude.
+- Eviter le changement pour la nouveaute seule.
+- Integrer les ameliorations de facon propre, progressive et stable.
 
 ---
-
-## Garde-fous explicites
-- Interdit: construire une automation sur hypotheses vagues.
-- Interdit: sur-automatiser sans besoin reel.
-- Interdit: inventer dependances sans evidence.
-- Interdit: creer un flux fragile sans signaler les risques.
-- Interdit: melanger Notes-Perso et travail partage.
-- Interdit: dupliquer logiques/automations sans valeur.
-- Interdit: supposer que l'automatique est toujours meilleure que le manuel.
 
 ## Blocs de prompt reutilisables
 
 ### A) Start workflow
 ```text
-Applique le workflow "Workflow-Agent-Automation-NoCode".
-Contexte: <scope>.
-Avant toute action: confirme les regles lues (AGENTS.md + Multi-Agent-Collaboration + AGENT-INSTRUCTIONS projet si present), le scope exact, les contraintes, et les criteres de succes.
+Applique le workflow SCC correspondant a cette mission.
+Contexte : <projet/scope>.
+Avant toute action : confirme les regles lues (`AGENTS.md`, `AGENT-INSTRUCTIONS` projet si present, bureau agent si pertinent), le scope autorise, et l'etat de depart utile.
 ```
 
-### B) Inspect/automation-context only
+### B) Apply changes
 ```text
-Fais uniquement une analyse du contexte automation/no-code existant.
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-Retourne: flux existants, dependances, points de panne, zones ambiguës.
+Applique uniquement les changements demandes dans le scope suivant : <scope>.
+Contraintes : modifications minimales, aucun fichier hors scope, aucune suppression ou refactor large non demande.
+Explique brievement ce que tu modifies et pourquoi.
 ```
 
-### C) Design flow only
+### C) Validation
 ```text
-Concois uniquement le flux d'automatisation dans le scope donne.
-Structure: trigger -> conditions -> actions -> sorties -> fallback.
-Ne commit pas, ne push pas, ne cree pas de PR.
+Execute la validation adaptee au scope.
+Si une validation est impossible, indique clairement pourquoi.
+Retourne un resultat simple : OK / KO + points de risque restants.
 ```
 
-### D) Validate logic only
+### D) Close / summarize
 ```text
-Valide uniquement la logique du flux (coherence, dependances, cas limites, risques).
-Ne modifie aucun fichier, ne commit pas, ne push pas, ne cree pas de PR.
-Retourne: OK/KO + risques residuels.
-```
-
-### E) Commit only
-```text
-Cree un commit unique avec uniquement les fichiers attendus.
-Si fichier inattendu: stop et rapport.
-Ne push pas, ne cree pas de PR.
-Message: "<message>".
-```
-
-### F) Push only
-```text
-Pousse uniquement la branche demandee vers le remote/repo valide.
-Ne modifie aucun fichier, ne cree pas de PR.
-Retourne: succes/erreur, branche distante, hash final.
-```
-
-### G) PR only
-```text
-Cree une PR uniquement si explicitement demande.
-Verifie base/head/titre/resume/scope avant creation.
-Ne depasse pas le scope de la mission.
-```
-
-### H) Close / summarize
-```text
-Cloture avec:
-1) but du flux
-2) logique proposee
-3) dependances/prerequis
-4) points de panne/risques
-5) prochaine etape recommandee
-6) statut commit/push/PR
+Cloture la mission avec :
+1) fichiers modifies
+2) resume court des changements
+3) validations executees et resultat
+4) risques/limites restants
+5) prochaines etapes recommandees
+Confirme explicitement s'il y a eu commit/push/PR ou non.
 ```

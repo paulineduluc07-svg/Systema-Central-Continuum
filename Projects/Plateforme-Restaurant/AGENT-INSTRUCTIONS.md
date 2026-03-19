@@ -1,33 +1,29 @@
 # AGENT-INSTRUCTIONS -- Plateforme Restaurant
 
 Lire avant toute intervention sur ce projet.
-Regles generales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Regles generales : voir `../../AGENTS.md`
 Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
 
 ## Contexte du projet
-**Plateforme Restaurant** -- Gestion resto V1.
-**Stack :** Airtable + Make.com
-**Local :** Aucun repo code -- tout est organise dans le SCC et les outils no-code cibles.
+**Plateforme Restaurant** -- Projet en cadrage dans le SCC.
+Code actif : `Projects/Plateforme-Restaurant/Code/`.
 
 ## Etat actuel (2026-03-18)
-- Documentation numerique a construire
-- Plateforme a cadrer puis construire from scratch
-- Source de donnees non arretee : blocage a lever avant toute implementation
+- Structure projet en place
+- Source de donnees et implementation pas encore validees
+- Aucun demarrage d'implementation autorise sans validation explicite de la source de donnees
 
 ## Ce dossier contient
-- `Notes/` -- reflexions, structure Airtable, workflows
-- `Prompts/` -- prompts IA specifiques
-- `Assets/` -- exports, references
-- `Livrables/` -- livrables finaux
-- `Todo.md` -- taches en cours
-- `Roadmap.md` -- vision et etapes
+- Notes/ -- contexte, decisions et cadrage
+- Prompts/ -- prompts de travail pour le projet
+- Assets/ -- references et maquettes
+- Livrables/ -- exports finaux
+- Todo.md -- taches en cours
+- Roadmap.md -- vision et etapes
 
-## Priorite actuelle
-- Cadrer la source de donnees
-- Definir le perimetre exact de la V1
-- Formaliser la structure Airtable initiale avant execution
+## Priorites actuelles
+- Finaliser le cadrage fonctionnel
+- Valider la source de donnees
+- Eviter toute implementation prematuree
 
-## Garde-fou projet
-- Aucune implementation, automatisation ou construction de schema ne doit commencer tant que la source de donnees n'a pas ete validee explicitement par Paw.
-
-*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
+*Mis a jour : 2026-03-19 | Paw -- Systema Central Continuum*

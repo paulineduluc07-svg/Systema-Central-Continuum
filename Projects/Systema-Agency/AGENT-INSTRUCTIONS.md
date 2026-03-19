@@ -1,7 +1,7 @@
 # AGENT-INSTRUCTIONS -- Systema Agency
 
 Lire avant toute intervention sur ce projet.
-Regles generales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Regles generales : voir `../../AGENTS.md`
 Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
 
 ## Contexte du projet
@@ -31,4 +31,4 @@ Deploie : `systema-agency.vercel.app`
 - Redesign dashboard
 - Integrer l'avatar Life Command et clarifier le suivi pilule
 
-*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
+*Mis a jour : 2026-03-19 | Paw -- Systema Central Continuum*
