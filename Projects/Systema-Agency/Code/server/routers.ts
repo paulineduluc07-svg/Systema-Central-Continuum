@@ -286,7 +286,7 @@ export const appRouter = router({
 
   // AI Chat API — Life-Command Agent
   ai: router({
-    chat: publicProcedure
+    chat: protectedProcedure
       .input(z.object({
         messages: z.array(z.object({
           role: z.enum(["system", "user", "assistant"]),
@@ -332,7 +332,7 @@ export const appRouter = router({
       }),
 
     // Categorize content for the Life-Command pipeline
-    categorize: publicProcedure
+    categorize: protectedProcedure
       .input(z.object({
         content: z.string(),
         type: z.enum(["memo", "bookmark", "idea", "document", "photo"]).optional(),

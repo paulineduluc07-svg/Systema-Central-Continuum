@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 
 const STORAGE_KEY = "systema_auth_ok";
-const PASSWORD = import.meta.env.VITE_APP_PASSWORD ?? "systema2026";
+const PASSWORD = import.meta.env.VITE_APP_PASSWORD?.trim();
 
 interface PasswordGateProps {
   children: ReactNode;
@@ -15,7 +15,7 @@ export function PasswordGate({ children }: PasswordGateProps) {
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
 
-  if (unlocked) return <>{children}</>;
+  if (!PASSWORD) return <>{children}</>;`n  if (unlocked) return <>{children}</>;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

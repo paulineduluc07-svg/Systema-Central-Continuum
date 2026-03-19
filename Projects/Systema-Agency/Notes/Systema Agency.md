@@ -41,5 +41,7 @@ Interface "Cozy Gaming UI" tactile, coloree et organisee par onglets.
 [2026-03-08] Transfert complet depuis backup SCC.
 [2026-03-17] Validation import GitHub -> SCC.
 [2026-03-18] Audit documentaire SCC : remise a niveau du contexte et des priorites du projet.
+[2026-03-19] Vague 1 securite: retrait fallback mot de passe client, retrait gate global, protection des endpoints ai.chat/categorize, rate-limit ajoute sur /api.
 
-*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
+
+*Mis a jour : 2026-03-19 | Paw -- Systema Central Continuum*
