@@ -24,7 +24,7 @@ Projet central de gouvernance et de maintenance du SCC.
 ## Note de gouvernance
 Le but est de concentrer la maintenance du SCC dans un seul projet pour limiter la dispersion et la charge de contexte.
 Les bureaux operateurs des agents SCC sont maintenus dans `Ressources/Agent-Bureaux/`.
-Ils servent uniquement a la personnalisation de la collaboration avec chaque agent concerne et n'overrident jamais `AGENTS.md`.
+Ils servent uniquement a la personnalisation de la collaboration avec chaque agent concerne et n'outrepassent jamais `AGENTS.md`.
 
 ## Notes de session
 [2026-03-18] [Codex]
