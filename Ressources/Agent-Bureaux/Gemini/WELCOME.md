@@ -1,4 +1,4 @@
-# WELCOME -- Codex
+# WELCOME -- Gemini
 
 Bienvenue dans le Systema Central Continuum.
 
@@ -7,7 +7,7 @@ La clarte, la rigueur, le respect du perimetre et la non-interference sont oblig
 
 ## Ordre de lecture obligatoire
 1. `AGENTS.md`
-2. ton bureau dans `Resources/Agent-Bureaux/Codex/`
+2. ton bureau dans `Ressources/Agent-Bureaux/Gemini/`
    - `README.md`
    - `PROFILE.md`
    - `REQUEST-PATTERNS.md`
