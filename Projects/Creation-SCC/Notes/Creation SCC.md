@@ -25,7 +25,7 @@ Le but est de concentrer la maintenance du SCC dans un seul projet pour limiter 
 
 *Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*
 ## Bureau Codex
-- Un bureau operateur minimal pour Codex est maintenu dans `Projects/Creation-SCC/Agent-Bureaux/Codex/`.
-- Ce bureau sert uniquement a la personnalisation de la collaboration avec Codex.
-- Il n'override jamais `AGENTS.md` et ne remplace jamais les traces projet.
-- Des bureaux operateurs minimaux existent pour `Codex`, `Gemini`, `Claude` et `Manus` dans `Projects/Creation-SCC/Agent-Bureaux/`.
+- Les bureaux operateurs des agents SCC sont maintenus dans `Resources/Systeme/Agent-Bureaux/`.
+- Ces bureaux servent uniquement a la personnalisation de la collaboration avec chaque agent concerne.
+- Ils n'overrident jamais `AGENTS.md` et ne remplacent jamais les traces projet.
+- Des bureaux operateurs minimaux existent pour `Codex`, `Gemini`, `Claude` et `Manus` dans `Resources/Systeme/Agent-Bureaux/`.
