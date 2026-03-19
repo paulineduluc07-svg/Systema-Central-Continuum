@@ -2,7 +2,7 @@
 
 Ce fichier est la source de verite unique des regles agents pour ce depot.
 Tout le reste doit rester aligne avec ce fichier.
-Les autres documents systeme ne doivent pas re-porter la meme gouvernance en double.
+Les autres documents systeme ne doivent pas reporter la meme gouvernance en double.
 
 ## Portee
 - Systeme multi-agent base sur role + contexte.
