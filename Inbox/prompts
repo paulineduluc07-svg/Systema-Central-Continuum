@@ -1,134 +1,83 @@
-Prompts SCC - version simple
+SCC CLI - PROMPTS MINIMUM (ANTI-BUG)
 
-Objectif:
-- commandes courtes
-- scope clair
-- zero ambiguite
-
-Regle globale:
-- si un chemin manque ou est ambigu: STOP + 1 question claire
+But:
+- simple
+- clair
+- sans ambiguite
 
 ==================================================
-0) VERROU REMOTE ONLY (A METTRE EN TETE)
+0) TEST SANTE (A LANCER EN PREMIER)
 ==================================================
 
-REMOTE ONLY obligatoire:
-- depot: `paulineduluc07-svg/Systema-Central-Continuum`
-- branche: `main`
-- racine: `Ressources`
-- commandes autorisees uniquement:
-  1) `gh auth status`
-  2) `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
-- interdit: toute lecture/ecriture locale (`C:\...`, git local, filesystem local)
-- si une action sort de ce cadre: STOP + 1 question claire
+Commande exacte:
+`gh api 'repos/paulineduluc07-svg/Systema-Central-Continuum/contents/Ressources/Agent-Bureaux/Codex/WELCOME.md?ref=main' --jq .sha`
+
+Si ca echoue:
+- STOP
+- poser 1 question claire
 
 ==================================================
-1) COMMANDE BIENVENUE (UNE SEULE FOIS)
+1) PROMPT BIENVENUE (UNE SEULE FOIS)
 ==================================================
 
 Mode accueil SCC - EXECUTION STRICTE
 
 REMOTE ONLY obligatoire:
-- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
-- aucun acces local
+- depot: `paulineduluc07-svg/Systema-Central-Continuum`
+- branche: `main`
+- commandes autorisees uniquement:
+  1) `gh auth status`
+  2) `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+- interdit: toute lecture/ecriture locale (`C:\...`, git local, filesystem local)
 
-NomAgent: `<NomAgent>`
+Chemins figes (sensibles a la casse):
+1. `AGENTS.md`
+2. `Ressources/Agent-Bureaux/Codex/WELCOME.md`
+3. `Ressources/Agent-Bureaux/Codex/README.md`
+4. `Ressources/Agent-Bureaux/Codex/PROFILE.md`
+5. `Ressources/Agent-Bureaux/Codex/REQUEST-PATTERNS.md`
+6. `Ressources/Agent-Bureaux/Codex/WATCHPOINTS.md`
 
 Mission:
-1. Lire exactement, dans cet ordre:
-   1) `AGENTS.md`
-   2) `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
-   3) `Ressources/Agent-Bureaux/<NomAgent>/README.md`
-   4) `Ressources/Agent-Bureaux/<NomAgent>/PROFILE.md`
-   5) `Ressources/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
-   6) `Ressources/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
-2. Repondre uniquement dans `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
-3. Ne rien modifier d'autre
-4. Aucun plan, aucune analyse globale, aucun commit/push/PR
+- lire ces fichiers dans cet ordre
+- repondre uniquement dans `Ressources/Agent-Bureaux/Codex/WELCOME.md`
+- ne rien modifier ailleurs
+- aucun plan, aucune analyse globale, aucun commit/push/PR
+
+Regle d'arret:
+- si un chemin manque ou est ambigu: STOP + 1 question claire
 
 ==================================================
-2) COMMANDE MISSION (EXECUTION)
+2) PROMPT MISSION (TOUTES LES AUTRES FOIS)
 ==================================================
 
 Mode mission SCC - EXECUTION STRICTE
 
 REMOTE ONLY obligatoire:
-- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
-- aucun acces local
+- depot: `paulineduluc07-svg/Systema-Central-Continuum`
+- branche: `main`
+- commandes autorisees uniquement:
+  1) `gh auth status`
+  2) `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+- interdit: toute lecture/ecriture locale (`C:\...`, git local, filesystem local)
 
 Mission:
 `<ECRIRE LA DEMANDE EXACTE>`
 
 Contraintes:
-- modifier uniquement les fichiers necessaires a la mission
+- modifier uniquement les fichiers du scope demande
 - pas de suppression/refactor majeur sans validation
 - commit/push/PR uniquement si explicitement demande
 - cloture courte: fichiers modifies + validations + risques
 
-==================================================
-3) COMMANDE AUDIT (SANS MODIFICATION)
-==================================================
-
-Mode audit SCC - LECTURE SEULE
-
-REMOTE ONLY obligatoire:
-- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
-- aucun acces local
-
-Mission:
-- auditer le scope suivant: `<SCOPE>`
-- ne modifier aucun fichier
-- retour attendu:
-  1) problemes trouves (ordonnes par severite)
-  2) corrections minimales proposees
-  3) risques restants
+Regle d'arret:
+- si un chemin manque ou est ambigu: STOP + 1 question claire
 
 ==================================================
-4) COMMANDE CREATION-SCC (GOUVERNANCE)
-==================================================
-
-Mode Creation-SCC - EXECUTION STRICTE
-
-REMOTE ONLY obligatoire:
-- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
-- aucun acces local
-
-Lecture minimum:
-1. `AGENTS.md`
-2. `Projects/Creation-SCC/AGENT-INSTRUCTIONS.md`
-3. bureau agent si utile
-
-Mission:
-`<ECRIRE LA DEMANDE DE GOUVERNANCE>`
-
-Contraintes:
-- rester dans la gouvernance SCC
-- ne pas melanger avec le travail metier des projets
-- cloture courte: fichiers modifies + validations + risques
-
-==================================================
-5) COMMANDE CORRECTION FICHIER UNIQUE
-==================================================
-
-Mode correction ciblee - EXECUTION STRICTE
-
-REMOTE ONLY obligatoire:
-- `gh auth status` + `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...` uniquement
-- aucun acces local
-
-Mission:
-- corriger uniquement ce fichier: `<CHEMIN_FICHIER>`
-- objectif: `<CORRECTION_PRECISE>`
-
-Contraintes:
-- zero changement hors fichier cible
-- aucun commit/push/PR sauf demande explicite
-
-==================================================
-RAPPEL SIMPLE
+RAPPEL OPERATIONNEL
 ==================================================
 
 Ordre d'usage:
-1) Bienvenue (une fois)
-2) Mission ou Audit ou Creation-SCC
-3) Reutiliser les commandes 2/3/4/5 ensuite
+1) lancer TEST SANTE
+2) lancer BIENVENUE une seule fois
+3) ensuite utiliser MISSION uniquement
