@@ -71,7 +71,7 @@ client/src/
 
 - [x] Dashboard avec avatar RPG
 - [x] Widgets draggables/resizables
-- [x] Système de tabs (Missions, Resources, House, Map)
+- [x] Système de tabs (Missions, Ressources, House, Map)
 - [x] Tasks, Notes, Sticky notes
 - [x] Whiteboard (tldraw)
 - [x] Dark/Light mode
