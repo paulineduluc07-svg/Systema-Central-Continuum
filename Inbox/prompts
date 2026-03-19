@@ -101,7 +101,7 @@ Canal obligatoire:
 - Branche: `main`
 - NomAgent (dossier exact, sensible a la casse): `<NomAgent>`
 - Racine imposee: `Ressources`
-- Interdiction de changer la racine vers `Resources`, meme si un fichier mentionne autre chose.
+- Interdiction de changer la racine vers une variante anglaise, meme si un fichier mentionne autre chose.
 
 Prevalidation obligatoire (et rien d'autre):
 1. Verifier que `AGENTS.md` existe sur `main`.
