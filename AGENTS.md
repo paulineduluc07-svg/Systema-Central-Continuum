@@ -39,7 +39,7 @@ Les autres documents systeme ne doivent pas reporter la meme gouvernance en doub
    - nouvelle feature majeure
 8. Commit/push/PR uniquement sur demande explicite.
 9. Les changements de gouvernance SCC se traitent dans `Projects/Creation-SCC/`.
-10. Les bureaux agents sont maintenus dans `Ressources/Agent-Bureaux/` et n'override jamais `AGENTS.md`.
+10. Les bureaux agents sont maintenus dans `Ressources/Agent-Bureaux/` et n'outrepasse jamais `AGENTS.md`.
 11. Si une contradiction apparait, `AGENTS.md` fait foi.
 
 ## Amelioration continue disciplinee
