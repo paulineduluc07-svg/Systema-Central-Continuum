@@ -5,10 +5,13 @@ Definir un cadre operationnel commun pour tout agent IA qui travaille dans le SC
 Le workflow est base sur le type d'agent et l'environnement, jamais sur une entreprise ou un modele.
 
 ## 2) Quand utiliser ce workflow
-- Toute mission executee principalement via GitHub, gh CLI ou API GitHub.\n- Toute tache ou la source de verite se lit et se modifie directement sur GitHub.
+- Toute mission executee principalement via GitHub, gh CLI ou API GitHub.
+- Toute tache ou la source de verite se lit et se modifie directement sur GitHub.
 
 ## 3) Quand NE PAS utiliser ce workflow
-- Tache purement locale sans interaction GitHub.\n- Tache qui demande un IDE ou un environnement graphique comme surface principale.\n- Action bloquee par regles de securite sans autorisation explicite.
+- Tache purement locale sans interaction GitHub.
+- Tache qui demande un IDE ou un environnement graphique comme surface principale.
+- Action bloquee par regles de securite sans autorisation explicite.
 
 ## 4) Sequence de demarrage obligatoire
 1. Lire `AGENTS.md`.
@@ -16,6 +19,15 @@ Le workflow est base sur le type d'agent et l'environnement, jamais sur une entr
 3. Lire le bureau agent concerne s'il existe et s'il est utile a la mission.
 4. Verifier le scope demande (fichiers autorises, contraintes, commit/push/PR).
 5. Verifier l'etat de depart pertinent pour l'environnement utilise.
+
+## 4.1) Verrou Remote Only (quand demande explicitement)
+- Interdiction totale d'acces local: pas de chemins `C:\...`, pas de git local, pas de lecture/ecriture filesystem local.
+- Commandes autorisees uniquement:
+  1. `gh auth status`
+  2. `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+- Toute commande hors whitelist: STOP immediat + 1 question claire.
+- Branche cible par defaut: `main`.
+- En cas d'echec reseau/sandbox: relancer la meme commande avec elevation, sans changer le scope.
 
 ## 5) Verification frontiere Notes / Notes-Perso
 - Ecrire les informations operationnelles dans `Notes/` uniquement.
@@ -66,6 +78,7 @@ Le workflow est base sur le type d'agent et l'environnement, jamais sur une entr
 Applique le workflow SCC correspondant a cette mission.
 Contexte : <projet/scope>.
 Avant toute action : confirme les regles lues (`AGENTS.md`, `AGENT-INSTRUCTIONS` projet si present, bureau agent si pertinent), le scope autorise, et l'etat de depart utile.
+Si mode remote-only explicitement demande : confirme la whitelist commandes (`gh auth status`, `gh api repos/...`) et l'interdiction locale.
 ```
 
 ### B) Apply changes
