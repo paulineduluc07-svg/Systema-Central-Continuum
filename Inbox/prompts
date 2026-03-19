@@ -5,6 +5,28 @@ Les regles globales vivent dans `AGENTS.md`.
 Les bureaux agents sont dans `Ressources/Agent-Bureaux/`.
 
 ==================================================
+0. MODE REMOTE ONLY (GITHUB DISTANT)
+==================================================
+
+Utiliser ce mode quand Paw demande explicitement un travail GitHub distant uniquement.
+
+Contraintes absolues:
+- Interdiction totale d'acces local (aucun chemin `C:\...`, aucun git local, aucune lecture/ecriture filesystem local).
+- Depot unique: `paulineduluc07-svg/Systema-Central-Continuum`
+- Branche unique: `main`
+- Racine imposee: `Ressources`
+- NomAgent impose: `Codex` (ou celui donne explicitement par Paw)
+- Si une action ne peut pas etre faite en distant uniquement: STOP + 1 question claire.
+
+Whitelist commandes:
+1. `gh auth status`
+2. `gh api repos/paulineduluc07-svg/Systema-Central-Continuum/...`
+
+Regle d'arret:
+- Toute commande hors whitelist => STOP immediat + 1 question claire.
+- Si chemin manquant/ambigu => STOP immediat + 1 question claire.
+
+==================================================
 1. PROMPT UNIVERSEL SCC
 ==================================================
 
@@ -68,32 +90,40 @@ Puis execute un controle final sur :
 - absence de lien interne casse si des docs ont ete modifiees
 
 ==================================================
-2. PROMPT ACCUEIL AGENT
+2. PROMPT ACCUEIL AGENT (REMOTE ONLY)
 ==================================================
 
-Mode accueil SCC. Ne fais aucune action hors de ce scope.
+Mode accueil SCC - EXECUTION STRICTE (GitHub distant uniquement)
 
-Ta mission se limite strictement a :
-1. lire tous les fichiers que tu dois lire pour entrer correctement dans le SCC
-2. repondre a ma note de bienvenue dans ton fichier `WELCOME.md`
-3. ne modifier aucun autre fichier
-4. ne proposer aucun plan
-5. ne lancer aucune analyse du repo
-6. ne faire aucun commit, push ou PR
+Canal obligatoire:
+- Lis uniquement le depot GitHub via `gh api` (pas de lecture locale, pas de filesystem local).
+- Repo: `paulineduluc07-svg/Systema-Central-Continuum`
+- Branche: `main`
+- NomAgent (dossier exact, sensible a la casse): `<NomAgent>`
+- Racine imposee: `Ressources`
+- Interdiction de changer la racine vers `Resources`, meme si un fichier mentionne autre chose.
 
-Ordre de lecture obligatoire :
-1. `AGENTS.md`
-2. `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
-3. `Ressources/Agent-Bureaux/<NomAgent>/README.md`
-4. `Ressources/Agent-Bureaux/<NomAgent>/PROFILE.md`
-5. `Ressources/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
-6. `Ressources/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
+Prevalidation obligatoire (et rien d'autre):
+1. Verifier que `AGENTS.md` existe sur `main`.
+2. Verifier que `Ressources/Agent-Bureaux/<NomAgent>/` existe sur `main`.
+- Si une verification echoue: STOP immediat + 1 seule question claire.
 
-Apres lecture :
-- reponds uniquement dans `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
-- n'ecris rien ailleurs
-- ne fais aucun resume global hors de ce fichier
-- si un fichier manque ou si la consigne est ambigue : STOP et pose 1 question claire
+Mission strictement limitee:
+1. Lire les fichiers dans cet ordre exact:
+   1) `AGENTS.md`
+   2) `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`
+   3) `Ressources/Agent-Bureaux/<NomAgent>/README.md`
+   4) `Ressources/Agent-Bureaux/<NomAgent>/PROFILE.md`
+   5) `Ressources/Agent-Bureaux/<NomAgent>/REQUEST-PATTERNS.md`
+   6) `Ressources/Agent-Bureaux/<NomAgent>/WATCHPOINTS.md`
+2. Repondre uniquement dans `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md`.
+3. Ne modifier aucun autre fichier.
+4. Ne proposer aucun plan.
+5. Ne lancer aucune analyse globale du repo.
+6. Aucun commit, push, PR.
+
+Regle d'arret:
+- Au moindre chemin manquant/ambigu: STOP + 1 seule question claire.
 
 ==================================================
 3. PROMPTS CREATION-SCC
