@@ -15,7 +15,8 @@ export function PasswordGate({ children }: PasswordGateProps) {
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
 
-  if (!PASSWORD) return <>{children}</>;`n  if (unlocked) return <>{children}</>;
+  if (!PASSWORD) return <>{children}</>;
+  if (unlocked) return <>{children}</>;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

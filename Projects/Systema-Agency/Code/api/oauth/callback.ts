@@ -2,9 +2,21 @@ import "dotenv/config";
 import { serialize } from "cookie";
 import { COOKIE_NAME, ONE_YEAR_MS } from "../../shared/const";
 import * as db from "../../server/db";
-import { sdk } from "../../server/_core/sdk";`nimport { consumeRateLimit, getClientIp } from "../../server/_core/rateLimit";
+import { sdk } from "../../server/_core/sdk";
+import { consumeRateLimit, getClientIp } from "../../server/_core/rateLimit";
 
-export default async function handler(req: any, res: any) {`n  const ip = getClientIp(req);`n  const limit = consumeRateLimit(`vercel-oauth:${ip}`, 30, 60_000);`n  res.setHeader("X-RateLimit-Limit", "30");`n  res.setHeader("X-RateLimit-Remaining", String(limit.remaining));`n  if (!limit.allowed) {`n    res.status(429).json({ error: "Too many requests" });`n    return;`n  }
+export default async function handler(req: any, res: any) {
+  const ip = getClientIp(req);
+  const limit = consumeRateLimit(`vercel-oauth:${ip}`, 30, 60_000);
+
+  res.setHeader("X-RateLimit-Limit", "30");
+  res.setHeader("X-RateLimit-Remaining", String(limit.remaining));
+
+  if (!limit.allowed) {
+    res.status(429).json({ error: "Too many requests" });
+    return;
+  }
+
   const code = req.query?.code as string | undefined;
   const state = req.query?.state as string | undefined;
 
