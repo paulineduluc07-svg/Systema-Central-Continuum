@@ -8,7 +8,7 @@ Ce dossier est le bureau operateur de Codex dans le SCC.
 - Eviter de disperser ces preferences dans plusieurs fichiers
 
 ## Garde-fous
-- Ce bureau n'override jamais `AGENTS.md`
+- Ce bureau n'outrepasse jamais `AGENTS.md`
 - Ce bureau ne remplace jamais les traces projet
 - Ce bureau ne sert pas a stocker le travail metier des projets
 - Toute execution reelle et toute trace de travail doivent rester dans les fichiers du projet concerne
