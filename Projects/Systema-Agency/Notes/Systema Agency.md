@@ -1,60 +1,45 @@
 Type : #context
 Subject : #business
 Status : #inprogress
-Date : 2026-03-08
+Date : 2026-03-18
 
-# PROJET — Systema Agency
+# PROJET -- Systema Agency
 
-## Ligne d'arrivée
-App de productivité opérationnelle — live, testée, bugs critiques corrigés.
+## Ligne d'arrivee
+App de productivite operationnelle live, testee et stable.
 
 ## C'est quoi
-Dashboard RPG de productivité pour neurodivergents.
-Interface "Cozy Gaming UI" — tactile, colorée, organisée par onglets comme un menu de jeu.
+Dashboard RPG de productivite pour neurodivergents.
+Interface "Cozy Gaming UI" tactile, coloree et organisee par onglets.
 
 ## Infos techniques
 - Stack : React 19 + Tailwind + shadcn/ui + Framer Motion
-- Tout le code est dans Projects/Systema-Agency/Code/
-- Live : https://systema-agency.vercel.app
+- Tout le code est dans `Projects/Systema-Agency/Code/`
+- Live : `https://systema-agency.vercel.app`
 
-## Design retenu : Cozy Gaming UI / Kawaii Tech
-- Boutons avec volume, ombres portées, effet d'enfoncement au clic
-- Navigation par onglets (Missions, Resources, House, Map)
-- Palette Candy & Pastel : Rose bonbon, Jaune or, Cyan
-- Édition directe — tout texte modifiable au clic
-- Police : Fredoka One / Nunito (titres), Quicksand (corps)
-
-## Ce qui marche (v actuelle)
-- [x] Dashboard avec avatar RPG
-- [x] Widgets draggables/resizables
-- [x] Systeme de tabs
-- [x] Tasks, Notes, Sticky notes, Whiteboard
-- [x] Dark/Light mode, Export PDF, Mode offline
-- [x] Auth + base de données cloud
+## Etat actuel
+- Import GitHub -> SCC valide : 173/173 fichiers, 0 mismatch SHA
+- Ancien repo archive en lecture seule jusqu'a suppression validee
+- Dashboard avec avatar RPG, widgets et tabs deja presents
+- Auth et certains points d'UX restent a finaliser
 
 ## Bugs connus
-| Bug | Fichier | Priorité |
+| Bug | Fichier | Priorite |
 |---|---|---|
-| URL hardcodée forge.butterfly-effect.dev | Map.tsx:92 | Moyenne |
-| Canvas vide (outils tldraw non chargés) | — | Haute |
-| CSS @import order warning | index.css | Basse |
+| URL hardcodee `forge.butterfly-effect.dev` | `Map.tsx` | Moyenne |
+| Canvas vide (outils tldraw non charges) | a confirmer | Haute |
+| Warning CSS `@import` order | `index.css` | Basse |
 
-## Prochaines étapes
-- Fix Map.tsx:92
-- Fix canvas tldraw vide
-- Widgets déplaçables librement
-- Sticky notes volantes
-- Widgets personnalisés par onglet
-- Avatar lumineux et déplaçable
-- Tester export PDF
-- Configurer domaine custom
+## Prochaines etapes
+- Implementer auth
+- Corriger `Map.tsx`
+- Corriger le canvas vide
+- Reprendre le redesign dashboard
+- Integrer l'avatar Life Command et clarifier le suivi pilule
 
 ## Notes de session
 [2026-03-08] Transfert complet depuis backup SCC.
+[2026-03-17] Validation import GitHub -> SCC.
+[2026-03-18] Audit documentaire SCC : remise a niveau du contexte et des priorites du projet.
 
-*Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
-
-## Post-migration (2026-03-17)
-- Import GitHub -> SCC valide: 173/173 fichiers, 0 mismatch SHA.
-- Source active: Projects/Systema-Agency/Code/.
-- Ancien repo: conserver temporairement en lecture seule jusqu'a suppression validee.
+*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*

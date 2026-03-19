@@ -12,7 +12,7 @@ Ce projet centralise les travaux qui touchent aux regles globales, a l'organisat
 - `Notes/` -- memoire operationnelle du SCC et decisions de gouvernance
 - `Prompts/` -- prompts utilitaires SCC si necessaire
 - `Assets/` -- support visuel ou schemas si necessaire
-- `Livrables/` -- exports ou livrables transverses si necessaire`r`n- `Agent-Bureaux/` -- bureaux operateurs minimaux reserves a la personnalisation de collaboration de certains agents
+- `Livrables/` -- exports ou livrables transverses si necessaire
 - `Todo.md` -- actions SCC en cours
 - `Roadmap.md` -- priorites et evolution du SCC
 
@@ -26,5 +26,6 @@ Ce projet centralise les travaux qui touchent aux regles globales, a l'organisat
 - Surveiller la coherence des regles SCC
 - Formaliser les evolutions structurelles du SCC
 - Limiter la dette documentaire et nettoyer les informations mortes
+- Garder les prompts et procedures SCC courts, stables et non ambigus
 
 *Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*

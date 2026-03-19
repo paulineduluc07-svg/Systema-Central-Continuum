@@ -9,7 +9,7 @@ Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce proje
 **Stack :** Airtable + Make.com
 **Local :** Aucun repo code -- tout est organise dans le SCC et les outils no-code cibles.
 
-## Etat actuel (2026-03-17)
+## Etat actuel (2026-03-18)
 - Documentation numerique a construire
 - Plateforme a cadrer puis construire from scratch
 - Source de donnees non arretee : blocage a lever avant toute implementation
@@ -27,6 +27,7 @@ Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce proje
 - Definir le perimetre exact de la V1
 - Formaliser la structure Airtable initiale avant execution
 
-*Mis a jour : 2026-03-17 | Paw -- Systema Central Continuum*
 ## Garde-fou projet
 - Aucune implementation, automatisation ou construction de schema ne doit commencer tant que la source de donnees n'a pas ete validee explicitement par Paw.
+
+*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*

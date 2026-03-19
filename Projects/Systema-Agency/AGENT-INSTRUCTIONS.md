@@ -1,30 +1,34 @@
-# AGENT-INSTRUCTIONS — Systema Agency
+# AGENT-INSTRUCTIONS -- Systema Agency
 
 Lire avant toute intervention sur ce projet.
-Règles générales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
-Ce fichier ajoute uniquement le contexte et les consignes spécifiques à ce projet.
+Regles generales : voir `../../AGENTS.md` et `../../Resources/Systeme/Multi-Agent-Collaboration.md`
+Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
 
 ## Contexte du projet
-**Systema Agency** — Agence systèmes numériques + PromptVault (tout est dans Systema Central Continuum, organisation IPARA).
+**Systema Agency** -- Agence systemes numeriques + PromptVault.
 Stack : TypeScript + Vite + Vercel Functions + Neon PostgreSQL.
-Déployé : systema-agency.vercel.app
+Code actif : `Projects/Systema-Agency/Code/`.
+Deploie : `systema-agency.vercel.app`
 
-## État actuel (2026-03-11)
-- Migration Neon PostgreSQL : complète ✅
-- API routes Vercel : déployées ✅
-- Auth OAuth Manus : non configurée → offline mode
-- Dashboard redesign : en attente (sticky notes + onglets + avatar Life Command)
+## Etat actuel (2026-03-18)
+- Migration GitHub -> SCC validee
+- Ancien repo archive en lecture seule
+- Migration Neon PostgreSQL complete
+- API routes Vercel deployees
+- Auth encore a finaliser
+- Dashboard redesign toujours en attente
 
 ## Ce dossier contient
-- Notes/ — décisions d'architecture, contexte
-- Prompts/ — prompts IA spécifiques
-- Assets/ — mockups dashboard, références
-- Livrables/ — exports finaux
-- Todo.md — tâches en cours
-- Roadmap.md — vision et étapes
+- Notes/ -- decisions d'architecture, contexte
+- Prompts/ -- prompts IA specifiques
+- Assets/ -- mockups dashboard, references
+- Livrables/ -- exports finaux
+- Todo.md -- taches en cours
+- Roadmap.md -- vision et etapes
 
-## Prochaines étapes
-1. Implémenter auth
-2. Redesign dashboard : sticky notes + onglets Santé/Finance/Carrière/Étude/Maison + avatar
+## Priorites actuelles
+- Implementer auth
+- Redesign dashboard
+- Integrer l'avatar Life Command et clarifier le suivi pilule
 
-*Mis à jour : 2026-03-11 | Paw — Systema Central Continuum*
+*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*

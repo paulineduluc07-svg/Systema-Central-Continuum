@@ -1,27 +1,26 @@
-# Roadmap — Systema Agency
+# Roadmap -- Systema Agency
 
-> Vision et étapes du projet.
+> Vision et etapes du projet.
 
 ---
 
 ## Vision
-
-Agence systèmes numériques + dashboard central de vie + PromptVault.
+Agence systemes numeriques + dashboard central de vie + PromptVault.
 Stack : TypeScript + Vite + Vercel Functions + Neon PostgreSQL.
 
-## État actuel
+## Etat actuel
+- [x] PromptVault en place
+- [x] Migration Neon PostgreSQL complete
+- [x] Deploiement Vercel actif
+- [x] Migration GitHub -> SCC validee
 
-- [x] PromptVault (31 prompts, 11 catégories) ✅
-- [x] Migration Neon PostgreSQL ✅
-- [x] Déployé sur Vercel ✅
-
-## Prochaines étapes
-
-- [ ] Auth (sans OAuth Manus)
+## Prochaines etapes
+- [ ] Auth
 - [ ] Redesign dashboard
-- [ ] Onglets Santé / Finance / Carrière / Étude / Maison
+- [ ] Onglets Sante / Finance / Carriere / Etude / Maison
 - [ ] Avatar Life Command
+- [ ] Stabilisation UX des modules existants
 
 ---
 
-*Mis à jour : 2026-03-11*
+*Mis a jour : 2026-03-18*

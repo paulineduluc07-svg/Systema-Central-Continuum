@@ -1,40 +1,41 @@
 Type : #context
 Subject : #business
 Status : #inprogress
-Date : 2026-03-08
+Date : 2026-03-18
 
-# PROJET — Plateforme Gestion Restaurant
+# PROJET -- Plateforme Gestion Restaurant
 
-## Ligne d'arrivée
-
-V1 fonctionnelle livrée — inventaire, recettes, menu, horaires, ventes.
+## Ligne d'arrivee
+V1 fonctionnelle livree : inventaire, recettes, menu, horaires et suivi des ventes.
 
 ## C'est quoi
-
-Système centralisé de gestion pour restaurant. Construite sur Airtable + Make.com.
-Basée sur l'expérience terrain de Paw (7 ans en restauration).
+Systeme centralise de gestion pour restaurant, base sur l'experience terrain de Paw.
 
 ## Stack
+- Airtable -- base de donnees et interface
+- Make.com -- automatisations
 
-- **Airtable** — base de données et interface
-- **Make.com** — automatisations
+## Etat actuel
+- Aucun code applicatif dans le repo pour ce projet
+- Structure projet SCC en place
+- Source de donnees a valider avant toute implementation
+- Documentation metier initiale encore legere
 
-## Ce que ça couvre (V1)
-
+## Ce que couvre la V1
 - [ ] Inventaire
-- [ ] Recettes et coûts
+- [ ] Recettes et couts
 - [ ] Menu et prix
 - [ ] Suivi des ventes
-- [ ] Horaires employés
-- [ ] Protocoles opérationnels
+- [ ] Horaires employes
+- [ ] Protocoles operationnels
 
-## Prochaines étapes
-
-- [ ] À définir en session de travail
+## Prochaines etapes
+- Definir la source de donnees cible
+- Cadrer le perimetre exact de la V1
+- Formaliser la structure Airtable initiale avant execution
 
 ## Notes de session
+[2026-03-08] Creation note de projet a partir du fichier maitre SCC.
+[2026-03-18] Clarification du blocage principal : aucune implementation ne commence tant que la source de donnees n'est pas validee.
 
-```
-[2026-03-08] [Agent Terminal]
-Tâche : Création note de projet à partir du fichier maître et SCC.
-```
+*Mis a jour : 2026-03-18 | Paw -- Systema Central Continuum*

@@ -5,11 +5,9 @@
 ---
 
 ## Vision
-
 Application web de tarot. Stack : TypeScript + Vite + Drizzle.
 
 ## Etapes
-
 - [x] Centraliser le code actif dans le SCC
 - [ ] Verifier l'etat technique du code importe
 - [ ] Stabiliser le MVP post-migration
@@ -17,4 +15,4 @@ Application web de tarot. Stack : TypeScript + Vite + Drizzle.
 
 ---
 
-*Mis a jour : 2026-03-17*
+*Mis a jour : 2026-03-18*

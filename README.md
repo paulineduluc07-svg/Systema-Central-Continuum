@@ -1,20 +1,21 @@
-# SCC — Systema Central Continuum
+# SCC -- Systema Central Continuum
 
-Repo GitHub de référence (single source of truth) pour les projets actifs.
+Repo GitHub de reference (single source of truth) pour les projets actifs et la gouvernance du SCC.
 
 ## Structure IPARA
-- `Inbox/` : captures à trier
+- `Inbox/` : captures et brouillons a trier
 - `Projects/` : projets actifs
-- `Areas/` : responsabilités continues
-- `Resources/` : règles, workflows, connaissances
-- `Archives/` : éléments terminés
+- `Areas/` : responsabilites continues
+- `Resources/` : regles, workflows, connaissances et bureaux agents
+- `Archives/` : elements termines
 
-## Fichiers clés
-- `AGENTS.md` : règles officielles des agents (source unique)
+## Fichiers cles
+- `AGENTS.md` : regles officielles des agents (source unique)
 - `Resources/Systeme/Multi-Agent-Collaboration.md` : politique multi-agent
 - `Projects/*/AGENT-INSTRUCTIONS.md` : contexte local par projet
+- `Resources/Systeme/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee aux regles globales
 
-## Règle d’alignement
-Si une contradiction apparaît, `AGENTS.md` fait foi.
+## Regle d'alignement
+Si une contradiction apparait, `AGENTS.md` fait foi.
 
-Mis à jour: 2026-03-17
+Mis a jour: 2026-03-18

@@ -1,38 +1,34 @@
 Type : #context
 Subject : #business #mindset
 Status : #inprogress
-Date : 2026-03-08
+Date : 2026-03-18
 
-# AREA — Reconstruction professionnelle
+# AREA -- Reconstruction professionnelle
 
 ## Ce que c'est
-
-Période de transition active après 7 ans en restauration (serveuse/gérante).
-Quittée le 1er mars 2026. Pas de retour en arrière.
+Periode de transition active apres 7 ans en restauration (serveuse / gerante).
+Quittee le 1er mars 2026. Pas de retour en arriere.
 
 ## Focus actuel
+**Mars-juin 2026 : Reconstruction.**
+Recentrage. Remise a zero. Poser une base saine avant de repartir.
 
-**Mars–juin 2026 : Reconstruction.**
-Recentrage. Remise à zéro. Poser une base saine avant de repartir.
+**Juillet 2026 : Reemergence.**
+Retourner vers l'exterieur avec assurance, confiance, joie. Ouverte a ce qui emerge.
 
-**Juillet 2026 : Réémergence.**
-Retourner vers l'extérieur avec assurance, confiance, joie. Ouverte à ce qui émerge.
+## Mes forces a activer
+- Coordination des operations (terrain, rythme, priorites)
+- Structurer, organiser, batir des systemes utiles
+- Creer des outils numeriques qui soutiennent la logistique et la gestion
 
-## Mes forces à activer
-
-- Coordination des opérations (terrain, rythme, priorités)
-- Structurer, organiser, bâtir des systèmes utiles
-- Créer des outils numériques qui soutiennent la logistique et la gestion
-
-## Ce que je construis
-
-- [[01 - PROJECTS/In Progress/Plateforme Restaurant]] — outil de gestion restaurant
-- [[01 - PROJECTS/In Progress/Systema Agency]] — agence de systèmes numériques
-- [[01 - PROJECTS/In Progress/Life-command]] — automatisation personnelle
+## Ce que je construis dans le SCC
+- `Projects/Plateforme-Restaurant/` -- outil de gestion restaurant
+- `Projects/Systema-Agency/` -- agence de systemes numeriques
+- `Projects/Drawn-by-Fate/` -- application web de tarot
 
 ## Notes de session
-
-```
 [2026-03-08] [Agent Terminal]
-Tâche : Création _CONTEXT à partir du fichier maître SCC.
-```
+Tache : creation du contexte initial a partir du fichier maitre SCC.
+
+[2026-03-18] [Codex]
+Tache : nettoyage des anciennes references Obsidian et alignement sur la structure SCC actuelle.

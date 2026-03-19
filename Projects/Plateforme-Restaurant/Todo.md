@@ -1,12 +1,14 @@
-# Todo — Plateforme Restaurant
+# Todo -- Plateforme Restaurant
 
-> Tâches actives. Mise à jour à chaque session.
-
----
-
-- [ ] Définir la source de données (Airtable structure à créer from scratch)
-- [ ] Définir les modules V1 (inventaire, recettes, menu, planning, ventes)
+> Taches actives. Mise a jour a chaque session.
 
 ---
 
-*Mis à jour : 2026-03-11*
+- [ ] Definir la source de donnees cible
+- [ ] Definir les modules V1 (inventaire, recettes, menu, planning, ventes)
+- [ ] Formaliser la structure Airtable initiale
+- [ ] Valider le perimetre avant toute implementation
+
+---
+
+*Mis a jour : 2026-03-18*
