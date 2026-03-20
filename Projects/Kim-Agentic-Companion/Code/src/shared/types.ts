@@ -1,4 +1,6 @@
-export type MemoryRole = "user" | "assistant";
+export type MemoryRole = \user\ | \assistant\;
+
+export type PermissionSource = \chat\ | \voice\ | \admin\ | \system\;
 
 export interface MemoryRecord {
   role: MemoryRole;
@@ -14,8 +16,32 @@ export interface RequestedTool {
 
 export interface ToolResult {
   name: string;
-  status: "blocked" | "needs_confirmation" | "executed" | "error";
+  status: \blocked\ | \needs_confirmation\ | \executed\ | \error\;
   detail: string;
+}
+
+export interface PermissionGrantState {
+  grantId: string;
+  subjectId: string;
+  scopes: string[];
+  issuedAt: string;
+  expiresAt?: string;
+  source: PermissionSource;
+  confirmationRequired?: boolean;
+}
+
+export interface PermissionRevokeState {
+  revokeId: string;
+  subjectId: string;
+  scope: string;
+  revokedAt: string;
+  reason?: string;
+}
+
+export interface PermissionContext {
+  grants?: PermissionGrantState[];
+  revokes?: PermissionRevokeState[];
+  confirmationProvided?: boolean;
 }
 
 export interface ChatRequest {
@@ -24,6 +50,7 @@ export interface ChatRequest {
   message: string;
   grantedTools?: string[];
   requestedTool?: RequestedTool;
+  permissionContext?: PermissionContext;
 }
 
 export interface SessionRecord {
