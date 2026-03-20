@@ -3,10 +3,11 @@
 ## Objectif du dossier
 Contenir l'implementation technique cloud-first du produit Kim agentic companion.
 
-## Stack v1 (scaffold)
+## Stack v1
 - Runtime: Node.js 20+
 - Langage: TypeScript
 - Serveur: HTTP natif Node
+- DB: PostgreSQL optionnelle (fallback in-memory)
 - Tests: Vitest
 - LLM: OpenAI Responses API (optionnel, fallback local si cle absente)
 
@@ -14,8 +15,9 @@ Contenir l'implementation technique cloud-first du produit Kim agentic companion
 - `src/api/` : endpoints HTTP
 - `src/agent-core/` : logique conversation, memoire, sessions, reponse LLM
 - `src/mcp-gateway/` : policy d'autorisation, client MCP et connecteurs outils
+- `src/persistence/` : bootstrap PostgreSQL + migrations minimales
 - `src/shared/` : types, auth, signature webhook, logging
-- `tests/` : tests unitaires de base
+- `tests/` : tests unitaires
 
 ## Endpoints exposes
 - `GET /health`
@@ -23,33 +25,17 @@ Contenir l'implementation technique cloud-first du produit Kim agentic companion
 - `POST /v1/chat` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/webhooks/vapi` (signature HMAC requise si `VAPI_WEBHOOK_SECRET` configure)
 
-## Exemple de payload `POST /v1/sessions`
-```json
-{
-  "userId": "user_123"
-}
-```
+## Variables cloud critiques
+- `DATABASE_URL` : active la persistance Postgres
+- `PGSSL_DISABLE` : desactive SSL DB si necessaire (`false` par defaut)
+- `MCP_SERVER_BASE_URL` : URL du serveur MCP cloud
+- `MCP_API_KEY` : cle API pour le serveur MCP cloud
+- `MCP_TIMEOUT_MS` : timeout reseau MCP
 
-## Exemple de payload `POST /v1/chat`
-```json
-{
-  "sessionId": "session_abc",
-  "message": "Aide moi a organiser ma journee",
-  "grantedTools": ["calendar.create_event"],
-  "requestedTool": {
-    "name": "calendar.create_event",
-    "input": {
-      "title": "Call",
-      "startAt": "2026-03-21T10:00:00Z",
-      "timezone": "America/Toronto"
-    },
-    "sensitive": false
-  }
-}
-```
-
-## Variables d'environnement
-Voir `.env.example`.
+## Templates d'environnement
+- `.env.example`
+- `.env.staging.example`
+- `.env.production.example`
 
 ## Lancer localement (optionnel)
 ```bash
