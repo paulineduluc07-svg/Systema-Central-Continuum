@@ -54,6 +54,10 @@ function closeServer(server: Server): Promise<void> {
   });
 }
 
+function signatureFor(secret: string, raw: string): string {
+  return createHmac("sha256", secret).update(raw, "utf8").digest("hex");
+}
+
 afterEach(() => {
   globalThis.fetch = originalFetch;
   vi.restoreAllMocks();
@@ -115,16 +119,221 @@ describe("Vapi webhook integration", () => {
     };
 
     const raw = JSON.stringify(payload);
-    const signature = createHmac("sha256", secret).update(raw, "utf8").digest("hex");
-
     const response = await sendJson(address.port, "/v1/webhooks/vapi", "POST", raw, {
-      "x-vapi-signature": signature
+      "x-vapi-signature": signatureFor(secret, raw)
     });
 
     expect(response.statusCode).toBe(200);
 
     const parsed = response.body as { tool?: { status?: string; name?: string } };
     expect(parsed.tool?.name).toBe("calendar.create_event");
+    expect(parsed.tool?.status).toBe("executed");
+    expect(mcpFetch).toHaveBeenCalledTimes(1);
+
+    await closeServer(server);
+  });
+
+  it("blocks tool when revoked scope is provided", async () => {
+    const mcpFetch = vi.fn(async (_url: unknown, _init?: RequestInit) => {
+      return new Response(JSON.stringify({ eventId: "evt_1" }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const agent = new KimAgent(
+      new InMemoryMemoryStore(),
+      new McpPolicy({
+        allowedToolsCsv: "calendar.create_event",
+        requireConfirmationByDefault: "false"
+      }),
+      mcpClient
+    );
+
+    const secret = "webhook_secret_test";
+    const server = startServer({
+      port: 0,
+      agent,
+      sessions: new InMemorySessionStore(),
+      mcpClient,
+      vapiWebhookSecret: secret
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const payload = {
+      userId: "user_webhook_2",
+      message: "cree un evenement calendrier",
+      grantedTools: ["calendar.create_event"],
+      revokedTools: ["calendar.create_event"],
+      requestedTool: {
+        name: "calendar.create_event",
+        input: {
+          title: "Call",
+          startAt: "2026-03-21T10:00:00Z"
+        },
+        sensitive: false
+      }
+    };
+
+    const raw = JSON.stringify(payload);
+    const response = await sendJson(address.port, "/v1/webhooks/vapi", "POST", raw, {
+      "x-vapi-signature": signatureFor(secret, raw)
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const parsed = response.body as { tool?: { status?: string; detail?: string } };
+    expect(parsed.tool?.status).toBe("blocked");
+    expect(parsed.tool?.detail).toBe("tool_scope_revoked");
+    expect(mcpFetch).toHaveBeenCalledTimes(0);
+
+    await closeServer(server);
+  });
+
+  it("returns needs_confirmation for sensitive tool without confirmation", async () => {
+    const mcpFetch = vi.fn(async (_url: unknown, _init?: RequestInit) => {
+      return new Response(JSON.stringify({ eventId: "evt_1" }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const agent = new KimAgent(
+      new InMemoryMemoryStore(),
+      new McpPolicy({
+        allowedToolsCsv: "calendar.create_event",
+        requireConfirmationByDefault: "false"
+      }),
+      mcpClient
+    );
+
+    const secret = "webhook_secret_test";
+    const server = startServer({
+      port: 0,
+      agent,
+      sessions: new InMemorySessionStore(),
+      mcpClient,
+      vapiWebhookSecret: secret
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const payload = {
+      userId: "user_webhook_3",
+      message: "supprime un evenement calendrier",
+      grantedTools: ["calendar.create_event"],
+      requestedTool: {
+        name: "calendar.create_event",
+        input: {
+          title: "Call",
+          startAt: "2026-03-21T10:00:00Z"
+        },
+        sensitive: true
+      }
+    };
+
+    const raw = JSON.stringify(payload);
+    const response = await sendJson(address.port, "/v1/webhooks/vapi", "POST", raw, {
+      "x-vapi-signature": signatureFor(secret, raw)
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const parsed = response.body as { tool?: { status?: string } };
+    expect(parsed.tool?.status).toBe("needs_confirmation");
+    expect(mcpFetch).toHaveBeenCalledTimes(0);
+
+    await closeServer(server);
+  });
+
+  it("executes sensitive tool when confirmationProvided is true", async () => {
+    const mcpFetch = vi.fn(async (_url: unknown, _init?: RequestInit) => {
+      return new Response(JSON.stringify({ eventId: "evt_1" }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const agent = new KimAgent(
+      new InMemoryMemoryStore(),
+      new McpPolicy({
+        allowedToolsCsv: "calendar.create_event",
+        requireConfirmationByDefault: "false"
+      }),
+      mcpClient
+    );
+
+    const secret = "webhook_secret_test";
+    const server = startServer({
+      port: 0,
+      agent,
+      sessions: new InMemorySessionStore(),
+      mcpClient,
+      vapiWebhookSecret: secret
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const payload = {
+      userId: "user_webhook_4",
+      message: "valide suppression evenement calendrier",
+      grantedTools: ["calendar.create_event"],
+      confirmationProvided: true,
+      requestedTool: {
+        name: "calendar.create_event",
+        input: {
+          title: "Call",
+          startAt: "2026-03-21T10:00:00Z"
+        },
+        sensitive: true
+      }
+    };
+
+    const raw = JSON.stringify(payload);
+    const response = await sendJson(address.port, "/v1/webhooks/vapi", "POST", raw, {
+      "x-vapi-signature": signatureFor(secret, raw)
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const parsed = response.body as { tool?: { status?: string } };
     expect(parsed.tool?.status).toBe("executed");
     expect(mcpFetch).toHaveBeenCalledTimes(1);
 
