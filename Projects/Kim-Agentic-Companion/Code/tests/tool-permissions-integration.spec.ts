@@ -1,5 +1,5 @@
 import { request as httpRequest, Server } from "node:http";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { KimAgent } from "../src/agent-core/kimAgent.js";
 import { InMemoryMemoryStore } from "../src/agent-core/memoryStore.js";
 import { InMemorySessionStore } from "../src/agent-core/sessionStore.js";
@@ -8,6 +8,7 @@ import { McpClient } from "../src/mcp-gateway/mcpClient.js";
 import { McpPolicy } from "../src/mcp-gateway/mcpPolicy.js";
 
 const originalFetch = globalThis.fetch;
+const originalOpenAiApiKey = process.env.OPENAI_API_KEY;
 
 function sendJson(port: number, path: string, method: string, body: string, headers?: Record<string, string>): Promise<{ statusCode: number; body: unknown }> {
   return new Promise((resolve, reject) => {
@@ -53,9 +54,20 @@ function closeServer(server: Server): Promise<void> {
   });
 }
 
+beforeEach(() => {
+  process.env.OPENAI_API_KEY = "";
+});
+
 afterEach(() => {
   globalThis.fetch = originalFetch;
   vi.restoreAllMocks();
+
+  if (originalOpenAiApiKey === undefined) {
+    delete process.env.OPENAI_API_KEY;
+    return;
+  }
+
+  process.env.OPENAI_API_KEY = originalOpenAiApiKey;
 });
 
 describe("Tool permissions integration", () => {
