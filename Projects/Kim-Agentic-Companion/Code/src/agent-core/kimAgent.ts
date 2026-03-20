@@ -9,6 +9,8 @@ export interface AgentInput {
   userId: string;
   message: string;
   grantedTools?: string[];
+  revokedTools?: string[];
+  confirmationProvided?: boolean;
   requestedTool?: RequestedTool;
 }
 
@@ -35,7 +37,12 @@ export class KimAgent {
     let toolSummary: string | undefined;
 
     if (input.requestedTool) {
-      toolResult = await this.handleTool(input.requestedTool, input.grantedTools ?? []);
+      toolResult = await this.handleTool(
+        input.requestedTool,
+        input.grantedTools ?? [],
+        input.revokedTools ?? [],
+        input.confirmationProvided
+      );
       toolSummary = `${toolResult.name}:${toolResult.status}`;
     }
 
@@ -50,10 +57,17 @@ export class KimAgent {
     return { reply, tool: toolResult };
   }
 
-  private async handleTool(requestedTool: RequestedTool, grantedTools: string[]): Promise<ToolResult> {
+  private async handleTool(
+    requestedTool: RequestedTool,
+    grantedTools: string[],
+    revokedTools: string[],
+    confirmationProvided?: boolean
+  ): Promise<ToolResult> {
     const decision = this.mcpPolicy.evaluate({
       toolName: requestedTool.name,
       userGrantedScopes: grantedTools,
+      revokedScopes: revokedTools,
+      confirmationProvided,
       isSensitive: Boolean(requestedTool.sensitive)
     });
 

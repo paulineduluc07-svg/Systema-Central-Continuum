@@ -77,6 +77,48 @@ function readStringArray(input: Record<string, unknown>, key: string): string[] 
   return items.length > 0 ? items : undefined;
 }
 
+function readBoolean(input: Record<string, unknown>, key: string): boolean | undefined {
+  const value = input[key];
+  return typeof value === "boolean" ? value : undefined;
+}
+
+function readRevokedTools(input: Record<string, unknown>): string[] | undefined {
+  const direct = readStringArray(input, "revokedTools");
+  if (direct) {
+    return direct;
+  }
+
+  const permissionContext = input.permissionContext;
+  if (!isRecord(permissionContext)) {
+    return undefined;
+  }
+
+  const revokes = permissionContext.revokes;
+  if (!Array.isArray(revokes)) {
+    return undefined;
+  }
+
+  const scopes = revokes
+    .map((item) => (isRecord(item) ? readString(item, "scope") : undefined))
+    .filter((scope): scope is string => typeof scope === "string" && scope.length > 0);
+
+  return scopes.length > 0 ? scopes : undefined;
+}
+
+function readConfirmationProvided(input: Record<string, unknown>): boolean | undefined {
+  const direct = readBoolean(input, "confirmationProvided");
+  if (direct !== undefined) {
+    return direct;
+  }
+
+  const permissionContext = input.permissionContext;
+  if (!isRecord(permissionContext)) {
+    return undefined;
+  }
+
+  return readBoolean(permissionContext, "confirmationProvided");
+}
+
 function readRequestedTool(input: Record<string, unknown>): ChatRequest["requestedTool"] {
   const rawTool = input.requestedTool;
   if (!isRecord(rawTool)) {
@@ -266,6 +308,8 @@ export function startServer(config: ServerConfig): Server {
           userId,
           message,
           grantedTools: readStringArray(payload, "grantedTools"),
+          revokedTools: readRevokedTools(payload),
+          confirmationProvided: readConfirmationProvided(payload),
           requestedTool: readRequestedTool(payload)
         });
 
@@ -312,6 +356,8 @@ export function startServer(config: ServerConfig): Server {
           userId: identity.userId,
           message,
           grantedTools: readStringArray(body, "grantedTools"),
+          revokedTools: readRevokedTools(body),
+          confirmationProvided: readConfirmationProvided(body),
           requestedTool: readRequestedTool(body)
         });
 
