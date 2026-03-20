@@ -19,6 +19,14 @@ export interface ServerConfig {
   vapiWebhookSecret?: string;
 }
 
+export interface RequestHandlerConfig {
+  agent: KimAgent;
+  sessions: InMemorySessionStore;
+  mcpClient: McpClient;
+  authToken?: string;
+  vapiWebhookSecret?: string;
+}
+
 function json(res: ServerResponse, statusCode: number, payload: unknown): void {
   const body = JSON.stringify(payload);
   res.writeHead(statusCode, {
@@ -261,177 +269,181 @@ function ensureAuthorized(req: IncomingMessage, expectedToken: string | undefine
   return isBearerAuthorized(req.headers.authorization, expectedToken);
 }
 
+export async function handleRequest(req: IncomingMessage, res: ServerResponse, config: RequestHandlerConfig): Promise<void> {
+  const requestId = randomUUID();
+
+  if (!req.url || !req.method) {
+    json(res, 400, { error: "invalid_request", requestId });
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/health") {
+    json(res, 200, { ok: true, service: "kim-agentic-api", requestId });
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/v1/mcp/health") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    const mcp = await config.mcpClient.health();
+    if (!mcp.success) {
+      json(res, 502, { error: "mcp_unavailable", detail: mcp.error, requestId });
+      return;
+    }
+
+    json(res, 200, { ok: true, requestId, mcp: mcp.data ?? { ok: true } });
+    return;
+  }
+
+  if (req.method === "POST" && req.url === "/v1/sessions") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    try {
+      const body = parseJson(await readRawBody(req));
+
+      if (!isSessionCreateRequest(body)) {
+        json(res, 400, { error: "invalid_payload", requestId });
+        return;
+      }
+
+      const session = config.sessions.create(body.userId.trim());
+      json(res, 201, { requestId, session });
+      return;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "unknown_error";
+      log("error", "session_create_failed", { requestId, reason });
+      json(res, 500, { error: "internal_error", requestId });
+      return;
+    }
+  }
+
+  if (req.method === "POST" && req.url === "/v1/chat") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    try {
+      const body = parseJson(await readRawBody(req));
+
+      if (!isChatRequest(body)) {
+        json(res, 400, { error: "invalid_payload", requestId });
+        return;
+      }
+
+      const payload = body as unknown as Record<string, unknown>;
+      const sessionId = readString(payload, "sessionId");
+      const directUserId = readString(payload, "userId");
+
+      let userId = directUserId;
+      if (sessionId) {
+        const session = config.sessions.get(sessionId);
+        if (!session) {
+          json(res, 404, { error: "session_not_found", requestId });
+          return;
+        }
+
+        if (userId && userId !== session.userId) {
+          json(res, 403, { error: "session_user_mismatch", requestId });
+          return;
+        }
+
+        userId = session.userId;
+      }
+
+      if (!userId) {
+        json(res, 400, { error: "missing_user_or_session", requestId });
+        return;
+      }
+
+      const message = readString(payload, "message") ?? "";
+      const result = await config.agent.respond({
+        userId,
+        message,
+        grantedTools: readStringArray(payload, "grantedTools"),
+        permissionGrants: readPermissionGrants(payload),
+        revokedTools: readRevokedTools(payload),
+        confirmationProvided: readConfirmationProvided(payload),
+        requestedTool: readRequestedTool(payload)
+      });
+
+      json(res, 200, {
+        requestId,
+        reply: result.reply,
+        tool: result.tool
+      });
+      return;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "unknown_error";
+      log("error", "chat_request_failed", { requestId, reason });
+      json(res, 500, { error: "internal_error", requestId });
+      return;
+    }
+  }
+
+  if (req.method === "POST" && req.url === "/v1/webhooks/vapi") {
+    try {
+      const rawBody = await readRawBody(req);
+      const signatureHeader =
+        (typeof req.headers["x-vapi-signature"] === "string" ? req.headers["x-vapi-signature"] : undefined) ??
+        (typeof req.headers["x-signature"] === "string" ? req.headers["x-signature"] : undefined);
+
+      if (!isValidHmacSha256(rawBody, signatureHeader, config.vapiWebhookSecret)) {
+        json(res, 401, { error: "invalid_signature", requestId });
+        return;
+      }
+
+      const body = parseJson(rawBody);
+      if (!isRecord(body)) {
+        json(res, 400, { error: "invalid_payload", requestId });
+        return;
+      }
+
+      const message = extractWebhookMessage(body);
+      if (!message) {
+        json(res, 400, { error: "missing_message", requestId });
+        return;
+      }
+
+      const identity = extractWebhookIdentity(body, config.sessions);
+      const result = await config.agent.respond({
+        userId: identity.userId,
+        message,
+        grantedTools: readStringArray(body, "grantedTools"),
+        permissionGrants: readPermissionGrants(body),
+        revokedTools: readRevokedTools(body),
+        confirmationProvided: readConfirmationProvided(body),
+        requestedTool: readRequestedTool(body)
+      });
+
+      json(res, 200, {
+        requestId,
+        ok: true,
+        reply: result.reply,
+        tool: result.tool,
+        sessionId: identity.sessionId
+      });
+      return;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "unknown_error";
+      log("error", "vapi_webhook_failed", { requestId, reason });
+      json(res, 500, { error: "internal_error", requestId });
+      return;
+    }
+  }
+
+  json(res, 404, { error: "not_found", requestId });
+}
+
 export function startServer(config: ServerConfig): Server {
-  const server = createServer(async (req, res) => {
-    const requestId = randomUUID();
-
-    if (!req.url || !req.method) {
-      json(res, 400, { error: "invalid_request", requestId });
-      return;
-    }
-
-    if (req.method === "GET" && req.url === "/health") {
-      json(res, 200, { ok: true, service: "kim-agentic-api", requestId });
-      return;
-    }
-
-    if (req.method === "GET" && req.url === "/v1/mcp/health") {
-      if (!ensureAuthorized(req, config.authToken)) {
-        json(res, 401, { error: "unauthorized", requestId });
-        return;
-      }
-
-      const mcp = await config.mcpClient.health();
-      if (!mcp.success) {
-        json(res, 502, { error: "mcp_unavailable", detail: mcp.error, requestId });
-        return;
-      }
-
-      json(res, 200, { ok: true, requestId, mcp: mcp.data ?? { ok: true } });
-      return;
-    }
-
-    if (req.method === "POST" && req.url === "/v1/sessions") {
-      if (!ensureAuthorized(req, config.authToken)) {
-        json(res, 401, { error: "unauthorized", requestId });
-        return;
-      }
-
-      try {
-        const body = parseJson(await readRawBody(req));
-
-        if (!isSessionCreateRequest(body)) {
-          json(res, 400, { error: "invalid_payload", requestId });
-          return;
-        }
-
-        const session = config.sessions.create(body.userId.trim());
-        json(res, 201, { requestId, session });
-        return;
-      } catch (error) {
-        const reason = error instanceof Error ? error.message : "unknown_error";
-        log("error", "session_create_failed", { requestId, reason });
-        json(res, 500, { error: "internal_error", requestId });
-        return;
-      }
-    }
-
-    if (req.method === "POST" && req.url === "/v1/chat") {
-      if (!ensureAuthorized(req, config.authToken)) {
-        json(res, 401, { error: "unauthorized", requestId });
-        return;
-      }
-
-      try {
-        const body = parseJson(await readRawBody(req));
-
-        if (!isChatRequest(body)) {
-          json(res, 400, { error: "invalid_payload", requestId });
-          return;
-        }
-
-        const payload = body as unknown as Record<string, unknown>;
-        const sessionId = readString(payload, "sessionId");
-        const directUserId = readString(payload, "userId");
-
-        let userId = directUserId;
-        if (sessionId) {
-          const session = config.sessions.get(sessionId);
-          if (!session) {
-            json(res, 404, { error: "session_not_found", requestId });
-            return;
-          }
-
-          if (userId && userId !== session.userId) {
-            json(res, 403, { error: "session_user_mismatch", requestId });
-            return;
-          }
-
-          userId = session.userId;
-        }
-
-        if (!userId) {
-          json(res, 400, { error: "missing_user_or_session", requestId });
-          return;
-        }
-
-        const message = readString(payload, "message") ?? "";
-        const result = await config.agent.respond({
-          userId,
-          message,
-          grantedTools: readStringArray(payload, "grantedTools"),
-          permissionGrants: readPermissionGrants(payload),
-          revokedTools: readRevokedTools(payload),
-          confirmationProvided: readConfirmationProvided(payload),
-          requestedTool: readRequestedTool(payload)
-        });
-
-        json(res, 200, {
-          requestId,
-          reply: result.reply,
-          tool: result.tool
-        });
-        return;
-      } catch (error) {
-        const reason = error instanceof Error ? error.message : "unknown_error";
-        log("error", "chat_request_failed", { requestId, reason });
-        json(res, 500, { error: "internal_error", requestId });
-        return;
-      }
-    }
-
-    if (req.method === "POST" && req.url === "/v1/webhooks/vapi") {
-      try {
-        const rawBody = await readRawBody(req);
-        const signatureHeader =
-          (typeof req.headers["x-vapi-signature"] === "string" ? req.headers["x-vapi-signature"] : undefined) ??
-          (typeof req.headers["x-signature"] === "string" ? req.headers["x-signature"] : undefined);
-
-        if (!isValidHmacSha256(rawBody, signatureHeader, config.vapiWebhookSecret)) {
-          json(res, 401, { error: "invalid_signature", requestId });
-          return;
-        }
-
-        const body = parseJson(rawBody);
-        if (!isRecord(body)) {
-          json(res, 400, { error: "invalid_payload", requestId });
-          return;
-        }
-
-        const message = extractWebhookMessage(body);
-        if (!message) {
-          json(res, 400, { error: "missing_message", requestId });
-          return;
-        }
-
-        const identity = extractWebhookIdentity(body, config.sessions);
-        const result = await config.agent.respond({
-          userId: identity.userId,
-          message,
-          grantedTools: readStringArray(body, "grantedTools"),
-          permissionGrants: readPermissionGrants(body),
-          revokedTools: readRevokedTools(body),
-          confirmationProvided: readConfirmationProvided(body),
-          requestedTool: readRequestedTool(body)
-        });
-
-        json(res, 200, {
-          requestId,
-          ok: true,
-          reply: result.reply,
-          tool: result.tool,
-          sessionId: identity.sessionId
-        });
-        return;
-      } catch (error) {
-        const reason = error instanceof Error ? error.message : "unknown_error";
-        log("error", "vapi_webhook_failed", { requestId, reason });
-        json(res, 500, { error: "internal_error", requestId });
-        return;
-      }
-    }
-
-    json(res, 404, { error: "not_found", requestId });
+  const server = createServer((req, res) => {
+    void handleRequest(req, res, config);
   });
 
   server.listen(config.port);
