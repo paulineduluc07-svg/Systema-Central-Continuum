@@ -1,6 +1,6 @@
-export type MemoryRole = \user\ | \assistant\;
+export type MemoryRole = "user" | "assistant";
 
-export type PermissionSource = \chat\ | \voice\ | \admin\ | \system\;
+export type PermissionSource = "chat" | "voice" | "admin" | "system";
 
 export interface MemoryRecord {
   role: MemoryRole;
@@ -16,7 +16,7 @@ export interface RequestedTool {
 
 export interface ToolResult {
   name: string;
-  status: \blocked\ | \needs_confirmation\ | \executed\ | \error\;
+  status: "blocked" | "needs_confirmation" | "executed" | "error";
   detail: string;
 }
 

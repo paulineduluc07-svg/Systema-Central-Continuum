@@ -1,13 +1,13 @@
-export type PermissionSource = \chat\ | \voice\ | \admin\ | \system\;
+export type PermissionSource = "chat" | "voice" | "admin" | "system";
 
 export type PermissionDecisionReason =
-  | \allowed\
-  | \confirmation_required\
-  | \tool_not_in_server_allowlist\
-  | \tool_not_granted_by_user\
-  | \tool_scope_revoked\
-  | \tool_grant_expired\
-  | \policy_error\;
+  | "allowed"
+  | "confirmation_required"
+  | "tool_not_in_server_allowlist"
+  | "tool_not_granted_by_user"
+  | "tool_scope_revoked"
+  | "tool_grant_expired"
+  | "policy_error";
 
 export interface ToolPermissionGrant {
   grantId: string;
