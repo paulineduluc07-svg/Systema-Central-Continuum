@@ -8,8 +8,24 @@ interface HttpResult {
   error?: string;
 }
 
+export interface McpClientConfig {
+  baseUrl: string;
+  apiKey?: string;
+  timeoutMs?: number;
+}
+
 export class McpClient {
-  constructor(private readonly baseUrl: string) {}
+  private readonly baseUrl: string;
+  private readonly apiKey?: string;
+  private readonly timeoutMs: number;
+
+  constructor(config: McpClientConfig) {
+    this.baseUrl = config.baseUrl.trim();
+    this.apiKey = config.apiKey?.trim() || undefined;
+
+    const parsedTimeout = Number(config.timeoutMs ?? 8000);
+    this.timeoutMs = Number.isFinite(parsedTimeout) && parsedTimeout > 0 ? parsedTimeout : 8000;
+  }
 
   async invoke(request: McpInvokeRequest): Promise<McpInvokeResult> {
     if (!this.baseUrl) {
@@ -72,10 +88,9 @@ export class McpClient {
     try {
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: {
-          "content-type": "application/json"
-        },
-        body: JSON.stringify(payload)
+        headers: this.buildHeaders(),
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(this.timeoutMs)
       });
 
       const body = await response.text();
@@ -96,6 +111,14 @@ export class McpClient {
         data: parsed
       };
     } catch (error) {
+      if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
+        return {
+          ok: false,
+          status: 0,
+          error: "mcp_timeout"
+        };
+      }
+
       const reason = error instanceof Error ? error.message : "mcp_network_error";
       return {
         ok: false,
@@ -103,6 +126,19 @@ export class McpClient {
         error: reason
       };
     }
+  }
+
+  private buildHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      "content-type": "application/json"
+    };
+
+    if (this.apiKey) {
+      headers.authorization = `Bearer ${this.apiKey}`;
+      headers["x-api-key"] = this.apiKey;
+    }
+
+    return headers;
   }
 
   private tryParseJson(text: string): unknown {
