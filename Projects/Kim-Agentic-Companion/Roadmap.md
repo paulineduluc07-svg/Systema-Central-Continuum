@@ -10,7 +10,7 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 ## Etat actuel
 - [x] Projet cree dans SCC
 - [x] Cadre produit et architecture v1 poses
-- [ ] Code applicatif non demarre
+- [x] Code applicatif demarre (scaffold API + agent-core + MCP)
 
 ## Prochaines etapes
 - [ ] Phase 0 -- Product framing + trust boundaries

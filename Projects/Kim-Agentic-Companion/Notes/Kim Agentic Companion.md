@@ -28,10 +28,15 @@ Kim peut agir hors de l'app via MCP, dans un cadre de permissions explicites.
 [2026-03-20] Creation du projet SCC `Projects/Kim-Agentic-Companion/`.
 [2026-03-20] Structure standard SCC initialisee (AGENT-INSTRUCTIONS, Todo, Roadmap, Notes, Code, Prompts, Assets, Livrables).
 [2026-03-20] Cadrage initial sur un MVP Replika-like + mode agentic + sortie app via MCP.
+[2026-03-20] Phase 2 lancee : scaffold TypeScript cloud-first ajoute dans `Code/`.
+[2026-03-20] Endpoints initiaux exposes: `GET /health`, `POST /v1/chat`.
+[2026-03-20] Policy MCP appliquee: allowlist + consentement utilisateur + confirmation par defaut.
+[2026-03-20] Tests unitaires initiaux ajoutes sur memory store et policy MCP.
 
 ## Prochaines etapes immediates
 - Finaliser les user stories MVP
 - Definir le protocole permissions/outils MCP
-- Demarrer le squelette backend cloud
+- Integrer un premier connecteur MCP reel
+- Brancher une couche auth/session
 
 *Mis a jour : 2026-03-20 | Codex -- SCC*

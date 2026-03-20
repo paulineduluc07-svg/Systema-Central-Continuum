@@ -1,24 +1,54 @@
 # Code -- Kim Agentic Companion
 
 ## Objectif du dossier
-Contenir l'implementation technique du produit Kim agentic companion.
+Contenir l'implementation technique cloud-first du produit Kim agentic companion.
 
-## Architecture proposee (v1)
-- `client/` : interface chat/voix
-- `api/` : endpoints publics (webhooks, sessions, actions)
-- `agent-core/` : orchestration, memory policies, decision loop
-- `mcp-gateway/` : interface avec serveurs MCP
-- `shared/` : schemas, types et utilitaires
+## Stack v1 (scaffold)
+- Runtime: Node.js 20+
+- Langage: TypeScript
+- Serveur: HTTP natif Node
+- Tests: Vitest
+- LLM: OpenAI Responses API (optionnel, fallback local si cle absente)
 
-## Principes techniques
-- Cloud-first et deploiement continu
-- Secrets via environnement uniquement
-- Actions externes MCP sous politique de permissions
-- Logs d'actions horodates et auditables
-- Validation automatique des flux critiques
+## Arborescence
+- `src/api/` : endpoints HTTP
+- `src/agent-core/` : logique conversation, memoire, reponse LLM
+- `src/mcp-gateway/` : policy d'autorisation et client MCP
+- `src/shared/` : types et logging
+- `tests/` : tests unitaires de base
 
-## Prerequis de securite
-- Authentification utilisateur avant actions externes
-- Confirmation explicite pour actions sensibles
-- Timeouts/retries limites sur appels outils
-- Circuit breaker sur outils indisponibles
+## Endpoints exposes
+- `GET /health`
+- `POST /v1/chat`
+
+## Exemple de payload `POST /v1/chat`
+```json
+{
+  "userId": "user_123",
+  "message": "Aide moi a organiser ma journee",
+  "grantedTools": ["calendar.create_event"],
+  "requestedTool": {
+    "name": "calendar.create_event",
+    "input": {
+      "title": "Call",
+      "time": "2026-03-21T10:00:00Z"
+    },
+    "sensitive": false
+  }
+}
+```
+
+## Variables d'environnement
+Voir `.env.example`.
+
+## Lancer localement (optionnel)
+```bash
+npm install
+npm run dev
+```
+
+## Principes securite deja poses
+- Aucune action outil sans policy gate
+- Liste blanche outils via `MCP_ALLOWED_TOOLS`
+- Confirmation par defaut avant action MCP (`MCP_REQUIRE_CONFIRMATION=true`)
+- Journalisation minimale des evenements cote serveur
