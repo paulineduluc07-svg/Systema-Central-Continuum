@@ -27,6 +27,28 @@ export class McpClient {
     this.timeoutMs = Number.isFinite(parsedTimeout) && parsedTimeout > 0 ? parsedTimeout : 8000;
   }
 
+  async health(): Promise<McpInvokeResult> {
+    if (!this.baseUrl) {
+      return {
+        success: false,
+        error: "mcp_server_not_configured"
+      };
+    }
+
+    const result = await this.getJson("/health");
+    if (!result.ok) {
+      return {
+        success: false,
+        error: result.error
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data ?? { ok: true }
+    };
+  }
+
   async invoke(request: McpInvokeRequest): Promise<McpInvokeResult> {
     if (!this.baseUrl) {
       return {
@@ -80,6 +102,51 @@ export class McpClient {
       success: false,
       error: direct.error
     };
+  }
+
+  private async getJson(path: string): Promise<HttpResult> {
+    const endpoint = `${this.baseUrl.replace(/\/$/, "")}${path}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "GET",
+        headers: this.buildHeaders(),
+        signal: AbortSignal.timeout(this.timeoutMs)
+      });
+
+      const body = await response.text();
+      const parsed = body.length > 0 ? this.tryParseJson(body) : undefined;
+
+      if (!response.ok) {
+        return {
+          ok: false,
+          status: response.status,
+          error: `mcp_http_${response.status}`,
+          data: parsed
+        };
+      }
+
+      return {
+        ok: true,
+        status: response.status,
+        data: parsed
+      };
+    } catch (error) {
+      if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
+        return {
+          ok: false,
+          status: 0,
+          error: "mcp_timeout"
+        };
+      }
+
+      const reason = error instanceof Error ? error.message : "mcp_network_error";
+      return {
+        ok: false,
+        status: 0,
+        error: reason
+      };
+    }
   }
 
   private async postJson(path: string, payload: unknown): Promise<HttpResult> {

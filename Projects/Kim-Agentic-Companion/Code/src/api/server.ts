@@ -1,7 +1,8 @@
-import { createServer, IncomingMessage, ServerResponse } from "node:http";
+import { createServer, IncomingMessage, Server, ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { KimAgent } from "../agent-core/kimAgent.js";
 import { InMemorySessionStore } from "../agent-core/sessionStore.js";
+import { McpClient } from "../mcp-gateway/mcpClient.js";
 import { isBearerAuthorized } from "../shared/auth.js";
 import { log } from "../shared/logger.js";
 import { isValidHmacSha256 } from "../shared/signature.js";
@@ -13,6 +14,7 @@ export interface ServerConfig {
   port: number;
   agent: KimAgent;
   sessions: InMemorySessionStore;
+  mcpClient: McpClient;
   authToken?: string;
   vapiWebhookSecret?: string;
 }
@@ -165,7 +167,7 @@ function ensureAuthorized(req: IncomingMessage, expectedToken: string | undefine
   return isBearerAuthorized(req.headers.authorization, expectedToken);
 }
 
-export function startServer(config: ServerConfig): void {
+export function startServer(config: ServerConfig): Server {
   const server = createServer(async (req, res) => {
     const requestId = randomUUID();
 
@@ -176,6 +178,22 @@ export function startServer(config: ServerConfig): void {
 
     if (req.method === "GET" && req.url === "/health") {
       json(res, 200, { ok: true, service: "kim-agentic-api", requestId });
+      return;
+    }
+
+    if (req.method === "GET" && req.url === "/v1/mcp/health") {
+      if (!ensureAuthorized(req, config.authToken)) {
+        json(res, 401, { error: "unauthorized", requestId });
+        return;
+      }
+
+      const mcp = await config.mcpClient.health();
+      if (!mcp.success) {
+        json(res, 502, { error: "mcp_unavailable", detail: mcp.error, requestId });
+        return;
+      }
+
+      json(res, 200, { ok: true, requestId, mcp: mcp.data ?? { ok: true } });
       return;
     }
 
@@ -292,7 +310,9 @@ export function startServer(config: ServerConfig): void {
         const identity = extractWebhookIdentity(body, config.sessions);
         const result = await config.agent.respond({
           userId: identity.userId,
-          message
+          message,
+          grantedTools: readStringArray(body, "grantedTools"),
+          requestedTool: readRequestedTool(body)
         });
 
         json(res, 200, {
@@ -315,4 +335,5 @@ export function startServer(config: ServerConfig): void {
   });
 
   server.listen(config.port);
+  return server;
 }

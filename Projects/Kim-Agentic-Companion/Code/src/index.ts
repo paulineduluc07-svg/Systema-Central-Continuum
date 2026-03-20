@@ -46,6 +46,7 @@ async function bootstrap(): Promise<void> {
     port,
     agent,
     sessions,
+    mcpClient,
     authToken: process.env.API_AUTH_TOKEN,
     vapiWebhookSecret: process.env.VAPI_WEBHOOK_SECRET
   });
