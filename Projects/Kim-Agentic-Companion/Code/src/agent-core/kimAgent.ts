@@ -2,6 +2,7 @@ import { generateKimReply } from "./llm.js";
 import { InMemoryMemoryStore } from "./memoryStore.js";
 import { McpClient } from "../mcp-gateway/mcpClient.js";
 import { McpPolicy } from "../mcp-gateway/mcpPolicy.js";
+import { CalendarConnector } from "../mcp-gateway/connectors/calendarConnector.js";
 import { RequestedTool, ToolResult } from "../shared/types.js";
 
 export interface AgentInput {
@@ -17,11 +18,15 @@ export interface AgentOutput {
 }
 
 export class KimAgent {
+  private readonly calendarConnector: CalendarConnector;
+
   constructor(
     private readonly memory: InMemoryMemoryStore,
     private readonly mcpPolicy: McpPolicy,
     private readonly mcpClient: McpClient
-  ) {}
+  ) {
+    this.calendarConnector = new CalendarConnector(this.mcpClient);
+  }
 
   async respond(input: AgentInput): Promise<AgentOutput> {
     this.memory.append(input.userId, "user", input.message);
@@ -66,6 +71,10 @@ export class KimAgent {
         status: "needs_confirmation",
         detail: "confirmation_required_before_mcp_execution"
       };
+    }
+
+    if (requestedTool.name === "calendar.create_event") {
+      return this.calendarConnector.createEvent(requestedTool.input);
     }
 
     const execution = await this.mcpClient.invoke({

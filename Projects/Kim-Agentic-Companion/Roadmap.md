@@ -11,6 +11,8 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 - [x] Projet cree dans SCC
 - [x] Cadre produit et architecture v1 poses
 - [x] Code applicatif demarre (scaffold API + agent-core + MCP)
+- [x] Contrat API v0 etabli (sessions, chat, webhook Vapi)
+- [x] Connecteur MCP calendrier v0 integre
 
 ## Prochaines etapes
 - [ ] Phase 0 -- Product framing + trust boundaries

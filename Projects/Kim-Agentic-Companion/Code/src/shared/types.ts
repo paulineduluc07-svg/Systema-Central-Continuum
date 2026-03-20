@@ -19,8 +19,27 @@ export interface ToolResult {
 }
 
 export interface ChatRequest {
-  userId: string;
+  userId?: string;
+  sessionId?: string;
   message: string;
   grantedTools?: string[];
   requestedTool?: RequestedTool;
+}
+
+export interface SessionRecord {
+  sessionId: string;
+  userId: string;
+  createdAt: string;
+}
+
+export interface SessionCreateRequest {
+  userId: string;
+}
+
+export interface CalendarCreateEventInput {
+  title: string;
+  startAt: string;
+  endAt?: string;
+  timezone?: string;
+  notes?: string;
 }
