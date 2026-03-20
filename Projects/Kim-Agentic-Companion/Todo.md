@@ -27,6 +27,7 @@
 
 ## Checklist technique v0
 - [x] Endpoint `GET /health`
+- [x] Endpoint `GET /v1/mcp/health`
 - [x] Endpoint `POST /v1/sessions`
 - [x] Endpoint `POST /v1/chat`
 - [x] Endpoint `POST /v1/webhooks/vapi`
@@ -38,6 +39,7 @@
 - [x] Connecteur calendrier MCP
 - [x] Templates env staging/prod
 - [x] Tests unitaires policy + memory + session + connector + signature + mcp client
+- [x] Test integration webhook signe -> tool call calendrier
 
 ---
 

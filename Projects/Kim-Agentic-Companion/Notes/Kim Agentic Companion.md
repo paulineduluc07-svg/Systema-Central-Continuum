@@ -38,6 +38,9 @@ Kim peut agir hors de l'app via MCP, dans un cadre de permissions explicites.
 [2026-03-20] Client MCP cloud renforce: API key + timeout + headers auth.
 [2026-03-20] Persistance Postgres ajoutee en mode mirror (hydratation au boot + replication ecritures).
 [2026-03-20] Templates env staging/prod ajoutes pour configuration cloud.
+[2026-03-20] Endpoint `GET /v1/mcp/health` ajoute pour probe MCP staging cote backend.
+[2026-03-20] Webhook Vapi etendu pour propager `grantedTools` + `requestedTool`.
+[2026-03-20] Test integration ajoute: webhook signe -> execution `calendar.create_event`.
 
 ## Prochaines etapes immediates
 - Finaliser les user stories MVP

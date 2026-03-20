@@ -17,13 +17,21 @@ Contenir l'implementation technique cloud-first du produit Kim agentic companion
 - `src/mcp-gateway/` : policy d'autorisation, client MCP et connecteurs outils
 - `src/persistence/` : bootstrap PostgreSQL + migrations minimales
 - `src/shared/` : types, auth, signature webhook, logging
-- `tests/` : tests unitaires
+- `tests/` : tests unitaires et integration
 
 ## Endpoints exposes
 - `GET /health`
+- `GET /v1/mcp/health` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/sessions` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/chat` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/webhooks/vapi` (signature HMAC requise si `VAPI_WEBHOOK_SECRET` configure)
+
+## Webhook Vapi
+`POST /v1/webhooks/vapi` accepte maintenant aussi:
+- `grantedTools: string[]`
+- `requestedTool: { name, input, sensitive? }`
+
+Cela permet de declencher des tool-calls MCP depuis les evenements webhook (sous policy gate).
 
 ## Variables cloud critiques
 - `DATABASE_URL` : active la persistance Postgres
