@@ -1,7 +1,7 @@
 # Code -- Kim Agentic Companion
 
 ## Objectif du dossier
-Contenir l'implementation technique cloud-first du produit Kim agentic companion.
+Contenir limplementation technique cloud-first du produit Kim agentic companion.
 
 ## Stack v1
 - Runtime: Node.js 20+
@@ -14,7 +14,7 @@ Contenir l'implementation technique cloud-first du produit Kim agentic companion
 ## Arborescence
 - `src/api/` : endpoints HTTP
 - `src/agent-core/` : logique conversation, memoire, sessions, reponse LLM
-- `src/mcp-gateway/` : policy d'autorisation, client MCP et connecteurs outils
+- `src/mcp-gateway/` : policy dautorisation, client MCP et connecteurs outils
 - `src/persistence/` : bootstrap PostgreSQL + migrations minimales
 - `src/shared/` : types, auth, signature webhook, logging
 - `tests/` : tests unitaires et integration
@@ -26,12 +26,30 @@ Contenir l'implementation technique cloud-first du produit Kim agentic companion
 - `POST /v1/chat` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/webhooks/vapi` (signature HMAC requise si `VAPI_WEBHOOK_SECRET` configure)
 
-## Webhook Vapi
-`POST /v1/webhooks/vapi` accepte maintenant aussi:
+## Payload permissions et outils
+`POST /v1/chat` et `POST /v1/webhooks/vapi` peuvent inclure:
 - `grantedTools: string[]`
+- `revokedTools: string[]`
+- `confirmationProvided: boolean`
 - `requestedTool: { name, input, sensitive? }`
 
-Cela permet de declencher des tool-calls MCP depuis les evenements webhook (sous policy gate).
+Optionnellement, un format enrichi est supporte:
+- `permissionContext.revokes[].scope`
+- `permissionContext.confirmationProvided`
+
+## Policy MCP (v1)
+Decision gate applique dans les flux API -> Agent -> MCP:
+1. verify allowlist (`MCP_ALLOWED_TOOLS`)
+2. deny si scope revoque
+3. deny si scope non accorde
+4. demander confirmation si action sensible ou confirmation globale active
+5. executer outil MCP seulement si autorise
+
+Reason codes courants:
+- `tool_not_in_server_allowlist`
+- `tool_not_granted_by_user`
+- `tool_scope_revoked`
+- `confirmation_required`
 
 ## Variables cloud critiques
 - `DATABASE_URL` : active la persistance Postgres
@@ -39,8 +57,19 @@ Cela permet de declencher des tool-calls MCP depuis les evenements webhook (sous
 - `MCP_SERVER_BASE_URL` : URL du serveur MCP cloud
 - `MCP_API_KEY` : cle API pour le serveur MCP cloud
 - `MCP_TIMEOUT_MS` : timeout reseau MCP
+- `MCP_ALLOWED_TOOLS` : allowlist des outils
+- `MCP_REQUIRE_CONFIRMATION` : confirmation par defaut (`true` ou `false`)
+- `API_AUTH_TOKEN` : token bearer API optionnel
+- `VAPI_WEBHOOK_SECRET` : secret signature webhook
 
-## Templates d'environnement
+## Exemples derreurs API
+- `401 unauthorized` si token bearer invalide
+- `401 invalid_signature` sur webhook signe incorrect
+- `400 invalid_payload` sur schema invalide
+- `404 session_not_found` si session inconnue
+- `tool.status = blocked` avec detail policy si outil refuse
+
+## Templates denvironnement
 - `.env.example`
 - `.env.staging.example`
 - `.env.production.example`
@@ -51,11 +80,11 @@ npm install
 npm run dev
 ```
 
-## Principes securite deja poses
+## Principes securite poses
 - Aucune action outil sans policy gate
 - Liste blanche outils via `MCP_ALLOWED_TOOLS`
-- Consentement utilisateur requis via `grantedTools`
-- Confirmation par defaut avant action MCP (`MCP_REQUIRE_CONFIRMATION=true`)
+- Consentement utilisateur explicite via payload permissions
+- Confirmation sur action sensible
 - Auth bearer optionnelle via `API_AUTH_TOKEN`
-- Verification de signature webhook Vapi via `VAPI_WEBHOOK_SECRET`
+- Verification signature webhook Vapi via `VAPI_WEBHOOK_SECRET`
 - Journalisation minimale des evenements cote serveur
