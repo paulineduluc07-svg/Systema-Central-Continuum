@@ -16,7 +16,12 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 - [x] Client MCP cloud configure (API key + timeout)
 - [x] Persistance Postgres optionnelle ajoutee (sessions + memoire)
 - [x] Endpoint de probe MCP staging ajoute (`GET /v1/mcp/health`)
-- [x] Parcours integration webhook signe -> tool call valide en test
+- [x] User stories MVP v1 redigees
+- [x] Modele permissions MCP v1 specifie
+- [x] Types permissions scopes integres
+- [x] Policy branchee dans les flux API/agent/webhook
+- [x] Tests integration critiques ajoutes
+- [x] Documentation technique et checklist readiness publiees
 
 ## Prochaines etapes
 - [ ] Phase 0 -- Product framing + trust boundaries

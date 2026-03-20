@@ -5,21 +5,21 @@ Date : 2026-03-20
 
 # PROJET -- Kim Agentic Companion
 
-## Ligne d'arrivee
-MVP cloud-first d'un compagnon Kim agentic avec actions MCP controlees et auditables.
+## Ligne darrivee
+MVP cloud-first dun compagnon Kim agentic avec actions MCP controlees et auditables.
 
-## C'est quoi
+## Cest quoi
 Application compagnon conversationnelle (texte + voix) avec memoire long terme.
-Kim peut agir hors de l'app via MCP, dans un cadre de permissions explicites.
+Kim peut agir hors de lapp via MCP, dans un cadre de permissions explicites.
 
 ## Hypotheses de depart
 - Le produit doit rester cloud-first (pas de dependance locale obligatoire)
 - Les actions externes sont autorisees par scopes et consentement utilisateur
-- L'observabilite des actions est non-negociable
+- Lobservabilite des actions est non-negociable
 
 ## Architecture cible v1
 - Client : UI chat/voix
-- Backend : orchestrateur agentique + politique d'action
+- Backend : orchestrateur agentique + politique daction
 - Memoire : profil, preferences, historique utile
 - MCP gateway : routage vers outils externes
 - Safety : guardrails, refus, validation action sensible
@@ -40,12 +40,18 @@ Kim peut agir hors de l'app via MCP, dans un cadre de permissions explicites.
 [2026-03-20] Templates env staging/prod ajoutes pour configuration cloud.
 [2026-03-20] Endpoint `GET /v1/mcp/health` ajoute pour probe MCP staging cote backend.
 [2026-03-20] Webhook Vapi etendu pour propager `grantedTools` + `requestedTool`.
-[2026-03-20] Test integration ajoute: webhook signe -> execution `calendar.create_event`.
+[2026-03-20] User stories MVP v1 publiees dans `Livrables/MVP-User-Stories-v1.md`.
+[2026-03-20] Spec permissions MCP v1 publiee dans `Livrables/MCP-Permissions-v1.md`.
+[2026-03-20] Types permissions/revoke/confirmation ajoutes et relies a la policy.
+[2026-03-20] Flux API et webhook connectes a `revokedTools` et `confirmationProvided`.
+[2026-03-20] Tests integration et unitaires etendus (chat nominal, webhook signe, refus policy, confirmation).
+[2026-03-20] README technique mis a jour pour contrat permissions et codes derreur.
+[2026-03-20] Checklist readiness MVP publiee dans `Livrables/MVP-Readiness-Checklist.md`.
 
 ## Prochaines etapes immediates
-- Finaliser les user stories MVP
-- Definir le protocole permissions/outils MCP multi-connecteurs
 - Integrer un MCP server cloud en staging avec secrets reels
-- Ajouter persistance durable des actions outils
+- Finaliser la validation GO/NO-GO sur la checklist readiness
+- Ajouter enforcement explicite dexpiration de consentement (TTL) dans la voie integration
+- Preparer un dry-run de release beta interne
 
 *Mis a jour : 2026-03-20 | Codex -- SCC*
