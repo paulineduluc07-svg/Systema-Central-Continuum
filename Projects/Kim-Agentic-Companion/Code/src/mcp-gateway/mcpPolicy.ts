@@ -29,6 +29,14 @@ export class McpPolicy {
       };
     }
 
+    if ((input.revokedScopes ?? []).includes(input.toolName)) {
+      return {
+        allowed: false,
+        requiresConfirmation: false,
+        reason: "tool_scope_revoked"
+      };
+    }
+
     if (!input.userGrantedScopes.includes(input.toolName)) {
       return {
         allowed: false,
@@ -37,7 +45,8 @@ export class McpPolicy {
       };
     }
 
-    if (input.isSensitive || this.requireConfirmationByDefault) {
+    const confirmationRequired = input.isSensitive || this.requireConfirmationByDefault;
+    if (confirmationRequired && !input.confirmationProvided) {
       return {
         allowed: true,
         requiresConfirmation: true,
