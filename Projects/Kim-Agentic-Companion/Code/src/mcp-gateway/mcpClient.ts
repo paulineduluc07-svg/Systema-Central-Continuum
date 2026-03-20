@@ -94,7 +94,7 @@ export class McpClient {
     if (direct.status === 404) {
       return this.invoke({
         toolName: "calendar.create_event",
-        input
+        input: input as unknown as Record<string, unknown>
       });
     }
 

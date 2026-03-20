@@ -3,12 +3,13 @@ import { InMemoryMemoryStore } from "./memoryStore.js";
 import { McpClient } from "../mcp-gateway/mcpClient.js";
 import { McpPolicy } from "../mcp-gateway/mcpPolicy.js";
 import { CalendarConnector } from "../mcp-gateway/connectors/calendarConnector.js";
-import { RequestedTool, ToolResult } from "../shared/types.js";
+import { RequestedTool, ToolResult, PermissionGrantState } from "../shared/types.js";
 
 export interface AgentInput {
   userId: string;
   message: string;
   grantedTools?: string[];
+  permissionGrants?: PermissionGrantState[];
   revokedTools?: string[];
   confirmationProvided?: boolean;
   requestedTool?: RequestedTool;
@@ -40,6 +41,7 @@ export class KimAgent {
       toolResult = await this.handleTool(
         input.requestedTool,
         input.grantedTools ?? [],
+        input.permissionGrants ?? [],
         input.revokedTools ?? [],
         input.confirmationProvided
       );
@@ -60,12 +62,14 @@ export class KimAgent {
   private async handleTool(
     requestedTool: RequestedTool,
     grantedTools: string[],
+    permissionGrants: PermissionGrantState[],
     revokedTools: string[],
     confirmationProvided?: boolean
   ): Promise<ToolResult> {
     const decision = this.mcpPolicy.evaluate({
       toolName: requestedTool.name,
       userGrantedScopes: grantedTools,
+      permissionGrants,
       revokedScopes: revokedTools,
       confirmationProvided,
       isSensitive: Boolean(requestedTool.sensitive)

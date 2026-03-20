@@ -30,6 +30,7 @@ export interface ToolPermissionRevoke {
 export interface ToolPolicyInput {
   toolName: string;
   userGrantedScopes: string[];
+  permissionGrants?: ToolPermissionGrant[];
   revokedScopes?: string[];
   isSensitive: boolean;
   confirmationProvided?: boolean;

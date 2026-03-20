@@ -238,4 +238,74 @@ describe("Tool permissions integration", () => {
 
     await closeServer(server);
   });
+
+  it("blocks tool when matching grant is expired", async () => {
+    const mcpFetch = vi.fn(async (_url: unknown, _init?: RequestInit) => {
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const server = startServer({
+      port: 0,
+      agent: new KimAgent(
+        new InMemoryMemoryStore(),
+        new McpPolicy({
+          allowedToolsCsv: "calendar.create_event",
+          requireConfirmationByDefault: "false"
+        }),
+        mcpClient
+      ),
+      sessions: new InMemorySessionStore(),
+      mcpClient
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const response = await sendJson(address.port, "/v1/chat", "POST", JSON.stringify({
+      userId: "user_chat_4",
+      message: "cree evenement",
+      permissionContext: {
+        grants: [
+          {
+            grantId: "g_expired_1",
+            subjectId: "user_chat_4",
+            scopes: ["calendar.create_event"],
+            issuedAt: "2026-03-20T10:00:00.000Z",
+            expiresAt: "2026-03-20T10:30:00.000Z",
+            source: "chat"
+          }
+        ]
+      },
+      requestedTool: {
+        name: "calendar.create_event",
+        input: {
+          title: "Call",
+          startAt: "2026-03-21T10:00:00Z"
+        },
+        sensitive: false
+      }
+    }));
+
+    expect(response.statusCode).toBe(200);
+    const parsed = response.body as { tool?: { status?: string; detail?: string } };
+    expect(parsed.tool?.status).toBe("blocked");
+    expect(parsed.tool?.detail).toBe("tool_grant_expired");
+    expect(mcpFetch).toHaveBeenCalledTimes(0);
+
+    await closeServer(server);
+  });
 });

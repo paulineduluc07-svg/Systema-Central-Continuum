@@ -6,7 +6,7 @@ import { McpClient } from "../mcp-gateway/mcpClient.js";
 import { isBearerAuthorized } from "../shared/auth.js";
 import { log } from "../shared/logger.js";
 import { isValidHmacSha256 } from "../shared/signature.js";
-import { ChatRequest, SessionCreateRequest } from "../shared/types.js";
+import { ChatRequest, PermissionGrantState, SessionCreateRequest } from "../shared/types.js";
 
 const MAX_BODY_BYTES = 1024 * 1024;
 
@@ -80,6 +80,58 @@ function readStringArray(input: Record<string, unknown>, key: string): string[] 
 function readBoolean(input: Record<string, unknown>, key: string): boolean | undefined {
   const value = input[key];
   return typeof value === "boolean" ? value : undefined;
+}
+
+function normalizePermissionSource(value: string | undefined): PermissionGrantState["source"] {
+  if (value === "chat" || value === "voice" || value === "admin" || value === "system") {
+    return value;
+  }
+
+  return "system";
+}
+
+function readPermissionGrants(input: Record<string, unknown>): PermissionGrantState[] | undefined {
+  const permissionContext = input.permissionContext;
+  if (!isRecord(permissionContext)) {
+    return undefined;
+  }
+
+  const grants = permissionContext.grants;
+  if (!Array.isArray(grants)) {
+    return undefined;
+  }
+
+  const parsed = grants
+    .map((item): PermissionGrantState | undefined => {
+      if (!isRecord(item)) {
+        return undefined;
+      }
+
+      const scopes = readStringArray(item, "scopes");
+      if (!scopes) {
+        return undefined;
+      }
+
+      const grantId = readString(item, "grantId") ?? "grant_unspecified";
+      const subjectId = readString(item, "subjectId") ?? "subject_unspecified";
+      const issuedAt = readString(item, "issuedAt") ?? new Date().toISOString();
+      const expiresAt = readString(item, "expiresAt");
+      const source = normalizePermissionSource(readString(item, "source"));
+      const confirmationRequired = readBoolean(item, "confirmationRequired");
+
+      return {
+        grantId,
+        subjectId,
+        scopes,
+        issuedAt,
+        expiresAt,
+        source,
+        confirmationRequired
+      };
+    })
+    .filter((grant): grant is PermissionGrantState => Boolean(grant));
+
+  return parsed.length > 0 ? parsed : undefined;
 }
 
 function readRevokedTools(input: Record<string, unknown>): string[] | undefined {
@@ -278,7 +330,7 @@ export function startServer(config: ServerConfig): Server {
           return;
         }
 
-        const payload = body as Record<string, unknown>;
+        const payload = body as unknown as Record<string, unknown>;
         const sessionId = readString(payload, "sessionId");
         const directUserId = readString(payload, "userId");
 
@@ -308,6 +360,7 @@ export function startServer(config: ServerConfig): Server {
           userId,
           message,
           grantedTools: readStringArray(payload, "grantedTools"),
+          permissionGrants: readPermissionGrants(payload),
           revokedTools: readRevokedTools(payload),
           confirmationProvided: readConfirmationProvided(payload),
           requestedTool: readRequestedTool(payload)
@@ -356,6 +409,7 @@ export function startServer(config: ServerConfig): Server {
           userId: identity.userId,
           message,
           grantedTools: readStringArray(body, "grantedTools"),
+          permissionGrants: readPermissionGrants(body),
           revokedTools: readRevokedTools(body),
           confirmationProvided: readConfirmationProvided(body),
           requestedTool: readRequestedTool(body)

@@ -99,4 +99,58 @@ describe("McpPolicy", () => {
     expect(decision.requiresConfirmation).toBe(false);
     expect(decision.reason).toBe("allowed");
   });
+
+  it("blocks tool when all matching grants are expired", () => {
+    const policy = new McpPolicy({
+      allowedToolsCsv: "calendar.create_event",
+      requireConfirmationByDefault: "false"
+    });
+
+    const decision = policy.evaluate({
+      toolName: "calendar.create_event",
+      userGrantedScopes: [],
+      permissionGrants: [
+        {
+          grantId: "g1",
+          subjectId: "u1",
+          scopes: ["calendar.create_event"],
+          issuedAt: "2026-03-20T10:00:00.000Z",
+          expiresAt: "2026-03-20T10:30:00.000Z",
+          source: "chat"
+        }
+      ],
+      isSensitive: false,
+      nowIso: "2026-03-20T11:00:00.000Z"
+    });
+
+    expect(decision.allowed).toBe(false);
+    expect(decision.reason).toBe("tool_grant_expired");
+  });
+
+  it("allows tool when at least one matching grant is active", () => {
+    const policy = new McpPolicy({
+      allowedToolsCsv: "calendar.create_event",
+      requireConfirmationByDefault: "false"
+    });
+
+    const decision = policy.evaluate({
+      toolName: "calendar.create_event",
+      userGrantedScopes: [],
+      permissionGrants: [
+        {
+          grantId: "g2",
+          subjectId: "u1",
+          scopes: ["calendar.create_event"],
+          issuedAt: "2026-03-20T10:00:00.000Z",
+          expiresAt: "2026-03-20T11:30:00.000Z",
+          source: "chat"
+        }
+      ],
+      isSensitive: false,
+      nowIso: "2026-03-20T11:00:00.000Z"
+    });
+
+    expect(decision.allowed).toBe(true);
+    expect(decision.reason).toBe("allowed");
+  });
 });
