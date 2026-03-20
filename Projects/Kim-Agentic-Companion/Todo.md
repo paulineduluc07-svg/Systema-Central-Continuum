@@ -12,7 +12,9 @@
 - [x] Choisir stack de deploiement cloud v1
 - [x] Implementer squelette backend agent + memory
 - [x] Integrer premier connecteur MCP (calendrier)
+- [x] Brancher client MCP cloud (auth + timeout)
 - [x] Ajouter observabilite minimale (logs, erreurs, traces actions)
+- [x] Ajouter persistance DB sessions + memoire (Postgres + fallback)
 - [ ] Ecrire tests de parcours critiques
 
 ## Checklist securite initiale
@@ -30,9 +32,12 @@
 - [x] Endpoint `POST /v1/webhooks/vapi`
 - [x] Store memoire in-memory
 - [x] Store sessions in-memory
+- [x] Store memoire Postgres (mode mirror)
+- [x] Store sessions Postgres (mode mirror)
 - [x] Policy MCP allowlist + consentement + confirmation
 - [x] Connecteur calendrier MCP
-- [x] Tests unitaires policy + memory + connector + signature
+- [x] Templates env staging/prod
+- [x] Tests unitaires policy + memory + session + connector + signature + mcp client
 
 ---
 

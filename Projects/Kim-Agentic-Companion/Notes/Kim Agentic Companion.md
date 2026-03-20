@@ -35,11 +35,14 @@ Kim peut agir hors de l'app via MCP, dans un cadre de permissions explicites.
 [2026-03-20] Extension API: `POST /v1/sessions` + `POST /v1/webhooks/vapi`.
 [2026-03-20] Securite API ajoutee: bearer token optionnel + verification HMAC webhook Vapi.
 [2026-03-20] Premier connecteur MCP reel integre: `calendar.create_event` avec validation payload.
+[2026-03-20] Client MCP cloud renforce: API key + timeout + headers auth.
+[2026-03-20] Persistance Postgres ajoutee en mode mirror (hydratation au boot + replication ecritures).
+[2026-03-20] Templates env staging/prod ajoutes pour configuration cloud.
 
 ## Prochaines etapes immediates
 - Finaliser les user stories MVP
 - Definir le protocole permissions/outils MCP multi-connecteurs
-- Integrer un premier MCP server en environnement cloud
-- Brancher une couche auth/session persistante (DB)
+- Integrer un MCP server cloud en staging avec secrets reels
+- Ajouter persistance durable des actions outils
 
 *Mis a jour : 2026-03-20 | Codex -- SCC*

@@ -13,6 +13,8 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 - [x] Code applicatif demarre (scaffold API + agent-core + MCP)
 - [x] Contrat API v0 etabli (sessions, chat, webhook Vapi)
 - [x] Connecteur MCP calendrier v0 integre
+- [x] Client MCP cloud configure (API key + timeout)
+- [x] Persistance Postgres optionnelle ajoutee (sessions + memoire)
 
 ## Prochaines etapes
 - [ ] Phase 0 -- Product framing + trust boundaries
