@@ -1,7 +1,13 @@
 import { MemoryRecord } from "../shared/types.js";
 
 export class InMemoryMemoryStore {
-  private readonly recordsByUser = new Map<string, MemoryRecord[]>();
+  protected readonly recordsByUser = new Map<string, MemoryRecord[]>();
+
+  protected addRecord(userId: string, record: MemoryRecord): void {
+    const existing = this.recordsByUser.get(userId) ?? [];
+    existing.push(record);
+    this.recordsByUser.set(userId, existing);
+  }
 
   append(userId: string, role: MemoryRecord["role"], content: string): MemoryRecord {
     const entry: MemoryRecord = {
@@ -10,10 +16,7 @@ export class InMemoryMemoryStore {
       timestamp: new Date().toISOString()
     };
 
-    const existing = this.recordsByUser.get(userId) ?? [];
-    existing.push(entry);
-    this.recordsByUser.set(userId, existing);
-
+    this.addRecord(userId, entry);
     return entry;
   }
 

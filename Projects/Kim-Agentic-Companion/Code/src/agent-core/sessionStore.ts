@@ -2,7 +2,11 @@ import { randomUUID } from "node:crypto";
 import { SessionRecord } from "../shared/types.js";
 
 export class InMemorySessionStore {
-  private readonly bySessionId = new Map<string, SessionRecord>();
+  protected readonly bySessionId = new Map<string, SessionRecord>();
+
+  protected setSession(record: SessionRecord): void {
+    this.bySessionId.set(record.sessionId, record);
+  }
 
   create(userId: string): SessionRecord {
     const record: SessionRecord = {
@@ -11,7 +15,7 @@ export class InMemorySessionStore {
       createdAt: new Date().toISOString()
     };
 
-    this.bySessionId.set(record.sessionId, record);
+    this.setSession(record);
     return record;
   }
 
