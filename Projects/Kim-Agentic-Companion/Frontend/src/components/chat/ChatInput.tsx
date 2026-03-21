@@ -45,7 +45,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         className="flex-1 bg-[rgba(7,10,24,0.45)] border border-[rgba(179,188,251,0.2)] rounded-xl px-4 py-2.5 text-[#f4f3ff] placeholder-[#a8aed3] text-sm resize-none focus:outline-none focus:border-[#ff5f7c] transition-colors disabled:opacity-50"
         style={{ minHeight: "42px", maxHeight: "120px" }}
       />
-      <VoiceButton onClick={toggle} />
+      <VoiceButton onToggle={toggle} />
       <Button type="submit" disabled={disabled || !value.trim()} size="md">
         Send
       </Button>
