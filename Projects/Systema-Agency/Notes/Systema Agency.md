@@ -1,7 +1,7 @@
 Type : #context
 Subject : #business
 Status : #inprogress
-Date : 2026-03-20
+Date : 2026-03-21
 
 # PROJET -- Systema Agency
 
@@ -17,30 +17,32 @@ Pas de RPG, pas d'avatar, pas de tarot. Interface minimaliste orientee utilite r
 - Stack : React 19 + Tailwind v4 + shadcn/ui + tRPC + Drizzle ORM + Neon PostgreSQL + Vercel
 - Code : `Projects/Systema-Agency/Code/`
 - Live : `https://systema-agency.vercel.app`
-- Auth : OAuth via SDK forge (VITE_OAUTH_PORTAL_URL requis en prod)
+- Auth : email/password via crypto Node.js natif (OWNER_EMAIL + OWNER_PASSWORD en variables d'env)
 - Sync : localStorage si non connecte, Neon PostgreSQL si connecte
 
 ## Architecture frontend actuelle
 ```
 pages/
-  Home.tsx        -- 6 onglets + notes par onglet (nouveau, 2026-03-20)
-  Suivi.tsx       -- suivi medicament (localStorage pour l instant)
+  Home.tsx        -- 6 onglets + notes par onglet
+  Suivi.tsx       -- suivi medicament (DB si auth, localStorage sinon)
   PromptVault.tsx -- bibliotheque prompts (statique)
 hooks/
   useSyncedData.ts -- gere notes/tasks/prefs : DB si auth, localStorage sinon
 ```
 
 ## Schema DB (Neon PostgreSQL)
-Tables actives : users, tasks, notes, user_preferences, custom_tabs, canvas_data
-A creer : suivi_entries (pour sync Suivi medicament)
+Tables actives : users, tasks, notes, user_preferences, custom_tabs, canvas_data, suivi_entries
 
-## Problemes connus et priorites
-| Probleme | Priorite | Action |
-|---|---|---|
-| VITE_OAUTH_PORTAL_URL non configure Vercel | Haute | Configurer dans Vercel env vars |
-| Suivi.tsx utilise localStorage uniquement | Haute | Ajouter table suivi_entries + route tRPC |
-| .env.example incomplet | Moyenne | Ajouter toutes les variables |
-| Foreign keys absentes en DB | Basse | Ajouter dans schema.ts |
+## Ce qui reste a faire avant que tout fonctionne en prod
+1. Configurer les variables Vercel (Vercel > Project Settings > Environment Variables) :
+   - DATABASE_URL  (deja la normalement)
+   - JWT_SECRET    (openssl rand -hex 32)
+   - OWNER_EMAIL   (ton email)
+   - OWNER_PASSWORD (mot de passe choisi)
+2. Appliquer la migration SQL dans Neon (table suivi_entries) :
+   - Soit via `pnpm drizzle-kit push` (necessite DATABASE_URL local dans .env)
+   - Soit via Neon SQL Editor : copier le contenu de drizzle/0001_suivi_entries.sql
+3. Deployer sur Vercel
 
 ## Ce qui a ete supprime (ne pas reimplanter)
 - Drawn by Fate / Tarot (toutes les pages et composants)
@@ -51,6 +53,7 @@ A creer : suivi_entries (pour sync Suivi medicament)
 - Hooks : useLifeCommandItems, useSpeechToText, useInfiniteCanvas, useComposition
 - Doublons : components/PromptVault.tsx, components/prompt-vault.jsx
 - Routers backend : tarot, ai (LifeCommand)
+- Auth Manus OAuth (remplace par email/password auto-contenu)
 
 ## Kim et Systema Agency
 Kim est un projet separe (`Projects/Kim-Agentic-Companion/`), en cours de construction.
@@ -68,5 +71,17 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - Nouveau Home.tsx : 6 onglets fixes + sticky notes syncees par onglet
   - App.tsx nettoye, server/routers.ts allege
   - Documentation SCC mise a jour : AGENT-INSTRUCTIONS, Todo, Roadmap, Notes
+[2026-03-20] Auth OAuth Manus remplacee par auth email/password :
+  - Probleme : VITE_OAUTH_PORTAL_URL inaccessible hors plateforme Manus
+  - Solution : verifyCredentials() HMAC + timingSafeEqual (crypto Node.js, zero dependance)
+  - Fichiers modifies : sdk.ts, env.ts, routers.ts, useAuth.ts, Home.tsx, const.ts, api/oauth/callback.ts
+[2026-03-21] Sync DB suivi medicament implementee :
+  - drizzle/schema.ts : ajout table suivi_entries (id, userId, timestamp, date, prise, dose, reasons JSON, note)
+  - drizzle/0001_suivi_entries.sql : migration SQL (a appliquer dans Neon)
+  - server/db.ts : fonctions getSuiviEntriesByUser, createSuiviEntry, replaceSuiviEntries
+  - server/routers.ts : router tRPC suivi.list / suivi.add / suivi.replace (protectedProcedure)
+  - client/src/pages/Suivi.tsx : sync tRPC si authentifiee, localStorage fallback sinon
+  - Comportement : au login, donnees DB remplacent localStorage ; chaque prise = envoyee en DB + localStorage
+  - En attente : appliquer la migration SQL + configurer variables Vercel + deployer
 
-*Mis a jour : 2026-03-20 | Claude (session refonte) -- Systema Central Continuum*
+*Mis a jour : 2026-03-21 | Claude (session sync DB) -- Systema Central Continuum*
