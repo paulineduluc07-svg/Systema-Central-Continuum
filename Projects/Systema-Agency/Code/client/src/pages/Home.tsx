@@ -21,9 +21,11 @@ import {
   BookOpen,
   Home as HomeIcon,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getLoginUrl } from "@/const";
+
+// ── Tab config ────────────────────────────────────────────────────────────────
 
 const TABS = [
   { id: "sante", label: "Sante", Icon: Heart, color: "#F472B6" },
@@ -35,6 +37,92 @@ const TABS = [
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
+
+// ── Login modal ───────────────────────────────────────────────────────────────
+
+function LoginModal({ onClose }: { onClose: () => void }) {
+  const { login, loginError, loading } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [localError, setLocalError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError("");
+    try {
+      await login(email, password);
+      onClose();
+    } catch {
+      setLocalError("Email ou mot de passe incorrect");
+    }
+  };
+
+  const errorMsg = localError || (loginError ? "Email ou mot de passe incorrect" : "");
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100">
+            Connexion
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div>
+            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoFocus
+              placeholder="ton@email.com"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 outline-none focus:border-pink-400 dark:focus:border-pink-500 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 block">
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 outline-none focus:border-pink-400 dark:focus:border-pink-500 transition-colors"
+            />
+          </div>
+
+          {errorMsg && (
+            <p className="text-xs text-red-500">{errorMsg}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-2 bg-pink-500 hover:bg-pink-600 disabled:opacity-60 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+          >
+            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            Se connecter
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ── Sticky note card ──────────────────────────────────────────────────────────
 
 function StickyCard({
   content,
@@ -86,6 +174,8 @@ function StickyCard({
   );
 }
 
+// ── Notes section ─────────────────────────────────────────────────────────────
+
 function NotesSection({ tabId }: { tabId: string }) {
   const { notes, addNote, updateNote, deleteNote } = useSyncedNotes(tabId);
 
@@ -103,6 +193,7 @@ function NotesSection({ tabId }: { tabId: string }) {
           Nouvelle note
         </button>
       </div>
+
       {notes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <div className="w-12 h-12 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
@@ -140,21 +231,21 @@ function NotesSection({ tabId }: { tabId: string }) {
   );
 }
 
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 export default function Home() {
   const { isAuthenticated, logout } = useAuth();
   const { darkMode, setDarkMode } = useSyncedPreferences();
   const [activeTab, setActiveTab] = usePersistedState<TabId>("active_tab", "sante");
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-
-  const handleLogin = () => {
-    const url = getLoginUrl();
-    if (url) window.location.href = url;
-  };
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <div className={cn("min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors", darkMode && "dark")}>
+      {/* Header */}
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+          {/* Tabs */}
           <nav className="flex items-center gap-0.5 overflow-x-auto flex-1 min-w-0">
             {TABS.map(({ id, label, Icon, color }) => {
               const isActive = activeTab === id;
@@ -179,6 +270,7 @@ export default function Home() {
             })}
           </nav>
 
+          {/* Toolbar */}
           <div className="flex items-center gap-1.5 shrink-0">
             {isAuthenticated ? (
               <Cloud className="w-3.5 h-3.5 text-green-400" title="Synchronise" />
@@ -207,7 +299,7 @@ export default function Home() {
               </button>
             ) : (
               <button
-                onClick={handleLogin}
+                onClick={() => setIsLoginOpen(true)}
                 className="p-1.5 rounded-lg bg-pink-500 hover:bg-pink-600 transition-colors"
                 title="Connexion"
               >
@@ -225,6 +317,7 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Content */}
       <main className="max-w-5xl mx-auto px-4 py-6">
         {activeTab === "ressources-ia" ? (
           <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
@@ -273,6 +366,8 @@ export default function Home() {
         )}
       </main>
 
+      {/* Modals */}
+      {isLoginOpen && <LoginModal onClose={() => setIsLoginOpen(false)} />}
       <AdminPanel isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     </div>
   );
