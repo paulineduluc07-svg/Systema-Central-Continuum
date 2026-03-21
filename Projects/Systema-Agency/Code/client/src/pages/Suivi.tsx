@@ -2,8 +2,10 @@
 // Suivi de prise — version simplifiée
 // Préserve le design original exact (Pacifico, inline styles, gradients)
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
@@ -206,6 +208,37 @@ export function SuiviPage() {
   const [showData, setShowData] = useState(false);
   const [importTxt, setImportTxt] = useState("");
 
+  const { isAuthenticated } = useAuth();
+  const utils = trpc.useUtils();
+
+  const suiviQuery = trpc.suivi.list.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+
+  const addMutation = trpc.suivi.add.useMutation();
+  const replaceMutation = trpc.suivi.replace.useMutation();
+
+  const loadedFromDb = useRef(false);
+  useEffect(() => {
+    if (isAuthenticated && suiviQuery.data && !loadedFromDb.current) {
+      loadedFromDb.current = true;
+      const dbEntries = suiviQuery.data.map((e) => ({
+        id: e.id,
+        timestamp: e.timestamp,
+        date: e.date,
+        prise: e.prise,
+        dose: e.dose as Dose,
+        reasons: e.reasons,
+        note: e.note,
+      }));
+      setEntries(dbEntries);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dbEntries));
+      } catch {}
+    }
+  }, [isAuthenticated, suiviQuery.data]);
+
   function save(arr: SuiviEntry[]) {
     setEntries(arr);
     try {
@@ -232,18 +265,26 @@ export function SuiviPage() {
 
   function submit() {
     if (!dose) return;
-    save([
-      {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        date,
-        prise: time,
-        dose,
-        reasons,
-        note,
-      },
-      ...entries,
-    ]);
+    const newEntry = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      date,
+      prise: time,
+      dose,
+      reasons,
+      note,
+    };
+    save([newEntry, ...entries]);
+    if (isAuthenticated) {
+      addMutation.mutate({
+        timestamp: newEntry.timestamp,
+        date: newEntry.date,
+        prise: newEntry.prise,
+        dose: newEntry.dose,
+        reasons: newEntry.reasons,
+        note: newEntry.note,
+      });
+    }
     setStep(4);
   }
 
