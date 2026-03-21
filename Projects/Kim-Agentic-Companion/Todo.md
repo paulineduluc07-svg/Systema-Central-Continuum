@@ -27,24 +27,24 @@
 - [x] Standardiser variable ElevenLabs (`ELEVENLABS_API_KEY`)
 - [x] Verifier chaines de sante app + MCP en cloud
 
-## Frontend Phase F1 -- Foundation + Chat (EN COURS)
-- [ ] Creer `Frontend/` avec scaffold Next.js 15 + React 19
-- [ ] Configurer Tailwind + design tokens galaxy
-- [ ] Creer `KimApiClient` type (tous les endpoints backend)
-- [ ] Creer types frontend (miroir de `shared/types.ts`)
-- [ ] Creer stores Jotai (auth, chat, tools)
-- [ ] Creer hooks (useChat, useAuth, useTools)
-- [ ] Creer composants UI (GlassPanel, Button, Input, ChatBubble, TabBar)
-- [ ] Creer layout (TopNav, CosmosBackground CSS, AppShell)
-- [ ] Creer ChatPanel + ChatLog + ChatInput + TypingIndicator
-- [ ] Creer AvatarStage (image 2D + orb anime)
-- [ ] Creer InfoCards + ToolList sidebar
-- [ ] Creer page principale (layout.tsx + page.tsx + globals.css)
-- [ ] Creer README.md + AGENT-INSTRUCTIONS.md frontend
+## Frontend Phase F1 -- Foundation + Chat (COMPLETE)
+- [x] Creer `Frontend/` avec scaffold Next.js 15 + React 19
+- [x] Configurer Tailwind + design tokens galaxy
+- [x] Creer `KimApiClient` type (tous les endpoints backend)
+- [x] Creer types frontend (miroir de `shared/types.ts`)
+- [x] Creer stores Jotai (auth, chat, tools)
+- [x] Creer hooks (useChat, useAuth, useTools)
+- [x] Creer composants UI (GlassPanel, Button, Input, ChatBubble, TabBar, Badge)
+- [x] Creer layout (TopNav, CosmosBackground CSS, AppShell)
+- [x] Creer ChatPanel + ChatLog + ChatInput + TypingIndicator
+- [x] Creer AvatarStage (image 2D + orb anime)
+- [x] Creer InfoCards + ToolList sidebar
+- [x] Creer page principale (layout.tsx + page.tsx + globals.css)
+- [x] Creer README.md + AGENT-INSTRUCTIONS.md frontend
 - [ ] Deployer sur Vercel (staging frontend)
 - [ ] Verifier zero regression vs UI inline actuelle
 
-## Frontend Phase F2 -- Tabs
+## Frontend Phase F2 -- Tabs (EN COURS)
 - [ ] Page Memory (liste + edition)
 - [ ] Page Profile (sliders personnalite)
 - [ ] Page Activities (timeline)
@@ -124,4 +124,4 @@
 
 ---
 
-*Mis a jour : 2026-03-21*
+*Mis a jour : 2026-03-21 — F1 complete (41 fichiers), F2 en cours*
