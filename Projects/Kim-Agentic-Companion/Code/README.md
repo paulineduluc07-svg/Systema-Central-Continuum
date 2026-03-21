@@ -22,9 +22,12 @@ Contenir limplementation technique cloud-first du produit Kim agentic companion.
 ## Endpoints exposes
 - `GET /health`
 - `GET /v1/mcp/health` (token bearer requis si `API_AUTH_TOKEN` configure)
+- `GET /v1/integrations/health` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/sessions` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/chat` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/webhooks/vapi` (signature HMAC requise si `VAPI_WEBHOOK_SECRET` configure)
+- `POST /v1/vapi/calls` (proxy outbound call vers Vapi, token bearer requis)
+- `POST /v1/voice/synthesize` (synthese vocale ElevenLabs, token bearer requis)
 
 ## Payload permissions et outils
 `POST /v1/chat` et `POST /v1/webhooks/vapi` peuvent inclure:
@@ -60,7 +63,15 @@ Reason codes courants:
 - `MCP_ALLOWED_TOOLS` : allowlist des outils
 - `MCP_REQUIRE_CONFIRMATION` : confirmation par defaut (`true` ou `false`)
 - `API_AUTH_TOKEN` : token bearer API optionnel
+- `VAPI_API_KEY` : cle API pour appels sortants Vapi
+- `VAPI_BASE_URL` : URL API Vapi (par defaut `https://api.vapi.ai`)
+- `VAPI_TIMEOUT_MS` : timeout reseau Vapi
 - `VAPI_WEBHOOK_SECRET` : secret signature webhook
+- `ELEVENLABS_API_KEY` ou `ELEVEN_LABS_API_KEY` : cle API ElevenLabs
+- `ELEVENLABS_VOICE_ID` : voix par defaut pour `POST /v1/voice/synthesize`
+- `ELEVENLABS_MODEL_ID` : modele voix par defaut
+- `ELEVENLABS_BASE_URL` : URL API ElevenLabs (par defaut `https://api.elevenlabs.io`)
+- `ELEVENLABS_TIMEOUT_MS` : timeout reseau ElevenLabs
 
 ## Exemples derreurs API
 - `401 unauthorized` si token bearer invalide

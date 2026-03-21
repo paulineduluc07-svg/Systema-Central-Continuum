@@ -2,6 +2,8 @@ import { createServer, IncomingMessage, Server, ServerResponse } from "node:http
 import { randomUUID } from "node:crypto";
 import { KimAgent } from "../agent-core/kimAgent.js";
 import { InMemorySessionStore } from "../agent-core/sessionStore.js";
+import { ElevenLabsClient, ElevenLabsSynthesisRequest } from "../integrations/elevenLabsClient.js";
+import { VapiCallRequest, VapiClient } from "../integrations/vapiClient.js";
 import { McpClient } from "../mcp-gateway/mcpClient.js";
 import { isBearerAuthorized } from "../shared/auth.js";
 import { log } from "../shared/logger.js";
@@ -15,6 +17,8 @@ export interface ServerConfig {
   agent: KimAgent;
   sessions: InMemorySessionStore;
   mcpClient: McpClient;
+  vapiClient?: VapiClient;
+  elevenLabsClient?: ElevenLabsClient;
   authToken?: string;
   vapiWebhookSecret?: string;
 }
@@ -23,6 +27,8 @@ export interface RequestHandlerConfig {
   agent: KimAgent;
   sessions: InMemorySessionStore;
   mcpClient: McpClient;
+  vapiClient?: VapiClient;
+  elevenLabsClient?: ElevenLabsClient;
   authToken?: string;
   vapiWebhookSecret?: string;
 }
@@ -201,6 +207,52 @@ function readRequestedTool(input: Record<string, unknown>): ChatRequest["request
   };
 }
 
+function readVapiCallRequest(input: Record<string, unknown>): VapiCallRequest | null {
+  const assistantId = readString(input, "assistantId");
+  const customer = input.customer;
+
+  if (!assistantId || !isRecord(customer)) {
+    return null;
+  }
+
+  const number = readString(customer, "number");
+  if (!number) {
+    return null;
+  }
+
+  const name = readString(customer, "name");
+  const phoneNumberId = readString(input, "phoneNumberId");
+  const metadata = isRecord(input.metadata) ? input.metadata : undefined;
+
+  return {
+    assistantId,
+    customer: {
+      number,
+      name
+    },
+    phoneNumberId,
+    metadata
+  };
+}
+
+function readSynthesisRequest(input: Record<string, unknown>): ElevenLabsSynthesisRequest | null {
+  const text = readString(input, "text");
+  if (!text) {
+    return null;
+  }
+
+  const voiceId = readString(input, "voiceId");
+  const modelId = readString(input, "modelId");
+  const outputFormat = readString(input, "outputFormat");
+
+  return {
+    text,
+    voiceId,
+    modelId,
+    outputFormat
+  };
+}
+
 function isSessionCreateRequest(input: unknown): input is SessionCreateRequest {
   if (!isRecord(input)) {
     return false;
@@ -296,6 +348,111 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse, c
 
     json(res, 200, { ok: true, requestId, mcp: mcp.data ?? { ok: true } });
     return;
+  }
+
+  if (req.method === "GET" && req.url === "/v1/integrations/health") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    json(res, 200, {
+      ok: true,
+      requestId,
+      integrations: {
+        vapiConfigured: Boolean(config.vapiClient?.isConfigured()),
+        elevenLabsConfigured: Boolean(config.elevenLabsClient?.isConfigured())
+      }
+    });
+    return;
+  }
+
+  if (req.method === "POST" && req.url === "/v1/vapi/calls") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    if (!config.vapiClient || !config.vapiClient.isConfigured()) {
+      json(res, 503, { error: "vapi_not_configured", requestId });
+      return;
+    }
+
+    try {
+      const body = parseJson(await readRawBody(req));
+      if (!isRecord(body)) {
+        json(res, 400, { error: "invalid_payload", requestId });
+        return;
+      }
+
+      const payload = readVapiCallRequest(body);
+      if (!payload) {
+        json(res, 400, { error: "invalid_vapi_call_payload", requestId });
+        return;
+      }
+
+      const result = await config.vapiClient.createCall(payload);
+      if (!result.success) {
+        json(res, 502, { error: "vapi_call_failed", detail: result.error, requestId, status: result.status });
+        return;
+      }
+
+      json(res, 200, { ok: true, requestId, provider: "vapi", call: result.data });
+      return;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "unknown_error";
+      log("error", "vapi_call_proxy_failed", { requestId, reason });
+      json(res, 500, { error: "internal_error", requestId });
+      return;
+    }
+  }
+
+  if (req.method === "POST" && req.url === "/v1/voice/synthesize") {
+    if (!ensureAuthorized(req, config.authToken)) {
+      json(res, 401, { error: "unauthorized", requestId });
+      return;
+    }
+
+    if (!config.elevenLabsClient || !config.elevenLabsClient.isConfigured()) {
+      json(res, 503, { error: "elevenlabs_not_configured", requestId });
+      return;
+    }
+
+    try {
+      const body = parseJson(await readRawBody(req));
+      if (!isRecord(body)) {
+        json(res, 400, { error: "invalid_payload", requestId });
+        return;
+      }
+
+      const payload = readSynthesisRequest(body);
+      if (!payload) {
+        json(res, 400, { error: "invalid_synthesis_payload", requestId });
+        return;
+      }
+
+      const result = await config.elevenLabsClient.synthesize(payload);
+      if (!result.success || !result.data) {
+        json(res, 502, { error: "synthesis_failed", detail: result.error, requestId, status: result.status });
+        return;
+      }
+
+      json(res, 200, {
+        ok: true,
+        requestId,
+        provider: "elevenlabs",
+        audioBase64: result.data.audioBase64,
+        mimeType: result.data.mimeType,
+        voiceId: result.data.voiceId,
+        modelId: result.data.modelId
+      });
+      return;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : "unknown_error";
+      log("error", "voice_synthesis_failed", { requestId, reason });
+      json(res, 500, { error: "internal_error", requestId });
+      return;
+    }
   }
 
   if (req.method === "POST" && req.url === "/v1/sessions") {
