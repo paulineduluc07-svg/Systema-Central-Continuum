@@ -41,6 +41,32 @@ function sendJson(port: number, path: string, method: string, body: string, head
   });
 }
 
+function sendGet(port: number, path: string, headers?: Record<string, string>): Promise<{ statusCode: number; body: unknown }> {
+  return new Promise((resolve, reject) => {
+    const req = httpRequest(
+      {
+        hostname: "127.0.0.1",
+        port,
+        path,
+        method: "GET",
+        headers: headers ?? {}
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+        res.on("end", () => {
+          const raw = Buffer.concat(chunks).toString("utf8");
+          const parsed = raw.length > 0 ? JSON.parse(raw) : {};
+          resolve({ statusCode: res.statusCode ?? 0, body: parsed });
+        });
+      }
+    );
+
+    req.on("error", reject);
+    req.end();
+  });
+}
+
 function closeServer(server: Server): Promise<void> {
   return new Promise((resolve, reject) => {
     server.close((err) => {
@@ -305,6 +331,120 @@ describe("Tool permissions integration", () => {
     expect(parsed.tool?.status).toBe("blocked");
     expect(parsed.tool?.detail).toBe("tool_grant_expired");
     expect(mcpFetch).toHaveBeenCalledTimes(0);
+
+    await closeServer(server);
+  });
+
+  it("executes /tool command embedded in chat message", async () => {
+    const mcpFetch = vi.fn(async (_url: unknown, _init?: RequestInit) => {
+      return new Response(JSON.stringify({ ok: true, data: { id: "evt_42" } }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const server = startServer({
+      port: 0,
+      agent: new KimAgent(
+        new InMemoryMemoryStore(),
+        new McpPolicy({
+          allowedToolsCsv: "calendar.create_event",
+          requireConfirmationByDefault: "false"
+        }),
+        mcpClient
+      ),
+      sessions: new InMemorySessionStore(),
+      mcpClient
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const response = await sendJson(address.port, "/v1/chat", "POST", JSON.stringify({
+      userId: "user_chat_5",
+      message: '/tool calendar.create_event {"title":"Sync","startAt":"2026-03-21T12:00:00Z"}',
+      grantedTools: ["calendar.create_event"]
+    }));
+
+    expect(response.statusCode).toBe(200);
+    const parsed = response.body as { tool?: { status?: string; name?: string } };
+    expect(parsed.tool?.name).toBe("calendar.create_event");
+    expect(parsed.tool?.status).toBe("executed");
+    expect(mcpFetch).toHaveBeenCalledTimes(1);
+
+    await closeServer(server);
+  });
+
+  it("returns allowed and MCP tools from /v1/tools", async () => {
+    const mcpFetch = vi.fn(async (url: unknown, _init?: RequestInit) => {
+      const endpoint = String(url);
+      if (endpoint.endsWith("/tools")) {
+        return new Response(
+          JSON.stringify({
+            tools: [{ name: "calendar.create_event", description: "Create event" }]
+          }),
+          { status: 200, headers: { "content-type": "application/json" } }
+        );
+      }
+
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" }
+      });
+    });
+
+    globalThis.fetch = mcpFetch as unknown as typeof fetch;
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const server = startServer({
+      port: 0,
+      agent: new KimAgent(
+        new InMemoryMemoryStore(),
+        new McpPolicy({
+          allowedToolsCsv: "calendar.create_event",
+          requireConfirmationByDefault: "false"
+        }),
+        mcpClient
+      ),
+      sessions: new InMemorySessionStore(),
+      mcpClient,
+      mcpPolicy: new McpPolicy({
+        allowedToolsCsv: "calendar.create_event",
+        requireConfirmationByDefault: "false"
+      }),
+      authToken: "token_123"
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const response = await sendGet(address.port, "/v1/tools", {
+      authorization: "Bearer token_123"
+    });
+
+    expect(response.statusCode).toBe(200);
+    const parsed = response.body as { tools?: { allowedTools?: string[]; mcpTools?: Array<{ name: string }> } };
+    expect(parsed.tools?.allowedTools).toContain("calendar.create_event");
+    expect(parsed.tools?.mcpTools?.[0]?.name).toBe("calendar.create_event");
 
     await closeServer(server);
   });

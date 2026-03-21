@@ -37,9 +37,10 @@ export class KimAgent {
     let toolResult: ToolResult | undefined;
     let toolSummary: string | undefined;
 
-    if (input.requestedTool) {
+    const inferredTool = input.requestedTool ?? this.parseToolCommand(input.message);
+    if (inferredTool) {
       toolResult = await this.handleTool(
-        input.requestedTool,
+        inferredTool,
         input.grantedTools ?? [],
         input.permissionGrants ?? [],
         input.revokedTools ?? [],
@@ -57,6 +58,22 @@ export class KimAgent {
     this.memory.append(input.userId, "assistant", reply);
 
     return { reply, tool: toolResult };
+  }
+
+  async executeTool(input: {
+    requestedTool: RequestedTool;
+    grantedTools?: string[];
+    permissionGrants?: PermissionGrantState[];
+    revokedTools?: string[];
+    confirmationProvided?: boolean;
+  }): Promise<ToolResult> {
+    return this.handleTool(
+      input.requestedTool,
+      input.grantedTools ?? [],
+      input.permissionGrants ?? [],
+      input.revokedTools ?? [],
+      input.confirmationProvided
+    );
   }
 
   private async handleTool(
@@ -111,7 +128,46 @@ export class KimAgent {
     return {
       name: requestedTool.name,
       status: "executed",
-      detail: "mcp_execution_success"
+      detail: "mcp_execution_success",
+      output: execution.data
     };
+  }
+
+  private parseToolCommand(message: string): RequestedTool | undefined {
+    const trimmed = message.trim();
+    if (!trimmed.startsWith("/tool ")) {
+      return undefined;
+    }
+
+    const command = trimmed.slice("/tool ".length).trim();
+    if (!command) {
+      return undefined;
+    }
+
+    const firstSpace = command.indexOf(" ");
+    if (firstSpace < 0) {
+      return undefined;
+    }
+
+    const toolName = command.slice(0, firstSpace).trim();
+    const rawInput = command.slice(firstSpace + 1).trim();
+    if (!toolName || !rawInput) {
+      return undefined;
+    }
+
+    try {
+      const parsed = JSON.parse(rawInput) as unknown;
+      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+        return undefined;
+      }
+
+      return {
+        name: toolName,
+        input: parsed as Record<string, unknown>,
+        sensitive: false
+      };
+    } catch {
+      return undefined;
+    }
   }
 }

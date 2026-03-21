@@ -49,4 +49,37 @@ describe("McpClient", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(result.success).toBe(true);
   });
+
+  it("lists tools when MCP server exposes /tools", async () => {
+    const fetchMock = vi.fn(async () => {
+      return new Response(
+        JSON.stringify({
+          tools: [
+            {
+              name: "calendar.create_event",
+              description: "Create a calendar event"
+            }
+          ]
+        }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" }
+        }
+      );
+    });
+
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+    const client = new McpClient({
+      baseUrl: "https://mcp.example.com",
+      apiKey: "key_123",
+      timeoutMs: 5000
+    });
+
+    const result = await client.listTools();
+
+    expect(result.success).toBe(true);
+    expect(result.tools?.[0]?.name).toBe("calendar.create_event");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
 });

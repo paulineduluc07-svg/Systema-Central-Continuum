@@ -34,7 +34,8 @@ async function buildRuntime(): Promise<RequestHandlerConfig> {
 
   const mcpPolicy = new McpPolicy({
     allowedToolsCsv: process.env.MCP_ALLOWED_TOOLS,
-    requireConfirmationByDefault: process.env.MCP_REQUIRE_CONFIRMATION
+    requireConfirmationByDefault: process.env.MCP_REQUIRE_CONFIRMATION,
+    allowAllowlistAsDefaultGrant: process.env.MCP_ALLOWLIST_AS_DEFAULT_GRANTS
   });
 
   const mcpClient = new McpClient({
@@ -73,6 +74,7 @@ async function buildRuntime(): Promise<RequestHandlerConfig> {
     agent,
     sessions,
     mcpClient,
+    mcpPolicy,
     vapiClient,
     elevenLabsClient,
     authToken: process.env.API_AUTH_TOKEN,

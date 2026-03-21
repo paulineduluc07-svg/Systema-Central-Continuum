@@ -1,39 +1,56 @@
 # AGENT-INSTRUCTIONS -- Kim Agentic Companion
 
 Lire avant toute intervention sur ce projet.
-Regles generales : voir `../../AGENTS.md`
-Ce fichier ajoute uniquement le contexte et les consignes specifiques a ce projet.
+Regles generales: voir `../../AGENTS.md`.
+Ce document complete les regles globales avec le contexte Kim.
 
-## Contexte du projet
-**Kim Agentic Companion** -- App compagnon conversationnelle type Replika, avec Kim en mode agentic.
-Objectif : combiner relation conversationnelle, actions utiles et execution out-of-app via MCP.
+## Mission
+Construire Kim, une assistante type Replika (chat + voix + presence visuelle), avec memoire persistante et outils agentiques via MCP.
 
-## Cible produit
-- Chat + voix avec personnalite Kim coherente
-- Memoire utilisateur long terme (preferences, objectifs, contexte)
-- Capacite d'action externe via MCP (avec permissions strictes)
-- Cadre trust/safety explicite pour eviter les actions non desirees
+## Etats de reference (2026-03-21)
+- Web app API + UI disponibles sur `kim-agentic-companion-staging`.
+- MCP server disponible sur `kim-mcp-staging`.
+- Flux critiques actifs: sessions, chat LLM, outils MCP, Vapi webhook signe, ElevenLabs synthesis.
+- Persistance sessions/memoire: Postgres (`DATABASE_URL`).
 
-## Architecture de reference
-- App client (web/mobile)
-- API backend + orchestrateur agentique
-- Memory store
-- MCP gateway / tool routers
-- Guardrails + observabilite + audit logs
+## URLs cloud de travail
+- App: `https://kim-agentic-companion-staging.vercel.app`
+- MCP: `https://kim-mcp-staging.vercel.app`
 
-## Ce dossier contient
-- Notes/ -- decisions produit/techniques et contexte operationnel
-- Prompts/ -- prompts systeme et prompts d'orchestration
-- Assets/ -- references visuelles et assets produit
-- Livrables/ -- livrables valides
-- Code/ -- implementation technique
-- Todo.md -- taches actives
-- Roadmap.md -- vision et etapes
+## Layout du projet
+- `Code/`: backend principal + UI web integree + tests
+- `MCP-Server/`: serveur MCP minimal (health/tools/invoke)
+- `Assets/`: references visuelles produit
+- `Notes/`: notes produit/fonctionnelles
+- `Prompts/`: prompts et variants
+- `Roadmap.md`: macro planning
+- `Todo.md`: execution backlog
 
-## Priorites actuelles
-- Definir MVP v1 (chat + memoire + actions MCP limitees)
-- Poser les permissions et la gouvernance d'actions externes
-- Construire un backend deployable cloud-first (sans dependance locale)
-- Valider les parcours critiques (conversation, action, refus securise)
+## Workflow recommande (remote-first)
+1. Prioriser verifications cloud (Vercel + endpoints deployes) avant de toucher au local.
+2. Si code change necessaire: modifier localement, tester (`check`, `test`, `build`), deploy preview.
+3. Mettre a jour docs de reprise si comportement/vars/routes changent.
+4. Eviter les secrets en clair dans les fichiers du repo.
 
-*Mis a jour : 2026-03-20 | Codex -- Systema Central Continuum*
+## Checklist reprise agent
+1. Lire `Roadmap.md`, `Todo.md`, puis `Code/README.md` et `MCP-Server/README.md`.
+2. Verifier endpoints:
+   - `GET /health`
+   - `GET /v1/integrations/health` (Bearer)
+   - `GET /v1/mcp/health` (Bearer)
+   - MCP `GET /health` et `GET /tools` (`x-api-key`)
+3. Valider localement dans `Code/`:
+   - `npm run check`
+   - `npm test`
+   - `npm run build`
+
+## Variables critiques (sans valeurs)
+- App: `APP_NAME`, `API_AUTH_TOKEN`, `DATABASE_URL`, `OPENAI_API_KEY`, `VAPI_API_KEY`, `VAPI_WEBHOOK_SECRET`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `MCP_SERVER_BASE_URL`, `MCP_API_KEY`
+- Policy MCP: `MCP_ALLOWED_TOOLS`, `MCP_REQUIRE_CONFIRMATION`, `MCP_ALLOWLIST_AS_DEFAULT_GRANTS`
+
+## Guardrails
+- Ne pas supprimer `kim-mcp-staging` sans migration explicite de `MCP_SERVER_BASE_URL`.
+- Ne pas casser les endpoints existants pour introduire une nouveaute UI.
+- Ne pas faire de nettoyage destructif local sans sauvegarde distante verifiee.
+
+*Mis a jour: 2026-03-21 | Codex*

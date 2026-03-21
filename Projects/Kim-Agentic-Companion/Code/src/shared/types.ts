@@ -18,6 +18,7 @@ export interface ToolResult {
   name: string;
   status: "blocked" | "needs_confirmation" | "executed" | "error";
   detail: string;
+  output?: unknown;
 }
 
 export interface PermissionGrantState {

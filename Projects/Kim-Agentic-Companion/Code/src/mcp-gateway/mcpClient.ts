@@ -1,5 +1,5 @@
 import { CalendarCreateEventInput } from "../shared/types.js";
-import { McpInvokeRequest, McpInvokeResult } from "./types.js";
+import { McpInvokeRequest, McpInvokeResult, McpToolDescriptor } from "./types.js";
 
 interface HttpResult {
   ok: boolean;
@@ -72,6 +72,29 @@ export class McpClient {
     return {
       success: true,
       data: result.data
+    };
+  }
+
+  async listTools(): Promise<{ success: boolean; tools?: McpToolDescriptor[]; error?: string }> {
+    if (!this.baseUrl) {
+      return {
+        success: false,
+        error: "mcp_server_not_configured"
+      };
+    }
+
+    const result = await this.getJson("/tools");
+    if (!result.ok) {
+      return {
+        success: false,
+        error: result.error
+      };
+    }
+
+    const tools = this.normalizeTools(result.data);
+    return {
+      success: true,
+      tools
     };
   }
 
@@ -214,5 +237,44 @@ export class McpClient {
     } catch {
       return text;
     }
+  }
+
+  private normalizeTools(input: unknown): McpToolDescriptor[] {
+    const asArray =
+      Array.isArray(input) ? input : this.readRecord(input)?.tools && Array.isArray(this.readRecord(input)?.tools) ? (this.readRecord(input)?.tools as unknown[]) : [];
+
+    return asArray
+      .map((item): McpToolDescriptor | null => {
+        const record = this.readRecord(item);
+        if (!record) {
+          return null;
+        }
+
+        const name = typeof record.name === "string" ? record.name.trim() : "";
+        if (!name) {
+          return null;
+        }
+
+        const description = typeof record.description === "string" ? record.description : undefined;
+        const inputSchema =
+          record.inputSchema && typeof record.inputSchema === "object" && !Array.isArray(record.inputSchema)
+            ? (record.inputSchema as Record<string, unknown>)
+            : undefined;
+
+        return {
+          name,
+          description,
+          inputSchema
+        };
+      })
+      .filter((item): item is McpToolDescriptor => Boolean(item));
+  }
+
+  private readRecord(input: unknown): Record<string, unknown> | null {
+    if (typeof input !== "object" || input === null || Array.isArray(input)) {
+      return null;
+    }
+
+    return input as Record<string, unknown>;
   }
 }

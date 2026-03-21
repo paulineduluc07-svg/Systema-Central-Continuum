@@ -153,4 +153,21 @@ describe("McpPolicy", () => {
     expect(decision.allowed).toBe(true);
     expect(decision.reason).toBe("allowed");
   });
+
+  it("uses allowlist as default grant when enabled", () => {
+    const policy = new McpPolicy({
+      allowedToolsCsv: "calendar.create_event",
+      requireConfirmationByDefault: "false",
+      allowAllowlistAsDefaultGrant: "true"
+    });
+
+    const decision = policy.evaluate({
+      toolName: "calendar.create_event",
+      userGrantedScopes: [],
+      isSensitive: false
+    });
+
+    expect(decision.allowed).toBe(true);
+    expect(decision.reason).toBe("allowed");
+  });
 });

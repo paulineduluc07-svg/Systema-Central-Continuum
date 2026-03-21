@@ -3,11 +3,13 @@ import { ToolPolicyDecision, ToolPolicyInput } from "./types.js";
 export interface McpPolicyConfig {
   allowedToolsCsv?: string;
   requireConfirmationByDefault?: string;
+  allowAllowlistAsDefaultGrant?: string;
 }
 
 export class McpPolicy {
   private readonly allowedTools: Set<string>;
   private readonly requireConfirmationByDefault: boolean;
+  private readonly allowAllowlistAsDefaultGrant: boolean;
 
   constructor(config: McpPolicyConfig) {
     this.allowedTools = new Set(
@@ -18,6 +20,11 @@ export class McpPolicy {
     );
 
     this.requireConfirmationByDefault = (config.requireConfirmationByDefault ?? "true") !== "false";
+    this.allowAllowlistAsDefaultGrant = config.allowAllowlistAsDefaultGrant === "true";
+  }
+
+  getAllowedTools(): string[] {
+    return Array.from(this.allowedTools);
   }
 
   private isGrantActive(expiresAt: string | undefined, nowMs: number): boolean {
@@ -55,8 +62,10 @@ export class McpPolicy {
 
     const matchingGrants = (input.permissionGrants ?? []).filter((grant) => grant.scopes.includes(input.toolName));
     const hasScopeFromSimpleGrant = input.userGrantedScopes.includes(input.toolName);
+    const useAllowlistAsGrant =
+      this.allowAllowlistAsDefaultGrant && (input.userGrantedScopes.length === 0) && (matchingGrants.length === 0);
 
-    if (matchingGrants.length === 0 && !hasScopeFromSimpleGrant) {
+    if (matchingGrants.length === 0 && !hasScopeFromSimpleGrant && !useAllowlistAsGrant) {
       return {
         allowed: false,
         requiresConfirmation: false,

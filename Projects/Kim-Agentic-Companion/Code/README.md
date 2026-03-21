@@ -23,6 +23,8 @@ Contenir limplementation technique cloud-first du produit Kim agentic companion.
 - `GET /health`
 - `GET /v1/mcp/health` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `GET /v1/integrations/health` (token bearer requis si `API_AUTH_TOKEN` configure)
+- `GET /v1/tools` (liste policy + outils MCP, token bearer requis)
+- `POST /v1/tools/invoke` (execution outil directe, token bearer requis)
 - `POST /v1/sessions` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/chat` (token bearer requis si `API_AUTH_TOKEN` configure)
 - `POST /v1/webhooks/vapi` (signature HMAC requise si `VAPI_WEBHOOK_SECRET` configure)
@@ -35,6 +37,10 @@ Contenir limplementation technique cloud-first du produit Kim agentic companion.
 - `revokedTools: string[]`
 - `confirmationProvided: boolean`
 - `requestedTool: { name, input, sensitive? }`
+
+Raccourci power-user dans `message`:
+- `/tool <toolName> <jsonInput>`
+- exemple: `/tool calendar.create_event {"title":"Demo","startAt":"2026-03-21T18:00:00Z"}`
 
 Optionnellement, un format enrichi est supporte:
 - `permissionContext.revokes[].scope`
@@ -55,6 +61,7 @@ Reason codes courants:
 - `confirmation_required`
 
 ## Variables cloud critiques
+- `APP_NAME` : nom affiche dans linterface web (`Kim` par defaut)
 - `DATABASE_URL` : active la persistance Postgres
 - `PGSSL_DISABLE` : desactive SSL DB si necessaire (`false` par defaut)
 - `MCP_SERVER_BASE_URL` : URL du serveur MCP cloud
@@ -62,6 +69,7 @@ Reason codes courants:
 - `MCP_TIMEOUT_MS` : timeout reseau MCP
 - `MCP_ALLOWED_TOOLS` : allowlist des outils
 - `MCP_REQUIRE_CONFIRMATION` : confirmation par defaut (`true` ou `false`)
+- `MCP_ALLOWLIST_AS_DEFAULT_GRANTS` : si `true`, lallowlist agit comme grant par defaut (staging trusted mode)
 - `API_AUTH_TOKEN` : token bearer API optionnel
 - `VAPI_API_KEY` : cle API pour appels sortants Vapi
 - `VAPI_BASE_URL` : URL API Vapi (par defaut `https://api.vapi.ai`)

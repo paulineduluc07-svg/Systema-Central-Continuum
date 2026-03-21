@@ -53,7 +53,8 @@ export class CalendarConnector {
     return {
       name: "calendar.create_event",
       status: "executed",
-      detail: "calendar_event_created"
+      detail: "calendar_event_created",
+      output: result.data
     };
   }
 }

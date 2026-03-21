@@ -48,6 +48,12 @@ export interface McpInvokeRequest {
   input: Record<string, unknown>;
 }
 
+export interface McpToolDescriptor {
+  name: string;
+  description?: string;
+  inputSchema?: Record<string, unknown>;
+}
+
 export interface McpInvokeResult {
   success: boolean;
   data?: unknown;
