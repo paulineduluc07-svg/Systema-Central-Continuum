@@ -10,7 +10,7 @@ Stack : TypeScript + React 19 + Vite + Tailwind v4 + shadcn/ui + tRPC + Drizzle 
 Code actif : `Projects/Systema-Agency/Code/`.
 Deploye : `systema-agency.vercel.app`
 
-## Vision produit (2026-03-20)
+## Vision produit
 Dashboard minimaliste organise en 6 onglets fixes :
 - **Sante** : notes + raccourci vers Suivi medicament (/suivi)
 - **Finance** : notes
@@ -20,71 +20,84 @@ Dashboard minimaliste organise en 6 onglets fixes :
 - **Ressources IA** : redirection vers Prompt Vault (/prompt-vault)
 
 Interface sobre et fonctionnelle. Pas de gamification, pas de RPG, pas d'elements tarot.
-Le module Kim (compagnon IA) est un projet separe dans `Projects/Kim-Agentic-Companion/` -- ne pas l'integrer ici pour le moment.
+Le module Kim (compagnon IA) est un projet separe dans `Projects/Kim-Agentic-Companion/` -- ne pas l'integrer ici.
+
+## Systeme d'auth
+Auth email/password auto-contenu. Aucun OAuth, aucun tiers.
+- `sdk.verifyCredentials(email, password)` : comparaison HMAC timing-safe (crypto Node.js natif)
+- Variables requises : OWNER_EMAIL, OWNER_PASSWORD, JWT_SECRET
+- Session : cookie JWT via `jose`
+- Fichiers cles : `server/_core/sdk.ts`, `server/_core/env.ts`
 
 ## Architecture technique actuelle
 
 ### Frontend (`client/src/`)
 ```
 pages/
-  Home.tsx        -- dashboard principal (onglets + notes par onglet)
-  Suivi.tsx       -- suivi medicament (page complete, route /suivi)
-  PromptVault.tsx -- bibliotheque prompts IA (route /prompt-vault)
+  Home.tsx        -- dashboard principal (6 onglets + notes par onglet + LoginModal)
+  Suivi.tsx       -- suivi medicament (tRPC si auth, localStorage fallback sinon)
+  PromptVault.tsx -- bibliotheque prompts IA
   NotFound.tsx
-components/
-  AdminPanel.tsx, DashboardLayout.tsx, EditableText.tsx
-  ErrorBoundary.tsx, ExportDialog.tsx, PasswordGate.tsx
-  widgets/
-    NotesWidget.tsx, StickyNote.tsx
-  ui/ (shadcn components)
 hooks/
   useSyncedData.ts    -- sync notes/tasks/prefs (DB si auth, localStorage sinon)
   useDataMigration.ts -- migration localStorage -> DB
-  usePersistedState.ts, useMobile.tsx, usePersistFn.ts
-contexts/
-  ConfigContext.tsx, ThemeContext.tsx
+  usePersistedState.ts
 _core/hooks/
-  useAuth.ts
+  useAuth.ts          -- login(email, password), logout, isAuthenticated
 ```
 
 ### Backend (`server/`)
 ```
-routers.ts   -- API tRPC : auth, tasks, notes, preferences, migration, customTabs, canvas
+routers.ts   -- API tRPC : auth, tasks, notes, preferences, migration, customTabs, canvas, suivi
 db.ts        -- couche Drizzle ORM
-_core/       -- trpc, context, oauth, cookies, env, sdk, rateLimit, llm...
+_core/       -- trpc, context, cookies, env, sdk, rateLimit
 ```
 
 ### Schema DB (Neon PostgreSQL, via Drizzle)
-Tables : `users`, `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_data`
+Tables actives : `users`, `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_data`, `suivi_entries`
+
+Schema suivi_entries :
+- id (serial PK), userId (int), timestamp (timestamp), date (varchar 10)
+- prise (varchar 5), dose (int), reasons (text JSON array), note (text)
+
+### tRPC suivi.*
+- `suivi.list` : retourne toutes les entrees de l'utilisateur connecte (timestamp converti en ISO string)
+- `suivi.add` : ajoute une entree
+- `suivi.replace` : remplace toutes les entrees (utilise pour import JSON)
 
 ### Deploiement Vercel
-- Build : `pnpm run build:client` (frontend seulement)
-- Routes API : `api/oauth/`, `api/trpc/` (Vercel Functions)
-- Rewrites : tout vers `/index.html` sauf `/api/*`
+- Build : `pnpm run build:client`
+- Routes API : `api/trpc/` (Vercel Functions)
+- Variables d'env requises : DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD
 
-## Etat actuel (2026-03-20)
+## Etat actuel (2026-03-21)
 - [x] Migration GitHub -> SCC validee
-- [x] Refonte architecture frontend complete (session 2026-03-20)
-  - Suppression : Drawn by Fate, VisionBoard, LifeCommandChat, Map, Whiteboard, GameTabs, widgets RPG
-  - Nouveau Home.tsx : 6 onglets fixes, sticky notes syncees par onglet
-  - App.tsx nettoye, routers.ts allege (tarot + ai retires)
-- [ ] Auth a finaliser (VITE_OAUTH_PORTAL_URL non configure en prod)
-- [ ] Suivi medicament : sync DB a implementer (actuellement localStorage)
-- [ ] .env.example incomplet (variables manquantes)
-- [ ] Suppression definitive ancien repo decidee
+- [x] Refonte architecture frontend (2026-03-20) : suppression RPG/Tarot/LifeCommand
+- [x] Nouveau Home.tsx : 6 onglets fixes + sticky notes syncees
+- [x] Auth email/password (2026-03-20) : remplace OAuth Manus, zero nouvelle dependance
+- [x] Suivi medicament sync DB (2026-03-21) : tRPC + localStorage fallback
+- [ ] **Variables Vercel a configurer** (DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD)
+- [ ] **Migration SQL a appliquer** dans Neon : `drizzle/0001_suivi_entries.sql`
+  - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
+  - Option B : coller le SQL dans Neon SQL Editor
+- [ ] Deployer sur Vercel apres les 2 etapes ci-dessus
+- [ ] Completer .env.example (ajouter OWNER_EMAIL, OWNER_PASSWORD ; retirer variables Manus)
+- [ ] Nettoyer les fichiers server inutilises : oauth.ts, llm.ts, imageGeneration.ts, voiceTranscription.ts, map.ts, dataApi.ts, notification.ts
+- [ ] Ajouter foreign keys dans schema Drizzle
 
 ## Problemes connus
-| Probleme | Fichier | Priorite |
+| Probleme | Action requise | Qui |
 |---|---|---|
-| VITE_OAUTH_PORTAL_URL non configure Vercel | Variables Vercel | Haute (bloque sync) |
-| Suivi.tsx utilise localStorage uniquement | pages/Suivi.tsx | Haute |
-| .env.example incomplet | .env.example | Moyenne |
-| Foreign keys absentes en DB | drizzle/schema.ts | Basse |
+| Variables Vercel non configurees | Vercel > Settings > Env Vars | Proprietaire |
+| Migration suivi_entries non appliquee | pnpm drizzle-kit push OU Neon SQL Editor | Proprietaire |
+| .env.example obsolete | Mettre a jour le fichier | Agent |
+| Fichiers server inutilises | Verifier et supprimer | Agent |
+| Foreign keys absentes | Ajouter dans schema.ts | Agent |
 
 ## Consignes specifiques
 - Ne pas reimplanter de Drawn by Fate, tarot, RPG, ou LifeCommandChat.
 - Ne pas toucher au projet Kim (`Projects/Kim-Agentic-Companion/`).
-- La sync des donnees entre appareils passe par l'auth OAuth -- ne pas contourner.
+- Ne pas ajouter de dependances npm sans justification explicite.
 - Respecter la convention de commit : `[NomAgent] [Systema-Agency] : Description courte`
 - Toute decision importante -> trace dans `Notes/Systema Agency.md`
 
@@ -97,4 +110,4 @@ Tables : `users`, `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_d
 - Todo.md -- taches actives
 - Roadmap.md -- vision et etapes
 
-*Mis a jour : 2026-03-20 | Claude (session refonte) -- Systema Central Continuum*
+*Mis a jour : 2026-03-21 | Claude (session sync DB) -- Systema Central Continuum*
