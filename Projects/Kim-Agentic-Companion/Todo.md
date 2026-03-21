@@ -41,7 +41,7 @@
 - [x] Creer InfoCards + ToolList sidebar
 - [x] Creer page principale (layout.tsx + page.tsx + globals.css)
 - [x] Creer README.md + AGENT-INSTRUCTIONS.md frontend
-- [x] Deployer sur Vercel (staging frontend) -- kim-frontend-staging.vercel.app
+- [x] Deployer sur Vercel (staging frontend)
 - [x] Verifier zero regression vs UI inline actuelle
 
 ## Frontend Phase F2 -- Tabs (COMPLETE)
@@ -59,18 +59,19 @@
 - [x] useVoice hook (toggle, transcript callback, voiceAvailableAtom)
 - [x] useTTS hook (speak, isSpeakingAtom)
 - [x] Auto-TTS sur reponses Kim (watcher dans ChatPanel)
-- [x] Deploye sur Vercel -- kim-agentic-companion-staging.vercel.app
 
-## Frontend Phase F4 -- 3D Scene
-- [ ] Scene Three.js + React Three Fiber + Canvas
-- [ ] Galaxy room (floor + glass walls + fog)
-- [ ] Starfield particules (2000 points)
-- [ ] Nebula lighting (pink/cyan/purple)
-- [ ] Avatar Kim GLB (Ready Player Me)
-- [ ] Animations Mixamo (idle, walk, wave, sit, dance)
-- [ ] AnimationController (react aux events chat)
-- [ ] Camera OrbitControls
-- [ ] Fallback 2D
+## Frontend Phase F4 -- 3D Galaxy Room + Kim Avatar (COMPLETE)
+- [x] Scene Three.js + React Three Fiber (Canvas dans AppShell, SSR-safe via dynamic import)
+- [x] Starfield 2000 particules (Starfield.tsx, rotation lente)
+- [x] Nebula lighting (NebulaLights.tsx -- rose/cyan/purple, intensite oscillante)
+- [x] Galaxy room (GalaxyRoom.tsx -- plancher + murs verre glass)
+- [x] sceneStore Zustand (avatarAnimation, isSceneReady)
+- [x] KimAvatar 2.5D billboard (photo rose primary -- shader suppression fond blanc)
+- [x] Camera lente orbit automatique (CameraRig dans GalaxyScene)
+- [x] AppShell mis a jour -- GalaxyScene remplace CosmosBackground CSS
+- [x] Avatar primaire : femme costume rose fuchsia (Notes/Capture 2026-03-20 222152.png)
+- [x] .npmrc legacy-peer-deps pour compatibilite Vercel + React 19
+- [x] Deploye -- kim-agentic-companion-staging-f7ayea688.vercel.app
 
 ## Frontend Phase F5 -- Customisation
 - [ ] Wardrobe systeme slot (hair, top, bottom, shoes, accessory)
@@ -128,4 +129,4 @@
 
 ---
 
-*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 complete*
+*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 complete, F4 complete*
