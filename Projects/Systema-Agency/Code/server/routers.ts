@@ -324,6 +324,70 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // Suivi medicament API
+  suivi: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const rows = await db.getSuiviEntriesByUser(ctx.user.id);
+      return rows.map((r) => ({
+        id: r.id,
+        timestamp: r.timestamp.toISOString(),
+        date: r.date,
+        prise: r.prise,
+        dose: r.dose,
+        reasons: JSON.parse(r.reasons) as string[],
+        note: r.note,
+      }));
+    }),
+
+    add: protectedProcedure
+      .input(z.object({
+        timestamp: z.string(),
+        date: z.string(),
+        prise: z.string(),
+        dose: z.number(),
+        reasons: z.array(z.string()),
+        note: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await db.createSuiviEntry({
+          userId: ctx.user.id,
+          timestamp: new Date(input.timestamp),
+          date: input.date,
+          prise: input.prise,
+          dose: input.dose,
+          reasons: JSON.stringify(input.reasons),
+          note: input.note,
+        });
+        return { id: result.id };
+      }),
+
+    replace: protectedProcedure
+      .input(z.object({
+        entries: z.array(z.object({
+          timestamp: z.string(),
+          date: z.string(),
+          prise: z.string(),
+          dose: z.number(),
+          reasons: z.array(z.string()),
+          note: z.string(),
+        })),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.replaceSuiviEntries(
+          ctx.user.id,
+          input.entries.map((e) => ({
+            timestamp: new Date(e.timestamp),
+            date: e.date,
+            prise: e.prise,
+            dose: e.dose,
+            reasons: JSON.stringify(e.reasons),
+            note: e.note,
+          })),
+        );
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
