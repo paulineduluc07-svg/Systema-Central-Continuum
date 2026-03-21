@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
 import { InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences } from "../drizzle/schema";
@@ -228,4 +228,32 @@ export async function deleteCanvasData(userId: number, tabId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(canvasData).where(and(eq(canvasData.userId, userId), eq(canvasData.tabId, tabId)));
+}
+
+// ============== SUIVI ENTRIES ==============
+
+import { suiviEntries, InsertSuiviEntry } from "../drizzle/schema";
+
+export async function getSuiviEntriesByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(suiviEntries)
+    .where(eq(suiviEntries.userId, userId))
+    .orderBy(desc(suiviEntries.timestamp));
+}
+
+export async function createSuiviEntry(entry: InsertSuiviEntry) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(suiviEntries).values(entry).returning({ id: suiviEntries.id });
+  return { id: result[0].id, ...entry };
+}
+
+export async function replaceSuiviEntries(userId: number, entries: Omit<InsertSuiviEntry, "userId">[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(suiviEntries).where(eq(suiviEntries.userId, userId));
+  if (entries.length > 0) {
+    await db.insert(suiviEntries).values(entries.map((e) => ({ ...e, userId })));
+  }
 }
