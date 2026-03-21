@@ -51,11 +51,15 @@
 - [x] Page Diary (journal + reflexion Kim)
 - [x] Tab switching client-side via TabBar (Chat/Memory/Profile/Activities/Diary)
 
-## Frontend Phase F3 -- Voice
-- [ ] Speech Recognition (Web Speech API)
-- [ ] TTS playback (ElevenLabs via backend)
-- [ ] Push-to-talk + toggle modes
-- [ ] VoiceWaveform animation CSS
+## Frontend Phase F3 -- Voice (COMPLETE)
+- [x] Speech Recognition (Web Speech API -- SpeechRecognitionManager)
+- [x] TTS playback (ElevenLabs via backend -- voix Tara configuree server-side)
+- [x] Push-to-talk (VoiceButton dans ChatInput) + toggle TTS auto (TTSToggle)
+- [x] VoiceWaveform animation CSS (@keyframes voice-bar)
+- [x] useVoice hook (toggle, transcript callback, voiceAvailableAtom)
+- [x] useTTS hook (speak, isSpeakingAtom)
+- [x] Auto-TTS sur reponses Kim (watcher dans ChatPanel)
+- [x] Deploye sur Vercel -- kim-agentic-companion-staging.vercel.app
 
 ## Frontend Phase F4 -- 3D Scene
 - [ ] Scene Three.js + React Three Fiber + Canvas
@@ -124,4 +128,4 @@
 
 ---
 
-*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 a venir*
+*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 complete*
