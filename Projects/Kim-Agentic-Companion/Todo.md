@@ -4,6 +4,7 @@
 
 ---
 
+## Backend (complete)
 - [x] Initialiser la structure SCC du projet
 - [x] Poser le cadre produit (Kim agentic + MCP)
 - [x] Definir user stories MVP (chat, voix, memoire, actions)
@@ -26,12 +27,71 @@
 - [x] Standardiser variable ElevenLabs (`ELEVENLABS_API_KEY`)
 - [x] Verifier chaines de sante app + MCP en cloud
 
-## Priorites immediates
-- [ ] Definir et appliquer le nom final via `APP_NAME` (dev/preview/prod)
-- [ ] Ajouter page memoire (liste + edition) dans UI
-- [ ] Ajouter auth UX plus simple que token manuel en frontend
-- [ ] Prioriser 3 outils "clawbot-like" a implementer ensuite
-- [ ] Rendre les docs de runbook encore plus operationnelles
+## Frontend Phase F1 -- Foundation + Chat (EN COURS)
+- [ ] Creer `Frontend/` avec scaffold Next.js 15 + React 19
+- [ ] Configurer Tailwind + design tokens galaxy
+- [ ] Creer `KimApiClient` type (tous les endpoints backend)
+- [ ] Creer types frontend (miroir de `shared/types.ts`)
+- [ ] Creer stores Jotai (auth, chat, tools)
+- [ ] Creer hooks (useChat, useAuth, useTools)
+- [ ] Creer composants UI (GlassPanel, Button, Input, ChatBubble, TabBar)
+- [ ] Creer layout (TopNav, CosmosBackground CSS, AppShell)
+- [ ] Creer ChatPanel + ChatLog + ChatInput + TypingIndicator
+- [ ] Creer AvatarStage (image 2D + orb anime)
+- [ ] Creer InfoCards + ToolList sidebar
+- [ ] Creer page principale (layout.tsx + page.tsx + globals.css)
+- [ ] Creer README.md + AGENT-INSTRUCTIONS.md frontend
+- [ ] Deployer sur Vercel (staging frontend)
+- [ ] Verifier zero regression vs UI inline actuelle
+
+## Frontend Phase F2 -- Tabs
+- [ ] Page Memory (liste + edition)
+- [ ] Page Profile (sliders personnalite)
+- [ ] Page Activities (timeline)
+- [ ] Page Diary (journal)
+- [ ] Routing tabs via Next.js App Router
+
+## Frontend Phase F3 -- Voice
+- [ ] Speech Recognition (Web Speech API)
+- [ ] TTS playback (ElevenLabs via backend)
+- [ ] Push-to-talk + toggle modes
+- [ ] VoiceWaveform animation CSS
+
+## Frontend Phase F4 -- 3D Scene
+- [ ] Scene Three.js + React Three Fiber + Canvas
+- [ ] Galaxy room (floor + glass walls + fog)
+- [ ] Starfield particules (2000 points)
+- [ ] Nebula lighting (pink/cyan/purple)
+- [ ] Avatar Kim GLB (Ready Player Me)
+- [ ] Animations Mixamo (idle, walk, wave, sit, dance)
+- [ ] AnimationController (react aux events chat)
+- [ ] Camera OrbitControls
+- [ ] Fallback 2D
+
+## Frontend Phase F5 -- Customisation
+- [ ] Wardrobe systeme slot (hair, top, bottom, shoes, accessory)
+- [ ] meshSwapper.ts
+- [ ] Catalogue vetements JSON
+- [ ] Room editor (drag-and-drop)
+- [ ] Furniture raycasting + snap grid
+- [ ] Room presets
+- [ ] Persistance Zustand + localStorage
+
+## Frontend Phase F6 -- Auth + Tools + Settings
+- [ ] Login page (companion access code)
+- [ ] AuthGuard redirect
+- [ ] ToolsPanel + ToolCard + PermissionBadge
+- [ ] ConfirmationDialog (Allow once / Always / Deny)
+- [ ] Settings page (voix, theme, compte)
+
+## Frontend Phase F7 -- PWA + Mobile
+- [ ] PWA manifest + service worker (Serwist)
+- [ ] Icons PWA (192, 512, apple-touch)
+- [ ] Capacitor config + init
+- [ ] Build iOS (Xcode)
+- [ ] Build Android (Android Studio)
+- [ ] Support offline
+- [ ] Safe area insets iOS
 
 ## Checklist securite
 - [x] Secrets uniquement en variables denvironnement
@@ -41,7 +101,7 @@
 - [x] Verification signature webhook Vapi (si secret configure)
 - [x] Bearer auth API (si token configure)
 
-## Checklist technique
+## Checklist technique backend
 - [x] Endpoint `GET /health`
 - [x] Endpoint `GET /v1/mcp/health`
 - [x] Endpoint `GET /v1/integrations/health`
