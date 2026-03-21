@@ -16,10 +16,16 @@
   - [x] useAuth.ts : ajout login(email, password)
   - [x] Home.tsx : modal de connexion email/password
   - [x] api/oauth/callback.ts : vide (plus utilise)
+- [x] Suivi medicament : sync DB (2026-03-21)
+  - [x] drizzle/schema.ts : ajout table `suivi_entries`
+  - [x] drizzle/0001_suivi_entries.sql : migration SQL
+  - [x] server/db.ts : ajout getSuiviEntriesByUser, createSuiviEntry, replaceSuiviEntries
+  - [x] server/routers.ts : ajout router `suivi.list / suivi.add / suivi.replace`
+  - [x] client/src/pages/Suivi.tsx : sync tRPC quand authentifie, localStorage fallback sinon
 
-## A faire maintenant -- Configurer les variables Vercel
+## A faire maintenant -- Configurer les variables Vercel et appliquer la migration
 
-L'auth est implementee. Pour qu'elle fonctionne en prod, configurer ces variables dans Vercel :
+Les variables Vercel sont necessaires pour que l'auth et le suivi fonctionnent en prod :
 
 ```
 DATABASE_URL=      postgresql://... (deja configure normalement)
@@ -30,17 +36,11 @@ OWNER_PASSWORD=    le mot de passe que tu veux utiliser pour te connecter
 
 Vercel > Project Settings > Environment Variables
 
-Une fois configure, deployer. La connexion fonctionnera.
-
-## Priorite haute (apres connexion validee)
-
-- [ ] **Suivi medicament : sync DB**
-  - Actuellement : localStorage uniquement (STORAGE_KEY = "suivi_paw_v1")
-  - A faire : ajouter table `suivi_entries` dans drizzle/schema.ts
-  - Champs : id, userId, timestamp, prise (string), dose (int), reasons (text/JSON), note (text)
-  - Ajouter migration SQL dans drizzle/migrations/
-  - Ajouter route tRPC `suivi.*` dans routers.ts
-  - Modifier Suivi.tsx pour utiliser la DB
+**Puis appliquer la migration SQL** (une seule fois) dans ton dashboard Neon ou via :
+```
+pnpm drizzle-kit push
+```
+(ou copier-coller le contenu de `drizzle/0001_suivi_entries.sql` dans le SQL editor de Neon)
 
 ## Priorite moyenne
 
@@ -66,4 +66,4 @@ Une fois configure, deployer. La connexion fonctionnera.
 
 ---
 
-*Mis a jour : 2026-03-20*
+*Mis a jour : 2026-03-21*
