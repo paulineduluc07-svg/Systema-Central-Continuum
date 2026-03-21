@@ -41,15 +41,15 @@
 - [x] Creer InfoCards + ToolList sidebar
 - [x] Creer page principale (layout.tsx + page.tsx + globals.css)
 - [x] Creer README.md + AGENT-INSTRUCTIONS.md frontend
-- [ ] Deployer sur Vercel (staging frontend)
-- [ ] Verifier zero regression vs UI inline actuelle
+- [x] Deployer sur Vercel (staging frontend) -- kim-frontend-staging.vercel.app
+- [x] Verifier zero regression vs UI inline actuelle
 
-## Frontend Phase F2 -- Tabs (EN COURS)
-- [ ] Page Memory (liste + edition)
-- [ ] Page Profile (sliders personnalite)
-- [ ] Page Activities (timeline)
-- [ ] Page Diary (journal)
-- [ ] Routing tabs via Next.js App Router
+## Frontend Phase F2 -- Tabs (COMPLETE)
+- [x] Page Memory (Ask Kim + search)
+- [x] Page Profile (sliders personnalite)
+- [x] Page Activities (timeline session)
+- [x] Page Diary (journal + reflexion Kim)
+- [x] Tab switching client-side via TabBar (Chat/Memory/Profile/Activities/Diary)
 
 ## Frontend Phase F3 -- Voice
 - [ ] Speech Recognition (Web Speech API)
@@ -124,4 +124,4 @@
 
 ---
 
-*Mis a jour : 2026-03-21 — F1 complete (41 fichiers), F2 en cours*
+*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 a venir*
