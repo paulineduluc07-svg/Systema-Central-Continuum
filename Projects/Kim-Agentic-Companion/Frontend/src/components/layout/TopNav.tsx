@@ -21,7 +21,9 @@ export function TopNav({ onLogout, isAuthenticated }: TopNavProps) {
         <span className="text-[#f4f3ff] text-sm">{config.appName}</span>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-xs text-[#a8aed3] hidden sm:inline">Companion</span>
+        <span className="text-xs text-[#a8aed3] hidden sm:inline">
+          {isAuthenticated ? "Session active" : "Locked"}
+        </span>
         {isAuthenticated && onLogout && (
           <Button variant="ghost" size="sm" onClick={onLogout}>
             Logout
