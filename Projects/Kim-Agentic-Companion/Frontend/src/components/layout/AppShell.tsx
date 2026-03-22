@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { TopNav } from "./TopNav";
 import { useAuth } from "@/hooks/useAuth";
+import { useAvatar } from "@/hooks/useAvatar";
 
 // Load 3D scene client-side only (Canvas cannot run on server)
 const GalaxyScene = dynamic(
@@ -17,6 +18,9 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const { isAuthenticated, logout } = useAuth();
+  // Bridge: watches Jotai chat messages → triggers Zustand avatar animations
+  useAvatar();
+
   return (
     <>
       {/* 3D galaxy scene — fixed fullscreen background */}
