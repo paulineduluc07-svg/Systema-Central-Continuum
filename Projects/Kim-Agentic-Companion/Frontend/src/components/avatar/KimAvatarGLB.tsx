@@ -149,7 +149,7 @@ interface KimAvatarGLBProps {
 }
 
 export function KimAvatarGLB({ position = [-1.5, -2.5, -3] }: KimAvatarGLBProps) {
-  const url = process.env.NEXT_PUBLIC_AVATAR_URL;
+  const url = process.env.NEXT_PUBLIC_AVATAR_URL || "/models/kim-avatar.glb";
 
   if (!url) {
     return <AvatarPlaceholder position={position} />;
