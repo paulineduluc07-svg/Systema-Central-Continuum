@@ -79,8 +79,16 @@ export interface McpTool {
   inputSchema?: Record<string, unknown>;
 }
 
+export interface ToolsPayload {
+  allowedTools?: string[];
+  mcpTools?: McpTool[];
+  mcpToolsError?: string;
+}
+
 export interface ToolsResponse {
-  tools: McpTool[];
+  ok?: boolean;
+  requestId?: string;
+  tools: ToolsPayload;
 }
 
 export interface HealthResponse {

@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { useCallback } from "react";
 import { toolsAtom, toolsLoadingAtom, toolsErrorAtom } from "@/stores/toolStore";
 import { kimApi } from "@/lib/api/client";
+import { parseToolsResponse } from "@/lib/api/tools";
 
 export function useTools() {
   const [tools, setTools] = useAtom(toolsAtom);
@@ -15,7 +16,9 @@ export function useTools() {
     setError(null);
     try {
       const res = await kimApi.getTools();
-      setTools(res.tools ?? []);
+      const parsed = parseToolsResponse(res);
+      setTools(parsed.tools);
+      setError(parsed.error);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load tools");
     } finally {
