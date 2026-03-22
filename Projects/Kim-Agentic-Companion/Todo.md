@@ -7,15 +7,18 @@
 ## Etat de reference
 - Backend stable.
 - Frontend confirme sur `main` a la fin de F4.
+- Les phases `F1` a `F7` sont strictement frontend.
+- Une validation backend ne modifie jamais le statut des phases `F`.
 - Prochaine phase executable: F5.
 - Toute validation de phase frontend exige un second agent de verification avant le passage a la suite.
 
-## Validation locale recente (2026-03-21)
+## Validation locale backend recente (2026-03-21)
 - [x] Backend `Code/` valide dans un worktree temporaire isole
 - [x] `npm run check`
 - [x] `npm test` (`10` fichiers / `32` tests passes)
 - [x] `npm run build`
 - [x] Worktree temporaire supprime apres execution
+- [x] Aucun changement de statut des phases `F`
 
 ## Backend (complete)
 - [x] Initialiser la structure SCC du projet
