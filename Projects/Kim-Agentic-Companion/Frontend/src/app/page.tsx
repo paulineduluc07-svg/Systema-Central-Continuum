@@ -10,6 +10,7 @@ import { MemoryPanel } from "@/components/memory/MemoryPanel";
 import { ProfilePanel } from "@/components/profile/ProfilePanel";
 import { ActivitiesPanel } from "@/components/activities/ActivitiesPanel";
 import { DiaryPanel } from "@/components/diary/DiaryPanel";
+import { WardrobePanel } from "@/components/wardrobe/WardrobePanel";
 
 const TABS: Tab[] = [
   { id: "chat",       label: "Chat"       },
@@ -17,10 +18,12 @@ const TABS: Tab[] = [
   { id: "profile",    label: "Profile"    },
   { id: "activities", label: "Activities" },
   { id: "diary",      label: "Diary"      },
+  { id: "wardrobe",   label: "Wardrobe"   },
 ];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("chat");
+  const [wardrobeOpen, setWardrobeOpen] = useState(false);
 
   return (
     <AppShell>
@@ -47,11 +50,27 @@ export default function Home() {
           {activeTab === "profile"    && <ProfilePanel />}
           {activeTab === "activities" && <ActivitiesPanel />}
           {activeTab === "diary"      && <DiaryPanel />}
+          {activeTab === "wardrobe"   && (
+            <div className="flex justify-end">
+              <button
+                onClick={() => setWardrobeOpen(true)}
+                className="px-4 py-2 rounded-xl bg-pink-500/20 border border-pink-400/40 text-pink-300 text-sm font-medium hover:bg-pink-500/30 transition-colors"
+              >
+                👗 Open Wardrobe
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Bottom tab bar */}
-        <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabBar tabs={TABS} activeTab={activeTab} onTabChange={(tab) => {
+          setActiveTab(tab);
+          if (tab === "wardrobe") setWardrobeOpen(true);
+        }} />
       </div>
+
+      {/* Wardrobe slide-in panel */}
+      <WardrobePanel open={wardrobeOpen} onClose={() => setWardrobeOpen(false)} />
     </AppShell>
   );
 }
