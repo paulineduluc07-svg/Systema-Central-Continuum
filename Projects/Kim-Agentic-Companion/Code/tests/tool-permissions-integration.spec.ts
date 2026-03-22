@@ -9,8 +9,15 @@ import { McpPolicy } from "../src/mcp-gateway/mcpPolicy.js";
 
 const originalFetch = globalThis.fetch;
 const originalOpenAiApiKey = process.env.OPENAI_API_KEY;
+const originalCorsAllowedOrigins = process.env.CORS_ALLOWED_ORIGINS;
 
-function sendJson(port: number, path: string, method: string, body: string, headers?: Record<string, string>): Promise<{ statusCode: number; body: unknown }> {
+function sendJson(
+  port: number,
+  path: string,
+  method: string,
+  body: string,
+  headers?: Record<string, string>
+): Promise<{ statusCode: number; body: unknown; headers: Record<string, string | string[] | undefined> }> {
   return new Promise((resolve, reject) => {
     const req = httpRequest(
       {
@@ -30,7 +37,7 @@ function sendJson(port: number, path: string, method: string, body: string, head
         res.on("end", () => {
           const raw = Buffer.concat(chunks).toString("utf8");
           const parsed = raw.length > 0 ? JSON.parse(raw) : {};
-          resolve({ statusCode: res.statusCode ?? 0, body: parsed });
+          resolve({ statusCode: res.statusCode ?? 0, body: parsed, headers: res.headers });
         });
       }
     );
@@ -41,7 +48,11 @@ function sendJson(port: number, path: string, method: string, body: string, head
   });
 }
 
-function sendGet(port: number, path: string, headers?: Record<string, string>): Promise<{ statusCode: number; body: unknown }> {
+function sendGet(
+  port: number,
+  path: string,
+  headers?: Record<string, string>
+): Promise<{ statusCode: number; body: unknown; headers: Record<string, string | string[] | undefined> }> {
   return new Promise((resolve, reject) => {
     const req = httpRequest(
       {
@@ -57,7 +68,37 @@ function sendGet(port: number, path: string, headers?: Record<string, string>): 
         res.on("end", () => {
           const raw = Buffer.concat(chunks).toString("utf8");
           const parsed = raw.length > 0 ? JSON.parse(raw) : {};
-          resolve({ statusCode: res.statusCode ?? 0, body: parsed });
+          resolve({ statusCode: res.statusCode ?? 0, body: parsed, headers: res.headers });
+        });
+      }
+    );
+
+    req.on("error", reject);
+    req.end();
+  });
+}
+
+function sendOptions(
+  port: number,
+  path: string,
+  headers?: Record<string, string>
+): Promise<{ statusCode: number; body: unknown; headers: Record<string, string | string[] | undefined> }> {
+  return new Promise((resolve, reject) => {
+    const req = httpRequest(
+      {
+        hostname: "127.0.0.1",
+        port,
+        path,
+        method: "OPTIONS",
+        headers: headers ?? {}
+      },
+      (res) => {
+        const chunks: Buffer[] = [];
+        res.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+        res.on("end", () => {
+          const raw = Buffer.concat(chunks).toString("utf8");
+          const parsed = raw.length > 0 ? JSON.parse(raw) : {};
+          resolve({ statusCode: res.statusCode ?? 0, body: parsed, headers: res.headers });
         });
       }
     );
@@ -87,13 +128,13 @@ beforeEach(() => {
 afterEach(() => {
   globalThis.fetch = originalFetch;
   vi.restoreAllMocks();
+  process.env.CORS_ALLOWED_ORIGINS = originalCorsAllowedOrigins;
 
   if (originalOpenAiApiKey === undefined) {
     delete process.env.OPENAI_API_KEY;
-    return;
+  } else {
+    process.env.OPENAI_API_KEY = originalOpenAiApiKey;
   }
-
-  process.env.OPENAI_API_KEY = originalOpenAiApiKey;
 });
 
 describe("Tool permissions integration", () => {
@@ -387,6 +428,8 @@ describe("Tool permissions integration", () => {
   });
 
   it("returns allowed and MCP tools from /v1/tools", async () => {
+    process.env.CORS_ALLOWED_ORIGINS = "https://kim-frontend-staging.vercel.app";
+
     const mcpFetch = vi.fn(async (url: unknown, _init?: RequestInit) => {
       const endpoint = String(url);
       if (endpoint.endsWith("/tools")) {
@@ -438,13 +481,60 @@ describe("Tool permissions integration", () => {
     }
 
     const response = await sendGet(address.port, "/v1/tools", {
-      authorization: "Bearer token_123"
+      authorization: "Bearer token_123",
+      origin: "https://kim-frontend-staging.vercel.app"
     });
 
     expect(response.statusCode).toBe(200);
     const parsed = response.body as { tools?: { allowedTools?: string[]; mcpTools?: Array<{ name: string }> } };
     expect(parsed.tools?.allowedTools).toContain("calendar.create_event");
     expect(parsed.tools?.mcpTools?.[0]?.name).toBe("calendar.create_event");
+    expect(response.headers["access-control-allow-origin"]).toBe("https://kim-frontend-staging.vercel.app");
+    expect(response.headers.vary).toContain("Origin");
+
+    await closeServer(server);
+  });
+
+  it("answers preflight requests for allowed frontend origins", async () => {
+    process.env.CORS_ALLOWED_ORIGINS = "https://kim-frontend-staging.vercel.app";
+
+    const mcpClient = new McpClient({
+      baseUrl: "https://mcp.staging.example.com",
+      apiKey: "mcp_key_test",
+      timeoutMs: 5000
+    });
+
+    const server = startServer({
+      port: 0,
+      agent: new KimAgent(
+        new InMemoryMemoryStore(),
+        new McpPolicy({
+          allowedToolsCsv: "calendar.create_event",
+          requireConfirmationByDefault: "false"
+        }),
+        mcpClient
+      ),
+      sessions: new InMemorySessionStore(),
+      mcpClient,
+      authToken: "token_123"
+    });
+
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      await closeServer(server);
+      throw new Error("failed_to_bind_test_server");
+    }
+
+    const response = await sendOptions(address.port, "/v1/tools", {
+      origin: "https://kim-frontend-staging.vercel.app",
+      "access-control-request-method": "GET",
+      "access-control-request-headers": "authorization"
+    });
+
+    expect(response.statusCode).toBe(204);
+    expect(response.headers["access-control-allow-origin"]).toBe("https://kim-frontend-staging.vercel.app");
+    expect(response.headers["access-control-allow-methods"]).toContain("GET");
+    expect(response.headers["access-control-allow-headers"]).toBe("authorization");
 
     await closeServer(server);
   });

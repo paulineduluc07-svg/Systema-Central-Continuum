@@ -71,6 +71,7 @@ Reason codes courants:
 - `MCP_REQUIRE_CONFIRMATION` : confirmation par defaut (`true` ou `false`)
 - `MCP_ALLOWLIST_AS_DEFAULT_GRANTS` : si `true`, l allowlist agit comme grant par defaut (staging trusted mode)
 - `API_AUTH_TOKEN` : token bearer API optionnel
+- `CORS_ALLOWED_ORIGINS` : origines frontend autorisees en CORS (CSV)
 - `VAPI_API_KEY` : cle API pour appels sortants Vapi
 - `VAPI_BASE_URL` : URL API Vapi (par defaut `https://api.vapi.ai`)
 - `VAPI_TIMEOUT_MS` : timeout reseau Vapi

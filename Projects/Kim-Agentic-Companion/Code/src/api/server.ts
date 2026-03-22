@@ -44,29 +44,105 @@ export interface RequestHandlerConfig {
   vapiWebhookSecret?: string;
 }
 
+const DEFAULT_CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "https://kim-frontend-staging.vercel.app"];
+const DEFAULT_CORS_ALLOWED_HEADERS = "authorization, content-type";
+const DEFAULT_CORS_ALLOWED_METHODS = "GET, POST, OPTIONS";
+
+function parseCsvList(raw: string | undefined): string[] {
+  if (!raw) {
+    return [];
+  }
+
+  return raw
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0);
+}
+
+function resolveAllowedCorsOrigins(raw: string | undefined): string[] {
+  return Array.from(new Set([...DEFAULT_CORS_ALLOWED_ORIGINS, ...parseCsvList(raw)]));
+}
+
+function readOrigin(req: IncomingMessage): string | undefined {
+  const header = req.headers.origin;
+  if (typeof header !== "string") {
+    return undefined;
+  }
+
+  const origin = header.trim();
+  return origin.length > 0 ? origin : undefined;
+}
+
+function setHeaderIfMissing(res: ServerResponse, key: string, value: string): void {
+  if (!res.hasHeader(key)) {
+    res.setHeader(key, value);
+  }
+}
+
+function appendVary(res: ServerResponse, value: string): void {
+  const existing = res.getHeader("vary");
+  const currentValues =
+    typeof existing === "string"
+      ? existing.split(",").map((part) => part.trim()).filter((part) => part.length > 0)
+      : Array.isArray(existing)
+        ? existing.flatMap((part) => String(part).split(",").map((item) => item.trim())).filter((part) => part.length > 0)
+        : [];
+
+  if (!currentValues.some((part) => part.toLowerCase() === value.toLowerCase())) {
+    currentValues.push(value);
+  }
+
+  if (currentValues.length > 0) {
+    res.setHeader("vary", currentValues.join(", "));
+  }
+}
+
+function applyCorsHeaders(req: IncomingMessage, res: ServerResponse, config: RequestHandlerConfig): string | undefined {
+  appendVary(res, "Origin");
+
+  const origin = readOrigin(req);
+  if (!origin) {
+    return undefined;
+  }
+
+  const allowedOrigins = resolveAllowedCorsOrigins(process.env.CORS_ALLOWED_ORIGINS);
+  if (!allowedOrigins.includes(origin)) {
+    return undefined;
+  }
+
+  const requestedHeaders =
+    typeof req.headers["access-control-request-headers"] === "string"
+      ? req.headers["access-control-request-headers"]
+      : DEFAULT_CORS_ALLOWED_HEADERS;
+
+  res.setHeader("access-control-allow-origin", origin);
+  res.setHeader("access-control-allow-methods", DEFAULT_CORS_ALLOWED_METHODS);
+  res.setHeader("access-control-allow-headers", requestedHeaders);
+  res.setHeader("access-control-max-age", "86400");
+  appendVary(res, "Access-Control-Request-Headers");
+  return origin;
+}
+
 function json(res: ServerResponse, statusCode: number, payload: unknown): void {
   const body = JSON.stringify(payload);
-  res.writeHead(statusCode, {
-    "content-type": "application/json; charset=utf-8",
-    "content-length": Buffer.byteLength(body).toString()
-  });
+  setHeaderIfMissing(res, "content-type", "application/json; charset=utf-8");
+  setHeaderIfMissing(res, "content-length", Buffer.byteLength(body).toString());
+  res.writeHead(statusCode);
   res.end(body);
 }
 
 function html(res: ServerResponse, statusCode: number, markup: string): void {
-  res.writeHead(statusCode, {
-    "content-type": "text/html; charset=utf-8",
-    "content-length": Buffer.byteLength(markup).toString()
-  });
+  setHeaderIfMissing(res, "content-type", "text/html; charset=utf-8");
+  setHeaderIfMissing(res, "content-length", Buffer.byteLength(markup).toString());
+  res.writeHead(statusCode);
   res.end(markup);
 }
 
 function png(res: ServerResponse, statusCode: number, data: Buffer): void {
-  res.writeHead(statusCode, {
-    "content-type": "image/png",
-    "cache-control": "public, max-age=3600",
-    "content-length": data.byteLength.toString()
-  });
+  setHeaderIfMissing(res, "content-type", "image/png");
+  setHeaderIfMissing(res, "cache-control", "public, max-age=3600");
+  setHeaderIfMissing(res, "content-length", data.byteLength.toString());
+  res.writeHead(statusCode);
   res.end(data);
 }
 
@@ -395,6 +471,18 @@ function ensureAuthorized(req: IncomingMessage, expectedToken: string | undefine
 
 export async function handleRequest(req: IncomingMessage, res: ServerResponse, config: RequestHandlerConfig): Promise<void> {
   const requestId = randomUUID();
+  const allowedOrigin = applyCorsHeaders(req, res, config);
+
+  if (req.method === "OPTIONS") {
+    if (readOrigin(req) && !allowedOrigin) {
+      json(res, 403, { error: "origin_not_allowed", requestId });
+      return;
+    }
+
+    res.writeHead(204);
+    res.end();
+    return;
+  }
 
   if (!req.url || !req.method) {
     json(res, 400, { error: "invalid_request", requestId });
