@@ -22,6 +22,7 @@ Projects/Kim-Agentic-Companion/
 - Deploiement : kim-agentic-companion-staging.vercel.app
 - Entree : `Code/api/index.ts`
 - Tests : `Code/tests/`
+- Validation locale recente: `npm run check`, `npm test`, `npm run build` passes le 2026-03-21 dans un worktree temporaire isole
 
 ### Frontend (Frontend/)
 - Role : UI utilisateur, scene 3D, avatar Kim, chat, voice, customisation, mobile
@@ -142,12 +143,19 @@ Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direct
 4. `Todo.md`, `Roadmap.md`, `README.md` et les docs frontend ne sont mis a jour en phase complete qu apres verification.
 5. Ne pas lancer F6 tant que F5 n a pas ete verifiee.
 
+## Protocole de tests locaux
+1. Ne pas utiliser le clone principal si son worktree est sale ou sert deja a un autre agent.
+2. Creer un worktree temporaire isole pour les validations locales.
+3. Lancer les checks utiles dans ce worktree seulement.
+4. Supprimer le worktree temporaire apres execution pour eviter les doublons locaux persistants.
+
 ## Checklist reprise agent
 
 ### Si travail BACKEND
 1. Lire `Code/README.md`
 2. Verifier `GET /health` et `GET /v1/integrations/health`
 3. Valider `npm run check && npm test && npm run build` dans `Code/`
+4. Si le clone principal est sale, utiliser un worktree temporaire pour cette validation
 
 ### Si travail FRONTEND
 1. Lire `Frontend/README.md` et `Frontend/AGENT-INSTRUCTIONS.md`
