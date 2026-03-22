@@ -72,12 +72,16 @@
 - [x] Remplacement du fond CSS par la scene principale
 - [x] Deploy frontend avec base F4
 
-## Frontend Phase F5 -- Fidelity + Customization (CURRENT)
-- [ ] Integrer le pipeline avatar principal en `GLB` dans la scene existante
-- [ ] Definir les etats d animation minimaux: idle, greet, listen, speak, react
-- [ ] Poser des materiaux PBR propres et coherents
-- [ ] Ajouter un post-processing mesure utile a la presence visuelle
-- [ ] Poser la structure wardrobe par slots (hair, top, bottom, shoes, accessory)
+## Frontend Phase F5 -- Fidelity + Customization (COMPLETE)
+- [x] Integrer le pipeline avatar GLB dans la scene (KimAvatarGLB + placeholder procedural)
+- [x] Etats d animation: idle, wave (sur message Kim), sit -- via useSceneStore
+- [x] Materiaux PBR: Environment night + MeshPhysicalMaterial + envMapIntensity
+- [x] Post-processing: SMAA + Bloom + Vignette (EffectComposer)
+- [x] Wardrobe par slots: catalog, wardrobeSlots, wardrobeStore, WardrobePanel
+- [x] Decoration 3D: roomStore, FurnitureItem (couch/rug/lamp), RoomDecoration
+- [x] Bridge animation: useAvatar (Jotai messages -> Zustand sceneStore)
+- [x] SceneLighting PBR (Environment + key/fill/rim/nebula lights)
+- [x] Deploye sur Vercel
 - [ ] Ajouter un premier catalogue d outfits / accessoires
 - [ ] Poser le socle room decoration (placement simple + snap)
 - [ ] Ajouter des presets de room
@@ -128,4 +132,4 @@
 
 ---
 
-*Mis a jour : 2026-03-21 -- F1, F2, F3 et F4 completes ; F5 courant*
+*Mis a jour : 2026-03-22 -- F1, F2, F3, F4 et F5 completes ; F6 suivant*
