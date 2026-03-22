@@ -23,10 +23,12 @@ Projects/Kim-Agentic-Companion/
 - Entree : `Code/api/index.ts`
 - Tests : `Code/tests/`
 - Validation locale recente: `npm run check`, `npm test`, `npm run build` passes le 2026-03-21 dans un worktree temporaire isole
+- Cette validation backend n a aucun effet sur les phases `F`
 
 ### Frontend (Frontend/)
 - Role : UI utilisateur, scene 3D, avatar Kim, chat, voice, customisation, mobile
 - Stack validee : `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`
+- Les phases `F1` a `F7` sont strictement des phases frontend
 - Etat reel sur `main` : F1, F2, F3 et F4 completes ; prochaine phase = F5
 - Direction a suivre : `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 - Alternatives refusees : pas de Babylon.js, pas de Unity WebGL
@@ -148,6 +150,7 @@ Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direct
 2. Creer un worktree temporaire isole pour les validations locales.
 3. Lancer les checks utiles dans ce worktree seulement.
 4. Supprimer le worktree temporaire apres execution pour eviter les doublons locaux persistants.
+5. Une validation backend locale reste une note backend et ne modifie jamais le statut des phases `F`.
 
 ## Checklist reprise agent
 
