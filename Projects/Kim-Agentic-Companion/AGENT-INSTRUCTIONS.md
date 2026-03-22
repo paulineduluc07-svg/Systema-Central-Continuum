@@ -1,4 +1,4 @@
-# AGENT-INSTRUCTIONS -- Kim Agentic Companion
+# AGENT-INSTRUCTIONS -- Kim
 
 > Lire INTEGRALEMENT avant toute intervention sur ce projet.
 > Regles generales: voir ../../AGENTS.md
@@ -29,7 +29,7 @@ Projects/Kim-Agentic-Companion/
 - Role : UI utilisateur, scene 3D, avatar Kim, chat, voice, customisation, mobile
 - Stack validee : `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`
 - Les phases `F1` a `F7` sont strictement des phases frontend
-- Etat reel sur `main` : F1..F4 completes ; F5 implemente et deploye ; verification independante avant F6
+- Etat reel sur la base frontend courante : prototype frontend deploye, chat le plus avance, reste non signe, rebaseline produit necessaire avant toute ouverture de F7
 - Direction a suivre : `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 - Alternatives refusees : pas de Babylon.js, pas de Unity WebGL
 - Deploiement : projet Vercel separe du backend
@@ -59,7 +59,13 @@ Frontend  ---- HTTP fetch ---->  Backend
 ---
 
 ## Mission
-Construire Kim, une assistante type Replika: chat, voix, presence visuelle 3D, memoire persistante et outils agentiques via MCP.
+Construire Kim, un AI agent ultra-competent oriente execution: chat, voix, memoire persistante, outils agentiques via MCP, aide sur fichiers, dossiers, sites et workflows.
+
+## Positionnement non negociable
+- Kim n est pas une application de compagnie.
+- Kim n existe pas pour "tenir compagnie", mais pour ameliorer la performance de vie de l utilisateur.
+- La reference de posture produit hors frontend immersif est plus proche d un produit type OpenClaw.
+- Replika et certains jeux video ne sont utiles ici que comme references de qualite visuelle frontend, de presence 3D et de finition.
 
 ## Etats de reference (2026-03-22)
 
@@ -70,21 +76,26 @@ Construire Kim, une assistante type Replika: chat, voix, presence visuelle 3D, m
 - Persistance sessions/memoire: Postgres
 - CORS staging valide pour `https://kim-frontend-staging.vercel.app`
 
-### Frontend (F5 IMPLEMENTEE / VERIFICATION EN ATTENTE)
+### Frontend (PROTOTYPE / REBASELINE NECESSAIRE)
 - Frontend autonome deja present dans `Frontend/`
 - F1 complete: foundation + chat
 - F2 complete: tabs fonctionnels
 - F3 complete: voice
 - F4 complete: scene R3F de base et presence visuelle actuelle
-- F5 implemente: avatar `GLB` local, wardrobe, room decoration, stack R3F stable sous React 19
-- Verification independante requise avant F6
+- Retour produit le plus recent avec token reel: le chat semble etre le parcours le plus fiable; auth, tools, settings et la qualite visuelle demandent encore une reprise importante
+- F5 n est pas consideree atteinte cote produit malgre la presence de pieces en code; l ecart visuel a la cible est estime tres important
+- F6 n est pas signee cote produit; les ecrans existent mais ne sont pas encore au niveau attendu
+- Validation locale 2026-03-22: `npm test`, `npm run typecheck`, `npm run build`
+- Deploiement staging canonical refait le 2026-03-22: `https://kim-frontend-staging.vercel.app`
+- `F7` reste bloquee tant que le frontend coeur n est pas recadre
 - Reference de direction: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 
 ## Direction frontend validee
 - Conserver `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`
-- Viser un rendu compagnon Replika-like avec avatar `GLB`
+- Viser un frontend d AI agent premium avec avatar `GLB`
+- Utiliser Replika et des references jeu video pour la qualite visuelle, la presence 3D, l animation et la finition, pas pour un positionnement relationnel
 - Ajouter une presence animee credible, des materiaux PBR et un post-processing mesure
-- Integrer wardrobe et room decoration sans casser la perf mobile
+- Garder wardrobe et room decoration comme options secondaires, jamais comme coeur de la proposition de valeur
 - Ne pas repartir de zero et ne pas changer de moteur 3D
 
 ## URLs cloud de travail
@@ -130,22 +141,24 @@ Projects/Kim-Agentic-Companion/
 | Phase | Statut | Contenu principal |
 |-------|--------|-------------------|
 | F1 | Complete | Foundation, chat, API client, design system |
-| F2 | Complete | Memory, Profile, Activities, Diary |
-| F3 | Complete | STT/TTS, push-to-talk, auto TTS |
-| F4 | Complete | Scene R3F, starfield, room baseline, presence visuelle actuelle |
-| F5 | Implemente, verification en attente | Avatar `GLB`, fidelite visuelle, wardrobe, room decoration, perf mobile |
-| F6 | En attente | Auth UX, permissions MCP, settings |
-| F7 | En attente | PWA, Capacitor, mobile stores |
+| F2 | Prototype presente | Memory, Profile, Activities, Diary |
+| F3 | Prototype presente | STT/TTS, push-to-talk, auto TTS |
+| F4 | Prototype presente | Scene R3F, starfield, room baseline, presence visuelle actuelle |
+| F5 | Non atteinte cote produit | Avatar `GLB`, fidelite visuelle, wardrobe, room decoration, perf mobile |
+| F6 | Non signee cote produit | Auth UX, permissions MCP, settings |
+| F7 | Bloquee / non ouverte | PWA, Capacitor, mobile stores |
 
 Details complets : `Livrables/Frontend-Implementation-Plan.md`
 Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
+Rebaseline et handoff courant : `Livrables/Frontend-Rebaseline-2026-03-22.md`
+Positionnement produit : `Livrables/Product-Positioning-2026-03-22.md`
 
 ## Workflow multi-agent obligatoire
 1. Un agent implemente une phase ou un sous-lot clairement borne.
 2. Un autre agent verifie le lot avant de passer a la phase suivante.
 3. La verification doit couvrir le code, les tests utiles, la doc et le statut des phases.
 4. `Todo.md`, `Roadmap.md`, `README.md` et les docs frontend ne sont mis a jour en phase complete qu apres verification.
-5. Ne pas lancer F6 tant que F5 n a pas ete verifiee.
+5. Ne pas presenter F5 ou F6 comme completes cote produit ni ouvrir F7 tant que le frontend coeur n a pas ete juge satisfaisant.
 
 ## Protocole de tests locaux
 1. Ne pas utiliser le clone principal si son worktree est sale ou sert deja a un autre agent.
@@ -164,10 +177,12 @@ Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direct
 
 ### Si travail FRONTEND
 1. Lire `Frontend/README.md` et `Frontend/AGENT-INSTRUCTIONS.md`
-2. Lire `Livrables/Frontend-Implementation-Plan.md`
-3. Lire `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
-4. Consulter `Todo.md` pour la phase en cours
-5. Verifier que le frontend reste connecte au backend staging
+2. Lire `Livrables/Product-Positioning-2026-03-22.md`
+3. Lire `Livrables/Frontend-Rebaseline-2026-03-22.md`
+4. Lire `Livrables/Frontend-Implementation-Plan.md`
+5. Lire `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
+6. Consulter `Todo.md` pour la phase en cours
+7. Verifier que le frontend reste connecte au backend staging
 
 ## Variables critiques
 
@@ -189,6 +204,7 @@ Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direct
 - Ne pas stocker de secrets dans le repo
 - Toujours distinguer etat reel et cible frontend dans la doc
 - Toujours faire verifier une phase frontend avant de marquer la suivante active
+- Ne pas surinterpreter la presence de composants UI comme preuve de maturite produit
 
 ---
 

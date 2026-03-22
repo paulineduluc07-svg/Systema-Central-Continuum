@@ -16,12 +16,21 @@ Point d entree rapide du projet dans SCC.
 
 ## Etat de reference (2026-03-22)
 - Backend: stable en staging, endpoints critiques actifs, CORS frontend staging corrige.
-- Frontend: etat reel confirme sur `main` = F5 implemente et deploye en staging.
+- Frontend: prototype redeploye sur staging, mais non signe cote produit.
+- Positionnement produit clarifie: Kim n est pas une app de compagnie; Kim est un AI agent ultra-competent oriente execution, fichiers, dossiers, sites et workflows.
+- Reference de posture produit hors frontend immersif: approche plus proche d un produit type OpenClaw que d une app de compagnie.
+- Replika et certains jeux video ne sont que des references de qualite visuelle frontend, de presence 3D et de finition.
+- Retour produit le plus recent avec token reel: le chat semble etre la brique la plus crediblement utilisable; auth, tools, settings et la direction visuelle demandent encore une reprise importante.
+- Le rendu visuel actuel est juge tres loin de la cible produit, ordre de grandeur estime: ~10% de la vision.
 - Les phases `F1` a `F7` sont strictement des phases frontend.
 - Une validation backend ne change jamais le statut d une phase `F`.
 - Frontend conserve la stack validee: `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
+- Alternatives refusees: pas de Babylon.js, pas de Unity WebGL.
+- Cadrage produit detaille: `Livrables/Product-Positioning-2026-03-22.md`.
 - Direction frontend a suivre: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`.
-- Prochaine etape utile: verification independante de F5, puis ouverture de F6.
+- Validation frontend locale recente: `npm test`, `npm run typecheck`, `npm run build` passes dans `Frontend/`; deploiement staging canonical refait le 2026-03-22.
+- `F7` ne doit pas etre ouverte tant que le frontend courant n a pas ete recadre contre la vision.
+- Prochaine etape utile: audit frontend complet, backlog de reprise priorise, puis corrections du coeur frontend avant tout travail mobile/PWA.
 
 ## Validation backend recente (2026-03-22)
 - Backend `Code/` valide localement dans un worktree temporaire isole.
@@ -39,12 +48,16 @@ Point d entree rapide du projet dans SCC.
 ## Reprise rapide (nouvel agent)
 1. Lire `AGENT-INSTRUCTIONS.md`
 2. Lire `Todo.md` et `Roadmap.md`
-3. Si travail frontend: lire `Frontend/README.md`, `Frontend/AGENT-INSTRUCTIONS.md`, `Livrables/Frontend-Implementation-Plan.md` et `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
-4. Identifier si le lot concerne `Code/` ou `Frontend/`
-5. Respecter le protocole multi-agent avant de passer a la phase suivante
+3. Lire `Livrables/Product-Positioning-2026-03-22.md`
+4. Si travail frontend: lire `Frontend/README.md`, `Frontend/AGENT-INSTRUCTIONS.md`, `Livrables/Frontend-Rebaseline-2026-03-22.md`, `Livrables/Frontend-Implementation-Plan.md` et `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
+5. Identifier si le lot concerne `Code/` ou `Frontend/`
+6. Respecter le protocole multi-agent avant de passer a la phase suivante
 
 ## Regle operationnelle
 - Remote obligatoire.
-- Le local sert seulement pour tester puis redeployer.
-- suprimer toute trace du repos, des tests et du travail dans le local a la fin des taches. 
-
+- Le local sert seulement pour coder, tester puis redeployer.
+- Supprimer toute trace locale du repo, des tests et du travail a la fin des taches.
+- Pour les tests locaux, preferer un worktree temporaire isole si le clone principal est sale.
+- Ne pas stocker de secrets dans le repo.
+- Une phase frontend est marquee complete seulement apres verification par un second agent.
+- Ne pas confondre presence en code et acceptation produit.

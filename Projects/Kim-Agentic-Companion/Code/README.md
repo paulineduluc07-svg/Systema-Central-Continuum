@@ -1,7 +1,7 @@
-# Code -- Kim Agentic Companion
+# Code -- Kim
 
 ## Objectif du dossier
-Contenir l implementation technique cloud-first du produit Kim agentic companion.
+Contenir l implementation technique cloud-first du produit Kim, un AI agent oriente execution.
 
 ## Stack v1
 - Runtime: Node.js 20+

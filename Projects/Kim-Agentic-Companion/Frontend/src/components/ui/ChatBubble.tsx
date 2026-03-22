@@ -9,6 +9,13 @@ interface ChatBubbleProps {
 
 export function ChatBubble({ role, content, tool }: ChatBubbleProps) {
   const isKim = role === "assistant";
+  const toolTone =
+    tool?.status === "executed"
+      ? "text-[#7be7bf]"
+      : tool?.status === "needs_confirmation"
+        ? "text-[#ffd27f]"
+        : "text-[#ff8ea5]";
+
   return (
     <div className={clsx("flex flex-col gap-1 max-w-[80%]", isKim ? "self-start" : "self-end")}>
       <div
@@ -21,8 +28,8 @@ export function ChatBubble({ role, content, tool }: ChatBubbleProps) {
       >
         {content}
       </div>
-      {tool && tool.status !== "blocked" && (
-        <p className="text-xs text-[#a8aed3] px-1">
+      {tool && (
+        <p className={clsx("text-xs px-1", toolTone)}>
           Tool: {tool.name} — {tool.status}
         </p>
       )}

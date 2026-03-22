@@ -501,7 +501,7 @@ export async function handleRequest(req: IncomingMessage, res: ServerResponse, c
 
   if (req.method === "GET" && (req.url === "/" || req.url.startsWith("/?"))) {
     const appName = resolveAppName(process.env.APP_NAME);
-    const appTitle = `${appName} Companion`;
+    const appTitle = appName;
     const appInitial = (appName[0] ?? "K").toUpperCase();
     const escapedAppName = escapeHtml(appName);
     const escapedAppTitle = escapeHtml(appTitle);

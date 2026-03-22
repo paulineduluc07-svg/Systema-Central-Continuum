@@ -1,4 +1,4 @@
-import type { McpTool } from "@/lib/api/types";
+import type { ChatRequest, McpTool } from "@/lib/api/types";
 
 export type ToolPermissionMode = "ask" | "always" | "denied";
 
@@ -34,6 +34,14 @@ export function writeStoredToolPermissions(next: Record<string, ToolPermissionMo
   window.localStorage.setItem(TOOL_PERMISSION_STORAGE_KEY, JSON.stringify(next));
 }
 
+export function clearStoredToolPermissions(): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(TOOL_PERMISSION_STORAGE_KEY);
+}
+
 export function getToolPermissionLabel(mode: ToolPermissionMode): string {
   if (mode === "always") {
     return "Always allow";
@@ -44,6 +52,66 @@ export function getToolPermissionLabel(mode: ToolPermissionMode): string {
   }
 
   return "Ask first";
+}
+
+export function readToolCommandName(message: string): string | null {
+  const trimmed = message.trim();
+  if (!trimmed.startsWith("/tool ")) {
+    return null;
+  }
+
+  const command = trimmed.slice("/tool ".length).trim();
+  if (!command) {
+    return null;
+  }
+
+  const firstSpace = command.indexOf(" ");
+  if (firstSpace < 0) {
+    return null;
+  }
+
+  const toolName = command.slice(0, firstSpace).trim();
+  const rawInput = command.slice(firstSpace + 1).trim();
+  if (!toolName || !rawInput) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(rawInput) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return null;
+    }
+
+    return toolName;
+  } catch {
+    return null;
+  }
+}
+
+export function resolveToolCommandPermissionRequest(
+  message: string,
+  permissions: Record<string, ToolPermissionMode> = readStoredToolPermissions()
+): Pick<ChatRequest, "grantedTools" | "revokedTools"> & { confirmationProvided?: boolean } {
+  const toolName = readToolCommandName(message);
+  if (!toolName) {
+    return {};
+  }
+
+  const permission = permissions[toolName] ?? "ask";
+  if (permission === "always") {
+    return {
+      grantedTools: [toolName],
+      confirmationProvided: true,
+    };
+  }
+
+  if (permission === "denied") {
+    return {
+      revokedTools: [toolName],
+    };
+  }
+
+  return {};
 }
 
 export function getToolExampleInput(tool: McpTool): Record<string, unknown> {

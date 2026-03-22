@@ -17,7 +17,7 @@ export function InfoCards() {
         <p className="text-xs text-[#a8aed3]">{fromUser} from you</p>
       </GlassPanel>
       <GlassPanel className="p-3">
-        <p className="text-xs text-[#a8aed3] mb-1">Companion</p>
+        <p className="text-xs text-[#a8aed3] mb-1">Agent</p>
         <p className="text-sm text-[#f4f3ff] font-medium">{config.appName}</p>
         <p className="text-xs text-[#68fff0]">● active</p>
       </GlassPanel>

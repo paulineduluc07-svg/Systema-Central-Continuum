@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { messagesAtom, isTypingAtom, chatErrorAtom, type ChatMessage } from "@/stores/chatStore";
 import { sessionIdAtom } from "@/stores/authStore";
 import { kimApi } from "@/lib/api/client";
+import { resolveToolCommandPermissionRequest } from "@/lib/tools/toolHelpers";
 import { useAuth } from "./useAuth";
 
 export function useChat() {
@@ -31,7 +32,9 @@ export function useChat() {
       if (!sid) {
         sid = await createSession();
       }
-      const res = await kimApi.chat({ userId, sessionId: sid, message: content.trim() });
+      const message = content.trim();
+      const permissionRequest = resolveToolCommandPermissionRequest(message);
+      const res = await kimApi.chat({ userId, sessionId: sid, message, ...permissionRequest });
       if (res.sessionId && !sessionId) setSessionId(res.sessionId);
 
       const assistantMsg: ChatMessage = {

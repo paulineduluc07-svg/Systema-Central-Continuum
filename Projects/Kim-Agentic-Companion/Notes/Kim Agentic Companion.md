@@ -1,16 +1,16 @@
 Type : #context
 Subject : #product
 Status : #inprogress
-Date : 2026-03-20
+Date : 2026-03-22
 
-# PROJET -- Kim Agentic Companion
+# PROJET -- Kim
 
 ## Ligne darrivee
-MVP cloud-first dun compagnon Kim agentic avec actions MCP controlees et auditables.
+MVP cloud-first d un AI agent Kim ultra-competent avec actions MCP controlees et auditables.
 
 ## Cest quoi
-Application compagnon conversationnelle (texte + voix) avec memoire long terme.
-Kim peut agir hors de lapp via MCP, dans un cadre de permissions explicites.
+Application agentique conversationnelle (texte + voix) avec memoire long terme.
+Kim peut agir hors de l app via MCP, dans un cadre de permissions explicites, pour aider sur fichiers, dossiers, sites et workflows.
 
 ## Hypotheses de depart
 - Le produit doit rester cloud-first (pas de dependance locale obligatoire)
@@ -47,11 +47,28 @@ Kim peut agir hors de lapp via MCP, dans un cadre de permissions explicites.
 [2026-03-20] Tests integration et unitaires etendus (chat nominal, webhook signe, refus policy, confirmation).
 [2026-03-20] README technique mis a jour pour contrat permissions et codes derreur.
 [2026-03-20] Checklist readiness MVP publiee dans `Livrables/MVP-Readiness-Checklist.md`.
+[2026-03-22] Raffinement du flux permissions/outils frontend: memoire locale des permissions reutilisee pour les commandes `/tool ...`, nettoyage au logout, affichage des refus outils dans le chat.
+[2026-03-22] Couverture de tests et verifications locales passees sur le frontend et les types partages.
+[2026-03-22] Preparation PWA initiale ajoutee: metadata / viewport et manifest web app de base.
+[2026-03-22] Staging frontend redeploye en preview puis en URL canonique `https://kim-frontend-staging.vercel.app`.
+[2026-03-22] Verification Vercel faite: le token backend attendu par le frontend est `API_AUTH_TOKEN` dans le projet `kim-agentic-companion-staging`.
+[2026-03-22] Passage manuel sur le staging avec vrai token API realise.
+[2026-03-22] Retour produit retenu: le chat est la surface la plus convaincante; auth, tools, settings et le visuel global demandent encore une reprise importante.
+[2026-03-22] Estimation qualitative retenue pour la fidelite frontend actuelle: environ 10% de la vision cible.
+[2026-03-22] Decision explicite: ne pas signer `F6` cote produit et ne pas ouvrir `F7`.
+[2026-03-22] Rebaseline documentaire engagee dans `README.md`, `Todo.md`, `Roadmap.md`, `Frontend/README.md`, `Frontend/AGENT-INSTRUCTIONS.md` et les livrables frontend.
+[2026-03-22] Nouveaux livrables de cadrage ajoutes: `Livrables/F6-Staging-Validation-Checklist-2026-03-22.md`, `Livrables/F7-Preparation-Plan-2026-03-22.md`, `Livrables/Frontend-Rebaseline-2026-03-22.md`.
+[2026-03-22] Clarification produit: Kim n est pas une app de compagnie; Kim est un AI agent ultra-competent oriente execution et amelioration de performance de vie.
+[2026-03-22] Clarification references: posture produit / backend plus proche d un produit type OpenClaw; Replika et des references jeu video servent seulement a cadrer la qualite visuelle frontend et la 3D.
+[2026-03-22] Des captures de comparaison Replika / Kim ont ete ajoutees dans `Notes/` pour servir de support d audit visuel.
+[2026-03-22] Nouveau livrable de positionnement ajoute: `Livrables/Product-Positioning-2026-03-22.md`.
 
 ## Prochaines etapes immediates
-- Integrer un MCP server cloud en staging avec secrets reels
-- Finaliser la validation GO/NO-GO sur la checklist readiness
-- Ajouter enforcement explicite dexpiration de consentement (TTL) dans la voie integration
-- Preparer un dry-run de release beta interne
+- Faire un audit ecran par ecran du frontend actuel contre le positionnement clarifie
+- Lister les ecarts visuels et UX par severite
+- Isoler un premier lot de reprise coeur frontend hors chat
+- Decider si la scene actuelle doit etre iteree ou reprise plus franchement
+- Reprioriser le backlog avant tout nouveau dev significatif
+- Garder `F7` fermee tant que le coeur frontend n est pas juge credible
 
-*Mis a jour : 2026-03-20 | Codex -- SCC*
+*Mis a jour : 2026-03-22 | Codex -- SCC*

@@ -1,4 +1,4 @@
-# MVP User Stories v1 -- Kim Agentic Companion
+# MVP User Stories v1 -- Kim
 
 Date: 2026-03-20
 Status: Draft ready for implementation
