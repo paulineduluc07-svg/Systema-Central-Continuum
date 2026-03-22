@@ -7,83 +7,80 @@
 ## Vision
 Construire une experience compagnon IA proche Replika, mais orientee execution utile: Kim dialogue, se souvient et agit via MCP avec supervision utilisateur.
 
-## Etat actuel (confirme)
-- [x] API backend deployee sur Vercel (staging) avec auth bearer optionnelle
-- [x] UI web de base en ligne (galaxy room + avatar rose + chat reel)
-- [x] Sessions + memoire persistantes via Postgres
-- [x] LLM connecte via OpenAI Responses API
-- [x] Voice stack active (Vapi + ElevenLabs)
-- [x] MCP policy gate active (allowlist/grants/revokes/confirmation)
-- [x] Outils MCP exposes (`calendar.create_event`, `system.get_time`, `web.fetch`)
-- [x] Endpoints outils app (`GET /v1/tools`, `POST /v1/tools/invoke`)
-- [x] Tests unitaires/integration passes
+## Etat actuel (confirme sur `main`)
+- [x] API backend deployee sur Vercel avec auth, memoire, outils MCP et voice
+- [x] Frontend standalone dans `Frontend/`
+- [x] F1 complete: foundation + chat parity
+- [x] F2 complete: tabs fonctionnels
+- [x] F3 complete: voice
+- [x] F4 complete: scene R3F de base et presence visuelle actuelle
+- [ ] F5 a ouvrir: fidelite visuelle, avatar `GLB`, wardrobe, room decoration, perf mobile
 
 ## Phases backend restantes
 - [ ] Phase 3 -- Orchestration agentique plus riche (skills composees, workflows multi-outils)
 - [ ] Phase 4 -- Durcissement securite + observabilite + beta publique
 
-## Phases frontend (NOUVEAU)
+## Direction frontend validee (2026-03-21)
+- Garder `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`
+- Ne pas introduire Babylon.js
+- Ne pas introduire Unity WebGL
+- Evoluer la base F4 actuelle vers un rendu compagnon Replika-like
+- Cible F5: avatar `GLB`, presence animee, PBR propre, post-processing mesure, wardrobe, room decoration, perf mobile
+- Reference: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 
-Voir `Livrables/Frontend-Implementation-Plan.md` pour le detail complet.
+## Phases frontend
 
-### Phase F1 -- Foundation: Next.js + Chat Parity
-- [ ] Scaffold Next.js 15 + React 19 + Tailwind dans `Frontend/`
-- [ ] API client type (KimApiClient) pour tous les endpoints
-- [ ] Stores Jotai (auth, chat, tools)
-- [ ] UI galaxy glassmorphism identique (zero regression)
-- [ ] Chat fonctionnel avec session + auth token
+### Phase F1 -- Foundation + Chat
+- [x] Scaffold frontend autonome
+- [x] API client type, stores et UI principale
+- [x] Chat fonctionnel aligne avec le backend
 
-### Phase F2 -- Tabs fonctionnels
-- [ ] Memory page (liste + edition)
-- [ ] Profile page (sliders personnalite)
-- [ ] Activities page (timeline interactions)
-- [ ] Diary page (journal avec Kim)
+### Phase F2 -- Tabs
+- [x] Memory
+- [x] Profile
+- [x] Activities
+- [x] Diary
 
-### Phase F3 -- Voice Chat
-- [ ] Speech-to-Text (Web Speech API)
-- [ ] Text-to-Speech (ElevenLabs via backend)
-- [ ] Push-to-talk + mode toggle
+### Phase F3 -- Voice
+- [x] Speech-to-Text navigateur
+- [x] Text-to-Speech via backend
+- [x] Push-to-talk et auto-TTS
 
-### Phase F4 -- 3D Galaxy Room + Avatar Kim
-- [ ] Scene Three.js + React Three Fiber
-- [ ] Avatar Ready Player Me GLB + animations Mixamo (idle, walk, wave, sit, dance)
-- [ ] Starfield particules + nebula lighting
-- [ ] Camera OrbitControls contraints
-- [ ] Fallback 2D si pas de WebGL
+### Phase F4 -- Scene Foundation
+- [x] Three.js + React Three Fiber en place
+- [x] Starfield, lighting et room baseline
+- [x] Presence visuelle actuelle dans la scene
 
-### Phase F5 -- Customisation: Wardrobe + Room
-- [ ] Systeme de garde-robe (swap mesh par slot)
-- [ ] Catalogue vetements/accessoires
-- [ ] Editeur de room (drag-and-drop mobilier 3D)
-- [ ] Presets de room (Cozy, Minimal, Studio, Galaxy Lounge)
-- [ ] Persistance localStorage (future: sync backend)
+### Phase F5 -- Fidelity + Customization
+- [ ] Pipeline avatar `GLB`
+- [ ] Presence animee credible
+- [ ] Materiaux PBR et post-processing mesure
+- [ ] Wardrobe par slots
+- [ ] Room decoration
+- [ ] Perf mobile tenue pendant l implementation
 
 ### Phase F6 -- Auth UX + Tools UI + Settings
-- [ ] Login page (code companion, pas de Bearer brut)
-- [ ] AuthGuard sur toutes les routes
-- [ ] UI permissions MCP (ToolCard, ConfirmationDialog)
-- [ ] Page Settings (voix, theme, compte)
+- [ ] Login UX et guard
+- [ ] Permissions MCP visibles
+- [ ] Settings utilisateur
 
-### Phase F7 -- PWA + Capacitor Mobile
-- [ ] PWA installable (manifest, service worker, icons)
-- [ ] Capacitor 7 wrap iOS + Android
-- [ ] Build natif pour Play Store + App Store
-- [ ] Support offline (cache app shell + models)
+### Phase F7 -- PWA + Mobile
+- [ ] PWA installable
+- [ ] Capacitor iOS + Android
+- [ ] Offline shell et packaging stores
 
-## Cibles produit court terme
-- Personnalisation Kim (tenues/accessoires/profil)
-- Memoires consultables/modifiables dans linterface
-- Outils "clawbot-like" prioritaires avec permissions claires
-- Qualite conversationnelle et latence plus stables
-- Nommage final de lapp (`APP_NAME`) applique sur tous les environnements
+## Protocole de progression frontend
+1. Un agent implemente la phase ou le sous-lot courant.
+2. Un second agent le verifie avant tout passage a la phase suivante.
+3. `Roadmap.md`, `Todo.md`, `README.md` et les docs frontend restent synchronises.
 
 ## Stack frontend
 - Next.js 15 + React 19
 - Three.js + React Three Fiber + drei
 - Zustand (3D) + Jotai (app)
 - Tailwind CSS
-- Capacitor 7 (mobile)
-- Vitest + Playwright (tests)
+- Capacitor 7 (cible mobile)
+- Vitest + Playwright
 
 ---
 
