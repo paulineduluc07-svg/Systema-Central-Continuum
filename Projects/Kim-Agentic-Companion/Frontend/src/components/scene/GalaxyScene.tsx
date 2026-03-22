@@ -7,7 +7,10 @@ import * as THREE from "three";
 import { Starfield } from "./Starfield";
 import { NebulaLights } from "./NebulaLights";
 import { GalaxyRoom } from "./GalaxyRoom";
-import { KimAvatar } from "@/components/avatar/KimAvatar";
+import { SceneLighting } from "./SceneLighting";
+import { PostProcessing } from "./PostProcessing";
+import { RoomDecoration } from "./RoomDecoration";
+import { KimAvatarGLB } from "@/components/avatar/KimAvatarGLB";
 
 function CameraRig() {
   const targetRef = useRef(new THREE.Vector3(-2, 1.5, -4));
@@ -27,10 +30,20 @@ function SceneContent() {
   return (
     <>
       <CameraRig />
+      {/* PBR lighting + environment */}
+      <SceneLighting />
+      {/* Atmospheric FX */}
       <NebulaLights />
+      {/* Room geometry */}
       <GalaxyRoom />
+      {/* Furniture (procedural placeholders until GLBs are added) */}
+      <RoomDecoration />
+      {/* Starfield particles */}
       <Starfield count={2000} />
-      <KimAvatar position={[-2, 0.5, -4]} />
+      {/* Kim — GLB avatar (procedural placeholder until RPM URL is set) */}
+      <KimAvatarGLB position={[-1.5, -2.2, -3.5]} />
+      {/* Post-processing: SMAA + Bloom + Vignette */}
+      <PostProcessing />
       <Preload all />
     </>
   );
