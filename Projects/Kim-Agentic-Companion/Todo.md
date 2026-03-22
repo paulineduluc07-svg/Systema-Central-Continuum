@@ -4,6 +4,12 @@
 
 ---
 
+## Etat de reference
+- Backend stable.
+- Frontend confirme sur `main` a la fin de F4.
+- Prochaine phase executable: F5.
+- Toute validation de phase frontend exige un second agent de verification avant le passage a la suite.
+
 ## Backend (complete)
 - [x] Initialiser la structure SCC du projet
 - [x] Poser le cadre produit (Kim agentic + MCP)
@@ -30,57 +36,44 @@
 ## Frontend Phase F1 -- Foundation + Chat (COMPLETE)
 - [x] Creer `Frontend/` avec scaffold Next.js 15 + React 19
 - [x] Configurer Tailwind + design tokens galaxy
-- [x] Creer `KimApiClient` type (tous les endpoints backend)
-- [x] Creer types frontend (miroir de `shared/types.ts`)
-- [x] Creer stores Jotai (auth, chat, tools)
-- [x] Creer hooks (useChat, useAuth, useTools)
-- [x] Creer composants UI (GlassPanel, Button, Input, ChatBubble, TabBar, Badge)
-- [x] Creer layout (TopNav, CosmosBackground CSS, AppShell)
-- [x] Creer ChatPanel + ChatLog + ChatInput + TypingIndicator
-- [x] Creer AvatarStage (image 2D + orb anime)
-- [x] Creer InfoCards + ToolList sidebar
-- [x] Creer page principale (layout.tsx + page.tsx + globals.css)
-- [x] Creer README.md + AGENT-INSTRUCTIONS.md frontend
-- [x] Deployer sur Vercel (staging frontend)
-- [x] Verifier zero regression vs UI inline actuelle
+- [x] Creer `KimApiClient` type
+- [x] Creer types frontend miroir
+- [x] Creer stores Jotai et hooks de base
+- [x] Creer layout, composants UI et chat fonctionnel
+- [x] Deployer sur Vercel
 
 ## Frontend Phase F2 -- Tabs (COMPLETE)
-- [x] Page Memory (Ask Kim + search)
-- [x] Page Profile (sliders personnalite)
-- [x] Page Activities (timeline session)
-- [x] Page Diary (journal + reflexion Kim)
-- [x] Tab switching client-side via TabBar (Chat/Memory/Profile/Activities/Diary)
+- [x] Page Memory
+- [x] Page Profile
+- [x] Page Activities
+- [x] Page Diary
+- [x] Navigation client-side des tabs
 
 ## Frontend Phase F3 -- Voice (COMPLETE)
-- [x] Speech Recognition (Web Speech API -- SpeechRecognitionManager)
-- [x] TTS playback (ElevenLabs via backend -- voix Tara configuree server-side)
-- [x] Push-to-talk (VoiceButton dans ChatInput) + toggle TTS auto (TTSToggle)
-- [x] VoiceWaveform animation CSS (@keyframes voice-bar)
-- [x] useVoice hook (toggle, transcript callback, voiceAvailableAtom)
-- [x] useTTS hook (speak, isSpeakingAtom)
-- [x] Auto-TTS sur reponses Kim (watcher dans ChatPanel)
+- [x] Speech Recognition navigateur
+- [x] TTS playback via backend
+- [x] Push-to-talk et toggle TTS auto
+- [x] Hooks voice et TTS
 
-## Frontend Phase F4 -- 3D Galaxy Room + Kim Avatar (COMPLETE)
-- [x] Scene Three.js + React Three Fiber (Canvas dans AppShell, SSR-safe via dynamic import)
-- [x] Starfield 2000 particules (Starfield.tsx, rotation lente)
-- [x] Nebula lighting (NebulaLights.tsx -- rose/cyan/purple, intensite oscillante)
-- [x] Galaxy room (GalaxyRoom.tsx -- plancher + murs verre glass)
-- [x] sceneStore Zustand (avatarAnimation, isSceneReady)
-- [x] KimAvatar 2.5D billboard (photo rose primary -- shader suppression fond blanc)
-- [x] Camera lente orbit automatique (CameraRig dans GalaxyScene)
-- [x] AppShell mis a jour -- GalaxyScene remplace CosmosBackground CSS
-- [x] Avatar primaire : femme costume rose fuchsia (Notes/Capture 2026-03-20 222152.png)
-- [x] .npmrc legacy-peer-deps pour compatibilite Vercel + React 19
-- [x] Deploye -- kim-agentic-companion-staging-f7ayea688.vercel.app
+## Frontend Phase F4 -- Scene Foundation (COMPLETE)
+- [x] Scene Three.js + React Three Fiber
+- [x] Starfield, lights et room baseline
+- [x] Presence visuelle actuelle dans la scene
+- [x] Remplacement du fond CSS par la scene principale
+- [x] Deploy frontend avec base F4
 
-## Frontend Phase F5 -- Customisation
-- [ ] Wardrobe systeme slot (hair, top, bottom, shoes, accessory)
-- [ ] meshSwapper.ts
-- [ ] Catalogue vetements JSON
-- [ ] Room editor (drag-and-drop)
-- [ ] Furniture raycasting + snap grid
-- [ ] Room presets
-- [ ] Persistance Zustand + localStorage
+## Frontend Phase F5 -- Fidelity + Customization (CURRENT)
+- [ ] Integrer le pipeline avatar principal en `GLB` dans la scene existante
+- [ ] Definir les etats d animation minimaux: idle, greet, listen, speak, react
+- [ ] Poser des materiaux PBR propres et coherents
+- [ ] Ajouter un post-processing mesure utile a la presence visuelle
+- [ ] Poser la structure wardrobe par slots (hair, top, bottom, shoes, accessory)
+- [ ] Ajouter un premier catalogue d outfits / accessoires
+- [ ] Poser le socle room decoration (placement simple + snap)
+- [ ] Ajouter des presets de room
+- [ ] Persister la customisation via Zustand + localStorage
+- [ ] Executer un passage perf mobile pendant la phase
+- [ ] Faire verifier F5 par un second agent avant tout demarrage de F6
 
 ## Frontend Phase F6 -- Auth + Tools + Settings
 - [ ] Login page (companion access code)
@@ -90,16 +83,16 @@
 - [ ] Settings page (voix, theme, compte)
 
 ## Frontend Phase F7 -- PWA + Mobile
-- [ ] PWA manifest + service worker (Serwist)
-- [ ] Icons PWA (192, 512, apple-touch)
+- [ ] PWA manifest + service worker
+- [ ] Icons PWA
 - [ ] Capacitor config + init
-- [ ] Build iOS (Xcode)
-- [ ] Build Android (Android Studio)
+- [ ] Build iOS
+- [ ] Build Android
 - [ ] Support offline
 - [ ] Safe area insets iOS
 
 ## Checklist securite
-- [x] Secrets uniquement en variables denvironnement
+- [x] Secrets uniquement en variables d environnement
 - [x] Aucune action MCP sans consentement explicite
 - [x] Journalisation de chaque action externe
 - [x] Politique de refus sur actions sensibles
@@ -117,16 +110,12 @@
 - [x] Endpoint `POST /v1/webhooks/vapi`
 - [x] Endpoint `POST /v1/vapi/calls`
 - [x] Endpoint `POST /v1/voice/synthesize`
-- [x] Store memoire in-memory
-- [x] Store sessions in-memory
-- [x] Store memoire Postgres (mode mirror)
-- [x] Store sessions Postgres (mode mirror)
+- [x] Store memoire Postgres
+- [x] Store sessions Postgres
 - [x] Policy MCP allowlist + consentement + confirmation
 - [x] Connecteurs MCP: calendrier + system + web
-- [x] Templates env staging/prod
-- [x] Tests unitaires policy + memory + session + connector + signature + mcp client
-- [x] Tests integration webhook signe + chat nominal + refus policy
+- [x] Tests unitaires et integration des parcours critiques
 
 ---
 
-*Mis a jour : 2026-03-21 -- F1 complete, F2 complete, F3 complete, F4 complete*
+*Mis a jour : 2026-03-21 -- F1, F2, F3 et F4 completes ; F5 courant*
