@@ -17,15 +17,18 @@ Point d entree rapide du projet Kim dans SCC.
 ## Etat de reference (2026-03-21)
 - Backend: stable en staging, endpoints critiques actifs.
 - Frontend: etat reel confirme sur `main` = fin F4 / pre-F5.
+- Les phases `F1` a `F7` sont strictement des phases frontend.
+- Une validation backend ne change jamais le statut d une phase `F`.
 - Frontend conserve la stack validee: `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
 - Alternatives refusees: pas de Babylon.js, pas de Unity WebGL.
 - Direction frontend a suivre: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`.
 - Prochaine phase executable: F5 = montee en fidelite, avatar `GLB`, wardrobe, room decoration, perf mobile.
 
-## Validation locale recente (2026-03-21)
+## Validation locale backend recente (2026-03-21)
 - Backend `Code/` valide localement dans un worktree temporaire isole.
 - Commandes passees: `npm run check`, `npm test`, `npm run build`.
 - Resultat tests: `10` fichiers / `32` tests passes.
+- Cette validation backend n affecte aucun statut de phase `F`.
 - Le dossier temporaire de test a ete supprime apres execution pour eviter tout doublon local persistant.
 
 ## Services cloud actifs
