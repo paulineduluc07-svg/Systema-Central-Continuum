@@ -13,6 +13,24 @@
   --accent-2: #68fff0;
 }
 
+:root[data-theme="aqua"] {
+  --bg-1: #04111a;
+  --bg-2: #10293a;
+  --glass: rgba(20, 56, 78, 0.48);
+  --glass-edge: rgba(128, 235, 255, 0.2);
+  --accent: #54d6ff;
+  --accent-2: #83ffe0;
+}
+
+:root[data-theme="sunset"] {
+  --bg-1: #140813;
+  --bg-2: #2c1636;
+  --glass: rgba(72, 32, 62, 0.48);
+  --glass-edge: rgba(255, 182, 154, 0.22);
+  --accent: #ff8a5b;
+  --accent-2: #ffcf73;
+}
+
 * {
   box-sizing: border-box;
 }

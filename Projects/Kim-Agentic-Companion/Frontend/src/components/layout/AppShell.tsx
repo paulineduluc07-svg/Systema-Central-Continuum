@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { TopNav } from "./TopNav";
 import { useAuth } from "@/hooks/useAuth";
 import { useAvatar } from "@/hooks/useAvatar";
+import { useSettings } from "@/hooks/useSettings";
 
 // Load 3D scene client-side only (Canvas cannot run on server)
 const GalaxyScene = dynamic(
@@ -18,6 +19,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const { isAuthenticated, logout } = useAuth();
+  const { backgroundStyle } = useSettings();
   // Bridge: watches Jotai chat messages → triggers Zustand avatar animations
   useAvatar();
 
@@ -26,7 +28,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* 3D galaxy scene — fixed fullscreen background */}
       <div
         className="fixed inset-0 z-0 pointer-events-none"
-        style={{ background: "linear-gradient(160deg, #050714, #13182f)" }}
+        style={{ background: backgroundStyle }}
       >
         <GalaxyScene className="w-full h-full" />
       </div>

@@ -12,6 +12,7 @@ import { ProfilePanel } from "@/components/profile/ProfilePanel";
 import { ActivitiesPanel } from "@/components/activities/ActivitiesPanel";
 import { DiaryPanel } from "@/components/diary/DiaryPanel";
 import { WardrobePanel } from "@/components/wardrobe/WardrobePanel";
+import { SettingsPanel } from "@/components/settings/SettingsPanel";
 
 const TABS: Tab[] = [
   { id: "chat",       label: "Chat"       },
@@ -20,6 +21,7 @@ const TABS: Tab[] = [
   { id: "activities", label: "Activities" },
   { id: "diary",      label: "Diary"      },
   { id: "wardrobe",   label: "Wardrobe"   },
+  { id: "settings",   label: "Settings"   },
 ];
 
 export default function Home() {
@@ -52,6 +54,7 @@ export default function Home() {
             {activeTab === "profile"    && <ProfilePanel />}
             {activeTab === "activities" && <ActivitiesPanel />}
             {activeTab === "diary"      && <DiaryPanel />}
+            {activeTab === "settings"   && <SettingsPanel />}
             {activeTab === "wardrobe"   && (
               <div className="flex justify-end">
                 <button
