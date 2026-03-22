@@ -9,12 +9,14 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 
 ## Etat actuel (confirme sur `main`)
 - [x] API backend deployee sur Vercel avec auth, memoire, outils MCP et voice
+- [x] CORS backend staging corrige pour `https://kim-frontend-staging.vercel.app`
 - [x] Frontend standalone dans `Frontend/`
 - [x] F1 complete: foundation + chat parity
 - [x] F2 complete: tabs fonctionnels
 - [x] F3 complete: voice
 - [x] F4 complete: scene R3F de base et presence visuelle actuelle
-- [ ] F5 a ouvrir: fidelite visuelle, avatar `GLB`, wardrobe, room decoration, perf mobile
+- [x] F5 implemente en staging: avatar `GLB` local, wardrobe, room decoration, stack R3F React 19 stable
+- [ ] Verification independante F5 avant ouverture officielle de F6
 
 ## Phases backend restantes
 - [ ] Phase 3 -- Orchestration agentique plus riche (skills composees, workflows multi-outils)
@@ -51,13 +53,14 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 - [x] Starfield, lighting et room baseline
 - [x] Presence visuelle actuelle dans la scene
 
-### Phase F5 -- Fidelity + Customization
-- [ ] Pipeline avatar `GLB`
-- [ ] Presence animee credible
-- [ ] Materiaux PBR et post-processing mesure
-- [ ] Wardrobe par slots
-- [ ] Room decoration
-- [ ] Perf mobile tenue pendant l implementation
+### Phase F5 -- Fidelity + Customization (implementation faite, verification en attente)
+- [x] Pipeline avatar `GLB`
+- [x] Presence animee credible
+- [x] Materiaux PBR et post-processing mesure
+- [x] Wardrobe par slots
+- [x] Room decoration
+- [x] Perf mobile tenue pendant l implementation
+- [ ] Verification independante et sign-off de phase
 
 ### Phase F6 -- Auth UX + Tools UI + Settings
 - [ ] Login UX et guard
@@ -84,4 +87,4 @@ Construire une experience compagnon IA proche Replika, mais orientee execution u
 
 ---
 
-*Mis a jour : 2026-03-21*
+*Mis a jour : 2026-03-22*

@@ -5,18 +5,19 @@
 ---
 
 ## Etat de reference
-- Backend stable.
-- Frontend confirme sur `main` a la fin de F4.
+- Backend stable et CORS frontend staging valide.
+- Frontend confirme sur `main` avec implementation F5 deployee.
 - Les phases `F1` a `F7` sont strictement frontend.
 - Une validation backend ne modifie jamais le statut des phases `F`.
-- Prochaine phase executable: F5.
+- Prochaine etape executable: verification independante de F5, puis ouverture de F6.
 - Toute validation de phase frontend exige un second agent de verification avant le passage a la suite.
 
-## Validation locale backend recente (2026-03-21)
+## Validation backend recente (2026-03-22)
 - [x] Backend `Code/` valide dans un worktree temporaire isole
 - [x] `npm run check`
-- [x] `npm test` (`10` fichiers / `32` tests passes)
+- [x] `npm test` (`10` fichiers / `33` tests passes)
 - [x] `npm run build`
+- [x] CORS staging valide sur `OPTIONS /v1/tools` et `GET /v1/tools`
 - [x] Worktree temporaire supprime apres execution
 - [x] Aucun changement de statut des phases `F`
 
@@ -72,13 +73,16 @@
 - [x] Remplacement du fond CSS par la scene principale
 - [x] Deploy frontend avec base F4
 
-## Frontend Phase F5 -- Fidelity + Customization (CODE COMPLETE -- AVATAR EN ATTENTE)
+## Frontend Phase F5 -- Fidelity + Customization (IMPLEMENTEE / VERIFICATION INDEPENDANTE EN ATTENTE)
 
-> Infrastructure 100% en place. Seul element manquant: le fichier GLB 3D de Kim.
-> Une fois NEXT_PUBLIC_AVATAR_URL defini dans Vercel, la phase est visuellement finalisee.
+> Le scope F5 est implemente et deploye en staging.
+> Le passage officiel a F6 reste conditionne a une verification par un second agent.
 
 ### Ce qui est fait (deploye sur Vercel)
 - [x] Pipeline avatar GLB: KimAvatarGLB + placeholder procedural PBR (rose metallique)
+- [x] Avatar GLB local embarque dans `Frontend/public/models/kim-avatar.glb`
+- [x] Fallback runtime sur `/models/kim-avatar.glb`
+- [x] `NEXT_PUBLIC_AVATAR_URL` mis a jour sur Vercel vers `/models/kim-avatar.glb`
 - [x] Etats d animation: idle, wave (sur message Kim), sit -- via useSceneStore
 - [x] Materiaux PBR: Environment night + MeshPhysicalMaterial + envMapIntensity 1.4
 - [x] Post-processing: SMAA + Bloom (luminanceThreshold 0.82) + Vignette
@@ -88,14 +92,13 @@
 - [x] Bridge animation: useAvatar (Jotai messages -> Zustand sceneStore) dans AppShell
 - [x] Onglet Wardrobe dans page.tsx + slide-in panel
 - [x] .env.example mis a jour avec NEXT_PUBLIC_AVATAR_URL
-- [x] Deploye sur Vercel: https://kim-agentic-companion-staging.vercel.app
+- [x] Stack R3F alignee avec React 19 (`@react-three/fiber` 9, `drei` 10, `postprocessing` 3)
+- [x] Frontend staging deploye: https://kim-frontend-staging.vercel.app
 
-### Seul blocage restant
-- [ ] **NEXT_PUBLIC_AVATAR_URL** -- fournir un GLB 3D de Kim (Ready Player Me ou equivalent)
-  - Option A: Creer l avatar sur https://readyplayer.me, exporter GLB, coller l URL dans Vercel
-  - Option B: Utiliser un service tiers (IN3D, Avaturn, Bitmoji 3D) pour generer le GLB
-  - Option C: Utiliser un GLB libre de droit comme point de depart temporaire
-  - Une fois l URL definie dans les env vars Vercel + redeploy -> phase visuellement complete
+### Verification restante avant passage a F6
+- [ ] Verification independante F5 par un second agent
+- [ ] Validation end-to-end frontend staging avec token API reel
+- [ ] Decision explicite d ouverture de F6 apres verification
 
 ## Frontend Phase F6 -- Auth + Tools + Settings
 - [ ] Login page (companion access code)
@@ -140,4 +143,4 @@
 
 ---
 
-*Mis a jour : 2026-03-22 -- F1..F4 completes ; F5 code complet, avatar GLB en attente ; F6 demarre apres avatar*
+*Mis a jour : 2026-03-22 -- F1..F4 completes ; F5 implemente et deploye ; verification independante requise avant F6 ; CORS backend staging corrige*

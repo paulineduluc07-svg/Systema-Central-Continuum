@@ -29,7 +29,7 @@ Projects/Kim-Agentic-Companion/
 - Role : UI utilisateur, scene 3D, avatar Kim, chat, voice, customisation, mobile
 - Stack validee : `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`
 - Les phases `F1` a `F7` sont strictement des phases frontend
-- Etat reel sur `main` : F1, F2, F3 et F4 completes ; prochaine phase = F5
+- Etat reel sur `main` : F1..F4 completes ; F5 implemente et deploye ; verification independante avant F6
 - Direction a suivre : `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 - Alternatives refusees : pas de Babylon.js, pas de Unity WebGL
 - Deploiement : projet Vercel separe du backend
@@ -61,21 +61,23 @@ Frontend  ---- HTTP fetch ---->  Backend
 ## Mission
 Construire Kim, une assistante type Replika: chat, voix, presence visuelle 3D, memoire persistante et outils agentiques via MCP.
 
-## Etats de reference (2026-03-21)
+## Etats de reference (2026-03-22)
 
 ### Backend (STABLE)
 - Backend staging disponible sur `https://kim-agentic-companion-staging.vercel.app`
 - MCP staging disponible sur `https://kim-mcp-staging.vercel.app`
 - Flux critiques actifs: sessions, chat LLM, outils MCP, webhook Vapi signe, ElevenLabs synthesis
 - Persistance sessions/memoire: Postgres
+- CORS staging valide pour `https://kim-frontend-staging.vercel.app`
 
-### Frontend (FIN F4 / PRE-F5)
+### Frontend (F5 IMPLEMENTEE / VERIFICATION EN ATTENTE)
 - Frontend autonome deja present dans `Frontend/`
 - F1 complete: foundation + chat
 - F2 complete: tabs fonctionnels
 - F3 complete: voice
 - F4 complete: scene R3F de base et presence visuelle actuelle
-- F5 a lancer: montee en fidelite, avatar `GLB`, wardrobe, room decoration, perf mobile
+- F5 implemente: avatar `GLB` local, wardrobe, room decoration, stack R3F stable sous React 19
+- Verification independante requise avant F6
 - Reference de direction: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 
 ## Direction frontend validee
@@ -131,7 +133,7 @@ Projects/Kim-Agentic-Companion/
 | F2 | Complete | Memory, Profile, Activities, Diary |
 | F3 | Complete | STT/TTS, push-to-talk, auto TTS |
 | F4 | Complete | Scene R3F, starfield, room baseline, presence visuelle actuelle |
-| F5 | En attente | Avatar `GLB`, fidelite visuelle, wardrobe, room decoration, perf mobile |
+| F5 | Implemente, verification en attente | Avatar `GLB`, fidelite visuelle, wardrobe, room decoration, perf mobile |
 | F6 | En attente | Auth UX, permissions MCP, settings |
 | F7 | En attente | PWA, Capacitor, mobile stores |
 
@@ -190,4 +192,4 @@ Direction visuelle et protocole phase-gate : `Livrables/Frontend-Fidelity-Direct
 
 ---
 
-*Mis a jour: 2026-03-21*
+*Mis a jour: 2026-03-22*

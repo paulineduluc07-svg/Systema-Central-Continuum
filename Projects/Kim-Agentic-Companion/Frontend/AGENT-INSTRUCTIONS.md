@@ -2,14 +2,14 @@
 
 > Read BEFORE any work on `Frontend/`. See parent `../AGENT-INSTRUCTIONS.md` for global rules.
 
-## Current state (2026-03-21)
-- Etat reel confirme sur `main`: fin F4 / pre-F5.
+## Current state (2026-03-22)
+- Etat reel confirme sur `main`: F5 implemente et deploye en staging.
 - Frontend standalone deja en place.
 - F1 complete: foundation + chat.
 - F2 complete: tabs fonctionnels.
 - F3 complete: voice.
 - F4 complete: scene Three.js / React Three Fiber de base.
-- Prochaine phase executable: F5.
+- Verification independante F5 requise avant F6.
 
 ## Validated direction
 - Keep `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
@@ -33,25 +33,20 @@
 - Memory / Profile / Activities / Diary pages
 - Voice input and TTS playback hooks
 - Galaxy scene foundation with current Kim presence
+- Local `GLB` avatar served from `public/models/kim-avatar.glb`
+- Runtime fallback to `/models/kim-avatar.glb`
+- Wardrobe slot system and room decoration baseline
+- React 19 / R3F / Drei / postprocessing stack aligned and stable
 - Galaxy / glass design language
 
 ## What does NOT exist yet
-- F5 avatar `GLB` production pipeline in the main scene
-- F5 wardrobe slot system and initial catalog
-- F5 room decoration baseline
-- F5 dedicated mobile perf pass
 - F6 auth UX, MCP tools UX and settings
 - F7 PWA / Capacitor packaging
 
-## Next phase: F5 -- Fidelity + Customization
-Priority order:
-1. Integrate the main `GLB` avatar into the existing scene.
-2. Define minimal animation states: idle, greet, listen, speak, react.
-3. Upgrade materials / lighting toward controlled PBR.
-4. Add measured post-processing only if it improves presence.
-5. Add wardrobe slots.
-6. Add room decoration baseline and presets.
-7. Verify mobile performance before calling F5 complete.
+## Current gate
+1. Verify F5 with a second agent.
+2. Confirm end-to-end staging behavior with a real API token.
+3. Only then open F6.
 
 ## Multi-agent phase gate
 1. One agent implements the current phase or sub-lot.

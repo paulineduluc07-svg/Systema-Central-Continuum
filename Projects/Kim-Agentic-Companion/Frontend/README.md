@@ -2,13 +2,13 @@
 
 Frontend autonome du projet Kim Agentic Companion.
 
-## Etat actuel (2026-03-21)
-- Etat reel confirme sur `main`: fin F4 / pre-F5.
+## Etat actuel (2026-03-22)
+- Etat reel confirme sur `main`: F5 implemente et deploye en staging.
 - F1 complete: foundation + chat.
 - F2 complete: tabs fonctionnels.
 - F3 complete: voice.
 - F4 complete: scene 3D de base via React Three Fiber.
-- F5 est la prochaine phase executable.
+- F5 attend une verification independante avant ouverture de F6.
 
 ## Direction validee
 - Conserver `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
@@ -30,15 +30,16 @@ Frontend autonome du projet Kim Agentic Companion.
 - Pages Memory, Profile, Activities, Diary
 - Voice input / output
 - Scene 3D de base et presence visuelle actuelle
+- Avatar `GLB` local servi depuis `public/models/kim-avatar.glb`
+- Fallback runtime sur `/models/kim-avatar.glb`
+- Wardrobe et room decoration baseline
+- Stack React 19 / R3F / Drei / postprocessing alignee
 - Design system galaxy / glassmorphism
 
-## Phase suivante: F5 -- Fidelity + Customization
-- pipeline avatar principal en `GLB`
-- etats d animation minimaux
-- materiaux PBR et post-processing mesure
-- wardrobe par slots
-- room decoration
+## Etat de phase
+- F5 implementee en staging
 - verification par un second agent avant F6
+- prochaine phase apres verification: F6 -- Auth + Tools + Settings
 
 ## Setup
 
@@ -85,4 +86,4 @@ src/
 - `../Livrables/Frontend-Implementation-Plan.md`
 - `../Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 
-*Mis a jour: 2026-03-21*
+*Mis a jour: 2026-03-22*
