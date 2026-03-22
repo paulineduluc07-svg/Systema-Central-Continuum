@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AuthGate } from "@/components/auth/AuthGate";
 import { ChatPanel } from "@/components/chat/ChatPanel";
-import { ToolList } from "@/components/sidebar/ToolList";
+import { ToolsPanel } from "@/components/sidebar/ToolsPanel";
 import { InfoCards } from "@/components/sidebar/InfoCards";
 import { TabBar, type Tab } from "@/components/ui/TabBar";
 import { MemoryPanel } from "@/components/memory/MemoryPanel";
@@ -43,8 +43,8 @@ export default function Home() {
                   <ChatPanel />
                 </div>
                 {/* Right sidebar — tools */}
-                <aside className="hidden xl:flex flex-col gap-3 w-52 shrink-0">
-                  <ToolList />
+                <aside className="hidden xl:flex flex-col gap-3 w-80 shrink-0">
+                  <ToolsPanel />
                 </aside>
               </div>
             )}

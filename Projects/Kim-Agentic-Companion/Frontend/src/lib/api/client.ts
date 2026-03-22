@@ -6,6 +6,8 @@ import type {
   SessionCreateRequest,
   SessionRecord,
   ToolsResponse,
+  ToolInvokeRequest,
+  ToolInvokeResponse,
   HealthResponse,
   VoiceSynthesisRequest,
   VoiceSynthesisResponse,
@@ -55,10 +57,10 @@ class KimApiClient {
     return this.request<ToolsResponse>("/v1/tools");
   }
 
-  invokeToolDirect(toolName: string, input: Record<string, unknown>): Promise<unknown> {
-    return this.request<unknown>("/v1/tools/invoke", {
+  invokeToolDirect(req: ToolInvokeRequest): Promise<ToolInvokeResponse> {
+    return this.request<ToolInvokeResponse>("/v1/tools/invoke", {
       method: "POST",
-      body: JSON.stringify({ toolName, input }),
+      body: JSON.stringify(req),
     });
   }
 

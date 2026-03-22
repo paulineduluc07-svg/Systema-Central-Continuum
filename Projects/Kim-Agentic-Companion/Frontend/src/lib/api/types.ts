@@ -91,6 +91,20 @@ export interface ToolsResponse {
   tools: ToolsPayload;
 }
 
+export interface ToolInvokeRequest {
+  toolName: string;
+  input: Record<string, unknown>;
+  sensitive?: boolean;
+  grantedTools?: string[];
+  confirmationProvided?: boolean;
+}
+
+export interface ToolInvokeResponse {
+  ok?: boolean;
+  requestId?: string;
+  tool: ToolResult;
+}
+
 export interface HealthResponse {
   status: string;
   uptime?: number;
