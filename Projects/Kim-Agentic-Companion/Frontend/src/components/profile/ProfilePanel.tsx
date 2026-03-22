@@ -33,7 +33,7 @@ export function ProfilePanel() {
           />
           <div>
             <h2 className="text-[#f4f3ff] font-semibold text-lg">{config.appName}</h2>
-            <p className="text-xs text-[#a8aed3]">AI Companion</p>
+            <p className="text-xs text-[#a8aed3]">AI Agent</p>
           </div>
         </div>
         <div className="flex items-center justify-between mb-4">

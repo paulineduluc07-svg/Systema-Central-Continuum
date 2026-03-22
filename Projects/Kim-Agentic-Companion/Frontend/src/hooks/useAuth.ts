@@ -7,6 +7,7 @@ import { toolsAtom, toolsErrorAtom } from "@/stores/toolStore";
 import { tokenAtom, sessionIdAtom, userIdAtom, isAuthenticatedAtom, authHydratedAtom } from "@/stores/authStore";
 import { getToken, setToken as persistToken, clearToken, getUserId } from "@/lib/auth/token";
 import { kimApi } from "@/lib/api/client";
+import { clearStoredToolPermissions } from "@/lib/tools/toolHelpers";
 
 export function useAuth() {
   const [token, setTokenAtom] = useAtom(tokenAtom);
@@ -60,6 +61,7 @@ export function useAuth() {
 
   function logout(): void {
     clearToken();
+    clearStoredToolPermissions();
     setTokenAtom(null);
     setSessionId(null);
     resetMessages([]);

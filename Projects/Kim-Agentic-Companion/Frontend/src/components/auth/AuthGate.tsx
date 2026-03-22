@@ -49,10 +49,10 @@ export function AuthGate({ children }: AuthGateProps) {
     <div className="flex-1 min-h-[calc(100vh-180px)] flex items-center justify-center">
       <GlassPanel className="w-full max-w-md p-6 sm:p-7 flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-[#a8aed3]">Companion Access</p>
+          <p className="text-[11px] uppercase tracking-[0.24em] text-[#a8aed3]">Agent Access</p>
           <h1 className="text-2xl font-semibold text-[#f4f3ff]">Unlock Kim</h1>
           <p className="text-sm text-[#a8aed3]">
-            Enter your API access token to open chat, memory, tools, voice, and wardrobe on this device.
+            Enter your API access token to open Kim on this device with chat, tools, voice, memory, and workspace access.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export function AuthGate({ children }: AuthGateProps) {
             label="API Token"
             type="password"
             autoComplete="off"
-            placeholder="Paste your companion access token"
+            placeholder="Paste your API access token"
             value={tokenInput}
             onChange={(event) => setTokenInput(event.target.value)}
             disabled={isSubmitting}

@@ -50,6 +50,7 @@ export interface ChatRequest {
   sessionId?: string;
   message: string;
   grantedTools?: string[];
+  revokedTools?: string[];
   requestedTool?: RequestedTool;
   permissionContext?: PermissionContext;
 }

@@ -1,20 +1,23 @@
 # Kim Frontend
 
-Frontend autonome du projet Kim Agentic Companion.
+Frontend autonome du projet Kim.
 
 ## Etat actuel (2026-03-22)
-- Etat reel confirme sur `main`: F5 implemente et deploye en staging.
-- F1 complete: foundation + chat.
-- F2 complete: tabs fonctionnels.
-- F3 complete: voice.
-- F4 complete: scene 3D de base via React Three Fiber.
-- F5 attend une verification independante avant ouverture de F6.
+- Etat reel: prototype frontend redeploye sur staging, non signe cote produit.
+- Ce frontend doit servir un AI agent ultra-competent, pas une app de compagnie.
+- Le chat semble etre le parcours le plus convaincant a ce stade.
+- Auth, tools, settings et plusieurs surfaces hors chat demandent encore des ajustements importants.
+- Le rendu visuel est juge tres loin de la vision produit, ordre de grandeur estime: ~10%.
+- Validation locale recente: `npm test`, `npm run typecheck`, `npm run build`.
+- `F7` reste bloquee tant que le frontend coeur n est pas remis a niveau.
 
 ## Direction validee
 - Conserver `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
 - Ne pas introduire Babylon.js.
 - Ne pas introduire Unity WebGL.
-- Viser une presence type Replika-like avec avatar `GLB`, animation credible, PBR propre, post-processing mesure, wardrobe, room decoration et perf mobile.
+- Viser un frontend d AI agent premium avec avatar `GLB`, animation credible, PBR propre, post-processing mesure et perf mobile.
+- Utiliser Replika et certains jeux video comme references de qualite visuelle, de presence 3D et de finition seulement.
+- Garder wardrobe et room decoration comme options secondaires tant que la presence Kim et la lisibilite produit ne sont pas reglees.
 - Reference: `../Livrables/Frontend-Fidelity-Direction-2026-03-21.md`.
 
 ## Stack
@@ -35,11 +38,22 @@ Frontend autonome du projet Kim Agentic Companion.
 - Wardrobe et room decoration baseline
 - Stack React 19 / R3F / Drei / postprocessing alignee
 - Design system galaxy / glassmorphism
+- AuthGate navigateur avec token local et bootstrap de session
+- ToolsPanel avec PermissionBadge, ConfirmationDialog et invocation directe
+- Settings panel pour theme, TTS et etat de compte
+- Memoire locale des permissions outils, reutilisee aussi pour les commandes chat `/tool ...`
+
+## Ce qui n est pas au niveau produit aujourd hui
+- Les surfaces hors chat ne sont pas encore considerees comme suffisamment solides
+- Le flux auth / tools / settings n est pas signe
+- La scene, la presence Kim et l identite visuelle sont encore loin de la cible AI agent premium
+- Ne pas utiliser la presence de composants comme preuve que la vision est atteinte
 
 ## Etat de phase
-- F5 implementee en staging
-- verification par un second agent avant F6
-- prochaine phase apres verification: F6 -- Auth + Tools + Settings
+- chat = surface la plus avancee
+- F5 non atteinte cote produit
+- F6 non signee cote produit
+- F7 bloquee / non ouverte
 
 ## Setup
 
@@ -83,6 +97,8 @@ src/
 - `AGENT-INSTRUCTIONS.md`
 - `../Todo.md`
 - `../Roadmap.md`
+- `../Livrables/Product-Positioning-2026-03-22.md`
+- `../Livrables/Frontend-Rebaseline-2026-03-22.md`
 - `../Livrables/Frontend-Implementation-Plan.md`
 - `../Livrables/Frontend-Fidelity-Direction-2026-03-21.md`
 

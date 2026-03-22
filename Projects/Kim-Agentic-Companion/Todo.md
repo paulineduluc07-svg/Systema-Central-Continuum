@@ -1,4 +1,4 @@
-# Todo -- Kim Agentic Companion
+# Todo -- Kim
 
 > Taches actives. Mise a jour a chaque session.
 
@@ -6,10 +6,15 @@
 
 ## Etat de reference
 - Backend stable et CORS frontend staging valide.
-- Frontend confirme sur `main` avec implementation F5 deployee.
+- Frontend courant reste un prototype cote produit malgre plusieurs briques presentes en code.
+- Positionnement clarifie: Kim n est pas une app de compagnie; Kim est un AI agent ultra-competent oriente execution.
+- Replika et les references jeu video servent uniquement a cadrer le niveau de qualite visuelle frontend et le 3D.
+- Retour produit du 2026-03-22 avec token reel: le chat semble etre la brique la plus convaincante; auth, tools, settings et la qualite visuelle demandent encore une reprise importante.
+- Estimation qualitative du rendu visuel courant par rapport a la cible: ~10%.
 - Les phases `F1` a `F7` sont strictement frontend.
 - Une validation backend ne modifie jamais le statut des phases `F`.
-- Prochaine etape executable: verification independante de F5, puis ouverture de F6.
+- `F7` est bloquee tant que le frontend coeur n atteint pas un niveau produit satisfaisant.
+- Prochaine etape executable: audit frontend complet contre le positionnement clarifie, backlog de reprise priorise, puis premier lot de corrections coeur frontend.
 - Toute validation de phase frontend exige un second agent de verification avant le passage a la suite.
 
 ## Validation backend recente (2026-03-22)
@@ -20,6 +25,16 @@
 - [x] CORS staging valide sur `OPTIONS /v1/tools` et `GET /v1/tools`
 - [x] Worktree temporaire supprime apres execution
 - [x] Aucun changement de statut des phases `F`
+
+## Validation frontend recente (2026-03-22)
+- [x] Relecture structurelle du scope F6 dans `Frontend/`
+- [x] `npm test` (`2` fichiers / `8` tests passes)
+- [x] `npm run typecheck`
+- [x] `npm run build`
+- [x] Flux permissions/outils raffine localement pour reutiliser `always` / `denied` aussi sur les commandes `/tool ...` dans le chat
+- [x] Frontend staging redeploye sur `https://kim-frontend-staging.vercel.app`
+- [x] Passage manuel avec token API reel effectue
+- [ ] Sign-off frontend refuse a ce stade
 
 ## Backend (complete)
 - [x] Initialiser la structure SCC du projet
@@ -44,7 +59,7 @@
 - [x] Standardiser variable ElevenLabs (`ELEVENLABS_API_KEY`)
 - [x] Verifier chaines de sante app + MCP en cloud
 
-## Frontend Phase F1 -- Foundation + Chat (COMPLETE)
+## Frontend Phase F1 -- Foundation + Chat (BASE LA PLUS AVANCEE)
 - [x] Creer `Frontend/` avec scaffold Next.js 15 + React 19
 - [x] Configurer Tailwind + design tokens galaxy
 - [x] Creer `KimApiClient` type
@@ -53,32 +68,33 @@
 - [x] Creer layout, composants UI et chat fonctionnel
 - [x] Deployer sur Vercel
 
-## Frontend Phase F2 -- Tabs (COMPLETE)
+## Frontend Phase F2 -- Tabs (PRESENTES EN CODE / NON PRIORITAIRES TANT QUE LE COEUR N EST PAS RECADRE)
 - [x] Page Memory
 - [x] Page Profile
 - [x] Page Activities
 - [x] Page Diary
 - [x] Navigation client-side des tabs
 
-## Frontend Phase F3 -- Voice (COMPLETE)
+## Frontend Phase F3 -- Voice (PRESENTE EN CODE / NON VALIDEE COTE PRODUIT)
 - [x] Speech Recognition navigateur
 - [x] TTS playback via backend
 - [x] Push-to-talk et toggle TTS auto
 - [x] Hooks voice et TTS
 
-## Frontend Phase F4 -- Scene Foundation (COMPLETE)
+## Frontend Phase F4 -- Scene Foundation (PRESENTE / FIDELITE ENCORE TRES INSUFFISANTE)
 - [x] Scene Three.js + React Three Fiber
 - [x] Starfield, lights et room baseline
 - [x] Presence visuelle actuelle dans la scene
 - [x] Remplacement du fond CSS par la scene principale
 - [x] Deploy frontend avec base F4
 
-## Frontend Phase F5 -- Fidelity + Customization (IMPLEMENTEE / VERIFICATION INDEPENDANTE EN ATTENTE)
+## Frontend Phase F5 -- Fidelity + Customization (NON ATTEINTE / TRES LOIN DE LA CIBLE)
 
-> Le scope F5 est implemente et deploye en staging.
-> Le passage officiel a F6 reste conditionne a une verification par un second agent.
+> Des pieces F5 existent en code et sont deployees en staging.
+> Cela ne constitue pas un sign-off produit.
+> Retour produit le plus recent: le rendu actuel reste tres loin de la vision cible, ordre de grandeur estime ~10%.
 
-### Ce qui est fait (deploye sur Vercel)
+### Ce qui existe en code
 - [x] Pipeline avatar GLB: KimAvatarGLB + placeholder procedural PBR (rose metallique)
 - [x] Avatar GLB local embarque dans `Frontend/public/models/kim-avatar.glb`
 - [x] Fallback runtime sur `/models/kim-avatar.glb`
@@ -95,19 +111,31 @@
 - [x] Stack R3F alignee avec React 19 (`@react-three/fiber` 9, `drei` 10, `postprocessing` 3)
 - [x] Frontend staging deploye: https://kim-frontend-staging.vercel.app
 
-### Verification restante avant passage a F6
-- [ ] Verification independante F5 par un second agent
-- [ ] Validation end-to-end frontend staging avec token API reel
-- [ ] Decision explicite d ouverture de F6 apres verification
+### Ce qui manque encore cote produit
+- [ ] Presence visuelle, posture, ambiance et desirabilite alignes a un AI agent premium
+- [ ] Avatar percu comme credible et premium plutot que placeholder
+- [ ] Direction artistique forte et coherente a travers scene, UI et identite Kim
+- [ ] Perception utilisateur que le produit ressemble a la destination voulue
 
-## Frontend Phase F6 -- Auth + Tools + Settings
-- [ ] Login page (companion access code)
-- [ ] AuthGuard redirect
-- [ ] ToolsPanel + ToolCard + PermissionBadge
-- [ ] ConfirmationDialog (Allow once / Always / Deny)
-- [ ] Settings page (voix, theme, compte)
+## Frontend Phase F6 -- Auth + Tools + Settings (STRUCTURE PRESENTE / NON SIGNEE)
+- [x] Login page (agent access token)
+- [x] AuthGate local storage + session bootstrap
+- [x] ToolsPanel + ToolCard + PermissionBadge
+- [x] ConfirmationDialog (Allow once / Always / Deny)
+- [x] Settings page (voix, theme, compte)
+- [x] Preferences theme et TTS persistantes
+- [x] Memoire locale des permissions outils
+- [x] Reutilisation de la permission `always` / `denied` pour les commandes `/tool ...` envoyees via le chat
 
-## Frontend Phase F7 -- PWA + Mobile
+### Ce qui reste a reprendre serieusement
+- [ ] UX auth plus propre et plus convaincante pour un produit AI agent
+- [ ] Flux permissions/outils juges vraiment clairs, fiables et operationnels
+- [ ] Settings suffisamment solides pour etre consideres comme une vraie surface produit utile
+- [ ] Parcours hors chat au meme niveau de confiance que le chat
+- [ ] Sign-off produit reel sur staging
+
+## Frontend Phase F7 -- PWA + Mobile (BLOQUEE / NON OUVERTE)
+- [ ] Ne pas ouvrir tant que le frontend coeur n est pas recadre
 - [ ] PWA manifest + service worker
 - [ ] Icons PWA
 - [ ] Capacitor config + init
@@ -115,6 +143,7 @@
 - [ ] Build Android
 - [ ] Support offline
 - [ ] Safe area insets iOS
+- [ ] Packaging mobile seulement apres un frontend coeur juge satisfaisant
 
 ## Checklist securite
 - [x] Secrets uniquement en variables d environnement
@@ -143,4 +172,4 @@
 
 ---
 
-*Mis a jour : 2026-03-22 -- F1..F4 completes ; F5 implemente et deploye ; verification independante requise avant F6 ; CORS backend staging corrige*
+*Mis a jour : 2026-03-22 -- retour produit reel integre ; positionnement AI agent clarifie ; chat le plus avance ; frontend global encore loin de la vision ; F7 bloquee*

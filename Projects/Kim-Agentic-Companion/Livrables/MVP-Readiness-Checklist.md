@@ -1,4 +1,4 @@
-# MVP Readiness Checklist -- Kim Agentic Companion
+# MVP Readiness Checklist -- Kim
 
 Date: 2026-03-20
 Status: Draft v1

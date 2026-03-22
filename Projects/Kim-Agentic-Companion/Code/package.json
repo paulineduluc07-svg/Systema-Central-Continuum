@@ -1,8 +1,8 @@
 {
-  "name": "kim-agentic-companion",
+  "name": "kim-agentic",
   "version": "0.1.0",
   "private": true,
-  "description": "Cloud-first scaffold for Kim agentic companion with MCP policy gate.",
+  "description": "Cloud-first scaffold for Kim AI agent with MCP policy gate.",
   "type": "module",
   "engines": {
     "node": "20.x"
