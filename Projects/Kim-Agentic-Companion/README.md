@@ -22,6 +22,12 @@ Point d entree rapide du projet Kim dans SCC.
 - Direction frontend a suivre: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`.
 - Prochaine phase executable: F5 = montee en fidelite, avatar `GLB`, wardrobe, room decoration, perf mobile.
 
+## Validation locale recente (2026-03-21)
+- Backend `Code/` valide localement dans un worktree temporaire isole.
+- Commandes passees: `npm run check`, `npm test`, `npm run build`.
+- Resultat tests: `10` fichiers / `32` tests passes.
+- Le dossier temporaire de test a ete supprime apres execution pour eviter tout doublon local persistant.
+
 ## Services cloud actifs
 - App staging backend: `https://kim-agentic-companion-staging.vercel.app`
 - MCP staging: `https://kim-mcp-staging.vercel.app`
@@ -36,5 +42,6 @@ Point d entree rapide du projet Kim dans SCC.
 ## Regle operationnelle
 - Remote-first prioritaire.
 - Le local sert seulement pour coder, tester puis redeployer.
+- Pour les tests locaux, preferer un worktree temporaire isole si le clone principal est sale.
 - Ne pas stocker de secrets dans le repo.
 - Une phase frontend est marquee complete seulement apres verification par un second agent.
