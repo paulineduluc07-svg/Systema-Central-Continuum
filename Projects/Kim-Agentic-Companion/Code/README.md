@@ -1,7 +1,7 @@
 # Code -- Kim Agentic Companion
 
 ## Objectif du dossier
-Contenir limplementation technique cloud-first du produit Kim agentic companion.
+Contenir l implementation technique cloud-first du produit Kim agentic companion.
 
 ## Stack v1
 - Runtime: Node.js 20+
@@ -14,7 +14,7 @@ Contenir limplementation technique cloud-first du produit Kim agentic companion.
 ## Arborescence
 - `src/api/` : endpoints HTTP
 - `src/agent-core/` : logique conversation, memoire, sessions, reponse LLM
-- `src/mcp-gateway/` : policy dautorisation, client MCP et connecteurs outils
+- `src/mcp-gateway/` : policy d autorisation, client MCP et connecteurs outils
 - `src/persistence/` : bootstrap PostgreSQL + migrations minimales
 - `src/shared/` : types, auth, signature webhook, logging
 - `tests/` : tests unitaires et integration
@@ -61,7 +61,7 @@ Reason codes courants:
 - `confirmation_required`
 
 ## Variables cloud critiques
-- `APP_NAME` : nom affiche dans linterface web (`Kim` par defaut)
+- `APP_NAME` : nom affiche dans l interface web (`Kim` par defaut)
 - `DATABASE_URL` : active la persistance Postgres
 - `PGSSL_DISABLE` : desactive SSL DB si necessaire (`false` par defaut)
 - `MCP_SERVER_BASE_URL` : URL du serveur MCP cloud
@@ -69,7 +69,7 @@ Reason codes courants:
 - `MCP_TIMEOUT_MS` : timeout reseau MCP
 - `MCP_ALLOWED_TOOLS` : allowlist des outils
 - `MCP_REQUIRE_CONFIRMATION` : confirmation par defaut (`true` ou `false`)
-- `MCP_ALLOWLIST_AS_DEFAULT_GRANTS` : si `true`, lallowlist agit comme grant par defaut (staging trusted mode)
+- `MCP_ALLOWLIST_AS_DEFAULT_GRANTS` : si `true`, l allowlist agit comme grant par defaut (staging trusted mode)
 - `API_AUTH_TOKEN` : token bearer API optionnel
 - `VAPI_API_KEY` : cle API pour appels sortants Vapi
 - `VAPI_BASE_URL` : URL API Vapi (par defaut `https://api.vapi.ai`)
@@ -81,14 +81,34 @@ Reason codes courants:
 - `ELEVENLABS_BASE_URL` : URL API ElevenLabs (par defaut `https://api.elevenlabs.io`)
 - `ELEVENLABS_TIMEOUT_MS` : timeout reseau ElevenLabs
 
-## Exemples derreurs API
+## Validation locale recente (2026-03-21)
+- Validation executee dans un worktree temporaire isole, pas dans le clone principal.
+- `npm run check` : OK
+- `npm test` : OK (`10` fichiers / `32` tests passes)
+- `npm run build` : OK
+- Worktree temporaire supprime apres execution.
+
+## Protocole local recommande
+```bash
+git worktree add <temp-dir> HEAD --detach
+cd <temp-dir>/Projects/Kim-Agentic-Companion/Code
+npm install
+npm run check
+npm test
+npm run build
+git worktree remove <temp-dir> --force
+```
+
+Utiliser ce flux si le clone principal est sale ou deja utilise par un autre agent.
+
+## Exemples d erreurs API
 - `401 unauthorized` si token bearer invalide
 - `401 invalid_signature` sur webhook signe incorrect
 - `400 invalid_payload` sur schema invalide
 - `404 session_not_found` si session inconnue
 - `tool.status = blocked` avec detail policy si outil refuse
 
-## Templates denvironnement
+## Templates d environnement
 - `.env.example`
 - `.env.staging.example`
 - `.env.production.example`
