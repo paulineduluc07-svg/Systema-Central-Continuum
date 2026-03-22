@@ -1,6 +1,6 @@
-# Kim Agentic Companion
+# Anima Ingenium
 
-Point d entree rapide du projet Kim dans SCC.
+Point d entree rapide du projet dans SCC.
 
 ## Dossiers
 - `Code/`: app backend principale (API + agent core + voice + tests)
@@ -20,7 +20,6 @@ Point d entree rapide du projet Kim dans SCC.
 - Les phases `F1` a `F7` sont strictement des phases frontend.
 - Une validation backend ne change jamais le statut d une phase `F`.
 - Frontend conserve la stack validee: `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`.
-- Alternatives refusees: pas de Babylon.js, pas de Unity WebGL.
 - Direction frontend a suivre: `Livrables/Frontend-Fidelity-Direction-2026-03-21.md`.
 - Prochaine etape utile: verification independante de F5, puis ouverture de F6.
 
@@ -45,8 +44,7 @@ Point d entree rapide du projet Kim dans SCC.
 5. Respecter le protocole multi-agent avant de passer a la phase suivante
 
 ## Regle operationnelle
-- Remote-first prioritaire.
-- Le local sert seulement pour coder, tester puis redeployer.
-- Pour les tests locaux, preferer un worktree temporaire isole si le clone principal est sale.
-- Ne pas stocker de secrets dans le repo.
-- Une phase frontend est marquee complete seulement apres verification par un second agent.
+- Remote obligatoire.
+- Le local sert seulement pour tester puis redeployer.
+- suprimer toute trace du repos, des tests et du travail dans le local a la fin des taches. 
+
