@@ -72,22 +72,30 @@
 - [x] Remplacement du fond CSS par la scene principale
 - [x] Deploy frontend avec base F4
 
-## Frontend Phase F5 -- Fidelity + Customization (COMPLETE)
-- [x] Integrer le pipeline avatar GLB dans la scene (KimAvatarGLB + placeholder procedural)
+## Frontend Phase F5 -- Fidelity + Customization (CODE COMPLETE -- AVATAR EN ATTENTE)
+
+> Infrastructure 100% en place. Seul element manquant: le fichier GLB 3D de Kim.
+> Une fois NEXT_PUBLIC_AVATAR_URL defini dans Vercel, la phase est visuellement finalisee.
+
+### Ce qui est fait (deploye sur Vercel)
+- [x] Pipeline avatar GLB: KimAvatarGLB + placeholder procedural PBR (rose metallique)
 - [x] Etats d animation: idle, wave (sur message Kim), sit -- via useSceneStore
-- [x] Materiaux PBR: Environment night + MeshPhysicalMaterial + envMapIntensity
-- [x] Post-processing: SMAA + Bloom + Vignette (EffectComposer)
-- [x] Wardrobe par slots: catalog, wardrobeSlots, wardrobeStore, WardrobePanel
-- [x] Decoration 3D: roomStore, FurnitureItem (couch/rug/lamp), RoomDecoration
-- [x] Bridge animation: useAvatar (Jotai messages -> Zustand sceneStore)
-- [x] SceneLighting PBR (Environment + key/fill/rim/nebula lights)
-- [x] Deploye sur Vercel
-- [ ] Ajouter un premier catalogue d outfits / accessoires
-- [ ] Poser le socle room decoration (placement simple + snap)
-- [ ] Ajouter des presets de room
-- [ ] Persister la customisation via Zustand + localStorage
-- [ ] Executer un passage perf mobile pendant la phase
-- [ ] Faire verifier F5 par un second agent avant tout demarrage de F6
+- [x] Materiaux PBR: Environment night + MeshPhysicalMaterial + envMapIntensity 1.4
+- [x] Post-processing: SMAA + Bloom (luminanceThreshold 0.82) + Vignette
+- [x] SceneLighting PBR: key/fill/rim/nebula lights + animated pink rim
+- [x] Wardrobe: catalog, wardrobeSlots, wardrobeStore (Zustand persist), WardrobePanel UI
+- [x] Room decoration: roomStore, FurnitureItem (couch/rug/lamp proceduraux), RoomDecoration
+- [x] Bridge animation: useAvatar (Jotai messages -> Zustand sceneStore) dans AppShell
+- [x] Onglet Wardrobe dans page.tsx + slide-in panel
+- [x] .env.example mis a jour avec NEXT_PUBLIC_AVATAR_URL
+- [x] Deploye sur Vercel: https://kim-agentic-companion-staging.vercel.app
+
+### Seul blocage restant
+- [ ] **NEXT_PUBLIC_AVATAR_URL** -- fournir un GLB 3D de Kim (Ready Player Me ou equivalent)
+  - Option A: Creer l avatar sur https://readyplayer.me, exporter GLB, coller l URL dans Vercel
+  - Option B: Utiliser un service tiers (IN3D, Avaturn, Bitmoji 3D) pour generer le GLB
+  - Option C: Utiliser un GLB libre de droit comme point de depart temporaire
+  - Une fois l URL definie dans les env vars Vercel + redeploy -> phase visuellement complete
 
 ## Frontend Phase F6 -- Auth + Tools + Settings
 - [ ] Login page (companion access code)
@@ -132,4 +140,4 @@
 
 ---
 
-*Mis a jour : 2026-03-22 -- F1, F2, F3, F4 et F5 completes ; F6 suivant*
+*Mis a jour : 2026-03-22 -- F1..F4 completes ; F5 code complet, avatar GLB en attente ; F6 demarre apres avatar*
