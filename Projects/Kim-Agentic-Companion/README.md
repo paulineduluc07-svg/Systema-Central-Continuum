@@ -1,5 +1,11 @@
 # Anima Ingenium
 
+> **Note de lien : Kim-Agentic-Companion = Anima Ingenium Prototype 2.**
+> Ce projet porte le nom de dossier `Kim-Agentic-Companion` dans le SCC mais son nom officiel est **Anima Ingenium**.
+> Kim est le nom de l'agent IA (le personnage). Anima Ingenium est le nom du produit/projet global.
+> Prototype 1 = `Systema-Agency`. Prototype 2 = ce projet (le plus avance).
+> Le prochain cycle de developpement repartira de cette base, pas de zero.
+
 Point d entree rapide du projet dans SCC.
 
 ## Dossiers
