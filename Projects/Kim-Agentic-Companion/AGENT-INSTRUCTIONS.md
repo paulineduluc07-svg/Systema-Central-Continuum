@@ -1,8 +1,12 @@
-# AGENT-INSTRUCTIONS -- Kim
+# AGENT-INSTRUCTIONS -- Anima Ingenium
 
 > Lire INTEGRALEMENT avant toute intervention sur ce projet.
 > Regles generales: voir ../../AGENTS.md
 > Ce document complete les regles globales avec le contexte Kim.
+
+Nom du produit/projet : **Anima Ingenium**
+Nom de l agent / personnage : **Kim**
+Le dossier SCC reste `Projects/Kim-Agentic-Companion/` tant qu un renommage structurel explicite n est pas decide.
 
 ---
 
@@ -59,10 +63,10 @@ Frontend  ---- HTTP fetch ---->  Backend
 ---
 
 ## Mission
-Construire Kim, un AI agent ultra-competent oriente execution: chat, voix, memoire persistante, outils agentiques via MCP, aide sur fichiers, dossiers, sites et workflows.
+Construire Anima Ingenium, un produit AI agent ultra-competent oriente execution. Kim en est l agent IA principal: chat, voix, memoire persistante, outils agentiques via MCP, aide sur fichiers, dossiers, sites et workflows.
 
 ## Positionnement non negociable
-- Kim n est pas une application de compagnie.
+- Anima Ingenium n est pas une application de compagnie.
 - Kim n existe pas pour "tenir compagnie", mais pour ameliorer la performance de vie de l utilisateur.
 - La reference de posture produit hors frontend immersif est plus proche d un produit type OpenClaw.
 - Replika et certains jeux video ne sont utiles ici que comme references de qualite visuelle frontend, de presence 3D et de finition.
@@ -75,6 +79,13 @@ Construire Kim, un AI agent ultra-competent oriente execution: chat, voix, memoi
 - Flux critiques actifs: sessions, chat LLM, outils MCP, webhook Vapi signe, ElevenLabs synthesis
 - Persistance sessions/memoire: Postgres
 - CORS staging valide pour `https://kim-frontend-staging.vercel.app`
+
+### Backend (PRIORITE ACTUELLE 2026-03-26)
+- La priorite backend actuelle est la fondation d un cognitive runtime.
+- Objectif: augmenter la lecture de situation, la retention de contexte, le suivi des engagements, la regulation et la fiabilite d action.
+- Le comportement cible sert la regulation, la fiabilite et l action, et non la fabulation ni l illusion de relation affective.
+- Base technique retenue a explorer: OpenClaw comme socle runtime/outils, avec une extension propre pour `Nuance Pass`, `State Service`, `Context Engine`, `Policy Gate`, `Commitment Ledger` et `Post Turn Consolidation`.
+- Trace de session a lire: `Notes/Anima Ingenium.md`
 
 ### Frontend (PROTOTYPE / REBASELINE NECESSAIRE)
 - Frontend autonome deja present dans `Frontend/`
@@ -171,9 +182,10 @@ Positionnement produit : `Livrables/Product-Positioning-2026-03-22.md`
 
 ### Si travail BACKEND
 1. Lire `Code/README.md`
-2. Verifier `GET /health` et `GET /v1/integrations/health`
-3. Valider `npm run check && npm test && npm run build` dans `Code/`
-4. Si le clone principal est sale, utiliser un worktree temporaire pour cette validation
+2. Lire `Notes/Anima Ingenium.md`
+3. Verifier `GET /health` et `GET /v1/integrations/health`
+4. Valider `npm run check && npm test && npm run build` dans `Code/`
+5. Si le clone principal est sale, utiliser un worktree temporaire pour cette validation
 
 ### Si travail FRONTEND
 1. Lire `Frontend/README.md` et `Frontend/AGENT-INSTRUCTIONS.md`

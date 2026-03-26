@@ -1,13 +1,14 @@
-# Roadmap -- Kim
+# Roadmap -- Anima Ingenium
 
 > Vision, etapes et statut reel.
 
 ---
 
 ## Vision
-Construire un AI agent ultra-competent, oriente execution utile: Kim dialogue, se souvient et agit via MCP avec supervision utilisateur pour aider sur fichiers, dossiers, sites et workflows.
+Construire Anima Ingenium, un produit AI agent ultra-competent, oriente execution utile: Kim dialogue, se souvient et agit via MCP avec supervision utilisateur pour aider sur fichiers, dossiers, sites et workflows.
 
 ## Etat actuel (base frontend courante)
+- [x] Convention de nommage clarifiee: Anima Ingenium = produit/projet, Kim = agent/personnage
 - [x] API backend deployee sur Vercel avec auth, memoire, outils MCP et voice
 - [x] CORS backend staging corrige pour `https://kim-frontend-staging.vercel.app`
 - [x] Frontend standalone dans `Frontend/`
@@ -20,8 +21,16 @@ Construire un AI agent ultra-competent, oriente execution utile: Kim dialogue, s
 - [ ] `F7` reste bloquee tant que le frontend coeur n est pas recadre
 
 ## Phases backend restantes
-- [ ] Phase 3 -- Orchestration agentique plus riche (skills composees, workflows multi-outils)
+- [ ] Phase 3 -- Cognitive runtime + orchestration agentique plus riche (lecture de situation, engagements, contexte structure, skills composees, workflows multi-outils)
 - [ ] Phase 4 -- Durcissement securite + observabilite + beta publique
+
+## Orientation backend validee (2026-03-26)
+- Prioriser un cognitive runtime avant toute sophistication cosmetique backend.
+- Viser une assistante qui tient une situation de travail, pas seulement une conversation.
+- Le moteur doit servir regulation, fiabilite, retention de contexte et action.
+- OpenClaw est retenu comme blueprint plausible pour la base runtime/outils.
+- Les briques a fonder en premier sont: `Nuance Pass`, `State Service`, `Context Engine`, `Commitment Ledger`, `Policy Gate`, `Post Turn Consolidation`.
+- Reference de trace projet: `Notes/Anima Ingenium.md`
 
 ## Direction frontend validee (2026-03-21)
 - Garder `Next.js 15 + React 19 + Three.js + React Three Fiber + Drei`

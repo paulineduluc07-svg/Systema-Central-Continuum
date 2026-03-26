@@ -1,4 +1,4 @@
-# Todo -- Kim
+# Todo -- Anima Ingenium
 
 > Taches actives. Mise a jour a chaque session.
 
@@ -7,15 +7,32 @@
 ## Etat de reference
 - Backend stable et CORS frontend staging valide.
 - Frontend courant reste un prototype cote produit malgre plusieurs briques presentes en code.
-- Positionnement clarifie: Kim n est pas une app de compagnie; Kim est un AI agent ultra-competent oriente execution.
+- Convention de nommage clarifiee: Anima Ingenium = produit/projet; Kim = agent/personnage.
+- Positionnement clarifie: Anima Ingenium n est pas une app de compagnie; Kim est un AI agent ultra-competent oriente execution.
 - Replika et les references jeu video servent uniquement a cadrer le niveau de qualite visuelle frontend et le 3D.
 - Retour produit du 2026-03-22 avec token reel: le chat semble etre la brique la plus convaincante; auth, tools, settings et la qualite visuelle demandent encore une reprise importante.
 - Estimation qualitative du rendu visuel courant par rapport a la cible: ~10%.
+- Nouvelle priorite backend (2026-03-26): cognitive runtime pour lecture de situation, retention de contexte, engagements, regulation et fiabilite d action.
+- Base technique visee pour cette couche: OpenClaw + extension runtime propre.
 - Les phases `F1` a `F7` sont strictement frontend.
 - Une validation backend ne modifie jamais le statut des phases `F`.
 - `F7` est bloquee tant que le frontend coeur n atteint pas un niveau produit satisfaisant.
-- Prochaine etape executable: audit frontend complet contre le positionnement clarifie, backlog de reprise priorise, puis premier lot de corrections coeur frontend.
+- Prochaine etape executable backend: specifier puis implementer la fondation du cognitive runtime.
+- Prochaine etape executable frontend: audit frontend complet contre le positionnement clarifie, backlog de reprise priorise, puis premier lot de corrections coeur frontend.
 - Toute validation de phase frontend exige un second agent de verification avant le passage a la suite.
+
+## Session backend runtime (2026-03-26)
+- [x] Relecture des README et fichiers agent du depot avant mise a jour documentaire
+- [x] Decision explicite: le produit se nomme Anima Ingenium; Kim reste le nom de l agent / personnage
+- [x] Decision explicite: le cognitive runtime devient une base prioritaire pour la suite de la vision
+- [x] Direction comportementale clarifiee: servir regulation, fiabilite et action; refuser la fabulation et l illusion de relation affective
+- [x] Cible comportementale clarifiee: lire une situation multi-facteurs sans perdre contexte, engagements ni contraintes
+- [x] OpenClaw retenu comme base plausible pour le runtime, les outils, les hooks, la memoire et les approvals
+- [x] Architecture de reference posee: `Nuance Pass`, `State Service`, `Context Engine`, `Commitment Ledger`, `Policy Gate`, `Post Turn Consolidation`
+- [x] Trois livrables externes crees dans Google Drive `01 - PROJETS/Anima Ingenium/Backend/Agent autonome`
+- [ ] Definir les schemas `AgentStateSnapshot`, `Commitment`, `DecisionRecord`
+- [ ] Definir le squelette du plugin `kim-runtime`
+- [ ] Definir le backlog V1 de la fondation cognitive
 
 ## Validation backend recente (2026-03-22)
 - [x] Backend `Code/` valide dans un worktree temporaire isole
