@@ -119,5 +119,13 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - gates automatiques: `pnpm check`, `pnpm test`, `pnpm build`
   - objectif: bloquer les regressions de compilation/tests avant merge
   - verification locale: `pnpm check` OK, `pnpm verify:step` OK
+[2026-03-30] Reprise production (T006):
+  - projet local relie a Vercel (`systema-agency`) pour execution CLI end-to-end
+  - deploiement production relance via `vercel deploy --prod -y` (deployment `Ready`, alias actif)
+  - verification locale complete: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - tentative migration Neon via Drizzle echouee: `28P01` (password authentication failed)
+  - observation env Vercel: `OWNER_EMAIL` et `OWNER_PASSWORD` manquants; `DATABASE_URL` actuelle mal formee et non exploitable
+  - decision: ne pas injecter de credentials fictifs en production; attendre les vraies valeurs owner + une URL Neon valide
+  - hygiene: suppression locale des `.env.vercel*` et ajout `.env.vercel*` au `.gitignore`
 
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006) -- Systema Central Continuum*

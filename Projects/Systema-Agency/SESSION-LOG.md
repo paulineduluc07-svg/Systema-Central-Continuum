@@ -101,3 +101,23 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Garde-fou CI en place pour eviter les regressions en PR.
   - Prochaine tache recommandee: T006 (config Vercel + migration Neon + validation prod).
+
+## 2026-03-30 - Etape 006 - Vercel + Neon + validation prod
+- Scope:
+  - Reprendre la mise en production T006 en execution reelle.
+  - Verifier environnement Vercel, tenter migration Neon, redeployer en production.
+- Livrables:
+  - Projet local relie a Vercel (`vercel link`) pour `systema-agency`.
+  - Deploiement prod relance via `vercel deploy --prod -y` (deployment `Ready`, alias actif).
+  - Hygiene secrets locale: fichiers `.env.vercel*` supprimes apres diagnostic.
+  - `Code/.gitignore` renforce avec `.env.vercel*` et `.vercel`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+  - Tentative migration DB = KO (`28P01` password authentication failed for `neondb_owner`)
+- Resultat:
+  - Pipeline local et deploy Vercel valides.
+  - Blocage restant: `OWNER_EMAIL` et `OWNER_PASSWORD` absents sur Vercel.
+  - Blocage critique DB: `DATABASE_URL` actuelle invalide (format/pwd), migration `0001_suivi_entries` non appliquee.
+  - Prochaine action: corriger `DATABASE_URL` Neon + definir credentials owner, puis relancer migration et validation fonctionnelle prod.

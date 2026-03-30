@@ -37,9 +37,11 @@ Stack:
 - [x] CI PR (check/test/build)
 
 ## Phase 3 - Production
-- [ ] Variables Vercel completes (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)
-- [ ] Migration SQL Neon appliquee
-- [ ] Validation production complete
+- [x] Deploy production relance (`vercel deploy --prod -y`) et alias actif
+- [ ] Variables Vercel completes (`OWNER_EMAIL`, `OWNER_PASSWORD` encore absentes)
+- [ ] `DATABASE_URL` Vercel assainie et validee (credentials Neon actuellement invalides)
+- [ ] Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql`)
+- [ ] Validation production fonctionnelle complete (auth + sync DB)
 
 ---
 

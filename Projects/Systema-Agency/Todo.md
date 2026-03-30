@@ -16,6 +16,12 @@ Taches actives. Mise a jour a chaque session.
 
 ## IN PROGRESS
 - [ ] T006 - Config Vercel + migration Neon + validation prod
+  - [x] Projet local lie a Vercel (`systema-agency`)
+  - [x] Deploy production lance via CLI (`vercel deploy --prod -y`)
+  - [x] Validation locale qualite: `pnpm check`, `pnpm test`, `pnpm build` OK
+  - [ ] Completer variables Vercel manquantes: `OWNER_EMAIL`, `OWNER_PASSWORD`
+  - [ ] Corriger `DATABASE_URL` Vercel (format + credentials Neon valides)
+  - [ ] Appliquer la migration Neon `drizzle/0001_suivi_entries.sql` (bloque tant que DB auth invalide)
 
 ## NEXT
 - [ ] T007 - Nettoyage final docs README (stack + auth + onboarding)
