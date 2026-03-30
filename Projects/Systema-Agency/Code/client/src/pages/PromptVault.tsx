@@ -493,22 +493,22 @@ export default function PromptVault() {
   };
 
   return (
-    <div style={{ background: "linear-gradient(160deg,#050510 0%,#0a0a1a 50%,#06060f 100%)", minHeight: "100vh", fontFamily: "'Trebuchet MS',sans-serif", color: "#e0e0ff", position: "relative", overflowX: "hidden" }}>
-      <div style={{ position: "fixed", inset: 0, backgroundImage: "linear-gradient(rgba(0,245,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,0.03) 1px,transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none", zIndex: 0 }} />
-      <div style={{ position: "fixed", top: "-80px", left: "-80px", width: "350px", height: "350px", borderRadius: "50%", background: "radial-gradient(circle,rgba(0,245,255,0.07) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
-      <div style={{ position: "fixed", bottom: "-80px", right: "-80px", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle,rgba(162,155,254,0.07) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+    <div style={{ background: "linear-gradient(180deg,#0f172a 0%,#111827 100%)", minHeight: "100vh", fontFamily: "'Segoe UI',sans-serif", color: "#e2e8f0", position: "relative", overflowX: "hidden" }}>
+      <div style={{ position: "fixed", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px)", backgroundSize: "42px 42px", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", top: "-120px", left: "-120px", width: "300px", height: "300px", borderRadius: "50%", background: "radial-gradient(circle,rgba(56,189,248,0.08) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
+      <div style={{ position: "fixed", bottom: "-120px", right: "-120px", width: "340px", height: "340px", borderRadius: "50%", background: "radial-gradient(circle,rgba(129,140,248,0.08) 0%,transparent 70%)", pointerEvents: "none", zIndex: 0 }} />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "1100px", margin: "0 auto", padding: "28px 16px" }}>
+      <div style={{ position: "relative", zIndex: 1, width: "100%", margin: 0, padding: "28px clamp(16px,4vw,40px) 36px" }}>
 
         {/* HEADER */}
-        <div style={{ textAlign: "center", marginBottom: "36px" }}>
-          <div style={{ fontSize: "10px", letterSpacing: "6px", color: "#00f5ff", marginBottom: "6px", opacity: 0.8 }}>⬡ SYSTÈME COGNITIF EXTERNE ⬡</div>
+        <div style={{ textAlign: "left", marginBottom: "28px" }}>
+          <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#7dd3fc", marginBottom: "6px", opacity: 0.9, textTransform: "uppercase" }}>Bibliotheque de prompts</div>
           <h1 style={{ fontSize: "clamp(32px,6vw,58px)", fontWeight: 900, letterSpacing: "4px", margin: 0, lineHeight: 1, textTransform: "uppercase" }}>
-            <span style={{ color: "#fff" }}>PROMPT </span>
-            <span style={{ color: "#00f5ff", textShadow: "0 0 30px #00f5ff,0 0 60px #00f5ff55" }}>VAULT</span>
+            <span style={{ color: "#f8fafc" }}>PROMPT </span>
+            <span style={{ color: "#38bdf8", textShadow: "0 0 24px rgba(56,189,248,0.45)" }}>VAULT</span>
           </h1>
-          <div style={{ fontSize: "10px", letterSpacing: "3px", color: "#a29bfe", marginTop: "7px", opacity: 0.85 }}>BIBLIOTHÈQUE — {list.length} MODULES ACTIFS</div>
-          <div style={{ display: "flex", justifyContent: "center", gap: "32px", marginTop: "18px", flexWrap: "wrap" }}>
+          <div style={{ fontSize: "12px", letterSpacing: "0.5px", color: "#a5b4fc", marginTop: "9px", opacity: 0.95 }}>Bibliotheque complete - {list.length} modules actifs</div>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: "32px", marginTop: "18px", flexWrap: "wrap" }}>
             {[{ v: list.length, l: "PROMPTS", c: "#00f5ff" }, { v: cats.length - 1, l: "CATÉGORIES", c: "#a29bfe" }, { v: favs.length, l: "FAVORIS", c: "#eccc68" }].map(s => (
               <div key={s.l} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: "24px", fontWeight: 900, color: s.c, textShadow: `0 0 20px ${s.c}` }}>{s.v}</div>
@@ -721,7 +721,7 @@ export default function PromptVault() {
         )}
 
         <div style={{ textAlign: "center", marginTop: "40px", paddingTop: "16px", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-          <div style={{ fontSize: "8px", letterSpacing: "4px", color: "#ffffff55" }}>PROMPT VAULT ⬡ PAW 2026</div>
+          <div style={{ fontSize: "10px", letterSpacing: "1px", color: "#ffffff70" }}>Prompt Vault - vue pleine page</div>
         </div>
       </div>
     </div>

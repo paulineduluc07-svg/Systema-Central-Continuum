@@ -9,8 +9,8 @@ Date : 2026-03-21
 Dashboard de vie personnel, sobre et fonctionnel, synchronise entre appareils.
 
 ## C'est quoi
-Application web organisee en 6 onglets fixes (Sante, Finance, Carriere, Etude, Maison, Ressources IA).
-Chaque onglet = sticky notes syncees. Sante = + raccourci Suivi medicament. Ressources IA = Prompt Vault.
+Application web organisee autour de 3 entrees fixes (Prompt Vault, Suivi medicament, Tableau blanc).
+Tableau blanc = sticky notes syncees. Suivi = prise medicament. Prompt Vault = bibliotheque IA pleine page.
 Pas de RPG, pas d'avatar, pas de tarot. Interface minimaliste orientee utilite reelle.
 
 ## Infos techniques
@@ -23,7 +23,7 @@ Pas de RPG, pas d'avatar, pas de tarot. Interface minimaliste orientee utilite r
 ## Architecture frontend actuelle
 ```
 pages/
-  Home.tsx        -- 6 onglets + notes par onglet
+  Home.tsx        -- 3 onglets (Prompt Vault, Suivi, Tableau blanc)
   Suivi.tsx       -- suivi medicament (DB si auth, localStorage sinon)
   PromptVault.tsx -- bibliotheque prompts (statique)
 hooks/
@@ -83,5 +83,12 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - client/src/pages/Suivi.tsx : sync tRPC si authentifiee, localStorage fallback sinon
   - Comportement : au login, donnees DB remplacent localStorage ; chaque prise = envoyee en DB + localStorage
   - En attente : appliquer la migration SQL + configurer variables Vercel + deployer
+[2026-03-30] Simplification UX + methode de travail:
+  - Home reduit a 3 onglets: Prompt Vault, Suivi medicament, Tableau blanc
+  - Prompt Vault passe en pleine page avec style plus sobre
+  - Bug build getLoginUrl corrige
+  - Processus d'execution en taches mis en place: WORKFLOW.md + SESSION-LOG.md
+  - Scripts de validation ajoutes: pnpm verify:step, pnpm verify:full
+  - Etat qualite: pnpm test OK, pnpm build OK, pnpm check KO (dette historique documentee)
 
-*Mis a jour : 2026-03-21 | Claude (session sync DB) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (setup workflow et simplification UX) -- Systema Central Continuum*

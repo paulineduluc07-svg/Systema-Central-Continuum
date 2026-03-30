@@ -1,52 +1,46 @@
-# Roadmap -- Systema Agency
+# Roadmap - Systema Agency
 
-> Vision et etapes du projet.
-
----
-
-## Vision
-Dashboard de vie personnel organise par domaines : Sante, Finance, Carriere, Etude, Maison, Ressources IA.
-Interface sobre et fonctionnelle. Notes syncees entre appareils via auth email/password + Neon PostgreSQL.
-Stack : TypeScript + React 19 + Vite + Tailwind v4 + tRPC + Drizzle ORM + Neon PostgreSQL + Vercel.
+Vision et etapes du projet.
 
 ---
 
-## Phase 0 -- Fondations (complete)
-- [x] PromptVault en place
-- [x] Migration Neon PostgreSQL complete
-- [x] Deploiement Vercel actif
-- [x] Migration GitHub -> SCC validee
-- [x] Vague 1 securite (2026-03-19)
-- [x] Refonte architecture frontend (2026-03-20)
-  - Suppression de tout ce qui est RPG, Tarot, VisionBoard, LifeCommand
-  - Nouveau dashboard : 6 onglets fixes + sticky notes par onglet
-  - Backend allege : routers tarot et ai retires
+## Vision produit (etat cible)
+Dashboard personnel simple et stable, organise autour de 3 entrees:
+- Prompt Vault
+- Suivi medicament
+- Tableau blanc illimite (notes volantes)
 
-## Phase 1 -- Sync et Auth (complete en code, en attente de deploiement)
-- [x] Auth email/password implementee (2026-03-20)
-  - Remplacement de l'OAuth Manus par auth auto-contenue
-  - verifyCredentials() via HMAC + timingSafeEqual (crypto Node.js natif, zero dep)
-  - Variables : OWNER_EMAIL, OWNER_PASSWORD, JWT_SECRET
-- [x] Suivi medicament : sync DB implementee (2026-03-21)
-  - Table suivi_entries dans schema + migration SQL
-  - Router tRPC suivi.list / suivi.add / suivi.replace
-  - Suivi.tsx : DB si auth, localStorage fallback sinon
-- [ ] **Configurer variables Vercel** (bloque le deploiement)
-- [ ] **Appliquer migration SQL** dans Neon (`drizzle/0001_suivi_entries.sql`)
-- [ ] **Deployer et valider** en prod
-
-## Phase 2 -- Stabilisation UX
-- [ ] Completer .env.example avec toutes les variables actuelles
-- [ ] Nettoyer fichiers server inutilises (oauth.ts, llm.ts, etc.)
-- [ ] Ajouter foreign keys dans schema Drizzle
-- [ ] Tester sync cross-appareils (notes par onglet, suivi medicament)
-
-## Phase 3 -- Extension (future)
-- [ ] Integrer Kim (compagnon IA) quand Kim MVP est stable
-  - Kim est un projet separe : `Projects/Kim-Agentic-Companion/`
-  - Ne pas implanter de chat IA dans Systema Agency avant que Kim soit pret
-- [ ] Export PDF avec donnees DB
+Stack:
+- TypeScript + React 19 + Vite + Tailwind v4
+- tRPC + Drizzle ORM + Neon PostgreSQL
+- Deploy Vercel
 
 ---
 
-*Mis a jour : 2026-03-21*
+## Phase 0 - Base UX (done)
+- [x] Simplification navigation a 3 onglets
+- [x] Prompt Vault en pleine page (layout normal)
+- [x] Tableau blanc conserve avec notes volantes
+- [x] Build frontend retabli (`getLoginUrl`)
+
+## Phase 1 - Discipline execution (in progress)
+- [x] Workflow de travail par taches documente (`WORKFLOW.md`)
+- [x] Journal de session (`SESSION-LOG.md`)
+- [x] Scripts de verification (`verify:step`, `verify:full`)
+- [ ] Retour a zero erreur sur `pnpm check`
+
+## Phase 2 - Stabilisation technique
+- [ ] Corriger incoherences ENV serveur
+- [ ] Mettre a jour `.env.example`
+- [ ] Politique cookie robuste dev/prod
+- [ ] Transaction sur `replaceSuiviEntries`
+- [ ] CI PR (check/test/build)
+
+## Phase 3 - Production
+- [ ] Variables Vercel completes (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)
+- [ ] Migration SQL Neon appliquee
+- [ ] Validation production complete
+
+---
+
+Mis a jour: 2026-03-30

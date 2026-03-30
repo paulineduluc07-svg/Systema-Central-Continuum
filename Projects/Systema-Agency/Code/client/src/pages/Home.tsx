@@ -15,12 +15,8 @@ import {
   Plus,
   X,
   Activity,
-  Heart,
-  DollarSign,
-  Briefcase,
-  BookOpen,
-  Home as HomeIcon,
   Sparkles,
+  StickyNote,
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -28,12 +24,9 @@ import { cn } from "@/lib/utils";
 // ── Tab config ────────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: "sante", label: "Sante", Icon: Heart, color: "#F472B6" },
-  { id: "finance", label: "Finance", Icon: DollarSign, color: "#34D399" },
-  { id: "carriere", label: "Carriere", Icon: Briefcase, color: "#60A5FA" },
-  { id: "etude", label: "Etude", Icon: BookOpen, color: "#A78BFA" },
-  { id: "maison", label: "Maison", Icon: HomeIcon, color: "#FBBF24" },
-  { id: "ressources-ia", label: "Ressources IA", Icon: Sparkles, color: "#67E8F9" },
+  { id: "prompt-vault", label: "Prompt Vault", Icon: Sparkles, color: "#22D3EE" },
+  { id: "suivi-medicament", label: "Suivi medicament", Icon: Activity, color: "#F472B6" },
+  { id: "tableau-blanc", label: "Tableau blanc", Icon: StickyNote, color: "#F59E0B" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -236,7 +229,7 @@ function NotesSection({ tabId }: { tabId: string }) {
 export default function Home() {
   const { isAuthenticated, logout } = useAuth();
   const { darkMode, setDarkMode } = useSyncedPreferences();
-  const [activeTab, setActiveTab] = usePersistedState<TabId>("active_tab", "sante");
+  const [activeTab, setActiveTab] = usePersistedState<TabId>("active_tab", "tableau-blanc");
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
@@ -273,9 +266,13 @@ export default function Home() {
           {/* Toolbar */}
           <div className="flex items-center gap-1.5 shrink-0">
             {isAuthenticated ? (
-              <Cloud className="w-3.5 h-3.5 text-green-400" title="Synchronise" />
+              <span title="Synchronise">
+                <Cloud className="w-3.5 h-3.5 text-green-400" />
+              </span>
             ) : (
-              <CloudOff className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600" title="Hors-ligne" />
+              <span title="Hors-ligne">
+                <CloudOff className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600" />
+              </span>
             )}
 
             <button
@@ -319,7 +316,7 @@ export default function Home() {
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-4 py-6">
-        {activeTab === "ressources-ia" ? (
+        {activeTab === "prompt-vault" ? (
           <div className="flex flex-col items-center justify-center py-16 text-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center">
               <Sparkles className="w-7 h-7 text-cyan-400" />
@@ -329,39 +326,43 @@ export default function Home() {
                 Prompt Vault
               </p>
               <p className="text-sm text-gray-400 mt-1">
-                Bibliotheque de prompts IA
+                Nouvelle vue pleine page, avec design normal
               </p>
             </div>
             <Link href="/prompt-vault">
               <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl text-sm font-medium transition-colors">
-                Ouvrir le Vault
+                Ouvrir le Prompt Vault
+              </button>
+            </Link>
+          </div>
+        ) : activeTab === "suivi-medicament" ? (
+          <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-900 rounded-xl border border-pink-100 dark:border-pink-900/20 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-900/30 flex items-center justify-center shrink-0">
+              <Activity className="w-5 h-5 text-pink-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                Suivi medicament
+              </p>
+              <p className="text-xs text-gray-400">Enregistrer une prise et voir les patterns</p>
+            </div>
+            <Link href="/suivi">
+              <button className="px-3 py-1.5 bg-pink-500 hover:bg-pink-600 text-white text-sm rounded-lg transition-colors shrink-0">
+                Ouvrir
               </button>
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
-            {activeTab === "sante" && (
-              <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-900 rounded-xl border border-pink-100 dark:border-pink-900/20 shadow-sm">
-                <div className="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-900/30 flex items-center justify-center shrink-0">
-                  <Activity className="w-5 h-5 text-pink-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                    Suivi medicament
-                  </p>
-                  <p className="text-xs text-gray-400">Enregistrer une prise</p>
-                </div>
-                <Link href="/suivi">
-                  <button className="px-3 py-1.5 bg-pink-500 hover:bg-pink-600 text-white text-sm rounded-lg transition-colors shrink-0">
-                    Ouvrir
-                  </button>
-                </Link>
-              </div>
-            )}
-
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-5">
-              <NotesSection tabId={activeTab} />
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-5 min-h-[70vh]">
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                Tableau blanc illimite
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Tes notes volantes restent synchronisees et sans limite pratique.
+              </p>
             </div>
+            <NotesSection tabId="tableau-blanc" />
           </div>
         )}
       </main>

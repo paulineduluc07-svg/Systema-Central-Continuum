@@ -11,13 +11,10 @@ Code actif : `Projects/Systema-Agency/Code/`.
 Deploye : `systema-agency.vercel.app`
 
 ## Vision produit
-Dashboard minimaliste organise en 6 onglets fixes :
-- **Sante** : notes + raccourci vers Suivi medicament (/suivi)
-- **Finance** : notes
-- **Carriere** : notes
-- **Etude** : notes
-- **Maison** : notes
-- **Ressources IA** : redirection vers Prompt Vault (/prompt-vault)
+Dashboard minimaliste organise en 3 onglets fixes :
+- **Prompt Vault** : redirection vers `/prompt-vault`
+- **Suivi medicament** : redirection vers `/suivi`
+- **Tableau blanc** : notes volantes illimitees syncees
 
 Interface sobre et fonctionnelle. Pas de gamification, pas de RPG, pas d'elements tarot.
 Le module Kim (compagnon IA) est un projet separe dans `Projects/Kim-Agentic-Companion/` -- ne pas l'integrer ici.
@@ -34,7 +31,7 @@ Auth email/password auto-contenu. Aucun OAuth, aucun tiers.
 ### Frontend (`client/src/`)
 ```
 pages/
-  Home.tsx        -- dashboard principal (6 onglets + notes par onglet + LoginModal)
+  Home.tsx        -- dashboard principal (3 onglets + LoginModal)
   Suivi.tsx       -- suivi medicament (tRPC si auth, localStorage fallback sinon)
   PromptVault.tsx -- bibliotheque prompts IA
   NotFound.tsx
@@ -70,12 +67,13 @@ Schema suivi_entries :
 - Routes API : `api/trpc/` (Vercel Functions)
 - Variables d'env requises : DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD
 
-## Etat actuel (2026-03-21)
+## Etat actuel (2026-03-30)
 - [x] Migration GitHub -> SCC validee
 - [x] Refonte architecture frontend (2026-03-20) : suppression RPG/Tarot/LifeCommand
-- [x] Nouveau Home.tsx : 6 onglets fixes + sticky notes syncees
+- [x] Home simplifie (2026-03-30) : 3 onglets fixes (Prompt Vault, Suivi medicament, Tableau blanc)
 - [x] Auth email/password (2026-03-20) : remplace OAuth Manus, zero nouvelle dependance
 - [x] Suivi medicament sync DB (2026-03-21) : tRPC + localStorage fallback
+- [x] Workflow d'execution par taches (2026-03-30) : `WORKFLOW.md` + `SESSION-LOG.md` + scripts `verify:*`
 - [ ] **Variables Vercel a configurer** (DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD)
 - [ ] **Migration SQL a appliquer** dans Neon : `drizzle/0001_suivi_entries.sql`
   - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
@@ -110,4 +108,4 @@ Schema suivi_entries :
 - Todo.md -- taches actives
 - Roadmap.md -- vision et etapes
 
-*Mis a jour : 2026-03-21 | Claude (session sync DB) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX) -- Systema Central Continuum*
