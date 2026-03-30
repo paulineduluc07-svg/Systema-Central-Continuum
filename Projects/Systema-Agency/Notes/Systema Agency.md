@@ -108,5 +108,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - `secure` reste derive du protocole effectif (`https` ou `x-forwarded-proto`)
   - tests logout enrichis pour couvrir les 2 modes
   - verification: `pnpm check` OK, `pnpm verify:step` OK
+[2026-03-30] Transaction `suivi.replace` (T004):
+  - `replaceSuiviEntries` passe en execution transactionnelle (`db.transaction`)
+  - suppression + reinsertion des entrees dans une meme unite atomique
+  - reduction du risque de perte de donnees en cas d'echec intermediaire
+  - verification: `pnpm check` OK, `pnpm verify:step` OK
 
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction) -- Systema Central Continuum*

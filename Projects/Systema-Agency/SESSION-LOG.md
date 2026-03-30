@@ -75,3 +75,15 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Sessions plus fiables en dev local, comportement cross-site explicite et controle.
   - Prochaine tache recommandee: T004 (`replaceSuiviEntries` sous transaction).
+
+## 2026-03-30 - Etape 004 - Transaction suivi.replace
+- Scope:
+  - Rendre `replaceSuiviEntries` atomique pour eviter la perte de donnees entre delete et insert.
+- Livrables:
+  - `server/db.ts` : `replaceSuiviEntries` execute maintenant delete + insert dans `db.transaction(...)`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK
+- Resultat:
+  - Remplacement des entrees suivi securise en une seule unite transactionnelle.
+  - Prochaine tache recommandee: T005 (CI PR check/test/build).

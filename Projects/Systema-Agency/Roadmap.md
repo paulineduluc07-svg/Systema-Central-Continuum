@@ -33,7 +33,7 @@ Stack:
 - [ ] Corriger incoherences ENV serveur
 - [x] Mettre a jour `.env.example`
 - [x] Politique cookie robuste dev/prod
-- [ ] Transaction sur `replaceSuiviEntries`
+- [x] Transaction sur `replaceSuiviEntries`
 - [ ] CI PR (check/test/build)
 
 ## Phase 3 - Production

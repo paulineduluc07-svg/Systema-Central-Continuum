@@ -252,8 +252,11 @@ export async function createSuiviEntry(entry: InsertSuiviEntry) {
 export async function replaceSuiviEntries(userId: number, entries: Omit<InsertSuiviEntry, "userId">[]) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.delete(suiviEntries).where(eq(suiviEntries.userId, userId));
-  if (entries.length > 0) {
-    await db.insert(suiviEntries).values(entries.map((e) => ({ ...e, userId })));
-  }
+
+  await db.transaction(async (tx) => {
+    await tx.delete(suiviEntries).where(eq(suiviEntries.userId, userId));
+    if (entries.length > 0) {
+      await tx.insert(suiviEntries).values(entries.map((e) => ({ ...e, userId })));
+    }
+  });
 }

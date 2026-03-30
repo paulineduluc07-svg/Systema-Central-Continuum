@@ -15,13 +15,16 @@ Taches actives. Mise a jour a chaque session.
 ---
 
 ## IN PROGRESS
-- [ ] T004 - Mettre `replaceSuiviEntries` sous transaction
+- [ ] T005 - CI PR (check/test/build)
 
 ## NEXT
-- [ ] T005 - CI PR (check/test/build)
 - [ ] T006 - Config Vercel + migration Neon + validation prod
 
 ## DONE
+- [x] T004 - Mettre `replaceSuiviEntries` sous transaction (2026-03-30)
+  - [x] `server/db.ts` : remplacement atomique via `db.transaction(...)`
+  - [x] Supprime + reinsere dans une meme transaction SQL
+  - [x] Validation: `pnpm check` OK et `pnpm verify:step` OK
 - [x] T003 - Ajuster la politique cookie (`sameSite` / `secure`) pour dev + prod (2026-03-30)
   - [x] `server/_core/cookies.ts` : `SameSite=Lax` par defaut
   - [x] Mode cross-site explicite via `COOKIE_CROSS_SITE=true` (`SameSite=None` seulement en HTTPS)
