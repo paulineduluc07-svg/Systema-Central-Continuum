@@ -80,7 +80,7 @@ Schema suivi_entries :
   - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
   - Option B : coller le SQL dans Neon SQL Editor
 - [ ] Deployer sur Vercel apres les 2 etapes ci-dessus
-- [ ] Completer .env.example (ajouter OWNER_EMAIL, OWNER_PASSWORD ; retirer variables Manus)
+- [x] `.env.example` aligne sur les variables actuelles (2026-03-30)
 - [ ] Nettoyer les fichiers server inutilises : oauth.ts, llm.ts, imageGeneration.ts, voiceTranscription.ts, map.ts, dataApi.ts, notification.ts
 - [ ] Ajouter foreign keys dans schema Drizzle
 

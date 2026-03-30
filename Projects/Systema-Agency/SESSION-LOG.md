@@ -39,3 +39,21 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Qualite de base retablie: check + test + build passent.
   - Prochaine tache recommandee: T002 (`.env.example`).
+
+## 2026-03-30 - Etape 002 - Alignement .env.example
+- Scope:
+  - Aligner `.env.example` avec les variables actuellement lues par le code.
+- Livrables:
+  - `Code/.env.example` recompose avec sections:
+    - required runtime
+    - optional client
+    - optional analytics
+    - optional legacy integrations
+    - runtime-provided vars (`NODE_ENV`, `PORT`)
+  - Variables OAuth obsoletes retirees.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK
+- Resultat:
+  - Setup d'environnement clarifie et coherent avec l'etat du code.
+  - Prochaine tache recommandee: T003 (politique cookie dev/prod).

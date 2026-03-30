@@ -96,5 +96,11 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - `env.ts` complete pour les cles `forge*` et `openai*`
   - `oauth.ts` neutralise (redirect simple), `rateLimit.ts` ajuste, `vite.config.ts` corrige
   - Verification finale: `pnpm verify:full` OK
+[2026-03-30] Alignement environnement (T002):
+  - `.env.example` mis a jour pour correspondre aux variables reelles du code
+  - variables OAuth obsoletes retirees (`OAUTH_SERVER_URL`, `OWNER_OPEN_ID`)
+  - ajout variables auth actuelles (`OWNER_EMAIL`, `OWNER_PASSWORD`, `VITE_LOGIN_URL`)
+  - ajout variables analytics (`VITE_ANALYTICS_ENDPOINT`, `VITE_ANALYTICS_WEBSITE_ID`)
+  - verification: `pnpm check` OK, `pnpm verify:step` OK
 
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment) -- Systema Central Continuum*

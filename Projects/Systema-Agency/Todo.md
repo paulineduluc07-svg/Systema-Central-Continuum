@@ -15,15 +15,20 @@ Taches actives. Mise a jour a chaque session.
 ---
 
 ## IN PROGRESS
-- [ ] T002 - Mettre a jour `.env.example` (variables actuelles uniquement)
+- [ ] T003 - Ajuster la politique cookie (`sameSite` / `secure`) pour dev + prod
 
 ## NEXT
-- [ ] T003 - Ajuster la politique cookie (`sameSite` / `secure`) pour dev + prod
 - [ ] T004 - Mettre `replaceSuiviEntries` sous transaction
 - [ ] T005 - CI PR (check/test/build)
 - [ ] T006 - Config Vercel + migration Neon + validation prod
 
 ## DONE
+- [x] T002 - Mettre a jour `.env.example` (2026-03-30)
+  - [x] Retrait des variables OAuth obsoletes (`OAUTH_SERVER_URL`, `OWNER_OPEN_ID`)
+  - [x] Ajout des variables auth actuelles (`OWNER_EMAIL`, `OWNER_PASSWORD`, `VITE_LOGIN_URL`)
+  - [x] Ajout des variables analytics utilisees par `client/index.html`
+  - [x] Ajout des variables integration legacy (`BUILT_IN_FORGE_*`, `OPENAI_*`) avec marquage optionnel
+  - [x] Validation: `pnpm check` OK et `pnpm verify:step` OK
 - [x] T001 - Stabiliser `pnpm check` (2026-03-30)
   - [x] Ajout de `client/src/hooks/useComposition.ts`
   - [x] Ajout de `client/src/components/AIChatBox.tsx` (composant demo pour `ComponentShowcase`)
