@@ -77,6 +77,7 @@ Schema suivi_entries :
 - [x] Qualite de base retablie (2026-03-30) : `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] Politique cookie dev/prod stabilisee (2026-03-30) : `SameSite=Lax` par defaut, mode cross-site explicite
 - [x] `replaceSuiviEntries` securise en transaction (2026-03-30)
+- [x] CI PR active (2026-03-30) : check + test + build sur pull_request/main
 - [ ] **Variables Vercel a configurer** (DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD)
 - [ ] **Migration SQL a appliquer** dans Neon : `drizzle/0001_suivi_entries.sql`
   - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
@@ -110,4 +111,4 @@ Schema suivi_entries :
 - Todo.md -- taches actives
 - Roadmap.md -- vision et etapes
 
-*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX + stabilisation typecheck + cookie policy + suivi transaction) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX + stabilisation typecheck + cookie policy + suivi transaction + CI PR) -- Systema Central Continuum*

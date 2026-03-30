@@ -113,5 +113,11 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - suppression + reinsertion des entrees dans une meme unite atomique
   - reduction du risque de perte de donnees en cas d'echec intermediaire
   - verification: `pnpm check` OK, `pnpm verify:step` OK
+[2026-03-30] CI Pull Request (T005):
+  - ajout workflow `ci-pr.yml` dans `Code/.github/workflows/`
+  - declenchement sur pull_request vers `main`
+  - gates automatiques: `pnpm check`, `pnpm test`, `pnpm build`
+  - objectif: bloquer les regressions de compilation/tests avant merge
+  - verification locale: `pnpm check` OK, `pnpm verify:step` OK
 
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR) -- Systema Central Continuum*

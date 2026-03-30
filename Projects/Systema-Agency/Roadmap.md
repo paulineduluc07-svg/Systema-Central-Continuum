@@ -34,7 +34,7 @@ Stack:
 - [x] Mettre a jour `.env.example`
 - [x] Politique cookie robuste dev/prod
 - [x] Transaction sur `replaceSuiviEntries`
-- [ ] CI PR (check/test/build)
+- [x] CI PR (check/test/build)
 
 ## Phase 3 - Production
 - [ ] Variables Vercel completes (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)

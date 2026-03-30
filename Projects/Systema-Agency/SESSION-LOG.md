@@ -87,3 +87,17 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Remplacement des entrees suivi securise en une seule unite transactionnelle.
   - Prochaine tache recommandee: T005 (CI PR check/test/build).
+
+## 2026-03-30 - Etape 005 - CI Pull Request
+- Scope:
+  - Ajouter un workflow CI execute a chaque PR vers `main`.
+- Livrables:
+  - `Code/.github/workflows/ci-pr.yml` ajoute.
+  - Pipeline: install + `pnpm check` + `pnpm test` + `pnpm build`.
+  - Cache pnpm configure avec lockfile du projet.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK
+- Resultat:
+  - Garde-fou CI en place pour eviter les regressions en PR.
+  - Prochaine tache recommandee: T006 (config Vercel + migration Neon + validation prod).

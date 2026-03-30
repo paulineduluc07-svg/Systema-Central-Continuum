@@ -15,12 +15,18 @@ Taches actives. Mise a jour a chaque session.
 ---
 
 ## IN PROGRESS
-- [ ] T005 - CI PR (check/test/build)
-
-## NEXT
 - [ ] T006 - Config Vercel + migration Neon + validation prod
 
+## NEXT
+- [ ] T007 - Nettoyage final docs README (stack + auth + onboarding)
+
 ## DONE
+- [x] T005 - CI PR (check/test/build) (2026-03-30)
+  - [x] Ajout workflow GitHub Actions `Code/.github/workflows/ci-pr.yml`
+  - [x] Trigger PR sur `main` + execution manuelle (`workflow_dispatch`)
+  - [x] Gates CI: `pnpm check`, `pnpm test`, `pnpm build`
+  - [x] Cache pnpm configure + lockfile cible
+  - [x] Validation locale: `pnpm check` OK et `pnpm verify:step` OK
 - [x] T004 - Mettre `replaceSuiviEntries` sous transaction (2026-03-30)
   - [x] `server/db.ts` : remplacement atomique via `db.transaction(...)`
   - [x] Supprime + reinsere dans une meme transaction SQL
