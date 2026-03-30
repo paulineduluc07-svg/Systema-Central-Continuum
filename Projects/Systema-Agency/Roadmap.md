@@ -32,7 +32,7 @@ Stack:
 ## Phase 2 - Stabilisation technique (in progress)
 - [ ] Corriger incoherences ENV serveur
 - [x] Mettre a jour `.env.example`
-- [ ] Politique cookie robuste dev/prod
+- [x] Politique cookie robuste dev/prod
 - [ ] Transaction sur `replaceSuiviEntries`
 - [ ] CI PR (check/test/build)
 

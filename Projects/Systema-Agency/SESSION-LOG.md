@@ -57,3 +57,21 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Setup d'environnement clarifie et coherent avec l'etat du code.
   - Prochaine tache recommandee: T003 (politique cookie dev/prod).
+
+## 2026-03-30 - Etape 003 - Politique cookie dev/prod
+- Scope:
+  - Rendre la politique cookie stable en local HTTP et configurable pour le cross-site HTTPS.
+- Livrables:
+  - `server/_core/cookies.ts`
+    - default: `SameSite=Lax`
+    - cross-site explicite: `COOKIE_CROSS_SITE=true` => `SameSite=None` uniquement sur requete HTTPS
+  - `server/auth.logout.test.ts` complete avec 2 cas:
+    - mode par defaut (`lax`)
+    - mode cross-site (`none`)
+  - `Code/.env.example` complete avec `COOKIE_CROSS_SITE`
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK
+- Resultat:
+  - Sessions plus fiables en dev local, comportement cross-site explicite et controle.
+  - Prochaine tache recommandee: T004 (`replaceSuiviEntries` sous transaction).

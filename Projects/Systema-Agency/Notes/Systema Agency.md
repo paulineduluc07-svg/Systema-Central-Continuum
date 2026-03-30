@@ -102,5 +102,11 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - ajout variables auth actuelles (`OWNER_EMAIL`, `OWNER_PASSWORD`, `VITE_LOGIN_URL`)
   - ajout variables analytics (`VITE_ANALYTICS_ENDPOINT`, `VITE_ANALYTICS_WEBSITE_ID`)
   - verification: `pnpm check` OK, `pnpm verify:step` OK
+[2026-03-30] Politique cookie dev/prod (T003):
+  - `getSessionCookieOptions()` passe en mode securise par defaut: `SameSite=Lax`
+  - mode cross-site explicite via `COOKIE_CROSS_SITE=true` -> `SameSite=None` seulement sur HTTPS
+  - `secure` reste derive du protocole effectif (`https` ou `x-forwarded-proto`)
+  - tests logout enrichis pour couvrir les 2 modes
+  - verification: `pnpm check` OK, `pnpm verify:step` OK
 
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy) -- Systema Central Continuum*

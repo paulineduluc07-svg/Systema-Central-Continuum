@@ -75,6 +75,7 @@ Schema suivi_entries :
 - [x] Suivi medicament sync DB (2026-03-21) : tRPC + localStorage fallback
 - [x] Workflow d'execution par taches (2026-03-30) : `WORKFLOW.md` + `SESSION-LOG.md` + scripts `verify:*`
 - [x] Qualite de base retablie (2026-03-30) : `pnpm check`, `pnpm test`, `pnpm build` OK
+- [x] Politique cookie dev/prod stabilisee (2026-03-30) : `SameSite=Lax` par defaut, mode cross-site explicite
 - [ ] **Variables Vercel a configurer** (DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD)
 - [ ] **Migration SQL a appliquer** dans Neon : `drizzle/0001_suivi_entries.sql`
   - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
@@ -89,7 +90,6 @@ Schema suivi_entries :
 |---|---|---|
 | Variables Vercel non configurees | Vercel > Settings > Env Vars | Proprietaire |
 | Migration suivi_entries non appliquee | pnpm drizzle-kit push OU Neon SQL Editor | Proprietaire |
-| .env.example obsolete | Mettre a jour le fichier | Agent |
 | Fichiers server inutilises | Verifier et supprimer | Agent |
 | Foreign keys absentes | Ajouter dans schema.ts | Agent |
 
@@ -109,4 +109,4 @@ Schema suivi_entries :
 - Todo.md -- taches actives
 - Roadmap.md -- vision et etapes
 
-*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX + stabilisation typecheck) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX + stabilisation typecheck + cookie policy) -- Systema Central Continuum*

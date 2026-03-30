@@ -15,14 +15,19 @@ Taches actives. Mise a jour a chaque session.
 ---
 
 ## IN PROGRESS
-- [ ] T003 - Ajuster la politique cookie (`sameSite` / `secure`) pour dev + prod
+- [ ] T004 - Mettre `replaceSuiviEntries` sous transaction
 
 ## NEXT
-- [ ] T004 - Mettre `replaceSuiviEntries` sous transaction
 - [ ] T005 - CI PR (check/test/build)
 - [ ] T006 - Config Vercel + migration Neon + validation prod
 
 ## DONE
+- [x] T003 - Ajuster la politique cookie (`sameSite` / `secure`) pour dev + prod (2026-03-30)
+  - [x] `server/_core/cookies.ts` : `SameSite=Lax` par defaut
+  - [x] Mode cross-site explicite via `COOKIE_CROSS_SITE=true` (`SameSite=None` seulement en HTTPS)
+  - [x] `server/auth.logout.test.ts` : couverture tests `lax` (defaut) + `none` (cross-site)
+  - [x] `.env.example` : ajout de `COOKIE_CROSS_SITE`
+  - [x] Validation: `pnpm check` OK et `pnpm verify:step` OK
 - [x] T002 - Mettre a jour `.env.example` (2026-03-30)
   - [x] Retrait des variables OAuth obsoletes (`OAUTH_SERVER_URL`, `OWNER_OPEN_ID`)
   - [x] Ajout des variables auth actuelles (`OWNER_EMAIL`, `OWNER_PASSWORD`, `VITE_LOGIN_URL`)
