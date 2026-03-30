@@ -21,3 +21,21 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Base de travail prete pour enchainement en taches courtes.
   - Prochaine tache recommandee: stabiliser `pnpm check`.
+
+## 2026-03-30 - Etape 001 - Stabilisation typecheck
+- Scope:
+  - Faire passer `pnpm check` sans erreur.
+  - Conserver build et tests verts.
+- Livrables:
+  - `client/src/hooks/useComposition.ts` ajoute.
+  - `client/src/components/AIChatBox.tsx` ajoute (usage demo `ComponentShowcase`).
+  - `server/_core/env.ts` aligne avec les usages (`forgeApiUrl`, `forgeApiKey`, `openaiApiKey`, `openaiApiUrl`, `openaiModel`).
+  - `server/_core/oauth.ts` simplifie (OAuth retire, redirect `/`).
+  - `server/_core/rateLimit.ts` ajuste pour compat TypeScript.
+  - `vite.config.ts` corrige (`allowedHosts: true`).
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:full` = OK
+- Resultat:
+  - Qualite de base retablie: check + test + build passent.
+  - Prochaine tache recommandee: T002 (`.env.example`).

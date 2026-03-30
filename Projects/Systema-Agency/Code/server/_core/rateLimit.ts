@@ -23,11 +23,11 @@ function nowMs() {
 }
 
 function pruneExpired(now: number) {
-  for (const [key, bucket] of buckets) {
+  buckets.forEach((bucket, key) => {
     if (bucket.resetAt <= now) {
       buckets.delete(key);
     }
-  }
+  });
 }
 
 export function getClientIp(req: { headers?: Record<string, unknown>; socket?: { remoteAddress?: string } }) {

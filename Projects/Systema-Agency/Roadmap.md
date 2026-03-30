@@ -23,13 +23,13 @@ Stack:
 - [x] Tableau blanc conserve avec notes volantes
 - [x] Build frontend retabli (`getLoginUrl`)
 
-## Phase 1 - Discipline execution (in progress)
+## Phase 1 - Discipline execution (done)
 - [x] Workflow de travail par taches documente (`WORKFLOW.md`)
 - [x] Journal de session (`SESSION-LOG.md`)
 - [x] Scripts de verification (`verify:step`, `verify:full`)
-- [ ] Retour a zero erreur sur `pnpm check`
+- [x] Retour a zero erreur sur `pnpm check`
 
-## Phase 2 - Stabilisation technique
+## Phase 2 - Stabilisation technique (in progress)
 - [ ] Corriger incoherences ENV serveur
 - [ ] Mettre a jour `.env.example`
 - [ ] Politique cookie robuste dev/prod

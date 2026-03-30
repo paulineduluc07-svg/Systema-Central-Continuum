@@ -48,9 +48,9 @@ Tables actives : users, tasks, notes, user_preferences, custom_tabs, canvas_data
 - Drawn by Fate / Tarot (toutes les pages et composants)
 - VisionBoard, DraggableGrid, DraggableWidget
 - LifeCommandChat (le module chat IA s'appellera Kim, c'est un projet separe)
-- Map, Whiteboard, GameTabs, AIChatBox, ManusDialog, QuickActions
+- Map, Whiteboard, GameTabs, ManusDialog, QuickActions
 - Widgets RPG : Avatar, Calendar, StatsGraph
-- Hooks : useLifeCommandItems, useSpeechToText, useInfiniteCanvas, useComposition
+- Hooks : useLifeCommandItems, useSpeechToText, useInfiniteCanvas
 - Doublons : components/PromptVault.tsx, components/prompt-vault.jsx
 - Routers backend : tarot, ai (LifeCommand)
 - Auth Manus OAuth (remplace par email/password auto-contenu)
@@ -90,5 +90,11 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - Processus d'execution en taches mis en place: WORKFLOW.md + SESSION-LOG.md
   - Scripts de validation ajoutes: pnpm verify:step, pnpm verify:full
   - Etat qualite: pnpm test OK, pnpm build OK, pnpm check KO (dette historique documentee)
+[2026-03-30] Stabilisation typecheck (T001):
+  - `pnpm check` repasse au vert
+  - Ajouts compatibilite: `useComposition.ts` (hook), `AIChatBox.tsx` (composant demo pour ComponentShowcase)
+  - `env.ts` complete pour les cles `forge*` et `openai*`
+  - `oauth.ts` neutralise (redirect simple), `rateLimit.ts` ajuste, `vite.config.ts` corrige
+  - Verification finale: `pnpm verify:full` OK
 
-*Mis a jour : 2026-03-30 | Codex (setup workflow et simplification UX) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck) -- Systema Central Continuum*

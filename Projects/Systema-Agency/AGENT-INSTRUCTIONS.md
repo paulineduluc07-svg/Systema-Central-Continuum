@@ -74,6 +74,7 @@ Schema suivi_entries :
 - [x] Auth email/password (2026-03-20) : remplace OAuth Manus, zero nouvelle dependance
 - [x] Suivi medicament sync DB (2026-03-21) : tRPC + localStorage fallback
 - [x] Workflow d'execution par taches (2026-03-30) : `WORKFLOW.md` + `SESSION-LOG.md` + scripts `verify:*`
+- [x] Qualite de base retablie (2026-03-30) : `pnpm check`, `pnpm test`, `pnpm build` OK
 - [ ] **Variables Vercel a configurer** (DATABASE_URL, JWT_SECRET, OWNER_EMAIL, OWNER_PASSWORD)
 - [ ] **Migration SQL a appliquer** dans Neon : `drizzle/0001_suivi_entries.sql`
   - Option A : `pnpm drizzle-kit push` (necessite .env local avec DATABASE_URL)
@@ -108,4 +109,4 @@ Schema suivi_entries :
 - Todo.md -- taches actives
 - Roadmap.md -- vision et etapes
 
-*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX) -- Systema Central Continuum*
+*Mis a jour : 2026-03-30 | Codex (workflow + simplification UX + stabilisation typecheck) -- Systema Central Continuum*
