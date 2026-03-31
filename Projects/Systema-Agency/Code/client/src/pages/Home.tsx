@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { AdminPanel } from "@/components/AdminPanel";
+import { useDataMigration } from "@/hooks/useDataMigration";
 import { useSyncedNotes, useSyncedPreferences, useSyncedTasks } from "@/hooks/useSyncedData";
 import { cn } from "@/lib/utils";
 import {
@@ -226,6 +227,7 @@ function NoteCard({
 
 export default function Home() {
   const { isAuthenticated, logout, user } = useAuth();
+  useDataMigration();
   const { darkMode, setDarkMode } = useSyncedPreferences();
   const { tasks, addTask, toggleTask, deleteTask } = useSyncedTasks("tableau-blanc");
   const { notes, addNote, updateNote, deleteNote } = useSyncedNotes("tableau-blanc");

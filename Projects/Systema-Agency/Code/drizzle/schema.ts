@@ -100,3 +100,14 @@ export const suiviEntries = pgTable("suivi_entries", {
 
 export type SuiviEntryRow = typeof suiviEntries.$inferSelect;
 export type InsertSuiviEntry = typeof suiviEntries.$inferInsert;
+
+export const promptVaultData = pgTable("prompt_vault_data", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  data: text("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type PromptVaultDataRow = typeof promptVaultData.$inferSelect;
+export type InsertPromptVaultData = typeof promptVaultData.$inferInsert;

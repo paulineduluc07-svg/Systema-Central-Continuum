@@ -260,3 +260,27 @@ export async function replaceSuiviEntries(userId: number, entries: Omit<InsertSu
     }
   });
 }
+
+// ============== PROMPT VAULT ==============
+
+import { promptVaultData } from "../drizzle/schema";
+
+export async function getPromptVaultData(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(promptVaultData)
+    .where(eq(promptVaultData.userId, userId))
+    .limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function upsertPromptVaultData(userId: number, data: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(promptVaultData)
+    .values({ userId, data })
+    .onConflictDoUpdate({
+      target: promptVaultData.userId,
+      set: { data, updatedAt: new Date() },
+    });
+}

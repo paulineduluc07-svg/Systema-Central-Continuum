@@ -60,6 +60,12 @@ Stack:
 - [x] Refonte Home dashboard selon reference visuelle (glass / rose-marbre / ambiance lumineuse)
 - [x] Conservation complete des flux produit (auth, sync taches/notes, navigation)
 
+## Phase 7 - Persistance totale des donnees (done)
+- [x] Prompt Vault persistant et synchronise (local + cloud)
+- [x] Migration locale -> cloud reactivee au login (`useDataMigration`) pour taches/notes/preferences
+- [x] Flux Suivi durci pour eviter les pertes de donnees au premier login (cloud vide -> import local auto)
+- [x] Routeur + stockage backend dedies Prompt Vault (`prompt_vault_data`, tRPC `promptVault.get/save`)
+
 ---
 
 Mis a jour: 2026-03-31

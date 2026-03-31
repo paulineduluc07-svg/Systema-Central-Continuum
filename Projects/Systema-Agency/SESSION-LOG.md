@@ -343,3 +343,35 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Home finale conforme a la direction visuelle souhaitee, sans regression fonctionnelle.
   - Prochaine tache recommandee: definir T018 (si ajustements pixel-perfect supplementaires).
+
+## 2026-03-31 - Etape 018 - Persistance + synchronisation complete des donnees
+- Scope:
+  - Finaliser la persistance/synchronisation de toutes les donnees utilisateur, avec priorite Prompt Vault.
+  - Eviter les pertes de donnees lors du passage local -> cloud (notamment Suivi).
+- Livrables:
+  - `Code/drizzle/schema.ts`
+    - ajout table `prompt_vault_data` (unique par `userId`, FK cascade vers `users`).
+  - `Code/drizzle/0003_prompt_vault_data.sql`
+    - migration SQL idempotente (table + contrainte unique + FK).
+  - `Code/server/db.ts`
+    - ajout `getPromptVaultData` et `upsertPromptVaultData`.
+  - `Code/server/routers.ts`
+    - ajout routeur tRPC `promptVault.get` / `promptVault.save`.
+  - `Code/server/promptVault.test.ts`
+    - couverture unitaire routeur Prompt Vault (lecture + sauvegarde).
+  - `Code/client/src/pages/PromptVault.tsx`
+    - persistance locale `prompt_vault_state_v1`.
+    - sync cloud automatique si authentifie.
+    - bootstrap local -> cloud si aucun snapshot cloud.
+  - `Code/client/src/pages/Home.tsx`
+    - activation `useDataMigration()` pour migration locale -> cloud au login (taches/notes/preferences).
+  - `Code/client/src/pages/Suivi.tsx`
+    - durcissement: si cloud vide au login, upload auto des donnees locales.
+    - import JSON synchronise aussi le cloud en mode authentifie.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK (`pnpm test` + `pnpm build`)
+- Resultat:
+  - Prompt Vault devient persistant et synchronise entre sessions/appareils.
+  - Les entrees Suivi locales ne sont plus ecrasees quand le cloud est vide.
+  - La migration locale -> cloud est reactivee sur Home pour les donnees historiques.

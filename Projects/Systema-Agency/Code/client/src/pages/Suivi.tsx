@@ -221,23 +221,59 @@ export function SuiviPage() {
 
   const loadedFromDb = useRef(false);
   useEffect(() => {
-    if (isAuthenticated && suiviQuery.data && !loadedFromDb.current) {
-      loadedFromDb.current = true;
-      const dbEntries = suiviQuery.data.map((e) => ({
-        id: e.id,
-        timestamp: e.timestamp,
-        date: e.date,
-        prise: e.prise,
-        dose: e.dose as Dose,
-        reasons: e.reasons,
-        note: e.note,
-      }));
+    if (!isAuthenticated) {
+      loadedFromDb.current = false;
+      return;
+    }
+    if (!suiviQuery.isSuccess || loadedFromDb.current) return;
+
+    loadedFromDb.current = true;
+    const dbEntries = suiviQuery.data.map((e) => ({
+      id: e.id,
+      timestamp: e.timestamp,
+      date: e.date,
+      prise: e.prise,
+      dose: e.dose as Dose,
+      reasons: e.reasons,
+      note: e.note,
+    }));
+
+    if (dbEntries.length > 0) {
       setEntries(dbEntries);
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(dbEntries));
       } catch {}
+      return;
     }
-  }, [isAuthenticated, suiviQuery.data]);
+
+    const localEntries = loadEntries();
+    if (localEntries.length === 0) {
+      setEntries([]);
+      return;
+    }
+
+    setEntries(localEntries);
+    replaceMutation.mutate(
+      {
+        entries: localEntries.map((entry) => ({
+          timestamp: entry.timestamp,
+          date: entry.date,
+          prise: entry.prise,
+          dose: entry.dose,
+          reasons: entry.reasons,
+          note: entry.note,
+        })),
+      },
+      {
+        onSuccess: async () => {
+          await utils.suivi.list.invalidate();
+        },
+        onError: () => {
+          loadedFromDb.current = false;
+        },
+      },
+    );
+  }, [isAuthenticated, suiviQuery.isSuccess, suiviQuery.data, replaceMutation, utils]);
 
   function save(arr: SuiviEntry[]) {
     setEntries(arr);
@@ -297,6 +333,25 @@ export function SuiviPage() {
       const arr = JSON.parse(importTxt) as SuiviEntry[];
       if (Array.isArray(arr)) {
         save(arr);
+        if (isAuthenticated) {
+          replaceMutation.mutate(
+            {
+              entries: arr.map((entry) => ({
+                timestamp: entry.timestamp,
+                date: entry.date,
+                prise: entry.prise,
+                dose: entry.dose,
+                reasons: entry.reasons,
+                note: entry.note,
+              })),
+            },
+            {
+              onSuccess: async () => {
+                await utils.suivi.list.invalidate();
+              },
+            },
+          );
+        }
         setShowData(false);
         setImportTxt("");
         alert(`Importé ! ${arr.length} entrées.`);

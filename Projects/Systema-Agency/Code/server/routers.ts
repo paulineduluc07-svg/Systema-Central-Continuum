@@ -322,6 +322,22 @@ export const appRouter = router({
       }),
   }),
 
+  // Prompt Vault API
+  promptVault: router({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      return db.getPromptVaultData(ctx.user.id);
+    }),
+
+    save: protectedProcedure
+      .input(z.object({
+        data: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.upsertPromptVaultData(ctx.user.id, input.data);
+        return { success: true };
+      }),
+  }),
+
   // Suivi medicament API
   suivi: router({
     list: protectedProcedure.query(async ({ ctx }) => {

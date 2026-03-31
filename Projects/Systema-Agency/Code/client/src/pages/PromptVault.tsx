@@ -1,4 +1,6 @@
-import { useState, useMemo, useRef } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface Category {
   id: string;
@@ -354,27 +356,139 @@ Construis un argumentaire éthique basé sur :
 Pas de manipulation. Pas de fausses urgences. Juste un argument solide, honnête et adapté à leur perspective.` },
 ];
 
+const PROMPT_VAULT_STORAGE_KEY = "prompt_vault_state_v1";
+
+interface PromptVaultSnapshot {
+  list: Prompt[];
+  cats: Category[];
+  favs: number[];
+  brightness: number;
+}
+
+const DEFAULT_PROMPT_VAULT_SNAPSHOT: PromptVaultSnapshot = {
+  list: DATA,
+  cats: INITIAL_CATS,
+  favs: [],
+  brightness: 70,
+};
+
+function getDefaultPromptCategory(cats: Category[]): string {
+  return cats.find((c) => c.id !== "all")?.id ?? "tech";
+}
+
+function normalizeCategories(cats: Category[]): Category[] {
+  const withoutAll = cats.filter((c) => c.id !== "all");
+  return [INITIAL_CATS[0], ...withoutAll];
+}
+
+function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
+  if (!raw || typeof raw !== "object") return null;
+  const value = raw as Partial<PromptVaultSnapshot>;
+
+  if (!Array.isArray(value.list) || !Array.isArray(value.cats)) return null;
+
+  const list = value.list
+    .filter((prompt): prompt is Prompt => (
+      typeof prompt?.id === "number"
+      && typeof prompt?.cat === "string"
+      && typeof prompt?.title === "string"
+      && typeof prompt?.text === "string"
+      && Array.isArray(prompt?.tags)
+      && prompt.tags.every((tag) => typeof tag === "string")
+    ))
+    .map((prompt) => ({
+      id: prompt.id,
+      cat: prompt.cat,
+      title: prompt.title,
+      tags: [...prompt.tags],
+      text: prompt.text,
+    }));
+
+  const cats = value.cats
+    .filter((category): category is Category => (
+      typeof category?.id === "string"
+      && typeof category?.label === "string"
+      && typeof category?.color === "string"
+    ))
+    .map((category) => ({
+      id: category.id,
+      label: category.label,
+      color: category.color,
+    }));
+
+  if (list.length === 0 || cats.length === 0) return null;
+
+  const favs = Array.isArray(value.favs)
+    ? value.favs.filter((fav): fav is number => typeof fav === "number")
+    : [];
+
+  const brightnessRaw = typeof value.brightness === "number" ? value.brightness : 70;
+  const brightness = Math.max(10, Math.min(100, Math.round(brightnessRaw)));
+
+  return {
+    list,
+    cats: normalizeCategories(cats),
+    favs,
+    brightness,
+  };
+}
+
+function readLocalPromptVaultSnapshot(): PromptVaultSnapshot | null {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem(PROMPT_VAULT_STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    return sanitizePromptVaultSnapshot(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalPromptVaultSnapshot(snapshot: PromptVaultSnapshot): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(PROMPT_VAULT_STORAGE_KEY, JSON.stringify(snapshot));
+  } catch {
+    // localStorage may be unavailable or full
+  }
+}
+
 export default function PromptVault() {
+  const { isAuthenticated, user } = useAuth();
+  const promptVaultQuery = trpc.promptVault.get.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+  const savePromptVaultMutation = trpc.promptVault.save.useMutation();
+
+  const initialSnapshotRef = useRef<PromptVaultSnapshot>(
+    readLocalPromptVaultSnapshot() ?? DEFAULT_PROMPT_VAULT_SNAPSHOT,
+  );
+  const initialSnapshot = initialSnapshotRef.current;
+
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
-  const [favs, setFavs] = useState<number[]>([]);
+  const [favs, setFavs] = useState<number[]>(initialSnapshot.favs);
   const [copied, setCopied] = useState<number | null>(null);
   const [exp, setExp] = useState<number | null>(null);
   const [form, setForm] = useState(false);
-  const [list, setList] = useState<Prompt[]>(DATA);
-  const [np, setNp] = useState({ title: "", cat: "tech", tags: "", text: "" });
+  const [list, setList] = useState<Prompt[]>(initialSnapshot.list);
+  const [np, setNp] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "" });
   const [editId, setEditId] = useState<number | null>(null);
-  const [editData, setEditData] = useState({ title: "", cat: "tech", tags: "", text: "" });
+  const [editData, setEditData] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "" });
   const dragIdx = useRef<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
 
   // Category management
-  const [cats, setCats] = useState<Category[]>(INITIAL_CATS);
-  const [brightness, setBrightness] = useState(70);
+  const [cats, setCats] = useState<Category[]>(initialSnapshot.cats);
+  const [brightness, setBrightness] = useState(initialSnapshot.brightness);
   const [manageCats, setManageCats] = useState(false);
   const [newCat, setNewCat] = useState({ label: "", color: "#7bed9f" });
   const [editCatId, setEditCatId] = useState<string | null>(null);
   const [editCatData, setEditCatData] = useState({ label: "", color: "" });
+  const [isCloudReady, setIsCloudReady] = useState(false);
+  const hydratedUserIdRef = useRef<number | null>(null);
+  const lastCloudSnapshotRef = useRef<string | null>(null);
 
   const gc = (id: string) => cats.find(c => c.id === id)?.color || "#00f5ff";
 
@@ -383,6 +497,90 @@ export default function PromptVault() {
     const ms = !q || p.title.toLowerCase().includes(q.toLowerCase()) || p.text.toLowerCase().includes(q.toLowerCase()) || p.tags.some(t => t.includes(q.toLowerCase()));
     return mc && ms;
   }), [list, cat, q]);
+
+  const snapshot = useMemo<PromptVaultSnapshot>(() => ({
+    list,
+    cats,
+    favs,
+    brightness,
+  }), [list, cats, favs, brightness]);
+  const serializedSnapshot = useMemo(() => JSON.stringify(snapshot), [snapshot]);
+
+  useEffect(() => {
+    writeLocalPromptVaultSnapshot(snapshot);
+  }, [serializedSnapshot]);
+
+  useEffect(() => {
+    if (isAuthenticated) return;
+    hydratedUserIdRef.current = null;
+    lastCloudSnapshotRef.current = null;
+    setIsCloudReady(false);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user?.id || !promptVaultQuery.isSuccess) return;
+    if (hydratedUserIdRef.current === user.id) return;
+
+    let serverRaw: unknown = null;
+    if (promptVaultQuery.data?.data) {
+      try {
+        serverRaw = JSON.parse(promptVaultQuery.data.data);
+      } catch {
+        serverRaw = null;
+      }
+    }
+
+    const serverSnapshot = sanitizePromptVaultSnapshot(serverRaw);
+    hydratedUserIdRef.current = user.id;
+
+    if (serverSnapshot) {
+      const serverSerialized = JSON.stringify(serverSnapshot);
+      lastCloudSnapshotRef.current = serverSerialized;
+      setList(serverSnapshot.list);
+      setCats(serverSnapshot.cats);
+      setFavs(serverSnapshot.favs);
+      setBrightness(serverSnapshot.brightness);
+      setIsCloudReady(true);
+      return;
+    }
+
+    lastCloudSnapshotRef.current = serializedSnapshot;
+    savePromptVaultMutation.mutate(
+      { data: serializedSnapshot },
+      {
+        onSuccess: () => {
+          lastCloudSnapshotRef.current = serializedSnapshot;
+        },
+      },
+    );
+    setIsCloudReady(true);
+  }, [
+    isAuthenticated,
+    user?.id,
+    promptVaultQuery.isSuccess,
+    promptVaultQuery.data,
+    serializedSnapshot,
+    savePromptVaultMutation,
+  ]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !isCloudReady || !user?.id) return;
+    if (serializedSnapshot === lastCloudSnapshotRef.current) return;
+
+    const payload = serializedSnapshot;
+    const timeout = window.setTimeout(() => {
+      savePromptVaultMutation.mutate(
+        { data: payload },
+        {
+          onSuccess: () => {
+            lastCloudSnapshotRef.current = payload;
+          },
+        },
+      );
+    }, 450);
+
+    return () => window.clearTimeout(timeout);
+  }, [isAuthenticated, isCloudReady, user?.id, serializedSnapshot, savePromptVaultMutation]);
 
   const copy = (id: number, txt: string) => {
     navigator.clipboard.writeText(txt);

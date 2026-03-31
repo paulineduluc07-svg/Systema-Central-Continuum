@@ -21,6 +21,18 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T018 - Persistance + synchronisation complete des donnees (Prompt Vault inclus) (2026-03-31)
+  - [x] Backend Prompt Vault ajoute: table `prompt_vault_data` + migration SQL `drizzle/0003_prompt_vault_data.sql`
+  - [x] API tRPC `promptVault.get/save` ajoutee + couche DB (`getPromptVaultData`, `upsertPromptVaultData`)
+  - [x] `client/src/pages/PromptVault.tsx` branche en sync hybride:
+    - localStorage persistante (`prompt_vault_state_v1`)
+    - sync cloud auto quand authentifie
+    - bootstrap local -> cloud si compte sans donnees cloud
+  - [x] Migration locale -> cloud reactualisee sur Home via `useDataMigration()` (taches/notes/preferences)
+  - [x] `client/src/pages/Suivi.tsx` securise:
+    - si cloud vide au login, push auto des entrees locales vers DB
+    - import JSON synchronise aussi le cloud en mode authentifie
+  - [x] Validation locale: `pnpm check`, `pnpm verify:step` OK
 - [x] T017 - Refonte visuelle finale Home dashboard (style reference fourni) (2026-03-31)
   - [x] `client/src/pages/Home.tsx` reconstruit avec layout glassmorphism rose/marbre + ambiance bokeh
   - [x] Hero conforme au style cible: salutation, date, actions principales, carte horloge, calendrier
