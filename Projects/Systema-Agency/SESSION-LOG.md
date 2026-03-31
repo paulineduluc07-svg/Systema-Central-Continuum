@@ -154,3 +154,29 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Documentation d'entree projet coherent avec l'etat reel du code et de la prod.
   - Prochaine tache recommandee: T008 (nettoyage server legacy).
+
+## 2026-03-31 - Etape 008 - Nettoyage server legacy
+- Scope:
+  - Supprimer les modules backend legacy devenus inutilises (OAuth/LLM/Image/Voice/Map/Data API/Notification).
+  - Retirer les branchements legacy encore actifs dans le serveur et le routeur tRPC.
+- Livrables:
+  - `Code/server/_core/index.ts`
+    - retrait de l'import/appel `registerOAuthRoutes`.
+  - `Code/server/routers.ts`
+    - retrait de `systemRouter` et de la section `system`.
+  - Fichiers supprimes:
+    - `Code/server/_core/oauth.ts`
+    - `Code/server/_core/llm.ts`
+    - `Code/server/_core/imageGeneration.ts`
+    - `Code/server/_core/voiceTranscription.ts`
+    - `Code/server/_core/map.ts`
+    - `Code/server/_core/dataApi.ts`
+    - `Code/server/_core/notification.ts`
+    - `Code/server/_core/systemRouter.ts`
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Dette technique legacy retiree du backend actif sans regression de qualite.
+  - Prochaine tache recommandee: T009 (ajout des foreign keys Drizzle).

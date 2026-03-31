@@ -133,4 +133,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - auth documentee: email/password proprietaire + JWT cookie (plus aucun OAuth)
   - onboarding simplifie: prerequis, variables `.env`, commandes qualite, migration DB, deploy prod
   - decision: utiliser `Code/README.md` comme point d'entree unique pour les nouveaux handoffs techniques
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README) -- Systema Central Continuum*
+[2026-03-31] T008 nettoyage server legacy:
+  - suppression des branchements restants: `registerOAuthRoutes` retire de `server/_core/index.ts`, `systemRouter` retire de `server/routers.ts`
+  - suppression des modules legacy: `oauth.ts`, `llm.ts`, `imageGeneration.ts`, `voiceTranscription.ts`, `map.ts`, `dataApi.ts`, `notification.ts`
+  - suppression `server/_core/systemRouter.ts` devenu orphelin apres retrait de `notification`
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: garder l'endpoint de compatibilite `api/oauth/callback.ts` (redirect `/`) pour ne pas casser d'eventuels anciens liens externes
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy) -- Systema Central Continuum*

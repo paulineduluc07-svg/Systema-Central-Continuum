@@ -36,6 +36,7 @@ Stack:
 - [x] Transaction sur `replaceSuiviEntries`
 - [x] CI PR (check/test/build)
 - [x] README technique/onboarding aligne (stack + auth + runbook)
+- [x] Nettoyage modules server legacy (`oauth`, `llm`, `imageGeneration`, `voiceTranscription`, `map`, `dataApi`, `notification`)
 
 ## Phase 3 - Production
 - [x] Deploy production relance (`vercel deploy --prod -y`) et alias actif

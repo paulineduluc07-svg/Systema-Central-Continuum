@@ -1,7 +1,6 @@
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { getSessionCookieOptions } from "./_core/cookies";
-import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { sdk } from "./_core/sdk";
 import { ENV } from "./_core/env";
@@ -9,8 +8,6 @@ import { z } from "zod";
 import * as db from "./db";
 
 export const appRouter = router({
-  system: systemRouter,
-
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
 

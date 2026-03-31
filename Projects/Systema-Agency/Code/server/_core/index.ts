@@ -3,7 +3,6 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -38,8 +37,6 @@ async function startServer() {
     "/api",
     createApiRateLimitMiddleware({ keyPrefix: "local-api", limit: 120, windowMs: 60_000 })
   );
-
-  registerOAuthRoutes(app);
 
   app.use(
     "/api/trpc",

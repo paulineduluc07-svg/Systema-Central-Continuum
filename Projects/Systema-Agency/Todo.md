@@ -18,9 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T008 - Nettoyage server legacy (oauth, llm, imageGeneration, voiceTranscription, map, dataApi, notification)
+- [ ] T009 - Ajouter foreign keys dans schema Drizzle
 
 ## DONE
+- [x] T008 - Nettoyage server legacy (oauth, llm, imageGeneration, voiceTranscription, map, dataApi, notification) (2026-03-31)
+  - [x] Retrait des branchements legacy encore actifs (`registerOAuthRoutes`, `systemRouter`)
+  - [x] Suppression des modules server legacy: `oauth.ts`, `llm.ts`, `imageGeneration.ts`, `voiceTranscription.ts`, `map.ts`, `dataApi.ts`, `notification.ts`
+  - [x] Suppression du routeur orphelin `server/_core/systemRouter.ts`
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T007 - Nettoyage final docs README (stack + auth + onboarding) (2026-03-31)
   - [x] `Code/README.md` aligne avec la stack reelle (Neon PostgreSQL, auth email/password, Vercel)
   - [x] Section onboarding recomposee (prerequis, `.env`, run local, commandes qualite)
