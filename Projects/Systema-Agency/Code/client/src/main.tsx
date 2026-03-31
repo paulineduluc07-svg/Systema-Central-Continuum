@@ -10,6 +10,23 @@ import "./index.css";
 
 const queryClient = new QueryClient();
 
+const setupAnalyticsScript = () => {
+  if (typeof document === "undefined") return;
+
+  const endpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT?.trim();
+  const websiteId = import.meta.env.VITE_ANALYTICS_WEBSITE_ID?.trim();
+
+  if (!endpoint || !websiteId) return;
+  if (document.querySelector('script[data-systema-analytics="umami"]')) return;
+
+  const script = document.createElement("script");
+  script.defer = true;
+  script.src = `${endpoint.replace(/\/+$/, "")}/umami`;
+  script.dataset.websiteId = websiteId;
+  script.dataset.systemaAnalytics = "umami";
+  document.body.appendChild(script);
+};
+
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
   if (typeof window === "undefined") return;
@@ -19,7 +36,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!isUnauthorized) return;
 
   const loginUrl = getLoginUrl();
-  // Don't redirect if OAuth is not configured (offline mode)
+  // Don't redirect if no login route is configured (offline/local mode)
   if (!loginUrl) return;
 
   window.location.href = loginUrl;
@@ -55,6 +72,8 @@ const trpcClient = trpc.createClient({
     }),
   ],
 });
+
+setupAnalyticsScript();
 
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>

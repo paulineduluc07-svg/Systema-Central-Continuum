@@ -18,9 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] (a definir)
+- [ ] T013 - Reduire la taille du bundle frontend (code splitting / lazy loading)
 
 ## DONE
+- [x] T012 - Stabiliser integration analytics (suppression warnings build) (2026-03-31)
+  - [x] `client/index.html` : retrait du script analytics statique (%VITE_ANALYTICS_*)
+  - [x] `client/src/main.tsx` : injection dynamique du script Umami si variables presentes
+  - [x] Commentaire login ajuste (plus de reference OAuth)
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T011 - Corriger incoherences ENV serveur post-cleanup legacy (2026-03-31)
   - [x] `server/_core/env.ts` simplifie (retrait champs `forge/openai` non utilises)
   - [x] `server/storage.ts` supprime (helper legacy orphelin)

@@ -234,3 +234,22 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Configuration ENV serveur coherente avec l'etat actuel du backend.
   - Prochaine tache recommandee: definir la priorite T012 (fonctionnelle ou dette UI/analytics).
+
+## 2026-03-31 - Etape 012 - Stabilisation integration analytics
+- Scope:
+  - Supprimer les warnings de build lies a l'injection analytics HTML (`%VITE_ANALYTICS_*`).
+  - Garder un chargement analytics optionnel uniquement quand les variables existent.
+- Livrables:
+  - `Code/client/index.html`
+    - retrait du script analytics statique base sur placeholders Vite.
+  - `Code/client/src/main.tsx`
+    - ajout de `setupAnalyticsScript()` pour injecter dynamiquement le script Umami.
+    - normalisation de l'URL endpoint (`trim` + retrait slash final).
+    - protection anti-double injection via `data-systema-analytics="umami"`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Warnings analytics supprimes au build; integration remains optional et robuste.
+  - Prochaine tache recommandee: T013 (reduction taille bundle frontend).

@@ -156,4 +156,9 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - `.env.example` simplifie avec retrait complet de la section `Legacy integrations`
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: phase 2 "stabilisation technique" consideree complete cote backend
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup) -- Systema Central Continuum*
+[2026-03-31] T012 analytics build-safe:
+  - retrait du script analytics statique dans `client/index.html` pour eviter les placeholders Vite non resolus
+  - ajout d'une injection dynamique Umami dans `client/src/main.tsx` (activee uniquement si `VITE_ANALYTICS_ENDPOINT` + `VITE_ANALYTICS_WEBSITE_ID`)
+  - decision: l'analytics devient strictement optionnel sans bruit de build ni impact si non configure
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization) -- Systema Central Continuum*
