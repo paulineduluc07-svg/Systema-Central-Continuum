@@ -18,10 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T007 - Nettoyage final docs README (stack + auth + onboarding)
 - [ ] T008 - Nettoyage server legacy (oauth, llm, imageGeneration, voiceTranscription, map, dataApi, notification)
 
 ## DONE
+- [x] T007 - Nettoyage final docs README (stack + auth + onboarding) (2026-03-31)
+  - [x] `Code/README.md` aligne avec la stack reelle (Neon PostgreSQL, auth email/password, Vercel)
+  - [x] Section onboarding recomposee (prerequis, `.env`, run local, commandes qualite)
+  - [x] Ajout des sections auth, migration DB et deploy pour eviter les infos obsoletes
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T006 - Config Vercel + migration Neon + validation prod (2026-03-31)
   - [x] Variables Vercel configurees pour la prod (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)
   - [x] Migration Neon appliquee: `drizzle/0001_suivi_entries.sql`

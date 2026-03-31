@@ -127,4 +127,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - validation locale complete: `pnpm check`, `pnpm test`, `pnpm build` OK
   - deploiement production relance et verifie `Ready` via `vercel inspect`
   - decision: conserver `.env.vercel*` ignore et ne jamais versionner les extractions d'env
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod) -- Systema Central Continuum*
+[2026-03-31] T007 README onboarding:
+  - `Code/README.md` passe de version legacy (MySQL/OAuth/widgets obsoletes) a version operationnelle actuelle
+  - stack documentee: React 19 + Vite + tRPC + Drizzle + Neon + Vercel
+  - auth documentee: email/password proprietaire + JWT cookie (plus aucun OAuth)
+  - onboarding simplifie: prerequis, variables `.env`, commandes qualite, migration DB, deploy prod
+  - decision: utiliser `Code/README.md` comme point d'entree unique pour les nouveaux handoffs techniques
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README) -- Systema Central Continuum*

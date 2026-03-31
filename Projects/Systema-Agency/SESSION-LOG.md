@@ -139,3 +139,18 @@ Trace courte de chaque etape executee.
 - Resultat:
   - T006 complete et fermee.
   - Prochaine tache recommandee: T007 (nettoyage final docs README).
+
+## 2026-03-31 - Etape 007 - Nettoyage README (stack + auth + onboarding)
+- Scope:
+  - Nettoyer le README technique pour supprimer les infos obsoletes et fiabiliser l'onboarding.
+- Livrables:
+  - `Code/README.md` reecrit avec stack actuelle (React 19, Vite, tRPC, Drizzle, Neon, Vercel).
+  - Section auth mise a jour (email/password + JWT cookie, plus aucun OAuth).
+  - Onboarding clarifie (`pnpm install`, `.env`, prerequis, commandes qualite, migration, deploy).
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Documentation d'entree projet coherent avec l'etat reel du code et de la prod.
+  - Prochaine tache recommandee: T008 (nettoyage server legacy).
