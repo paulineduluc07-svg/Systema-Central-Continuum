@@ -45,6 +45,7 @@ Stack:
 - [x] `DATABASE_URL` Vercel assainie et validee
 - [x] Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql`)
 - [x] Validation production fonctionnelle complete (auth + sync DB)
+- [x] Migration FK appliquee en prod (`drizzle/0002_add_user_foreign_keys.sql`) + smoke check prod (`Ready`, HTTP 200)
 
 ---
 

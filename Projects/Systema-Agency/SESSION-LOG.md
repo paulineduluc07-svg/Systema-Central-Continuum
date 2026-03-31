@@ -199,3 +199,21 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Integrite referentielle explicite dans le schema Drizzle et migration versionnee.
   - Prochaine tache recommandee: T010 (appliquer `0002_add_user_foreign_keys.sql` sur Neon + validation prod).
+
+## 2026-03-31 - Etape 010 - Application migration FK + validation prod
+- Scope:
+  - Appliquer en base Neon la migration des foreign keys et confirmer la sante production.
+- Livrables:
+  - Migration executee: `pnpm drizzle-kit migrate` (incluant `drizzle/0002_add_user_foreign_keys.sql`).
+  - Validation production:
+    - `vercel inspect systema-agency.vercel.app` => status `Ready`
+    - `GET https://systema-agency.vercel.app` => HTTP `200`
+  - Hygiene secrets:
+    - fichier temporaire de pull env supprime apres execution (`.env.migrate`).
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Migration FK appliquee en production et validation operationnelle confirmee.
+  - Prochaine tache recommandee: definir la prochaine priorite produit/technique.

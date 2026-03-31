@@ -18,9 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T010 - Appliquer la migration FK (`drizzle/0002_add_user_foreign_keys.sql`) sur Neon + valider prod
+- [ ] (a definir)
 
 ## DONE
+- [x] T010 - Appliquer la migration FK sur Neon + valider prod (2026-03-31)
+  - [x] Migration executee sur Neon via `pnpm drizzle-kit migrate`
+  - [x] Validation locale complete: `pnpm check`, `pnpm test`, `pnpm build` OK
+  - [x] Validation production: deployment `Ready` (`vercel inspect`) + domaine `https://systema-agency.vercel.app` repond `200`
+  - [x] Hygiene secrets: suppression locale du fichier temporaire `.env.migrate` apres execution
 - [x] T009 - Ajouter foreign keys dans schema Drizzle (2026-03-31)
   - [x] `drizzle/schema.ts` : ajout des `references(() => users.id, { onDelete: "cascade" })` sur `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_data`, `suivi_entries`
   - [x] Nouvelle migration SQL: `drizzle/0002_add_user_foreign_keys.sql`

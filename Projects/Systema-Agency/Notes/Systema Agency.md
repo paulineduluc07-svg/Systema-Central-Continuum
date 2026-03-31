@@ -145,4 +145,9 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - migration versionnee ajoutee: `drizzle/0002_add_user_foreign_keys.sql`
   - migration ecrite de facon idempotente (`DO $$` + `IF NOT EXISTS`) pour faciliter les environnements deja partiellement modifies
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle) -- Systema Central Continuum*
+[2026-03-31] T010 application migration FK en production:
+  - migration Neon appliquee via `pnpm drizzle-kit migrate` (inclut `0002_add_user_foreign_keys.sql`)
+  - validation prod executee: `vercel inspect` retourne `Ready` + `https://systema-agency.vercel.app` repond en HTTP 200
+  - hygiene securite: fichier temporaire `.env.migrate` supprime immediatement apres usage
+  - decision: conserver un flux court "pull env temporaire -> migrate -> suppression fichier" pour les futures migrations prod
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod) -- Systema Central Continuum*
