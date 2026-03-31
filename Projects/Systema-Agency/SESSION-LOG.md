@@ -253,3 +253,22 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Warnings analytics supprimes au build; integration remains optional et robuste.
   - Prochaine tache recommandee: T013 (reduction taille bundle frontend).
+
+## 2026-03-31 - Etape 013 - Reduction bundle frontend
+- Scope:
+  - Reduire le poids du chunk principal frontend pour eliminer l'alerte Vite > 500 kB.
+- Livrables:
+  - `Code/client/src/App.tsx`
+    - passage en `React.lazy` + `Suspense` pour les pages routees (`Home`, `Suivi`, `PromptVault`).
+    - split explicite du named export `SuiviPage` via import dynamique.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+  - Sortie build:
+    - `assets/index-*.js` ≈ 418 kB
+    - `assets/Home-*.js`, `assets/Suivi-*.js`, `assets/PromptVault-*.js` en chunks separes
+    - plus d'avertissement `Some chunks are larger than 500 kB`
+- Resultat:
+  - Perf de chargement initial amelioree et warning bundle elimine.
+  - Prochaine tache recommandee: definir T014 selon priorite produit.

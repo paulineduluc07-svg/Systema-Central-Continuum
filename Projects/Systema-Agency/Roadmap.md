@@ -47,9 +47,9 @@ Stack:
 - [x] Validation production fonctionnelle complete (auth + sync DB)
 - [x] Migration FK appliquee en prod (`drizzle/0002_add_user_foreign_keys.sql`) + smoke check prod (`Ready`, HTTP 200)
 
-## Phase 4 - Qualite UX/Perf (in progress)
+## Phase 4 - Qualite UX/Perf (done)
 - [x] Stabilisation integration analytics (retrait warnings build lies a `%VITE_ANALYTICS_*`)
-- [ ] Reduction taille bundle frontend (>500 kB)
+- [x] Reduction taille bundle frontend (>500 kB) via code-splitting routes
 
 ---
 

@@ -18,9 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T013 - Reduire la taille du bundle frontend (code splitting / lazy loading)
+- [ ] (a definir)
 
 ## DONE
+- [x] T013 - Reduire la taille du bundle frontend (code splitting / lazy loading) (2026-03-31)
+  - [x] `client/src/App.tsx` passe en lazy loading des pages (`Home`, `Suivi`, `PromptVault`) via `React.lazy` + `Suspense`
+  - [x] Code-splitting route-level confirme au build (`Home`, `Suivi`, `PromptVault` en chunks separes)
+  - [x] Warning Vite supprime: plus de chunk frontend > 500 kB
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T012 - Stabiliser integration analytics (suppression warnings build) (2026-03-31)
   - [x] `client/index.html` : retrait du script analytics statique (%VITE_ANALYTICS_*)
   - [x] `client/src/main.tsx` : injection dynamique du script Umami si variables presentes
