@@ -180,4 +180,9 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - variable optionnelle ajoutee: `VITE_ERROR_LOG_ENDPOINT`
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: garder un pipeline observability lean (sans backend dedie pour le moment, endpoint externe optionnel)
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability) -- Systema Central Continuum*
+[2026-03-31] T016 fallback UX lazy pages:
+  - `App.tsx` passe de `Suspense fallback=null` a un fallback visuel (spinner + message)
+  - objectif: eviter les blancs de transition lors du chargement des routes en lazy
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: conserver ce fallback comme standard UX tant que les routes restent code-split
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX) -- Systema Central Continuum*

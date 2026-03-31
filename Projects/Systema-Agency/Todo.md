@@ -18,9 +18,13 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T016 - Fallback UX pendant lazy loading des pages
+- [ ] (a definir)
 
 ## DONE
+- [x] T016 - Fallback UX pendant lazy loading des pages (2026-03-31)
+  - [x] `client/src/App.tsx` : ajout de `RouteLoadingFallback` (spinner + message) pour `Suspense`
+  - [x] Remplacement du `fallback={null}` par une experience de chargement visible
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T015 - Observabilite frontend (logs runtime + alerting minimal) (2026-03-31)
   - [x] Ajout module `client/src/lib/observability.ts` (capture globale, dedupe, logs structures, envoi optionnel endpoint)
   - [x] Branchements runtime: `window.error`, `window.unhandledrejection`, erreurs tRPC query/mutation, `ErrorBoundary.componentDidCatch`

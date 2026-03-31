@@ -309,3 +309,18 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Logs runtime frontend centralises avec alerting minimal (toast unique) et sortie optionnelle vers endpoint.
   - Prochaine tache recommandee: T016 (fallback UX pendant lazy loading).
+
+## 2026-03-31 - Etape 016 - Fallback UX lazy loading
+- Scope:
+  - Ameliorer l'experience percue lors du chargement des routes lazy en supprimant l'ecran vide.
+- Livrables:
+  - `Code/client/src/App.tsx`
+    - ajout composant `RouteLoadingFallback` (spinner + message).
+    - `Suspense` passe de `fallback={null}` a `fallback={<RouteLoadingFallback />}`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK (16 tests)
+  - `pnpm build` = OK
+- Resultat:
+  - Transitions de pages lazy rendues visibles et plus confortables pour l'utilisateur.
+  - Prochaine tache recommandee: definir la priorite T017.
