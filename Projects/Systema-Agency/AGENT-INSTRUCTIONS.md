@@ -104,7 +104,7 @@ Schema suivi_entries :
 
 ## Ce dossier contient
 - Notes/ -- decisions d'architecture, contexte operationnel
-- Notes-Perso/ -- strictement interdit aux agents
+- Notes-Perso/ -- notes personnelles du proprietaire
 - Prompts/ -- prompts IA specifiques au projet
 - Assets/ -- references visuelles
 - Livrables/ -- exports finaux
