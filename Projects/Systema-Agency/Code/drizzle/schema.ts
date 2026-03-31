@@ -20,7 +20,7 @@ export type InsertUser = typeof users.$inferInsert;
 
 export const tasks = pgTable("tasks", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   tabId: varchar("tabId", { length: 64 }).notNull(),
   title: text("title").notNull(),
   completed: boolean("completed").default(false).notNull(),
@@ -34,7 +34,7 @@ export type InsertTask = typeof tasks.$inferInsert;
 
 export const notes = pgTable("notes", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   tabId: varchar("tabId", { length: 64 }).notNull(),
   content: text("content").notNull(),
   sortOrder: integer("sortOrder").default(0).notNull(),
@@ -47,7 +47,7 @@ export type InsertNote = typeof notes.$inferInsert;
 
 export const userPreferences = pgTable("user_preferences", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull().unique(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
   darkMode: boolean("darkMode").default(false).notNull(),
   widgetOrder: text("widgetOrder"),
   tabConfig: text("tabConfig"),
@@ -60,7 +60,7 @@ export type InsertUserPreferences = typeof userPreferences.$inferInsert;
 
 export const customTabs = pgTable("custom_tabs", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   tabId: varchar("tabId", { length: 64 }).notNull(),
   label: varchar("label", { length: 128 }).notNull(),
   color: varchar("color", { length: 32 }).default("#FF69B4").notNull(),
@@ -76,7 +76,7 @@ export type InsertCustomTab = typeof customTabs.$inferInsert;
 
 export const canvasData = pgTable("canvas_data", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   tabId: varchar("tabId", { length: 64 }).notNull(),
   data: text("data"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -88,7 +88,7 @@ export type InsertCanvasData = typeof canvasData.$inferInsert;
 
 export const suiviEntries = pgTable("suivi_entries", {
   id: serial("id").primaryKey(),
-  userId: integer("userId").notNull(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
   timestamp: timestamp("timestamp").notNull(),
   date: varchar("date", { length: 10 }).notNull(),
   prise: varchar("prise", { length: 5 }).notNull(),

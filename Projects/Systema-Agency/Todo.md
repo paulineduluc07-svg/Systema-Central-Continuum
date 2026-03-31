@@ -18,9 +18,14 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T009 - Ajouter foreign keys dans schema Drizzle
+- [ ] T010 - Appliquer la migration FK (`drizzle/0002_add_user_foreign_keys.sql`) sur Neon + valider prod
 
 ## DONE
+- [x] T009 - Ajouter foreign keys dans schema Drizzle (2026-03-31)
+  - [x] `drizzle/schema.ts` : ajout des `references(() => users.id, { onDelete: "cascade" })` sur `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_data`, `suivi_entries`
+  - [x] Nouvelle migration SQL: `drizzle/0002_add_user_foreign_keys.sql`
+  - [x] Migration rendue idempotente via `DO $$ ... IF NOT EXISTS ... $$`
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T008 - Nettoyage server legacy (oauth, llm, imageGeneration, voiceTranscription, map, dataApi, notification) (2026-03-31)
   - [x] Retrait des branchements legacy encore actifs (`registerOAuthRoutes`, `systemRouter`)
   - [x] Suppression des modules server legacy: `oauth.ts`, `llm.ts`, `imageGeneration.ts`, `voiceTranscription.ts`, `map.ts`, `dataApi.ts`, `notification.ts`

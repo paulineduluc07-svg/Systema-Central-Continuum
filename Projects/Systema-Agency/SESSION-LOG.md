@@ -180,3 +180,22 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Dette technique legacy retiree du backend actif sans regression de qualite.
   - Prochaine tache recommandee: T009 (ajout des foreign keys Drizzle).
+
+## 2026-03-31 - Etape 009 - Foreign keys schema Drizzle
+- Scope:
+  - Ajouter des contraintes de cle etrangere entre les tables metiers et `users`.
+  - Versionner une migration SQL dediee, robuste a une reapplique.
+- Livrables:
+  - `Code/drizzle/schema.ts`
+    - ajout des references FK sur `userId` pour `tasks`, `notes`, `user_preferences`, `custom_tabs`, `canvas_data`, `suivi_entries`.
+    - politique retenue: `ON DELETE CASCADE` pour maintenir la coherence des donnees utilisateur.
+  - `Code/drizzle/0002_add_user_foreign_keys.sql`
+    - ajout des contraintes FK via `ALTER TABLE ... ADD CONSTRAINT`.
+    - garde idempotente `IF NOT EXISTS` via blocs `DO $$`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Integrite referentielle explicite dans le schema Drizzle et migration versionnee.
+  - Prochaine tache recommandee: T010 (appliquer `0002_add_user_foreign_keys.sql` sur Neon + validation prod).

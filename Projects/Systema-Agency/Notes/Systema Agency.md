@@ -139,4 +139,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - suppression `server/_core/systemRouter.ts` devenu orphelin apres retrait de `notification`
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: garder l'endpoint de compatibilite `api/oauth/callback.ts` (redirect `/`) pour ne pas casser d'eventuels anciens liens externes
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy) -- Systema Central Continuum*
+[2026-03-31] T009 foreign keys Drizzle:
+  - `drizzle/schema.ts` enrichi avec FK explicites vers `users.id` sur toutes les tables metiers liees au `userId`
+  - choix de suppression: `onDelete: "cascade"` pour eviter les orphelins en cas de purge utilisateur
+  - migration versionnee ajoutee: `drizzle/0002_add_user_foreign_keys.sql`
+  - migration ecrite de facon idempotente (`DO $$` + `IF NOT EXISTS`) pour faciliter les environnements deja partiellement modifies
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle) -- Systema Central Continuum*
