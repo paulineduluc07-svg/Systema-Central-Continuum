@@ -414,3 +414,28 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Persistance Prompt Vault plus robuste sur les etats edge-case.
   - Plus de reset implicite vers la base par defaut si l'utilisateur vide sa liste.
+
+## 2026-03-31 - Etape 021 - E2E UI Playwright
+- Scope:
+  - Ajouter un test E2E UI couvrant le flux principal login + Prompt Vault + Suivi.
+  - Verifier explicitement la synchronisation cloud cote UI via mocks stateful.
+- Livrables:
+  - `Code/playwright.config.ts`
+    - config Playwright (Chromium, webServer Vite, baseURL locale).
+  - `Code/e2e/app-flow.spec.ts`
+    - scenario unique couvrant:
+      - login UI
+      - Prompt Vault (create/update/delete)
+      - verification sync cloud mockee (`promptVault.save`)
+      - Suivi import JSON + verification sync cloud mockee (`suivi.replace`)
+  - `Code/package.json`
+    - script `test:e2e` ajoute.
+  - `Code/.gitignore`
+    - ajout `playwright-report/` et `test-results/`.
+- Verification:
+  - `pnpm test:e2e` = OK
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK (`pnpm test` + `pnpm build`)
+- Resultat:
+  - Couverture E2E UI front-to-back mockee ajoutee sur les parcours critiques.
+  - Validation reproductible sans dependance DB/reseau externe.

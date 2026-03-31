@@ -21,6 +21,16 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T021 - Ajouter e2e UI Playwright (login + Prompt Vault + Suivi sync) (2026-03-31)
+  - [x] Playwright ajoute (`@playwright/test`) + config `Code/playwright.config.ts`
+  - [x] Script npm ajoute: `pnpm test:e2e`
+  - [x] Scenario e2e `Code/e2e/app-flow.spec.ts`:
+    - login UI
+    - Prompt Vault CRUD + verification sync cloud mockee
+    - Suivi import JSON + verification sync cloud mockee
+  - [x] Mocks tRPC stateful dans le test pour fiabiliser le flux sans dependance externe
+  - [x] Hygiene repo: ignore `playwright-report/` et `test-results/`
+  - [x] Validation locale: `pnpm test:e2e`, `pnpm check`, `pnpm verify:step` OK
 - [x] T020 - Durcir la persistance Prompt Vault (cas limites) (2026-03-31)
   - [x] `client/src/pages/PromptVault.tsx` : validation snapshot robuste (liste vide preservee, categories normalisees, fallback categorie)
   - [x] Filtrage des favoris invalides + deduplication

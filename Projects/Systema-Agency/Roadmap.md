@@ -54,6 +54,7 @@ Stack:
 
 ## Phase 5 - Robustesse operationnelle (done)
 - [x] Smoke e2e backend (login + notes + suivi)
+- [x] E2E UI Playwright (login + Prompt Vault CRUD/sync + Suivi import/sync mocke)
 - [x] Observabilite frontend (runtime errors + alerting minimal)
 - [x] Fallback UX pendant lazy loading des pages
 

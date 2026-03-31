@@ -101,6 +101,8 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
+playwright-report/
+test-results/
 
 # Database
 *.db

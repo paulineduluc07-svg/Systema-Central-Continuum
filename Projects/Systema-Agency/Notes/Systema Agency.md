@@ -217,4 +217,15 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - tags assainis au restore (trim + suppression vides)
   - verification qualite complete executee: `pnpm check` OK, `pnpm verify:step` OK
   - decision: conserver une strategie de restauration permissive et defensive pour ne jamais perdre les etats utilisateur edge-case
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening) -- Systema Central Continuum*
+[2026-03-31] T021 e2e UI Playwright:
+  - ajout du runner Playwright (`@playwright/test`) + config `Code/playwright.config.ts` (Chromium, webServer Vite local)
+  - ajout du script `pnpm test:e2e`
+  - nouveau scenario `Code/e2e/app-flow.spec.ts` couvrant:
+    - login UI
+    - Prompt Vault CRUD (create/update/delete)
+    - verification sync cloud Prompt Vault (mock tRPC stateful)
+    - Suivi import JSON + verification sync cloud (`suivi.replace` mocke)
+  - hygiene test: ajout des ignores `playwright-report/` et `test-results/`
+  - verification complete executee: `pnpm test:e2e` OK, `pnpm check` OK, `pnpm verify:step` OK
+  - decision: conserver ce test comme garde-fou UI critical-path independant de l'infrastructure backend
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui) -- Systema Central Continuum*
