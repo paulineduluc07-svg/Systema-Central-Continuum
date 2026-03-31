@@ -38,11 +38,11 @@ Stack:
 
 ## Phase 3 - Production
 - [x] Deploy production relance (`vercel deploy --prod -y`) et alias actif
-- [ ] Variables Vercel completes (`OWNER_EMAIL`, `OWNER_PASSWORD` encore absentes)
-- [ ] `DATABASE_URL` Vercel assainie et validee (credentials Neon actuellement invalides)
-- [ ] Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql`)
-- [ ] Validation production fonctionnelle complete (auth + sync DB)
+- [x] Variables Vercel completes (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)
+- [x] `DATABASE_URL` Vercel assainie et validee
+- [x] Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql`)
+- [x] Validation production fonctionnelle complete (auth + sync DB)
 
 ---
 
-Mis a jour: 2026-03-30
+Mis a jour: 2026-03-31

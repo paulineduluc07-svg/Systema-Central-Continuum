@@ -15,18 +15,18 @@ Taches actives. Mise a jour a chaque session.
 ---
 
 ## IN PROGRESS
-- [ ] T006 - Config Vercel + migration Neon + validation prod
-  - [x] Projet local lie a Vercel (`systema-agency`)
-  - [x] Deploy production lance via CLI (`vercel deploy --prod -y`)
-  - [x] Validation locale qualite: `pnpm check`, `pnpm test`, `pnpm build` OK
-  - [ ] Completer variables Vercel manquantes: `OWNER_EMAIL`, `OWNER_PASSWORD`
-  - [ ] Corriger `DATABASE_URL` Vercel (format + credentials Neon valides)
-  - [ ] Appliquer la migration Neon `drizzle/0001_suivi_entries.sql` (bloque tant que DB auth invalide)
+- [ ] (aucune tache active)
 
 ## NEXT
 - [ ] T007 - Nettoyage final docs README (stack + auth + onboarding)
+- [ ] T008 - Nettoyage server legacy (oauth, llm, imageGeneration, voiceTranscription, map, dataApi, notification)
 
 ## DONE
+- [x] T006 - Config Vercel + migration Neon + validation prod (2026-03-31)
+  - [x] Variables Vercel configurees pour la prod (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`)
+  - [x] Migration Neon appliquee: `drizzle/0001_suivi_entries.sql`
+  - [x] Validation locale qualite: `pnpm check`, `pnpm test`, `pnpm build` OK
+  - [x] Deploiement prod relance et valide (`vercel deploy --prod -y`, status `Ready`)
 - [x] T005 - CI PR (check/test/build) (2026-03-30)
   - [x] Ajout workflow GitHub Actions `Code/.github/workflows/ci-pr.yml`
   - [x] Trigger PR sur `main` + execution manuelle (`workflow_dispatch`)
@@ -72,4 +72,4 @@ Taches actives. Mise a jour a chaque session.
 
 ---
 
-Mis a jour: 2026-03-30
+Mis a jour: 2026-03-31

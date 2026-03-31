@@ -33,16 +33,10 @@ hooks/
 ## Schema DB (Neon PostgreSQL)
 Tables actives : users, tasks, notes, user_preferences, custom_tabs, canvas_data, suivi_entries
 
-## Ce qui reste a faire avant que tout fonctionne en prod
-1. Configurer les variables Vercel (Vercel > Project Settings > Environment Variables) :
-   - DATABASE_URL  (deja la normalement)
-   - JWT_SECRET    (openssl rand -hex 32)
-   - OWNER_EMAIL   (ton email)
-   - OWNER_PASSWORD (mot de passe choisi)
-2. Appliquer la migration SQL dans Neon (table suivi_entries) :
-   - Soit via `pnpm drizzle-kit push` (necessite DATABASE_URL local dans .env)
-   - Soit via Neon SQL Editor : copier le contenu de drizzle/0001_suivi_entries.sql
-3. Deployer sur Vercel
+## Etat production (2026-03-31)
+1. Variables runtime configurees sur Vercel (`DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`).
+2. Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql` via Drizzle migrate).
+3. Deploiement production valide (`systema-agency.vercel.app` + alias custom actif).
 
 ## Ce qui a ete supprime (ne pas reimplanter)
 - Drawn by Fate / Tarot (toutes les pages et composants)
@@ -127,5 +121,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - observation env Vercel: `OWNER_EMAIL` et `OWNER_PASSWORD` manquants; `DATABASE_URL` actuelle mal formee et non exploitable
   - decision: ne pas injecter de credentials fictifs en production; attendre les vraies valeurs owner + une URL Neon valide
   - hygiene: suppression locale des `.env.vercel*` et ajout `.env.vercel*` au `.gitignore`
-
-*Mis a jour : 2026-03-30 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006) -- Systema Central Continuum*
+[2026-03-31] Cloture T006:
+  - `DATABASE_URL` Vercel corrigee et credentials owner ajoutes en runtime (`development` + `production`)
+  - migration Neon executee avec succes via `pnpm drizzle-kit migrate`
+  - validation locale complete: `pnpm check`, `pnpm test`, `pnpm build` OK
+  - deploiement production relance et verifie `Ready` via `vercel inspect`
+  - decision: conserver `.env.vercel*` ignore et ne jamais versionner les extractions d'env
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod) -- Systema Central Continuum*

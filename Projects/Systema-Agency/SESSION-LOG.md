@@ -121,3 +121,21 @@ Trace courte de chaque etape executee.
   - Blocage restant: `OWNER_EMAIL` et `OWNER_PASSWORD` absents sur Vercel.
   - Blocage critique DB: `DATABASE_URL` actuelle invalide (format/pwd), migration `0001_suivi_entries` non appliquee.
   - Prochaine action: corriger `DATABASE_URL` Neon + definir credentials owner, puis relancer migration et validation fonctionnelle prod.
+
+## 2026-03-31 - Etape 006B - Cloture T006 (env + migration + prod)
+- Scope:
+  - Finaliser les variables runtime production et supprimer les blocages de migration.
+- Livrables:
+  - Variables Vercel mises a jour en `development` et `production`: `DATABASE_URL`, `OWNER_EMAIL`, `OWNER_PASSWORD`.
+  - Note Vercel Preview: variables custom non appliquees (projet avec Preview branche-scopee, aucune branche preview active).
+  - Migration DB executee avec succes via `pnpm drizzle-kit migrate`.
+  - Nouveau deploiement production effectue (`vercel deploy --prod -y`) et deployment `Ready`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+  - `pnpm drizzle-kit migrate` = OK
+  - `vercel inspect` deployment = `Ready`
+- Resultat:
+  - T006 complete et fermee.
+  - Prochaine tache recommandee: T007 (nettoyage final docs README).
