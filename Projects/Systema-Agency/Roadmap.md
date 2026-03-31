@@ -51,6 +51,11 @@ Stack:
 - [x] Stabilisation integration analytics (retrait warnings build lies a `%VITE_ANALYTICS_*`)
 - [x] Reduction taille bundle frontend (>500 kB) via code-splitting routes
 
+## Phase 5 - Robustesse operationnelle (in progress)
+- [x] Smoke e2e backend (login + notes + suivi)
+- [ ] Observabilite frontend (runtime errors + alerting minimal)
+- [ ] Fallback UX pendant lazy loading des pages
+
 ---
 
 Mis a jour: 2026-03-31

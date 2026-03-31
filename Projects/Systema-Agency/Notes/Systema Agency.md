@@ -167,4 +167,9 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - warning build "Some chunks are larger than 500 kB" supprime
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: conserver le split route-level comme baseline perf pour les prochaines features
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction) -- Systema Central Continuum*
+[2026-03-31] T014 smoke e2e backend:
+  - ajout `server/smoke.e2e.test.ts` pour valider un parcours bout-en-bout critique (`login -> notes -> suivi`)
+  - mocks etatful db/sdk pour verifier le chainage tRPC sans reseau externe
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: garder ce smoke test comme garde-fou de non-regression fonctionnelle rapide
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e) -- Systema Central Continuum*

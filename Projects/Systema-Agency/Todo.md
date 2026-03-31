@@ -18,9 +18,13 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] (a definir)
+- [ ] T015 - Observabilite frontend (logs runtime + alerting minimal)
 
 ## DONE
+- [x] T014 - Ajouter smoke e2e (login + notes + suivi) (2026-03-31)
+  - [x] Nouveau test `server/smoke.e2e.test.ts` (flux complet routeur: `auth.login -> notes.create/list -> suivi.add/list`)
+  - [x] Mocks etatful de `db` et `sdk` pour couvrir le parcours de bout en bout sans dependance externe
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T013 - Reduire la taille du bundle frontend (code splitting / lazy loading) (2026-03-31)
   - [x] `client/src/App.tsx` passe en lazy loading des pages (`Home`, `Suivi`, `PromptVault`) via `React.lazy` + `Suspense`
   - [x] Code-splitting route-level confirme au build (`Home`, `Suivi`, `PromptVault` en chunks separes)

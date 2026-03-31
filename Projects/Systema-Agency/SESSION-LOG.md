@@ -272,3 +272,18 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Perf de chargement initial amelioree et warning bundle elimine.
   - Prochaine tache recommandee: definir T014 selon priorite produit.
+
+## 2026-03-31 - Etape 014 - Smoke e2e backend
+- Scope:
+  - Ajouter un test smoke de flux complet couvrant les parcours critiques login + notes + suivi.
+- Livrables:
+  - `Code/server/smoke.e2e.test.ts`
+    - scenario: `auth.login` puis `notes.create/list` puis `suivi.add/list`.
+    - mocks etatful de `db` et `sdk` pour simuler un parcours realiste sans dependances externes.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK (suite totale: 16 tests)
+  - `pnpm build` = OK
+- Resultat:
+  - Couverture smoke ajoutee sur le flux principal backend.
+  - Prochaine tache recommandee: T015 (observabilite frontend + alerting minimal).
