@@ -21,6 +21,11 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T011 - Corriger incoherences ENV serveur post-cleanup legacy (2026-03-31)
+  - [x] `server/_core/env.ts` simplifie (retrait champs `forge/openai` non utilises)
+  - [x] `server/storage.ts` supprime (helper legacy orphelin)
+  - [x] `.env.example` nettoye (suppression section `Legacy integrations`)
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T010 - Appliquer la migration FK sur Neon + valider prod (2026-03-31)
   - [x] Migration executee sur Neon via `pnpm drizzle-kit migrate`
   - [x] Validation locale complete: `pnpm check`, `pnpm test`, `pnpm build` OK

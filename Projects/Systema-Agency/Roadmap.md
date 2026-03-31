@@ -29,8 +29,8 @@ Stack:
 - [x] Scripts de verification (`verify:step`, `verify:full`)
 - [x] Retour a zero erreur sur `pnpm check`
 
-## Phase 2 - Stabilisation technique (in progress)
-- [ ] Corriger incoherences ENV serveur
+## Phase 2 - Stabilisation technique (done)
+- [x] Corriger incoherences ENV serveur
 - [x] Mettre a jour `.env.example`
 - [x] Politique cookie robuste dev/prod
 - [x] Transaction sur `replaceSuiviEntries`

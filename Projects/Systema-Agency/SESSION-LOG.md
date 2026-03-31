@@ -217,3 +217,20 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Migration FK appliquee en production et validation operationnelle confirmee.
   - Prochaine tache recommandee: definir la prochaine priorite produit/technique.
+
+## 2026-03-31 - Etape 011 - Nettoyage ENV serveur post-legacy
+- Scope:
+  - Aligner les variables d'environnement serveur avec le code reel apres suppression des modules legacy.
+- Livrables:
+  - `Code/server/_core/env.ts` simplifie:
+    - retrait des champs `forgeApiUrl`, `forgeApiKey`, `openaiApiKey`, `openaiApiUrl`, `openaiModel`.
+  - `Code/server/storage.ts` supprime (fichier orphelin).
+  - `Code/.env.example` nettoye:
+    - suppression de la section `Legacy integrations`.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK
+  - `pnpm build` = OK
+- Resultat:
+  - Configuration ENV serveur coherente avec l'etat actuel du backend.
+  - Prochaine tache recommandee: definir la priorite T012 (fonctionnelle ou dette UI/analytics).

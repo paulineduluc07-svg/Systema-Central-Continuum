@@ -150,4 +150,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - validation prod executee: `vercel inspect` retourne `Ready` + `https://systema-agency.vercel.app` repond en HTTP 200
   - hygiene securite: fichier temporaire `.env.migrate` supprime immediatement apres usage
   - decision: conserver un flux court "pull env temporaire -> migrate -> suppression fichier" pour les futures migrations prod
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod) -- Systema Central Continuum*
+[2026-03-31] T011 nettoyage ENV serveur:
+  - `env.ts` aligne sur les usages reels (suppression des champs `forge/openai` non consommes)
+  - suppression `server/storage.ts` (reste template non utilise depuis le cleanup legacy)
+  - `.env.example` simplifie avec retrait complet de la section `Legacy integrations`
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: phase 2 "stabilisation technique" consideree complete cote backend
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup) -- Systema Central Continuum*
