@@ -56,6 +56,10 @@ Stack:
 - [x] Observabilite frontend (runtime errors + alerting minimal)
 - [x] Fallback UX pendant lazy loading des pages
 
+## Phase 6 - Direction visuelle finale (done)
+- [x] Refonte Home dashboard selon reference visuelle (glass / rose-marbre / ambiance lumineuse)
+- [x] Conservation complete des flux produit (auth, sync taches/notes, navigation)
+
 ---
 
 Mis a jour: 2026-03-31

@@ -324,3 +324,22 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Transitions de pages lazy rendues visibles et plus confortables pour l'utilisateur.
   - Prochaine tache recommandee: definir la priorite T017.
+
+## 2026-03-31 - Etape 017 - Refonte visuelle Home finale
+- Scope:
+  - Aligner la page principale du dashboard sur la reference visuelle fournie (ambiance verre + rose/marbre + glow).
+- Livrables:
+  - `Code/client/src/pages/Home.tsx` entierement restructure:
+    - nouveau hero visuel (salutation + date + actions principales).
+    - carte centrale horloge temps reel + carte calendrier mensuel.
+    - section "Missions du jour" reliee a `useSyncedTasks("tableau-blanc")`.
+    - section "Tableau blanc" reliee a `useSyncedNotes("tableau-blanc")`.
+    - toolbar sync/auth/theme/settings conservee.
+    - modal login harmonisee avec la nouvelle direction visuelle.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK (16 tests)
+  - `pnpm build` = OK
+- Resultat:
+  - Home finale conforme a la direction visuelle souhaitee, sans regression fonctionnelle.
+  - Prochaine tache recommandee: definir T018 (si ajustements pixel-perfect supplementaires).

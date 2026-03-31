@@ -185,4 +185,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - objectif: eviter les blancs de transition lors du chargement des routes en lazy
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: conserver ce fallback comme standard UX tant que les routes restent code-split
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX) -- Systema Central Continuum*
+[2026-03-31] T017 design final Home:
+  - refonte complete de `Home.tsx` pour coller a la reference visuelle (glassmorphism rose/marbre, glow, structure en 3 colonnes)
+  - maintien des fonctions metier: login/logout, sync cloud, taches/notes reliees aux hooks synchronises, liens vers Prompt Vault et Suivi
+  - ajout horloge temps reel + calendrier mensuel integres dans la nouvelle composition
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: cette version devient la base du design final dashboard
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design) -- Systema Central Continuum*

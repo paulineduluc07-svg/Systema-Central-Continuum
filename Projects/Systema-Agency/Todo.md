@@ -21,6 +21,13 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T017 - Refonte visuelle finale Home dashboard (style reference fourni) (2026-03-31)
+  - [x] `client/src/pages/Home.tsx` reconstruit avec layout glassmorphism rose/marbre + ambiance bokeh
+  - [x] Hero conforme au style cible: salutation, date, actions principales, carte horloge, calendrier
+  - [x] "Missions du jour" connectees aux vraies taches sync (`useSyncedTasks`)
+  - [x] "Tableau blanc" connecte aux vraies notes sync (`useSyncedNotes`)
+  - [x] Toolbar auth/sync/theme/admin conservee, responsive desktop + mobile
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T016 - Fallback UX pendant lazy loading des pages (2026-03-31)
   - [x] `client/src/App.tsx` : ajout de `RouteLoadingFallback` (spinner + message) pour `Suspense`
   - [x] Remplacement du `fallback={null}` par une experience de chargement visible
