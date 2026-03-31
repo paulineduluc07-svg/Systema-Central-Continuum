@@ -203,4 +203,10 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
     - restauration JSON en mode connecte => push cloud immediat
   - verification complete executee: `pnpm check` OK, `pnpm verify:step` OK
   - decision: la source de verite utilisateur devient cloud-first avec fallback local resilient, sans perte de donnees offline au premier login
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete) -- Systema Central Continuum*
+[2026-03-31] T019 migration prod Prompt Vault:
+  - migration Neon executee via `pnpm drizzle-kit migrate` (applique `drizzle/0003_prompt_vault_data.sql`)
+  - verification prod executee: `vercel inspect` = `Ready`, `https://systema-agency.vercel.app` = HTTP `200`
+  - hygiene secrets maintenue: fichier temporaire `.env.migrate` supprime apres execution
+  - verification qualite complete executee: `pnpm check` OK, `pnpm verify:step` OK
+  - decision: le flux standard de migration prod reste "pull env temporaire -> migrate -> suppression fichier -> check prod"
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration) -- Systema Central Continuum*

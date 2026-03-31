@@ -375,3 +375,22 @@ Trace courte de chaque etape executee.
   - Prompt Vault devient persistant et synchronise entre sessions/appareils.
   - Les entrees Suivi locales ne sont plus ecrasees quand le cloud est vide.
   - La migration locale -> cloud est reactivee sur Home pour les donnees historiques.
+
+## 2026-03-31 - Etape 019 - Migration production Prompt Vault
+- Scope:
+  - Appliquer en base Neon la migration Prompt Vault introduite en T018.
+  - Revalider l'etat production et la qualite locale.
+- Livrables:
+  - Migration executee: `pnpm drizzle-kit migrate` (incluant `drizzle/0003_prompt_vault_data.sql`).
+  - Hygiene secrets:
+    - pull env temporaire via `vercel env pull .env.migrate`
+    - suppression immediate du fichier temporaire apres usage.
+  - Validation production:
+    - `vercel inspect systema-agency.vercel.app` => status `Ready`
+    - `GET https://systema-agency.vercel.app` => HTTP `200`
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK (`pnpm test` + `pnpm build`)
+- Resultat:
+  - Migration Prompt Vault appliquee en production sans regression.
+  - Etat prod confirme operationnel apres application migration.

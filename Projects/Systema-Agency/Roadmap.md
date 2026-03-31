@@ -46,6 +46,7 @@ Stack:
 - [x] Migration SQL Neon appliquee (`drizzle/0001_suivi_entries.sql`)
 - [x] Validation production fonctionnelle complete (auth + sync DB)
 - [x] Migration FK appliquee en prod (`drizzle/0002_add_user_foreign_keys.sql`) + smoke check prod (`Ready`, HTTP 200)
+- [x] Migration Prompt Vault appliquee en prod (`drizzle/0003_prompt_vault_data.sql`) + check prod (`Ready`, HTTP 200)
 
 ## Phase 4 - Qualite UX/Perf (done)
 - [x] Stabilisation integration analytics (retrait warnings build lies a `%VITE_ANALYTICS_*`)

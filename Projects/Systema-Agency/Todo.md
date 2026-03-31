@@ -21,6 +21,11 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T019 - Appliquer migration Prompt Vault en production + valider prod (2026-03-31)
+  - [x] Migration executee sur Neon: `pnpm drizzle-kit migrate` (incluant `drizzle/0003_prompt_vault_data.sql`)
+  - [x] Hygiene secrets: pull env temporaire puis suppression immediate de `.env.migrate`
+  - [x] Validation production: `vercel inspect` = `Ready` et `GET https://systema-agency.vercel.app` = `200`
+  - [x] Validation locale: `pnpm check` et `pnpm verify:step` OK
 - [x] T018 - Persistance + synchronisation complete des donnees (Prompt Vault inclus) (2026-03-31)
   - [x] Backend Prompt Vault ajoute: table `prompt_vault_data` + migration SQL `drizzle/0003_prompt_vault_data.sql`
   - [x] API tRPC `promptVault.get/save` ajoutee + couche DB (`getPromptVaultData`, `upsertPromptVaultData`)
