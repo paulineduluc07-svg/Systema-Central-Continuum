@@ -18,9 +18,15 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T015 - Observabilite frontend (logs runtime + alerting minimal)
+- [ ] T016 - Fallback UX pendant lazy loading des pages
 
 ## DONE
+- [x] T015 - Observabilite frontend (logs runtime + alerting minimal) (2026-03-31)
+  - [x] Ajout module `client/src/lib/observability.ts` (capture globale, dedupe, logs structures, envoi optionnel endpoint)
+  - [x] Branchements runtime: `window.error`, `window.unhandledrejection`, erreurs tRPC query/mutation, `ErrorBoundary.componentDidCatch`
+  - [x] Alerting minimal: toast unique utilisateur sur erreur runtime non dedupee
+  - [x] `.env.example` complete avec `VITE_ERROR_LOG_ENDPOINT` (optionnel)
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build` OK
 - [x] T014 - Ajouter smoke e2e (login + notes + suivi) (2026-03-31)
   - [x] Nouveau test `server/smoke.e2e.test.ts` (flux complet routeur: `auth.login -> notes.create/list -> suivi.add/list`)
   - [x] Mocks etatful de `db` et `sdk` pour couvrir le parcours de bout en bout sans dependance externe

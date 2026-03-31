@@ -287,3 +287,25 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Couverture smoke ajoutee sur le flux principal backend.
   - Prochaine tache recommandee: T015 (observabilite frontend + alerting minimal).
+
+## 2026-03-31 - Etape 015 - Observabilite frontend
+- Scope:
+  - Ajouter une couche minimale de monitoring runtime frontend + alerting utilisateur non intrusif.
+- Livrables:
+  - `Code/client/src/lib/observability.ts`
+    - `reportFrontendError` (normalisation, dedupe fingerprint, log structure, envoi endpoint optionnel).
+    - `setupGlobalErrorMonitoring` (`window.error` + `window.unhandledrejection`).
+  - `Code/client/src/main.tsx`
+    - integration des rapports d'erreurs tRPC query/mutation (hors redirects unauthorized).
+    - activation du monitoring global au bootstrap.
+  - `Code/client/src/components/ErrorBoundary.tsx`
+    - ajout `componentDidCatch` avec reporting `react.error-boundary`.
+  - `Code/.env.example`
+    - ajout `VITE_ERROR_LOG_ENDPOINT` (sink optionnel pour logs runtime).
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK (16 tests)
+  - `pnpm build` = OK
+- Resultat:
+  - Logs runtime frontend centralises avec alerting minimal (toast unique) et sortie optionnelle vers endpoint.
+  - Prochaine tache recommandee: T016 (fallback UX pendant lazy loading).

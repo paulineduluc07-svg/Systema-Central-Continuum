@@ -172,4 +172,12 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - mocks etatful db/sdk pour verifier le chainage tRPC sans reseau externe
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
   - decision: garder ce smoke test comme garde-fou de non-regression fonctionnelle rapide
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e) -- Systema Central Continuum*
+[2026-03-31] T015 observabilite frontend:
+  - nouveau module `client/src/lib/observability.ts` (capture globale + dedupe + reporting)
+  - integration dans `main.tsx` pour erreurs tRPC + hooks globaux `window.error` / `unhandledrejection`
+  - `ErrorBoundary` enrichi avec `componentDidCatch` et reporting structure
+  - alerting minimal ajoute: toast utilisateur unique sur erreur runtime
+  - variable optionnelle ajoutee: `VITE_ERROR_LOG_ENDPOINT`
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK
+  - decision: garder un pipeline observability lean (sans backend dedie pour le moment, endpoint externe optionnel)
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability) -- Systema Central Continuum*

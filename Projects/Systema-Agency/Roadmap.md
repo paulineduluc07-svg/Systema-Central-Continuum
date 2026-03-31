@@ -53,7 +53,7 @@ Stack:
 
 ## Phase 5 - Robustesse operationnelle (in progress)
 - [x] Smoke e2e backend (login + notes + suivi)
-- [ ] Observabilite frontend (runtime errors + alerting minimal)
+- [x] Observabilite frontend (runtime errors + alerting minimal)
 - [ ] Fallback UX pendant lazy loading des pages
 
 ---
