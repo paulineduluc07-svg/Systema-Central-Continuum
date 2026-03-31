@@ -394,3 +394,23 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Migration Prompt Vault appliquee en production sans regression.
   - Etat prod confirme operationnel apres application migration.
+
+## 2026-03-31 - Etape 020 - Durcissement snapshot Prompt Vault
+- Scope:
+  - Securiser la restauration des donnees Prompt Vault sur les cas limites de persistence.
+  - Eviter toute reinitialisation involontaire (notamment quand la liste utilisateur est vide).
+- Livrables:
+  - `Code/client/src/pages/PromptVault.tsx`
+    - `sanitizePromptVaultSnapshot` durci:
+      - conserve les snapshots valides meme avec `list: []`
+      - normalise/categories dedupees + fallback categorie par defaut
+      - re-assigne les prompts avec categorie invalide vers une categorie valide
+      - nettoie tags (trim + suppression des valeurs vides)
+      - filtre + dedupe les favoris obsoletes
+    - `normalizeCategories` durci avec deduplication et fallback minimal.
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm verify:step` = OK (`pnpm test` + `pnpm build`)
+- Resultat:
+  - Persistance Prompt Vault plus robuste sur les etats edge-case.
+  - Plus de reset implicite vers la base par defaut si l'utilisateur vide sa liste.

@@ -66,6 +66,7 @@ Stack:
 - [x] Migration locale -> cloud reactivee au login (`useDataMigration`) pour taches/notes/preferences
 - [x] Flux Suivi durci pour eviter les pertes de donnees au premier login (cloud vide -> import local auto)
 - [x] Routeur + stockage backend dedies Prompt Vault (`prompt_vault_data`, tRPC `promptVault.get/save`)
+- [x] Validation snapshot Prompt Vault durcie (cas liste vide / categories invalides / favoris obsoletes)
 
 ---
 

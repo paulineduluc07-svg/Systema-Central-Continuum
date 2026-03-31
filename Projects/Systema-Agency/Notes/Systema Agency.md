@@ -209,4 +209,12 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - hygiene secrets maintenue: fichier temporaire `.env.migrate` supprime apres execution
   - verification qualite complete executee: `pnpm check` OK, `pnpm verify:step` OK
   - decision: le flux standard de migration prod reste "pull env temporaire -> migrate -> suppression fichier -> check prod"
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration) -- Systema Central Continuum*
+[2026-03-31] T020 durcissement Prompt Vault:
+  - validation snapshot robuste pour la persistence (`PromptVault.tsx`)
+  - les snapshots avec `list: []` restent valides (plus de retour force sur la base `DATA`)
+  - categories dedupees/normalisees + fallback categorie valide pour eviter les incoherences
+  - favoris nettoyes (suppression IDs obsoletes) + deduplication
+  - tags assainis au restore (trim + suppression vides)
+  - verification qualite complete executee: `pnpm check` OK, `pnpm verify:step` OK
+  - decision: conserver une strategie de restauration permissive et defensive pour ne jamais perdre les etats utilisateur edge-case
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening) -- Systema Central Continuum*

@@ -377,7 +377,25 @@ function getDefaultPromptCategory(cats: Category[]): string {
 }
 
 function normalizeCategories(cats: Category[]): Category[] {
-  const withoutAll = cats.filter((c) => c.id !== "all");
+  const unique = new Map<string, Category>();
+  for (const category of cats) {
+    const id = category.id.trim();
+    if (!id || id === "all" || unique.has(id)) continue;
+    unique.set(id, {
+      id,
+      label: category.label,
+      color: category.color,
+    });
+  }
+
+  const withoutAll = Array.from(unique.values());
+  if (withoutAll.length === 0) {
+    const fallback = INITIAL_CATS.find((c) => c.id === "tech");
+    if (fallback) {
+      withoutAll.push(fallback);
+    }
+  }
+
   return [INITIAL_CATS[0], ...withoutAll];
 }
 
@@ -386,6 +404,21 @@ function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
   const value = raw as Partial<PromptVaultSnapshot>;
 
   if (!Array.isArray(value.list) || !Array.isArray(value.cats)) return null;
+
+  const normalizedCats = normalizeCategories(value.cats
+    .filter((category): category is Category => (
+      typeof category?.id === "string"
+      && typeof category?.label === "string"
+      && typeof category?.color === "string"
+    ))
+    .map((category) => ({
+      id: category.id,
+      label: category.label,
+      color: category.color,
+    })));
+
+  const defaultCategoryId = getDefaultPromptCategory(normalizedCats);
+  const categoryIds = new Set(normalizedCats.map((category) => category.id));
 
   const list = value.list
     .filter((prompt): prompt is Prompt => (
@@ -398,28 +431,21 @@ function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
     ))
     .map((prompt) => ({
       id: prompt.id,
-      cat: prompt.cat,
+      cat: categoryIds.has(prompt.cat) ? prompt.cat : defaultCategoryId,
       title: prompt.title,
-      tags: [...prompt.tags],
+      tags: prompt.tags.map((tag) => tag.trim()).filter(Boolean),
       text: prompt.text,
     }));
 
-  const cats = value.cats
-    .filter((category): category is Category => (
-      typeof category?.id === "string"
-      && typeof category?.label === "string"
-      && typeof category?.color === "string"
-    ))
-    .map((category) => ({
-      id: category.id,
-      label: category.label,
-      color: category.color,
-    }));
-
-  if (list.length === 0 || cats.length === 0) return null;
-
+  const promptIdSet = new Set(list.map((prompt) => prompt.id));
   const favs = Array.isArray(value.favs)
-    ? value.favs.filter((fav): fav is number => typeof fav === "number")
+    ? Array.from(
+        new Set(
+          value.favs.filter((fav): fav is number => (
+            typeof fav === "number" && promptIdSet.has(fav)
+          )),
+        ),
+      )
     : [];
 
   const brightnessRaw = typeof value.brightness === "number" ? value.brightness : 70;
@@ -427,7 +453,7 @@ function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
 
   return {
     list,
-    cats: normalizeCategories(cats),
+    cats: normalizedCats,
     favs,
     brightness,
   };

@@ -21,6 +21,11 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (a definir)
 
 ## DONE
+- [x] T020 - Durcir la persistance Prompt Vault (cas limites) (2026-03-31)
+  - [x] `client/src/pages/PromptVault.tsx` : validation snapshot robuste (liste vide preservee, categories normalisees, fallback categorie)
+  - [x] Filtrage des favoris invalides + deduplication
+  - [x] Assainissement des tags (trim + suppression des vides) a la restauration
+  - [x] Validation locale: `pnpm check`, `pnpm verify:step` OK
 - [x] T019 - Appliquer migration Prompt Vault en production + valider prod (2026-03-31)
   - [x] Migration executee sur Neon: `pnpm drizzle-kit migrate` (incluant `drizzle/0003_prompt_vault_data.sql`)
   - [x] Hygiene secrets: pull env temporaire puis suppression immediate de `.env.migrate`
