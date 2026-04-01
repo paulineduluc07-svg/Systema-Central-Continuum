@@ -19,6 +19,11 @@ Taches actives. Mise a jour a chaque session.
 
 ## NEXT
 - [ ] T027 - Exploiter les nouvelles images de reference ajoutees dans le repo pour les prochains ajustements UI
+  - [ ] References detectees:
+    - `Notes-Perso/56c3336a-1c3e-447c-9da3-04b5abe80d69.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77 (1).jpg`
+  - [ ] Reprise session: demain, partir de T027 (images -> ajustements UI cibles)
 
 ## DONE
 - [x] T026 - Ajouter validation de version backup + message d'erreur UX explicite (2026-03-31)
@@ -218,4 +223,4 @@ Taches actives. Mise a jour a chaque session.
 
 ---
 
-Mis a jour: 2026-03-31
+Mis a jour: 2026-03-31 (checkpoint fin de session, reprise sur T027)

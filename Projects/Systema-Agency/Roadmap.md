@@ -95,6 +95,15 @@ Stack:
 - [x] Message UX explicite sur backup incompatible / payload invalide
 - [x] Couverture test backend + e2e UI pour les rejets de version
 
+## Phase 13 - Ajustements UI guides par references images (next)
+- [ ] Exploiter les nouvelles references visuelles ajoutees dans `Notes-Perso/`
+- [ ] Aligner les ecrans cibles sur ces references sans regression fonctionnelle
+- [ ] Valider localement (`pnpm check`, `pnpm test`, `pnpm build`) avant push
+- [ ] References de depart:
+  - `Notes-Perso/56c3336a-1c3e-447c-9da3-04b5abe80d69.jpg`
+  - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77.jpg`
+  - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77 (1).jpg`
+
 ---
 
-Mis a jour: 2026-03-31
+Mis a jour: 2026-03-31 (checkpoint fin de session, prochaine etape Phase 13/T027)

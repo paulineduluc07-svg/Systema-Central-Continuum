@@ -292,4 +292,11 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
     - `e2e/app-flow.spec.ts`: verification UI message version incompatible
   - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK, `pnpm test:e2e` OK
   - decision: prochaine priorite candidate = exploiter les images de reference ajoutees dans le repo pour les ajustements UI (T027)
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator, T024 unified backup import-export, T025 backup e2e ui, T026 backup version validation + UX errors) -- Systema Central Continuum*
+[2026-03-31] Checkpoint fin de session:
+  - statut: T026 termine, push effectue, base stable pour reprise.
+  - references visuelles recues pour prochaine passe UI:
+    - `Notes-Perso/56c3336a-1c3e-447c-9da3-04b5abe80d69.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77 (1).jpg`
+  - plan de reprise: demarrer directement sur T027 (ajustements UI guides par ces references).
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator, T024 unified backup import-export, T025 backup e2e ui, T026 backup version validation + UX errors, checkpoint reprise T027) -- Systema Central Continuum*

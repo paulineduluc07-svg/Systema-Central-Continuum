@@ -564,3 +564,14 @@ Trace courte de chaque etape executee.
   - L'erreur massive post-T025 n'est pas reproduite sur les checks/tests/build locaux.
   - Le flux backup affiche des erreurs explicites et actionnables.
   - Les imports avec version incompatible sont maintenant refuses de facon claire et previsible.
+
+## 2026-03-31 - Checkpoint fin de session
+- Etat:
+  - `main` propre et aligne remote apres push T026.
+  - Aucun incident ouvert bloquant detecte localement.
+- Reprise demain:
+  - Demarrer sur `T027` (ajustements UI guides par references images).
+  - References a exploiter:
+    - `Notes-Perso/56c3336a-1c3e-447c-9da3-04b5abe80d69.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77.jpg`
+    - `Notes-Perso/1657bddd-dc3b-4760-ac6c-c0abcd461b77 (1).jpg`
