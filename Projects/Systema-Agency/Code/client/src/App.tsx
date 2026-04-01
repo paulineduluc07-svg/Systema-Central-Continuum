@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { GlobalSyncIndicator } from "./components/GlobalSyncIndicator";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ConfigProvider } from "./contexts/ConfigContext";
 
@@ -51,6 +52,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <Router />
+            <GlobalSyncIndicator />
           </TooltipProvider>
         </ThemeProvider>
       </ConfigProvider>

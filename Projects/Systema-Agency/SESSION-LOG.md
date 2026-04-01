@@ -467,3 +467,24 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Backend sync plus robuste face aux payloads invalides/abusifs.
   - Contrat d'entree explicite et couvert par des tests.
+
+## 2026-03-31 - Etape 023 - Indicateur de synchronisation global
+- Scope:
+  - Priorite: visibilite utilisateur sur l'etat de sync global.
+  - Contrainte: implementation code-first, sans changements d'infra.
+- Livrables:
+  - `Code/client/src/hooks/useGlobalSyncStatus.ts`
+    - derive un statut global (`local`, `syncing`, `synced`, `error`)
+    - base sur authentification + activite/etat du cache React Query
+    - detail temporel (derniere sync ou dernier echec)
+  - `Code/client/src/components/GlobalSyncIndicator.tsx`
+    - composant visuel flottant global (pill)
+    - variation de ton + icone selon statut
+  - `Code/client/src/App.tsx`
+    - integration du composant au niveau global pour couvrir toutes les routes
+- Verification:
+  - `pnpm verify:step` = OK
+  - `pnpm check` = OK
+- Resultat:
+  - Statut de synchronisation visible en continu sur tout le produit.
+  - Reduction de l'ambiguite utilisateur entre mode local, sync active, sync reussie et erreur.

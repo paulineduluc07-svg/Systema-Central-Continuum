@@ -18,9 +18,18 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T023 - Ajouter un indicateur de synchronisation global (etat local/cloud + statut en cours/erreur)
+- [ ] T024 - Export/Import global unifie (taches + notes + suivi + prompt vault)
 
 ## DONE
+- [x] T023 - Ajouter un indicateur de synchronisation global (2026-03-31)
+  - [x] Nouveau hook `client/src/hooks/useGlobalSyncStatus.ts`:
+    - statut global derive de l'etat auth + React Query cache (local/syncing/synced/error)
+    - detail horodate de derniere sync ou dernier echec
+  - [x] Nouveau composant `client/src/components/GlobalSyncIndicator.tsx`:
+    - pill flottant global visible sur toutes les pages
+    - codes visuels selon statut (local, en cours, synchro, erreur)
+  - [x] Integration globale dans `client/src/App.tsx`
+  - [x] Validation locale: `pnpm verify:step`, `pnpm check` OK
 - [x] T022 - Durcir la validation backend des endpoints de synchronisation (2026-03-31)
   - [x] `server/routers.ts`:
     - schema strict `promptVault.save` (JSON valide + limite taille payload)

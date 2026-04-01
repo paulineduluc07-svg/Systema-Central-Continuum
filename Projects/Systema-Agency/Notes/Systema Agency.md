@@ -241,4 +241,16 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
     - `smoke.e2e.test.ts`: alignement du format `prise` avec le contrat `HH:mm`
   - verification complete executee: `pnpm verify:step` OK, `pnpm check` OK
   - decision: prochaine priorite candidate cote UX = indicateur de synchronisation global (T023)
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening) -- Systema Central Continuum*
+[2026-03-31] T023 indicateur sync global:
+  - priorite retenue: visibilite UX de la synchronisation globale
+  - contrainte retenue: code d'abord, sans operation prod
+  - ajout du hook `useGlobalSyncStatus`:
+    - derive les etats `local`, `syncing`, `synced`, `error`
+    - lit l'activite et l'historique recent depuis le cache React Query
+    - expose un detail temporel (derniere sync / dernier echec)
+  - ajout du composant `GlobalSyncIndicator`:
+    - pill flottant global avec feedback visuel selon statut
+    - visible sur toutes les routes via integration dans `App.tsx`
+  - verification complete executee: `pnpm verify:step` OK, `pnpm check` OK
+  - decision: prochaine priorite candidate cote robustesse data = export/import global unifie (T024)
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator) -- Systema Central Continuum*

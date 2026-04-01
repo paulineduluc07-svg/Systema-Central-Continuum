@@ -74,6 +74,11 @@ Stack:
 - [x] Garde-fous anti-abus (limite taille snapshot Prompt Vault, limite volume import Suivi)
 - [x] Couverture tests dediee pour les rejets de payload invalide
 
+## Phase 9 - Visibilite de synchronisation (done)
+- [x] Indicateur de sync global (local/cloud + en cours + erreur)
+- [x] Affichage global cross-routes via `App.tsx`
+- [x] Detail temporel (derniere sync / dernier echec)
+
 ---
 
 Mis a jour: 2026-03-31
