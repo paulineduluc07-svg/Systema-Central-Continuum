@@ -79,6 +79,11 @@ Stack:
 - [x] Affichage global cross-routes via `App.tsx`
 - [x] Detail temporel (derniere sync / dernier echec)
 
+## Phase 10 - Portabilite des donnees (done)
+- [x] Export global unifie (taches, notes, suivi, prompt vault)
+- [x] Import global unifie avec remplacement des donnees existantes
+- [x] Support dual local/cloud selon authentification
+
 ---
 
 Mis a jour: 2026-03-31

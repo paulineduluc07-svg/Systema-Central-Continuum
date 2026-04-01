@@ -253,4 +253,19 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
     - visible sur toutes les routes via integration dans `App.tsx`
   - verification complete executee: `pnpm verify:step` OK, `pnpm check` OK
   - decision: prochaine priorite candidate cote robustesse data = export/import global unifie (T024)
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator) -- Systema Central Continuum*
+[2026-03-31] T024 export/import global unifie:
+  - backend `backup` ajoute dans `routers.ts`:
+    - `backup.export`: sortie unique taches + notes + suivi + prompt vault
+    - `backup.import`: restauration unique avec validation stricte
+  - couche DB enrichie:
+    - `replaceTasksByUser` et `replaceNotesByUser` (replace atomique)
+    - `deletePromptVaultData` pour restaurer un snapshot prompt vault vide
+  - frontend:
+    - nouveau panneau `GlobalBackupPanel` (modal export/import)
+    - bouton integre a Home dans la zone d'etat globale
+    - fonctionnement dual: localStorage en mode local, tRPC cloud en mode authentifie
+  - tests:
+    - `server/backup.test.ts` ajoute pour couvrir export/import unifies
+  - verification complete executee: `pnpm verify:step` OK, `pnpm check` OK
+  - decision: prochaine priorite candidate = ajouter une couverture e2e UI du flux backup (T025)
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator, T024 unified backup import-export) -- Systema Central Continuum*

@@ -488,3 +488,30 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Statut de synchronisation visible en continu sur tout le produit.
   - Reduction de l'ambiguite utilisateur entre mode local, sync active, sync reussie et erreur.
+
+## 2026-03-31 - Etape 024 - Export/Import global unifie
+- Scope:
+  - Priorite: portabilite complete des donnees utilisateur.
+  - Cible: un flux unique couvrant taches, notes, suivi et Prompt Vault.
+- Livrables:
+  - `Code/server/routers.ts`
+    - ajout routeur `backup`:
+      - `backup.export` (snapshot global cloud)
+      - `backup.import` (restauration globale avec validation)
+  - `Code/server/db.ts`
+    - ajout `replaceTasksByUser`, `replaceNotesByUser` (remplacement atomique)
+    - ajout `deletePromptVaultData` (support suppression snapshot cloud)
+  - `Code/server/backup.test.ts`
+    - tests de routeur pour export et import unifies
+  - `Code/client/src/components/GlobalBackupPanel.tsx`
+    - modal unique export/import global
+    - mode local: lecture/ecriture localStorage
+    - mode connecte: appel tRPC backup cloud
+  - `Code/client/src/pages/Home.tsx`
+    - integration du bouton `Export/Import global`
+- Verification:
+  - `pnpm verify:step` = OK
+  - `pnpm check` = OK
+- Resultat:
+  - Sauvegarde/restauration globale disponible en mode local et cloud.
+  - Remplacement complet des datasets supporte sans intervention manuelle multi-ecran.

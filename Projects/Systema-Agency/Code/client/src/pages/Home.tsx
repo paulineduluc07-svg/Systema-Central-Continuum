@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { AdminPanel } from "@/components/AdminPanel";
+import { GlobalBackupPanel } from "@/components/GlobalBackupPanel";
 import { useDataMigration } from "@/hooks/useDataMigration";
 import { useSyncedNotes, useSyncedPreferences, useSyncedTasks } from "@/hooks/useSyncedData";
 import { cn } from "@/lib/utils";
@@ -488,6 +489,8 @@ export default function Home() {
                 : "Mode local actif — connecte-toi pour synchroniser."}
             </span>
             <span className="mx-1 opacity-50">•</span>
+            <GlobalBackupPanel />
+            <span className="opacity-50">•</span>
             <Link href="/prompt-vault">
               <span className="cursor-pointer font-medium text-[#7d3f58] underline decoration-dotted underline-offset-4 dark:text-[#f0b7ca]">
                 Ouvrir Prompt Vault

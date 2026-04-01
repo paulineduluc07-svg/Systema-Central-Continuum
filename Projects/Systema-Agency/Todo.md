@@ -18,9 +18,21 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T024 - Export/Import global unifie (taches + notes + suivi + prompt vault)
+- [ ] T025 - Ajouter des tests e2e UI sur le flux sauvegarde/restauration globale
 
 ## DONE
+- [x] T024 - Export/Import global unifie (taches + notes + suivi + prompt vault) (2026-03-31)
+  - [x] Backend:
+    - nouveau routeur tRPC `backup.export` / `backup.import` dans `server/routers.ts`
+    - remplacement atomique taches/notes ajoute dans `server/db.ts` (`replaceTasksByUser`, `replaceNotesByUser`)
+    - support suppression Prompt Vault cloud sur import (`deletePromptVaultData`)
+  - [x] Frontend:
+    - nouveau composant `client/src/components/GlobalBackupPanel.tsx`
+    - bouton et modal export/import global integres sur Home
+    - support localStorage (mode local) et tRPC backup (mode authentifie)
+  - [x] Tests:
+    - nouveau `server/backup.test.ts` (export unifie + import unifie)
+  - [x] Validation locale: `pnpm verify:step`, `pnpm check` OK
 - [x] T023 - Ajouter un indicateur de synchronisation global (2026-03-31)
   - [x] Nouveau hook `client/src/hooks/useGlobalSyncStatus.ts`:
     - statut global derive de l'etat auth + React Query cache (local/syncing/synced/error)

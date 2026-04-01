@@ -14,6 +14,7 @@ const SUIVI_MAX_REASON_LENGTH = 160;
 const SUIVI_MAX_NOTE_LENGTH = 5_000;
 const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_24H_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
+const BACKUP_VERSION = 1;
 
 const promptVaultDataSchema = z
   .string()
@@ -40,6 +41,33 @@ const suiviEntryInputSchema = z.object({
     .max(SUIVI_MAX_REASONS_PER_ENTRY),
   note: z.string().max(SUIVI_MAX_NOTE_LENGTH),
 });
+
+const backupTaskSchema = z.object({
+  tabId: z.string().min(1).max(120),
+  title: z.string().min(1).max(500),
+  completed: z.boolean(),
+  sortOrder: z.number().int().min(0).max(100_000),
+});
+
+const backupNoteSchema = z.object({
+  tabId: z.string().min(1).max(120),
+  content: z.string().max(20_000),
+  sortOrder: z.number().int().min(0).max(100_000),
+});
+
+const backupPromptVaultSchema = z
+  .unknown()
+  .nullable()
+  .optional()
+  .refine((value) => {
+    if (value === undefined || value === null) return true;
+    try {
+      const serialized = JSON.stringify(value);
+      return serialized.length <= PROMPT_VAULT_MAX_PAYLOAD_CHARS;
+    } catch {
+      return false;
+    }
+  }, `Le snapshot Prompt Vault est invalide ou depasse ${PROMPT_VAULT_MAX_PAYLOAD_CHARS} caracteres.`);
 
 export const appRouter = router({
   auth: router({
@@ -277,6 +305,107 @@ export const appRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         await db.upsertUserPreferences(ctx.user.id, input);
+        return { success: true };
+      }),
+  }),
+
+  // Backup API
+  backup: router({
+    export: protectedProcedure.query(async ({ ctx }) => {
+      const [taskRows, noteRows, suiviRows, promptVaultRow] = await Promise.all([
+        db.getAllTasksByUser(ctx.user.id),
+        db.getAllNotesByUser(ctx.user.id),
+        db.getSuiviEntriesByUser(ctx.user.id),
+        db.getPromptVaultData(ctx.user.id),
+      ]);
+
+      let promptVault: unknown = null;
+      if (promptVaultRow?.data) {
+        try {
+          promptVault = JSON.parse(promptVaultRow.data);
+        } catch {
+          promptVault = null;
+        }
+      }
+
+      return {
+        version: BACKUP_VERSION,
+        exportedAt: new Date().toISOString(),
+        data: {
+          tasks: taskRows.map((task) => ({
+            tabId: task.tabId,
+            title: task.title,
+            completed: task.completed,
+            sortOrder: task.sortOrder,
+          })),
+          notes: noteRows.map((note) => ({
+            tabId: note.tabId,
+            content: note.content,
+            sortOrder: note.sortOrder,
+          })),
+          suivi: suiviRows.map((entry) => ({
+            timestamp: entry.timestamp.toISOString(),
+            date: entry.date,
+            prise: entry.prise,
+            dose: entry.dose,
+            reasons: JSON.parse(entry.reasons) as string[],
+            note: entry.note,
+          })),
+          promptVault,
+        },
+      };
+    }),
+
+    import: protectedProcedure
+      .input(z.object({
+        data: z.object({
+          tasks: z.array(backupTaskSchema).max(10_000),
+          notes: z.array(backupNoteSchema).max(10_000),
+          suivi: z.array(suiviEntryInputSchema).max(SUIVI_MAX_ENTRIES_PER_REPLACE),
+          promptVault: backupPromptVaultSchema,
+        }),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.replaceTasksByUser(
+          ctx.user.id,
+          input.data.tasks.map((task) => ({
+            tabId: task.tabId,
+            title: task.title,
+            completed: task.completed,
+            sortOrder: task.sortOrder,
+          })),
+        );
+
+        await db.replaceNotesByUser(
+          ctx.user.id,
+          input.data.notes.map((note) => ({
+            tabId: note.tabId,
+            content: note.content,
+            sortOrder: note.sortOrder,
+          })),
+        );
+
+        await db.replaceSuiviEntries(
+          ctx.user.id,
+          input.data.suivi.map((entry) => ({
+            timestamp: new Date(entry.timestamp),
+            date: entry.date,
+            prise: entry.prise,
+            dose: entry.dose,
+            reasons: JSON.stringify(entry.reasons),
+            note: entry.note,
+          })),
+        );
+
+        if (input.data.promptVault !== undefined) {
+          if (input.data.promptVault === null) {
+            await db.deletePromptVaultData(ctx.user.id);
+          } else {
+            const payload = JSON.stringify(input.data.promptVault);
+            await db.upsertPromptVaultData(ctx.user.id, payload);
+          }
+        }
+
         return { success: true };
       }),
   }),
