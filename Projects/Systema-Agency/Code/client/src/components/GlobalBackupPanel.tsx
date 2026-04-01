@@ -1,5 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { BACKUP_SCHEMA_VERSION } from "@shared/const";
 import { Database, Download, Loader2, Upload, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -44,6 +45,55 @@ type BackupFile = {
   source: "local" | "cloud";
   data: BackupData;
 };
+
+function parseBackupImportFile(raw: string): BackupFile {
+  const parsed = JSON.parse(raw) as Partial<BackupFile>;
+
+  if (!parsed || typeof parsed !== "object" || !parsed.data) {
+    throw new Error("Format de sauvegarde invalide: objet racine ou champ data manquant.");
+  }
+
+  if (!Number.isInteger(parsed.version)) {
+    throw new Error("Format de sauvegarde invalide: champ version manquant.");
+  }
+
+  if (parsed.version !== BACKUP_SCHEMA_VERSION) {
+    throw new Error(
+      `Version de sauvegarde non supportee (${parsed.version}). Version attendue: ${BACKUP_SCHEMA_VERSION}.`,
+    );
+  }
+
+  return {
+    version: parsed.version,
+    exportedAt:
+      typeof parsed.exportedAt === "string" ? parsed.exportedAt : new Date().toISOString(),
+    source: parsed.source === "local" ? "local" : "cloud",
+    data: normalizeBackupData(parsed.data),
+  };
+}
+
+function toBackupErrorMessage(error: unknown, fallbackMessage: string): string {
+  if (error instanceof SyntaxError) {
+    return "JSON invalide. Verifie la structure du backup avant de restaurer.";
+  }
+
+  if (error instanceof Error) {
+    const trimmed = error.message.trim();
+    if (!trimmed) return fallbackMessage;
+
+    if (
+      trimmed.startsWith("[") ||
+      trimmed.includes("invalid_type") ||
+      trimmed.includes("TRPCClientError")
+    ) {
+      return "Backup invalide ou incomplet. Verifie la version et la structure des donnees.";
+    }
+
+    return trimmed;
+  }
+
+  return fallbackMessage;
+}
 
 function normalizeBackupData(raw: unknown): BackupData {
   const input = raw && typeof raw === "object" ? (raw as Partial<BackupData>) : {};
@@ -283,7 +333,7 @@ export function GlobalBackupPanel() {
         setPayloadText(JSON.stringify(payload, null, 2));
       } else {
         const backupFile: BackupFile = {
-          version: 1,
+          version: BACKUP_SCHEMA_VERSION,
           exportedAt: new Date().toISOString(),
           source: "local",
           data: readLocalBackup(),
@@ -293,7 +343,7 @@ export function GlobalBackupPanel() {
 
       toast.success("Export global généré.");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Erreur pendant l'export global.";
+      const message = toBackupErrorMessage(error, "Erreur pendant l'export global.");
       toast.error(message);
     } finally {
       setIsExporting(false);
@@ -313,12 +363,7 @@ export function GlobalBackupPanel() {
   const handleImport = async () => {
     try {
       if (!importText.trim()) return;
-      const parsed = JSON.parse(importText) as Partial<BackupFile>;
-      if (!parsed || typeof parsed !== "object" || !parsed.data) {
-        throw new Error("Format de backup invalide.");
-      }
-
-      const normalizedData = normalizeBackupData(parsed.data);
+      const parsed = parseBackupImportFile(importText);
       const confirmed = window.confirm(
         "Restaurer va remplacer les données actuelles (tâches, notes, suivi, prompt vault). Continuer ?",
       );
@@ -326,15 +371,18 @@ export function GlobalBackupPanel() {
 
       setIsImporting(true);
       if (isAuthenticated) {
-        await backupImportMutation.mutateAsync({ data: normalizedData });
+        await backupImportMutation.mutateAsync({
+          version: parsed.version,
+          data: parsed.data,
+        });
       } else {
-        writeLocalBackup(normalizedData);
+        writeLocalBackup(parsed.data);
       }
 
       toast.success("Import global appliqué.");
       window.location.reload();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Erreur pendant l'import global.";
+      const message = toBackupErrorMessage(error, "Erreur pendant l'import global.");
       toast.error(message);
     } finally {
       setIsImporting(false);

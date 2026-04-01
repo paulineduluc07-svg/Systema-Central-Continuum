@@ -18,9 +18,24 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T026 - Ajouter validation de version backup + message d'erreur UX explicite
+- [ ] T027 - Exploiter les nouvelles images de reference ajoutees dans le repo pour les prochains ajustements UI
 
 ## DONE
+- [x] T026 - Ajouter validation de version backup + message d'erreur UX explicite (2026-03-31)
+  - [x] Version backup centralisee:
+    - ajout `BACKUP_SCHEMA_VERSION` dans `Code/shared/const.ts`
+    - alignement frontend + backend + tests sur cette constante
+  - [x] Validation stricte de version:
+    - `backup.import` exige maintenant `version` (backend)
+    - rejet explicite si version differente de la version supportee
+    - import client bloque en amont si version invalide
+  - [x] UX erreurs import/export durcie:
+    - parsing explicite du fichier backup (`version` + `data` requis)
+    - mapping des erreurs tRPC/Zod verbeuses vers messages courts et actionnables
+  - [x] Couverture tests mise a jour:
+    - `server/backup.test.ts` couvre le rejet de version non supportee
+    - `e2e/app-flow.spec.ts` couvre le message UI de version incompatible
+  - [x] Validation locale: `pnpm check`, `pnpm test`, `pnpm build`, `pnpm test:e2e` OK
 - [x] T025 - Ajouter des tests e2e UI sur le flux sauvegarde/restauration globale (2026-03-31)
   - [x] `Code/e2e/app-flow.spec.ts`:
     - extension du mock tRPC avec `backup.export` / `backup.import`

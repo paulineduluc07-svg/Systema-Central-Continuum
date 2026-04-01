@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+import { BACKUP_SCHEMA_VERSION } from "@shared/const";
 import * as db from "./db";
 
 vi.mock("./db", () => ({
@@ -67,7 +68,7 @@ describe("backup router", () => {
 
     const result = await caller.backup.export();
 
-    expect(result.version).toBe(1);
+    expect(result.version).toBe(BACKUP_SCHEMA_VERSION);
     expect(result.data.tasks).toHaveLength(1);
     expect(result.data.notes).toHaveLength(1);
     expect(result.data.suivi).toHaveLength(1);
@@ -78,6 +79,7 @@ describe("backup router", () => {
     const caller = appRouter.createCaller(createAuthContext());
 
     const payload = {
+      version: BACKUP_SCHEMA_VERSION,
       data: {
         tasks: [{ tabId: "tableau-blanc", title: "T2", completed: true, sortOrder: 0 }],
         notes: [{ tabId: "tableau-blanc", content: "N2", sortOrder: 0 }],
@@ -102,5 +104,22 @@ describe("backup router", () => {
     expect(db.replaceSuiviEntries).toHaveBeenCalledTimes(1);
     expect(db.upsertPromptVaultData).toHaveBeenCalledTimes(1);
   });
-});
 
+  it("rejects an unsupported backup version", async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+
+    await expect(
+      caller.backup.import({
+        version: BACKUP_SCHEMA_VERSION + 1,
+        data: {
+          tasks: [],
+          notes: [],
+          suivi: [],
+          promptVault: null,
+        },
+      }),
+    ).rejects.toMatchObject({
+      message: `Version de sauvegarde non supportee (${BACKUP_SCHEMA_VERSION + 1}). Version attendue: ${BACKUP_SCHEMA_VERSION}.`,
+    });
+  });
+});

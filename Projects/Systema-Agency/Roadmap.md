@@ -89,6 +89,12 @@ Stack:
 - [x] Mocks tRPC stateful pour backup cloud en Playwright
 - [x] Stabilisation hook indicateur sync pour eviter les boucles de rendu
 
+## Phase 12 - Compatibilite backup versionnee (done)
+- [x] Version de schema backup centralisee et partagee (`BACKUP_SCHEMA_VERSION`)
+- [x] Validation stricte de version sur `backup.import` (client + server)
+- [x] Message UX explicite sur backup incompatible / payload invalide
+- [x] Couverture test backend + e2e UI pour les rejets de version
+
 ---
 
 Mis a jour: 2026-03-31

@@ -278,4 +278,18 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
     - effet: Home redevient stable en runtime et en e2e
   - verification complete executee: `pnpm test:e2e` OK, `pnpm verify:step` OK, `pnpm check` OK
   - decision: prochaine priorite candidate = validation de version backup + message UX d'erreur explicite (T026)
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator, T024 unified backup import-export, T025 backup e2e ui) -- Systema Central Continuum*
+[2026-03-31] T026 validation version backup + erreur UX explicite:
+  - source unique de version ajoutee: `BACKUP_SCHEMA_VERSION` dans `Code/shared/const.ts`
+  - backend durci:
+    - `backup.import` exige desormais `version` + `data`
+    - rejet explicite si version differente (`Version de sauvegarde non supportee (...)`)
+  - frontend durci (`GlobalBackupPanel.tsx`):
+    - parser d'import strict (`version` entiere obligatoire + `data` obligatoire)
+    - blocage immediat des versions incompatibles avant mutation cloud
+    - mapping des erreurs tRPC/Zod trop verbeuses vers messages UX courts
+  - tests mis a jour:
+    - `server/backup.test.ts`: ajout rejet version non supportee
+    - `e2e/app-flow.spec.ts`: verification UI message version incompatible
+  - verification complete executee: `pnpm check` OK, `pnpm test` OK, `pnpm build` OK, `pnpm test:e2e` OK
+  - decision: prochaine priorite candidate = exploiter les images de reference ajoutees dans le repo pour les ajustements UI (T027)
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening, T023 global sync indicator, T024 unified backup import-export, T025 backup e2e ui, T026 backup version validation + UX errors) -- Systema Central Continuum*

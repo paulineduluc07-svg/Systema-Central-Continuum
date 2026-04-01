@@ -1,4 +1,4 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { BACKUP_SCHEMA_VERSION, COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { TRPCError } from "@trpc/server";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -14,8 +14,6 @@ const SUIVI_MAX_REASON_LENGTH = 160;
 const SUIVI_MAX_NOTE_LENGTH = 5_000;
 const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_24H_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
-const BACKUP_VERSION = 1;
-
 const promptVaultDataSchema = z
   .string()
   .max(
@@ -329,7 +327,7 @@ export const appRouter = router({
       }
 
       return {
-        version: BACKUP_VERSION,
+        version: BACKUP_SCHEMA_VERSION,
         exportedAt: new Date().toISOString(),
         data: {
           tasks: taskRows.map((task) => ({
@@ -358,6 +356,7 @@ export const appRouter = router({
 
     import: protectedProcedure
       .input(z.object({
+        version: z.number().int().min(1),
         data: z.object({
           tasks: z.array(backupTaskSchema).max(10_000),
           notes: z.array(backupNoteSchema).max(10_000),
@@ -366,6 +365,13 @@ export const appRouter = router({
         }),
       }))
       .mutation(async ({ ctx, input }) => {
+        if (input.version !== BACKUP_SCHEMA_VERSION) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Version de sauvegarde non supportee (${input.version}). Version attendue: ${BACKUP_SCHEMA_VERSION}.`,
+          });
+        }
+
         await db.replaceTasksByUser(
           ctx.user.id,
           input.data.tasks.map((task) => ({

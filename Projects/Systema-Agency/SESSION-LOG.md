@@ -534,3 +534,33 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Le flux backup global est couvert en E2E UI.
   - Le rendu Home est stabilise (plus de boucle `Maximum update depth exceeded`).
+
+## 2026-03-31 - Etape 026 - Version backup + erreur UX explicite
+- Scope:
+  - Priorite: corriger le message d'erreur massif post-T025 lors des imports backup.
+  - Ajouter une validation de version explicite du format de sauvegarde.
+- Livrables:
+  - `Code/shared/const.ts`
+    - ajout `BACKUP_SCHEMA_VERSION` (source unique de version backup).
+  - `Code/server/routers.ts`
+    - `backup.import` exige maintenant `version`.
+    - rejet explicite `BAD_REQUEST` si version non supportee.
+  - `Code/client/src/components/GlobalBackupPanel.tsx`
+    - parsing strict du JSON d'import (`version` + `data` requis).
+    - blocage en amont des versions incompatibles.
+    - mapping des erreurs tRPC/Zod verbeuses en messages UX courts.
+    - import cloud envoie `version` + `data`.
+  - `Code/server/backup.test.ts`
+    - ajout d'un test de rejet de version non supportee.
+  - `Code/e2e/app-flow.spec.ts`
+    - adaptation mock `backup.import` au nouveau contrat.
+    - ajout verification UI de l'erreur "version non supportee".
+- Verification:
+  - `pnpm check` = OK
+  - `pnpm test` = OK (26 tests)
+  - `pnpm build` = OK
+  - `pnpm test:e2e` = OK (2 tests)
+- Resultat:
+  - L'erreur massive post-T025 n'est pas reproduite sur les checks/tests/build locaux.
+  - Le flux backup affiche des erreurs explicites et actionnables.
+  - Les imports avec version incompatible sont maintenant refuses de facon claire et previsible.

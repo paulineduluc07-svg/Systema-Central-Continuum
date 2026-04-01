@@ -8,6 +8,8 @@ type TrpcSuccess = {
   };
 };
 
+const BACKUP_SCHEMA_VERSION = 1;
+
 type MockUser = {
   id: number;
   openId: string;
@@ -190,7 +192,7 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
 
         case "backup.export": {
           return ok({
-            version: 1,
+            version: BACKUP_SCHEMA_VERSION,
             exportedAt: "2026-03-31T12:00:00.000Z",
             data: {
               tasks: state.tasks.map((task) => ({
@@ -218,7 +220,7 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
         }
 
         case "backup.import": {
-          const payload = ((input as { data?: unknown })?.data ?? {}) as {
+          const payload = ((input as { data?: unknown })?.data ?? input ?? {}) as {
             tasks?: Array<{ tabId: string; title: string; completed: boolean; sortOrder: number }>;
             notes?: Array<{ tabId: string; content: string; sortOrder: number }>;
             suivi?: Array<{ timestamp: string; date: string; prise: string; dose: number; reasons: string[]; note: string }>;
@@ -472,7 +474,7 @@ test("backup panel export + import restores unified cloud state", async ({ page 
   await expect(exportTextarea).toContainText("\"Cloud Task Initiale\"");
 
   const importedPayload = {
-    version: 1,
+    version: BACKUP_SCHEMA_VERSION,
     exportedAt: "2026-03-31T19:30:00.000Z",
     source: "cloud",
     data: {
@@ -500,6 +502,21 @@ test("backup panel export + import restores unified cloud state", async ({ page 
       },
     },
   };
+
+  const unsupportedVersionPayload = {
+    ...importedPayload,
+    version: BACKUP_SCHEMA_VERSION + 998,
+  };
+
+  await page.getByPlaceholder("Colle ici ton JSON de sauvegarde globale.").fill(
+    JSON.stringify(unsupportedVersionPayload),
+  );
+  await page.getByRole("button", { name: "Restaurer" }).click();
+  await expect(
+    page.getByText(
+      `Version de sauvegarde non supportee (${BACKUP_SCHEMA_VERSION + 998}). Version attendue: ${BACKUP_SCHEMA_VERSION}.`,
+    ),
+  ).toBeVisible();
 
   await page.getByPlaceholder("Colle ici ton JSON de sauvegarde globale.").fill(JSON.stringify(importedPayload));
 
