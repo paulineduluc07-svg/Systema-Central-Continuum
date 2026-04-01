@@ -200,7 +200,7 @@ describe("smoke e2e flow", () => {
     const suiviAdd = await authedCaller.suivi.add({
       timestamp,
       date: "2026-03-31",
-      prise: "oui",
+      prise: "12:00",
       dose: 18,
       reasons: ["focus"],
       note: "smoke",
@@ -212,7 +212,7 @@ describe("smoke e2e flow", () => {
     expect(suivi[0]).toMatchObject({
       id: 1,
       date: "2026-03-31",
-      prise: "oui",
+      prise: "12:00",
       dose: 18,
       reasons: ["focus"],
       note: "smoke",

@@ -439,3 +439,31 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Couverture E2E UI front-to-back mockee ajoutee sur les parcours critiques.
   - Validation reproductible sans dependance DB/reseau externe.
+
+## 2026-03-31 - Etape 022 - Durcissement backend sync
+- Scope:
+  - Priorite retenue: hardening backend (code d'abord, sans operation production).
+  - Durcir les endpoints de synchronisation exposes aux payloads utilisateur.
+- Livrables:
+  - `Code/server/routers.ts`
+    - validation stricte `promptVault.save`:
+      - payload JSON obligatoire
+      - limite de taille snapshot
+    - validation stricte `suivi.add` et `suivi.replace`:
+      - `timestamp` ISO datetime
+      - `date` au format `YYYY-MM-DD`
+      - `prise` au format `HH:mm`
+      - limites sur `dose`, `reasons`, `note`
+      - limite du nombre d'entrees en import massif
+  - `Code/server/promptVault.test.ts`
+    - ajout des cas de rejet: JSON invalide + payload trop volumineux
+  - `Code/server/suivi.test.ts`
+    - nouveau fichier de tests dedies validation Suivi
+  - `Code/server/smoke.e2e.test.ts`
+    - ajustement du format `prise` pour matcher la validation stricte
+- Verification:
+  - `pnpm verify:step` = OK
+  - `pnpm check` = OK
+- Resultat:
+  - Backend sync plus robuste face aux payloads invalides/abusifs.
+  - Contrat d'entree explicite et couvert par des tests.

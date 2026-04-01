@@ -7,6 +7,40 @@ import { ENV } from "./_core/env";
 import { z } from "zod";
 import * as db from "./db";
 
+const PROMPT_VAULT_MAX_PAYLOAD_CHARS = 1_000_000;
+const SUIVI_MAX_ENTRIES_PER_REPLACE = 2_000;
+const SUIVI_MAX_REASONS_PER_ENTRY = 30;
+const SUIVI_MAX_REASON_LENGTH = 160;
+const SUIVI_MAX_NOTE_LENGTH = 5_000;
+const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const TIME_24H_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+const promptVaultDataSchema = z
+  .string()
+  .max(
+    PROMPT_VAULT_MAX_PAYLOAD_CHARS,
+    `Le snapshot Prompt Vault depasse la limite (${PROMPT_VAULT_MAX_PAYLOAD_CHARS} caracteres).`,
+  )
+  .refine((value) => {
+    try {
+      const parsed = JSON.parse(value) as unknown;
+      return parsed !== null && typeof parsed === "object";
+    } catch {
+      return false;
+    }
+  }, "Le snapshot Prompt Vault doit etre un JSON valide.");
+
+const suiviEntryInputSchema = z.object({
+  timestamp: z.string().datetime({ offset: true }),
+  date: z.string().regex(DATE_ISO_REGEX, "La date doit etre au format YYYY-MM-DD."),
+  prise: z.string().regex(TIME_24H_REGEX, "L'heure doit etre au format HH:mm."),
+  dose: z.number().int().min(1).max(1_000),
+  reasons: z
+    .array(z.string().trim().min(1).max(SUIVI_MAX_REASON_LENGTH))
+    .max(SUIVI_MAX_REASONS_PER_ENTRY),
+  note: z.string().max(SUIVI_MAX_NOTE_LENGTH),
+});
+
 export const appRouter = router({
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -330,7 +364,7 @@ export const appRouter = router({
 
     save: protectedProcedure
       .input(z.object({
-        data: z.string(),
+        data: promptVaultDataSchema,
       }))
       .mutation(async ({ ctx, input }) => {
         await db.upsertPromptVaultData(ctx.user.id, input.data);
@@ -354,14 +388,7 @@ export const appRouter = router({
     }),
 
     add: protectedProcedure
-      .input(z.object({
-        timestamp: z.string(),
-        date: z.string(),
-        prise: z.string(),
-        dose: z.number(),
-        reasons: z.array(z.string()),
-        note: z.string(),
-      }))
+      .input(suiviEntryInputSchema)
       .mutation(async ({ ctx, input }) => {
         const result = await db.createSuiviEntry({
           userId: ctx.user.id,
@@ -377,14 +404,7 @@ export const appRouter = router({
 
     replace: protectedProcedure
       .input(z.object({
-        entries: z.array(z.object({
-          timestamp: z.string(),
-          date: z.string(),
-          prise: z.string(),
-          dose: z.number(),
-          reasons: z.array(z.string()),
-          note: z.string(),
-        })),
+        entries: z.array(suiviEntryInputSchema).max(SUIVI_MAX_ENTRIES_PER_REPLACE),
       }))
       .mutation(async ({ ctx, input }) => {
         await db.replaceSuiviEntries(

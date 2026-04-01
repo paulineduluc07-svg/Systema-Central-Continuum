@@ -59,4 +59,21 @@ describe("promptVault router", () => {
     expect(result).toEqual({ success: true });
     expect(db.upsertPromptVaultData).toHaveBeenCalledWith(1, payload);
   });
+
+  it("rejects invalid prompt vault JSON payload", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    await expect(caller.promptVault.save({ data: "invalid-json" })).rejects.toThrow();
+    expect(db.upsertPromptVaultData).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized prompt vault payload", async () => {
+    const ctx = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const tooLargePayload = JSON.stringify({ data: "a".repeat(1_000_001) });
+    await expect(caller.promptVault.save({ data: tooLargePayload })).rejects.toThrow();
+    expect(db.upsertPromptVaultData).not.toHaveBeenCalled();
+  });
 });

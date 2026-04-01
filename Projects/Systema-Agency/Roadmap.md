@@ -69,6 +69,11 @@ Stack:
 - [x] Routeur + stockage backend dedies Prompt Vault (`prompt_vault_data`, tRPC `promptVault.get/save`)
 - [x] Validation snapshot Prompt Vault durcie (cas liste vide / categories invalides / favoris obsoletes)
 
+## Phase 8 - Hardening backend sync (done)
+- [x] Validation stricte des payloads sync backend (`promptVault.save`, `suivi.add`, `suivi.replace`)
+- [x] Garde-fous anti-abus (limite taille snapshot Prompt Vault, limite volume import Suivi)
+- [x] Couverture tests dediee pour les rejets de payload invalide
+
 ---
 
 Mis a jour: 2026-03-31

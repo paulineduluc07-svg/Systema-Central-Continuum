@@ -228,4 +228,17 @@ Quand Kim sera pret, l'integration dans Systema Agency sera une decision conscie
   - hygiene test: ajout des ignores `playwright-report/` et `test-results/`
   - verification complete executee: `pnpm test:e2e` OK, `pnpm check` OK, `pnpm verify:step` OK
   - decision: conserver ce test comme garde-fou UI critical-path independant de l'infrastructure backend
-*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui) -- Systema Central Continuum*
+[2026-03-31] T022 hardening backend sync:
+  - priorite retenue: hardening backend (et non export/import global ni indicateur sync UI)
+  - contrainte retenue: code d'abord, sans operation production
+  - `server/routers.ts` durci:
+    - `promptVault.save`: JSON valide obligatoire + limite taille payload
+    - `suivi.add` / `suivi.replace`: validation stricte datetime/date/heure + limites de champs
+    - limite du volume `suivi.replace` pour eviter les imports massifs abusifs
+  - couverture tests etendue:
+    - `promptVault.test.ts`: rejet JSON invalide + payload trop volumineux
+    - `suivi.test.ts`: nouveau fichier de tests de validation backend suivi
+    - `smoke.e2e.test.ts`: alignement du format `prise` avec le contrat `HH:mm`
+  - verification complete executee: `pnpm verify:step` OK, `pnpm check` OK
+  - decision: prochaine priorite candidate cote UX = indicateur de synchronisation global (T023)
+*Mis a jour : 2026-03-31 | Codex (workflow, simplification UX, stabilisation typecheck, env alignment, cookie policy, suivi transaction, CI PR, reprise prod T006, cloture prod, T007 README, T008 cleanup server legacy, T009 foreign keys Drizzle, T010 apply FK migration prod, T011 env cleanup, T012 analytics stabilization, T013 bundle reduction, T014 smoke e2e, T015 observability, T016 lazy fallback UX, T017 final home design, T018 persistence/sync complete, T019 prompt-vault prod migration, T020 prompt-vault hardening, T021 playwright e2e ui, T022 backend sync hardening) -- Systema Central Continuum*

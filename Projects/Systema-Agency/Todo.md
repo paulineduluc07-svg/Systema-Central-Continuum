@@ -18,9 +18,19 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] (a definir)
+- [ ] T023 - Ajouter un indicateur de synchronisation global (etat local/cloud + statut en cours/erreur)
 
 ## DONE
+- [x] T022 - Durcir la validation backend des endpoints de synchronisation (2026-03-31)
+  - [x] `server/routers.ts`:
+    - schema strict `promptVault.save` (JSON valide + limite taille payload)
+    - schema strict `suivi.add` / `suivi.replace` (timestamp ISO, date `YYYY-MM-DD`, heure `HH:mm`, limites dose/raisons/note)
+    - garde-fou volume import `suivi.replace` (max entrees)
+  - [x] Couverture tests:
+    - `server/promptVault.test.ts` enrichi (rejets JSON invalide + payload trop volumineux)
+    - `server/suivi.test.ts` ajoute (validation payload Suivi + limite import)
+    - `server/smoke.e2e.test.ts` aligne sur le format heure valide
+  - [x] Validation locale: `pnpm verify:step`, `pnpm check` OK
 - [x] T021 - Ajouter e2e UI Playwright (login + Prompt Vault + Suivi sync) (2026-03-31)
   - [x] Playwright ajoute (`@playwright/test`) + config `Code/playwright.config.ts`
   - [x] Script npm ajoute: `pnpm test:e2e`
