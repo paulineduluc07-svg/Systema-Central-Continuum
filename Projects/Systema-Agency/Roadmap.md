@@ -84,6 +84,11 @@ Stack:
 - [x] Import global unifie avec remplacement des donnees existantes
 - [x] Support dual local/cloud selon authentification
 
+## Phase 11 - Validation E2E backup (done)
+- [x] E2E UI du flux backup global (export + import + restauration etat)
+- [x] Mocks tRPC stateful pour backup cloud en Playwright
+- [x] Stabilisation hook indicateur sync pour eviter les boucles de rendu
+
 ---
 
 Mis a jour: 2026-03-31

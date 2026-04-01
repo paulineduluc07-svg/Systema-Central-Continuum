@@ -19,6 +19,19 @@ type MockUser = {
 type MockState = {
   isAuthenticated: boolean;
   user: MockUser;
+  tasks: Array<{
+    id: number;
+    tabId: string;
+    title: string;
+    completed: boolean;
+    sortOrder: number;
+  }>;
+  notes: Array<{
+    id: number;
+    tabId: string;
+    content: string;
+    sortOrder: number;
+  }>;
   promptVaultData: string | null;
   suiviEntries: Array<{
     id: number;
@@ -100,12 +113,36 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
 
         case "tasks.list":
         case "tasks.listAll": {
-          return ok([]);
+          const tabId = typeof (input as { tabId?: unknown })?.tabId === "string"
+            ? ((input as { tabId: string }).tabId)
+            : null;
+
+          if (tabId) {
+            return ok(
+              state.tasks
+                .filter((task) => task.tabId === tabId)
+                .sort((a, b) => a.sortOrder - b.sortOrder),
+            );
+          }
+
+          return ok([...state.tasks].sort((a, b) => a.sortOrder - b.sortOrder));
         }
 
         case "notes.list":
         case "notes.listAll": {
-          return ok([]);
+          const tabId = typeof (input as { tabId?: unknown })?.tabId === "string"
+            ? ((input as { tabId: string }).tabId)
+            : null;
+
+          if (tabId) {
+            return ok(
+              state.notes
+                .filter((note) => note.tabId === tabId)
+                .sort((a, b) => a.sortOrder - b.sortOrder),
+            );
+          }
+
+          return ok([...state.notes].sort((a, b) => a.sortOrder - b.sortOrder));
         }
 
         case "preferences.get": {
@@ -148,6 +185,80 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
           if (typeof data === "string") {
             state.promptVaultData = data;
           }
+          return ok({ success: true });
+        }
+
+        case "backup.export": {
+          return ok({
+            version: 1,
+            exportedAt: "2026-03-31T12:00:00.000Z",
+            data: {
+              tasks: state.tasks.map((task) => ({
+                tabId: task.tabId,
+                title: task.title,
+                completed: task.completed,
+                sortOrder: task.sortOrder,
+              })),
+              notes: state.notes.map((note) => ({
+                tabId: note.tabId,
+                content: note.content,
+                sortOrder: note.sortOrder,
+              })),
+              suivi: state.suiviEntries.map((entry) => ({
+                timestamp: entry.timestamp,
+                date: entry.date,
+                prise: entry.prise,
+                dose: entry.dose,
+                reasons: entry.reasons,
+                note: entry.note,
+              })),
+              promptVault: state.promptVaultData ? JSON.parse(state.promptVaultData) : null,
+            },
+          });
+        }
+
+        case "backup.import": {
+          const payload = ((input as { data?: unknown })?.data ?? {}) as {
+            tasks?: Array<{ tabId: string; title: string; completed: boolean; sortOrder: number }>;
+            notes?: Array<{ tabId: string; content: string; sortOrder: number }>;
+            suivi?: Array<{ timestamp: string; date: string; prise: string; dose: number; reasons: string[]; note: string }>;
+            promptVault?: unknown;
+          };
+
+          const tasks = Array.isArray(payload.tasks) ? payload.tasks : [];
+          state.tasks = tasks.map((task, index) => ({
+            id: index + 1,
+            tabId: task.tabId,
+            title: task.title,
+            completed: task.completed,
+            sortOrder: task.sortOrder,
+          }));
+
+          const notes = Array.isArray(payload.notes) ? payload.notes : [];
+          state.notes = notes.map((note, index) => ({
+            id: index + 1,
+            tabId: note.tabId,
+            content: note.content,
+            sortOrder: note.sortOrder,
+          }));
+
+          const suivi = Array.isArray(payload.suivi) ? payload.suivi : [];
+          state.suiviEntries = suivi.map((entry, index) => ({
+            id: index + 1,
+            timestamp: entry.timestamp,
+            date: entry.date,
+            prise: entry.prise,
+            dose: entry.dose,
+            reasons: entry.reasons,
+            note: entry.note,
+          }));
+
+          if (payload.promptVault === null) {
+            state.promptVaultData = null;
+          } else if (payload.promptVault !== undefined) {
+            state.promptVaultData = JSON.stringify(payload.promptVault);
+          }
+
           return ok({ success: true });
         }
 
@@ -224,6 +335,8 @@ test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
       name: "Owner",
       role: "user",
     },
+    tasks: [],
+    notes: [],
     promptVaultData: null,
     suiviEntries: [],
   };
@@ -231,14 +344,18 @@ test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
   await setupTrpcMock(page, state);
 
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.getByText("Mode local actif — connecte-toi pour synchroniser.")).toBeVisible();
+  await expect(page.getByText("Mode local actif — connecte-toi pour synchroniser.")).toBeVisible({
+    timeout: 30_000,
+  });
 
   await page.getByTitle("Connexion").click();
   await page.getByPlaceholder("ton@email.com").fill("owner@example.com");
   await page.getByPlaceholder("••••••••").fill("super-secret");
   await page.getByRole("button", { name: "Se connecter" }).click();
 
-  await expect(page.getByText("Synchronisation cloud active.")).toBeVisible();
+  await expect(page.getByText("Synchronisation cloud active.")).toBeVisible({
+    timeout: 30_000,
+  });
 
   await page.goto("/prompt-vault");
   await page.getByRole("button", { name: /NOUVEAU/ }).click();
@@ -298,4 +415,108 @@ test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
   await expect.poll(() => state.suiviEntries.length).toBe(1);
   await expect.poll(() => state.suiviEntries[0]?.note).toBe("import e2e");
   await expect.poll(() => state.suiviEntries[0]?.dose).toBe(40);
+});
+
+test("backup panel export + import restores unified cloud state", async ({ page }) => {
+  test.setTimeout(120_000);
+
+  const state: MockState = {
+    isAuthenticated: true,
+    user: {
+      id: 1,
+      openId: "owner@example.com",
+      email: "owner@example.com",
+      name: "Owner",
+      role: "user",
+    },
+    tasks: [
+      { id: 1, tabId: "tableau-blanc", title: "Cloud Task Initiale", completed: false, sortOrder: 0 },
+    ],
+    notes: [
+      { id: 1, tabId: "tableau-blanc", content: "Cloud note initiale", sortOrder: 0 },
+    ],
+    promptVaultData: JSON.stringify({
+      list: [{ id: 1, cat: "tech", title: "Prompt cloud initial", tags: ["cloud"], text: "init" }],
+      cats: [{ id: "all", label: "TOUS", color: "#00f5ff" }, { id: "tech", label: "TECH/CODE", color: "#7bed9f" }],
+      favs: [1],
+      brightness: 70,
+    }),
+    suiviEntries: [
+      {
+        id: 1,
+        timestamp: "2026-03-31T10:00:00.000Z",
+        date: "2026-03-31",
+        prise: "10:00",
+        dose: 30,
+        reasons: ["energie||Boost pour commencer ma journée"],
+        note: "initial",
+      },
+    ],
+  };
+
+  await setupTrpcMock(page, state);
+
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("Synchronisation cloud active.")).toBeVisible({
+    timeout: 30_000,
+  });
+  await expect(page.getByText("Cloud Task Initiale")).toBeVisible({
+    timeout: 30_000,
+  });
+
+  await page.getByRole("button", { name: "Export/Import global" }).click();
+  await page.getByRole("button", { name: "Générer export" }).click();
+
+  const exportTextarea = page.locator("textarea[readonly]").first();
+  await expect(exportTextarea).toContainText("\"source\": \"cloud\"");
+  await expect(exportTextarea).toContainText("\"Cloud Task Initiale\"");
+
+  const importedPayload = {
+    version: 1,
+    exportedAt: "2026-03-31T19:30:00.000Z",
+    source: "cloud",
+    data: {
+      tasks: [
+        { tabId: "tableau-blanc", title: "Cloud Task Restaurée", completed: false, sortOrder: 0 },
+      ],
+      notes: [
+        { tabId: "tableau-blanc", content: "Cloud note restaurée", sortOrder: 0 },
+      ],
+      suivi: [
+        {
+          timestamp: "2026-03-31T19:31:00.000Z",
+          date: "2026-03-31",
+          prise: "19:31",
+          dose: 50,
+          reasons: ["energie||Maintenir mon élan"],
+          note: "restored",
+        },
+      ],
+      promptVault: {
+        list: [{ id: 77, cat: "tech", title: "Prompt restauré", tags: ["restore"], text: "hello" }],
+        cats: [{ id: "all", label: "TOUS", color: "#00f5ff" }, { id: "tech", label: "TECH/CODE", color: "#7bed9f" }],
+        favs: [77],
+        brightness: 66,
+      },
+    },
+  };
+
+  await page.getByPlaceholder("Colle ici ton JSON de sauvegarde globale.").fill(JSON.stringify(importedPayload));
+
+  page.once("dialog", async (dialog) => {
+    await dialog.accept();
+  });
+
+  await page.getByRole("button", { name: "Restaurer" }).click();
+
+  await expect.poll(() => state.tasks[0]?.title).toBe("Cloud Task Restaurée");
+  await expect.poll(() => state.notes[0]?.content).toBe("Cloud note restaurée");
+  await expect.poll(() => state.suiviEntries[0]?.note).toBe("restored");
+  await expect.poll(() => {
+    if (!state.promptVaultData) return "";
+    const parsed = JSON.parse(state.promptVaultData) as { list: Array<{ title: string }> };
+    return parsed.list[0]?.title ?? "";
+  }).toBe("Prompt restauré");
+
+  await expect(page.getByText("Cloud Task Restaurée")).toBeVisible();
 });

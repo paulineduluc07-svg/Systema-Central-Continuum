@@ -1,6 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useIsFetching, useIsMutating, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 type SyncStatusPhase = "local" | "syncing" | "synced" | "error";
 
@@ -78,21 +78,6 @@ export function useGlobalSyncStatus(): SyncStatus {
   const queryClient = useQueryClient();
   const activeFetches = useIsFetching();
   const activeMutations = useIsMutating();
-  const [cacheRevision, setCacheRevision] = useState(0);
-
-  useEffect(() => {
-    const unsubscribeQueryCache = queryClient.getQueryCache().subscribe(() => {
-      setCacheRevision((current) => current + 1);
-    });
-    const unsubscribeMutationCache = queryClient.getMutationCache().subscribe(() => {
-      setCacheRevision((current) => current + 1);
-    });
-
-    return () => {
-      unsubscribeQueryCache();
-      unsubscribeMutationCache();
-    };
-  }, [queryClient]);
 
   return useMemo(() => {
     if (!isAuthenticated) {
@@ -128,6 +113,5 @@ export function useGlobalSyncStatus(): SyncStatus {
       label: "Cloud synchronise",
       detail: `Derniere sync: ${formatTime(latestSuccessAt)}`,
     };
-  }, [activeFetches, activeMutations, cacheRevision, isAuthenticated, queryClient]);
+  }, [activeFetches, activeMutations, isAuthenticated, queryClient]);
 }
-

@@ -515,3 +515,22 @@ Trace courte de chaque etape executee.
 - Resultat:
   - Sauvegarde/restauration globale disponible en mode local et cloud.
   - Remplacement complet des datasets supporte sans intervention manuelle multi-ecran.
+
+## 2026-03-31 - Etape 025 - E2E UI backup global
+- Scope:
+  - Valider bout-en-bout le flux de sauvegarde/restauration globale introduit en T024.
+  - Couvrir explicitement le chemin cloud (tRPC backup).
+- Livrables:
+  - `Code/e2e/app-flow.spec.ts`
+    - extension du mock stateful pour `tasks` et `notes`
+    - gestion mock des procedures `backup.export` et `backup.import`
+    - nouveau scenario e2e "backup panel export + import restores unified cloud state"
+  - `Code/client/src/hooks/useGlobalSyncStatus.ts`
+    - correction stabilite: suppression boucle de rendu provoquee par l'abonnement cache
+- Verification:
+  - `pnpm test:e2e` = OK
+  - `pnpm verify:step` = OK
+  - `pnpm check` = OK
+- Resultat:
+  - Le flux backup global est couvert en E2E UI.
+  - Le rendu Home est stabilise (plus de boucle `Maximum update depth exceeded`).

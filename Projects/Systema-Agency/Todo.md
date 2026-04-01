@@ -18,9 +18,22 @@ Taches actives. Mise a jour a chaque session.
 - [ ] (aucune tache active)
 
 ## NEXT
-- [ ] T025 - Ajouter des tests e2e UI sur le flux sauvegarde/restauration globale
+- [ ] T026 - Ajouter validation de version backup + message d'erreur UX explicite
 
 ## DONE
+- [x] T025 - Ajouter des tests e2e UI sur le flux sauvegarde/restauration globale (2026-03-31)
+  - [x] `Code/e2e/app-flow.spec.ts`:
+    - extension du mock tRPC avec `backup.export` / `backup.import`
+    - couverture stateful des donnees `tasks` + `notes` dans le mock
+    - nouveau scenario e2e:
+      - ouverture panneau backup global
+      - generation export cloud
+      - import JSON restaure + verification etat mocke
+      - verification visuelle de la tache restauree
+  - [x] Correction de stabilite:
+    - `client/src/hooks/useGlobalSyncStatus.ts` ajuste pour supprimer une boucle de rendu React
+    - impact: rendu Home et tests e2e redeviennent stables
+  - [x] Validation locale: `pnpm test:e2e`, `pnpm verify:step`, `pnpm check` OK
 - [x] T024 - Export/Import global unifie (taches + notes + suivi + prompt vault) (2026-03-31)
   - [x] Backend:
     - nouveau routeur tRPC `backup.export` / `backup.import` dans `server/routers.ts`
