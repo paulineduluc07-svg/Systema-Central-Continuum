@@ -12,19 +12,19 @@ Les autres documents systeme ne doivent pas reporter la meme gouvernance en doub
 
 ## Ordre de lecture obligatoire
 1. `AGENTS.md`
-2. `Projects/<Projet>/AGENT-INSTRUCTIONS.md` (si projet cible)
-3. `Ressources/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
-4. `Ressources/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
+2. `SCC-PROJECTS/<Projet>/AGENT-INSTRUCTIONS.md` (si projet cible)
+3. `SCC-RESSOURCES/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
+4. `SCC-RESSOURCES/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
 5. Tout autre fichier explicitement demande par la mission
 
 ## Architecture utile du SCC
-- `Projects/` : travail reel par projet.
-- `Projects/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC.
-- `Ressources/Workflows/` : methodes de travail par role et environnement.
-- `Ressources/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
-- `Areas/` : contexte de responsabilites continues.
-- `Inbox/` : capture et transit, a garder legers.
-- `Archives/` : elements termines.
+- `SCC-PROJECTS/` : travail reel par projet.
+- `SCC-PROJECTS/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC.
+- `SCC-RESSOURCES/Workflows/` : methodes de travail par role et environnement.
+- `SCC-RESSOURCES/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
+- `SCC-AREAS/` : contexte de responsabilites continues.
+- `SCC-INBOX/` : capture et transit, a garder legers.
+- `SCC-ARCHIVES/` : elements termines.
 
 ## Regles operationnelles
 1. Zero doublon actif.
@@ -38,8 +38,8 @@ Les autres documents systeme ne doivent pas reporter la meme gouvernance en doub
    - refactor majeur
    - nouvelle feature majeure
 8. Commit/push/PR uniquement sur demande explicite.
-9. Les changements de gouvernance SCC se traitent dans `Projects/Creation-SCC/`.
-10. Les bureaux agents sont maintenus dans `Ressources/Agent-Bureaux/` et n'outrepasse jamais `AGENTS.md`.
+9. Les changements de gouvernance SCC se traitent dans `SCC-PROJECTS/Creation-SCC/`.
+10. Les bureaux agents sont maintenus dans `SCC-RESSOURCES/Agent-Bureaux/` et n'outrepasse jamais `AGENTS.md`.
 11. Si une contradiction apparait, `AGENTS.md` fait foi.
 
 ## Amelioration continue disciplinee
@@ -50,8 +50,8 @@ Les autres documents systeme ne doivent pas reporter la meme gouvernance en doub
 
 ## Tracabilite minimale
 - Laisser une trace si : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
-- Trace projet par defaut : `Projects/<Projet>/Notes/`
-- Trace transverse SCC : `Projects/Creation-SCC/Notes/`
+- Trace projet par defaut : `SCC-PROJECTS/<Projet>/Notes/`
+- Trace transverse SCC : `SCC-PROJECTS/Creation-SCC/Notes/`
 - Si une regle globale change, la mise a jour peut vivre directement dans le fichier systeme source de verite concerne.
 - Si l'information est deja suffisamment portee par les fichiers modifies et par la note pertinente, ne pas creer de trace supplementaire.
 - Une trace = une source principale + renvoi court si necessaire.
