@@ -1,21 +1,28 @@
-# SCC -- Systema Central Continuum
+# SCC — Systema Central Continuum
 
-Repo GitHub de reference (single source of truth) pour les projets actifs et la gouvernance du SCC.
+## Rôle
+SCC est le cadre de gouvernance et d'organisation du système.
 
-## Structure IPARA
-- `SCC-INBOX/` : captures et brouillons a trier
-- `SCC-PROJECTS/` : projets actifs
-- `SCC-AREAS/` : responsabilites continues
-- `SCC-RESSOURCES/` : regles, workflows, connaissances et bureaux agents
-- `SCC-ARCHIVES/` : elements termines
+Il sert à :
+- garder une seule logique de travail
+- maintenir une structure documentaire claire
+- éviter les confusions entre documentation, runtime, archives et backups
 
-## Fichiers cles
-- `AGENTS.md` : regles officielles des agents, ordre de lecture et architecture utile du SCC
-- `SCC-PROJECTS/*/AGENT-INSTRUCTIONS.md` : contexte local par projet
-- `SCC-RESSOURCES/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee aux regles globales
-- `SCC-RESSOURCES/Workflows/` : methodes de travail par role et environnement
+## Règles centrales
+- une seule vérité active par sujet
+- ne pas confondre documentation, runtime, archives et backups
+- ne pas laisser un ancien setup se faire passer pour l'actif
+- toute modification importante doit être reflétée dans le `WORKLOG.md` concerné
 
-## Regle d'alignement
-Si une contradiction apparait, `AGENTS.md` fait foi.
+## Structure
+- `01-INBOX` = entrées brutes à trier
+- `02-PROJECTS` = projets actifs
+- `03-ARCHIVES` = éléments inactifs, anciens ou figés
+- `04-RESSOURCES` = ressources transversales
+- `05-AGENTS` = cadre et espace pour les agents qui travaille dans le SCC
 
-Mis a jour: 2026-03-19
+## Règle finale
+SCC documente et gouverne.
+SCC n’est pas le runtime.
+
+*Mis à jour : 2026-04-15 | Systema Central Continuum*

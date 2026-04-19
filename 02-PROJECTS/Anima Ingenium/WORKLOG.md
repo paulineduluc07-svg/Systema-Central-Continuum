@@ -1,0 +1,146 @@
+# WORKLOG - Anima Ingenium
+
+Ce fichier sert a tracer ce qui a ete fait, quand, et avec quel impact.
+
+Format d'entree:
+- Date:
+- Action:
+- Impact:
+- Prochaine etape:
+
+---
+
+## 2026-04-18
+- Action: Nettoyage complet OpenRouter et MiniMax du VPS + Fix config.yaml et .env.
+- Impact: Suppression de toutes les traces de clés et configurations OpenRouter/MiniMax sur le VPS. Kim est désormais strictement sur Gemini 2.5 Pro (Primaire) et OpenAI (Fallback). Accès autorisé à tous les utilisateurs (GATEWAY_ALLOW_ALL_USERS=true) pour validation.
+- Action: Mise à jour finale du runtime (Modèles, Timezone, Labels).
+- Impact: Bascule sur **Gemini 2.5 Pro** comme standard stable. Configuration d'OpenAI (GPT-4o-mini) comme fallback automatique. Fuseau horaire du serveur réglé sur **America/Toronto (Montréal)**. Renommage des labels d'affichage ("Google AI Studio" -> "Gemini"). Stabilisation de la connexion Discord.
+- Prochaine etape: Surveiller la stabilité du lien Discord et la précision des réponses de Gemini 2.5 Pro.
+- Action: Migration LLM vers Gemini (Primaire) + OpenAI (Fallback) + Cleanup "Tara" + Heartbeat.
+- Impact: Kim utilise désormais Gemini 1.5 Pro comme modèle principal, ce qui devrait corriger les erreurs de français et les hallucinations du modèle MiniMax. La voix "Tara" a été retirée de toute la documentation. Un "Visual Heartbeat" a été programmé toutes les 30 minutes sur Telegram pour assurer un suivi visuel de l'état de Kim.
+- Prochaine etape: Valider la stabilité comportementale de Kim avec Gemini et surveiller le bon fonctionnement du Heartbeat.
+- Action: PASSE-007 (Correction) - Injection SOUL V1.3 + Activation Edge TTS + Restart service.
+- Impact: Kim utilise desormais des instructions claires en UTF-8 (plus de "??"). La voix est passee sur Edge TTS (Gratuit) pour economiser le plan ElevenLabs. Le ton a ete ajuste (moins de jargon quebecois pour stabiliser MiniMax).
+- Prochaine etape: Validation comportementale par Pauline sur Discord/Telegram.
+- Action: Audit technique PASSE-006 (Lecture seule) sur la qualite de langue et l'encodage de Kim.
+- Impact: Problemes confirmes : melange de langues (fr/en), erreurs de generation du modele MiniMax ("qui盛"), et corruption d'encodage dans `SOUL.md` sur le VPS.
+- Prochaine etape: PASSE-007 - Correction de l'encodage de `SOUL.md` et bascule test sur GPT-4o-mini pour ameliorer la coherence.
+- Action: Unification persona V1.1 (`SOUL.md`) + Fix bug `write_runtime_status`.
+- Impact: Kim utilise desormais les regles d'ancrage (grounding) et de politique outils (Tools.md) dans son system prompt. L'etat Telegram dans `gateway_state.json` est desormais propre (clear errors on connect).
+- Prochaine etape: Valider l'usage des outils par Kim avec demande de confirmation (Tier 2).
+
+## 2026-04-15
+- Action: Durcissement cognitif `PASSE-007` (Brain.md/Identity.md/SOUL.md).
+- Impact: Nouveau cycle de raisonnement V1.1 avec etape de verification obligatoire; regle d'ancrage reel (grounding) ajoutee pour interdire l'invention de faits non documentes.
+- Prochaine etape: Validation comportementale anti-hallucination et finalisation du setup de base (OAuth Google, voix finale Tara).
+- Action: Audit technique `PASSE-006` sur l'hallucination Jeedom.
+- Impact: Source identifiee (Honcho + association libre suite a panne vocal). Decision prise de ne pas corriger par "patch" unitaire mais par une regle de raisonnement globale.
+- Prochaine etape: `PASSE-007` - Durcissement cognitif (Brain.md/Identity.md) pour reduire les hallucinations systemiques.
+- Action: Validation comportementale reelle `PASSE-005` sur Telegram avec un nouveau vocal (aller/retour).
+- Impact: Succes total. Kim ne nie plus la transcription, l'utilise pour repondre, et peut desormais envoyer ses propres vocaux via ElevenLabs. Le cycle vocal complet est operationnel.
+- Action: Investigation de l'hallucination "Jeedom".
+- Impact: Source identifiee (profil utilisateur detaille dans une ancienne session mentionnant Ste-Emelie-de-l'Energie). Kim a fait une association erronee entre le lieu et un systeme domotique qu'elle n'a pas.
+- Prochaine etape: Finaliser le setup de base (OAuth Google, voix finale Tara) et ajouter un garde-fou de "grounding" pour eviter les hallucinations memoire.
+- Action: Production de `AUDIT_RUNTIME_004_2026-04-15.md` + correction minimale unique du garde-fou vocal dans `/root/Hermes-Agent/gateway/run.py`, puis restart controle du service.
+- Impact: Le contexte texte donne maintenant au modele indique explicitement qu'un vocal reussi est deja transcrit et qu'il ne doit pas nier cette capacite; `hermes-gateway` a redemarre proprement avec la correction active.
+- Prochaine etape: Ouvrir `PASSE-005` pour une validation comportementale reelle sur Telegram avec un nouveau vocal.
+- Action: Production de `AUDIT_RUNTIME_003_2026-04-15.md` sur la derive comportementale de Kim face aux vocaux deja transcrits.
+- Impact: La cause est maintenant prouvee: Kim ne niait pas un STT absent, elle privilegiait une deduction basee sur ses outils visibles au lieu de la transcription deja injectee; les garde-fous comportementaux utiles ne sont pas tous prouves comme actifs dans le prompt de session.
+- Prochaine etape: Ouvrir `PASSE-004` pour une correction minimale unique du garde-fou anti-contradiction sur les vocaux transcrits.
+- Action: Production de `AUDIT_RUNTIME_002_2026-04-15.md` sur la contradiction Telegram uniquement, en lecture seule.
+- Impact: La contradiction Telegram est maintenant levee au niveau diagnostic: le vocal et les messages Telegram etaient bien reels, et `gateway_state.json` est identifie comme un etat stale/mal nettoye plutot qu'une preuve d'echec courant.
+- Prochaine etape: Ouvrir `PASSE-003` sur la derive comportementale de Kim apres transcription vocale, sans corriger encore le code.
+- Action: Production de la premiere matrice d'etat runtime en lecture seule (`AUDIT_RUNTIME_001_2026-04-15.md`).
+- Impact: Le projet a maintenant un premier audit structure du runtime actif, avec separation nette entre points confirmes, contradictoires et non prouves.
+- Prochaine etape: Ouvrir `PASSE-002` sur la contradiction Telegram uniquement, sans corriger autre chose.
+- Action: Ajout d'un template officiel de matrice d'etat runtime + formalisation courte de la discipline `1 passe - 1 audit - 1 session encadree`.
+- Impact: Le projet dispose maintenant d'un format standard pour les audits lecture seule et d'une regle simple a reutiliser a chaque session.
+- Prochaine etape: Utiliser ce template pour produire la premiere matrice d'etat du runtime actif.
+- Action: Formalisation d'un cadre de travail officiel `petites passes fermees` + feuille de route de stabilisation runtime.
+- Impact: Le projet dispose maintenant d'une methode stricte pour verifier, corriger et tracer le runtime sans repartir dans des changements diffus ou non prouves.
+- Prochaine etape: Produire la matrice d'etat du runtime actif en lecture seule, puis traiter les contradictions une par une.
+- Action: Simplification de `05-AGENTS/.codex/INIT/README.md` pour ne garder qu'un pointeur direct vers les fichiers a lire.
+- Impact: Le point de reprise est plus court, plus direct et moins susceptible de bloquer un agent sur du texte annexe.
+- Prochaine etape: Garder `INIT/README.md` minimal et limiter son contenu aux chemins utiles.
+- Action: Clarification du point d'entree `05-AGENTS/.codex/INIT/README.md` avec chemins exacts, noms de dossiers reels et projet actif explicite.
+- Impact: Reprise future plus directe pour les agents, avec moins de friction et moins de deduction implicite.
+- Prochaine etape: Maintenir `INIT/README.md` a jour si le projet actif par defaut change.
+- Action: Ajout d'une ligne d'utilite au debut des fichiers maitres (`TODO`, `NOTES`, `WORKLOG`, `NOTES DE PAULINE`) + nettoyage des anomalies de fichiers.
+- Impact: Lecture plus claire des fichiers officiels et structure locale allegee.
+- Prochaine etape: Continuer le menage fin des doublons ou noms parasites si d'autres reapparaissent.
+- Action: Restructuration des fichiers maitres (`README` Anima, `05-AGENTS/README`, `05-AGENTS/NOTES`, `SCC/README`, `RESSOURCES/README`).
+- Impact: Separation plus nette entre cadre agent, cadre projet, gouvernance SCC et documentation technique.
+- Prochaine etape: Ajouter une courte ligne d'utilite au debut de chaque fichier maitre (`TODO`, `NOTES`, `WORKLOG`, etc.).
+- Action: Suppression complete de `05-AGENTS/.codex/INIT/NEXT_SESSION.md` a la demande de Pauline.
+- Impact: Plus de fichier pointeur; `WORKLOG.md` redevient l'entree principale de reprise.
+- Prochaine etape: Demarrer chaque session par `WORKLOG` puis `TODO`, `NOTES`, `SETUP_VOCAL_HONCHO_ETAT`.
+- Action: Simplification documentaire: suppression des fichiers intermediaires `SESSION_WORKFLOW_STANDARD.md` et `REPRISE_RAPIDE.md`.
+- Impact: Moins de doublons; reprise centralisee via les fichiers maitres (`TODO`, `NOTES`, `WORKLOG`, `SETUP_VOCAL_HONCHO_ETAT`).
+- Prochaine etape: Utiliser uniquement l ordre de lecture standard defini dans les docs.
+- Action: Standardisation workflow session (debut/fin) formalisee pour tous agents (`05-AGENTS/SESSION_WORKFLOW_STANDARD.md`).
+- Impact: Reprise uniforme entre agents, moins d oublis, process stable d une session a l autre.
+- Prochaine etape: Exiger ce workflow au debut de chaque nouvelle session.
+- Action: Nettoyage securite docs: suppression d un bloc sensible injecte par erreur dans `REPRISE_RAPIDE.md`.
+- Impact: Dossier ressource assaini, aucun secret laisse en clair dans le workflow de reprise.
+- Prochaine etape: Maintenir une verification systematique des fichiers de reprise avant cloture.
+- Action: Selection d une voix provisoire `Sarah` (`EXAVITQu4vr4xnSDxMaL`) et test TTS valide.
+- Impact: Le vocal est utilisable immediatement sans attendre la voix Tara finale.
+- Prochaine etape: Tester les commandes Discord `/voice on`, `/voice tts`, `/voice join` en usage reel.
+- Action: Repriorisation vocal validee: Vapi passe en option (non bloquant) pour Anima Ingenium.
+- Impact: Le chemin principal reste Hermes + ElevenLabs + voix Tara, avec moins de dependances critiques court terme.
+- Prochaine etape: Finaliser la voix Tara compatible plan ElevenLabs, puis OAuth Google.
+- Action: Debug runtime `hermes-gateway` apres sync secrets (verification systemd + `.env` + logs + smoke checks).
+- Impact: Service stable sur VPS, canaux Telegram + Discord connectes sur l'instance active.
+- Prochaine etape: Garder un seul cycle de restart controle et surveiller les logs de reconnexion.
+- Action: Validation vocale ElevenLabs (API test OK) + activation runtime `tts.provider=elevenlabs` + voix fallback.
+- Impact: Voix ElevenLabs operationnelle en prod avec une voix stable en attendant la voix finale Tara.
+- Prochaine etape: Completer le setup Vapi (`VAPI_API_KEY`, `VAPI_WEBHOOK_SECRET`) puis brancher la voix cible.
+- Action: Durcissement CLI runtime: wrapper `/root/Hermes-Agent/hermes` force le python du venv.
+- Impact: Suppression de l'erreur `ModuleNotFoundError: httpx` lors des commandes Hermes lancees manuellement.
+- Prochaine etape: Continuer les commandes d'exploitation via `./hermes` sans dependre du python systeme.
+
+## 2026-04-14
+- Action: Refonte documentaire (README/TODO/NOTES/WORKLOG) + clarification de `NOTES DE PAULINE POUR L'AGENT.md`.
+- Impact: Documentation plus legere, plus actionnable, et mieux alignee avec les priorites actuelles.
+- Prochaine etape: Construire le plan de mise en marche de Kim + inventaire complet outils/skills.
+- Action: Creation de `SCRIPT_SIMPLE_EXPLICATIONS.md` (guide detaille en langage simple).
+- Impact: Support de lecture direct pour comprendre la structure et le plan de suite sans jargon technique.
+- Prochaine etape: Valider "Vision Kim v1" puis derouler le point 5 pas a pas.
+- Action: Setup SSH VPS finalise (cle ajoutee), commandes ops installees (`hcheck`, `hguard`, `hrestart`, `hsmoke`) et runbook cree.
+- Impact: Acces administrateur stabilise et exploitation `hermes-gateway` plus fiable/repetable.
+- Prochaine etape: Passer sur P1 (vision Kim v1 + plan de mise en marche + inventaire outils/skills).
+- Action: Production des livrables P1 (`VISION_KIM_V1.md`, `PLAN_MISE_EN_MARCHE_KIM.md`, `INVENTAIRE_OUTILS_SKILLS_SETUP.md`).
+- Impact: Vision Kim formalisee, plan d'execution clair et inventaire setup disponible pour prioriser.
+- Prochaine etape: Valider Vision Kim v1 avec Pauline, puis finaliser le setup de base.
+- Action: Mot de passe root VPS modifie et verification SSH post-changement.
+- Impact: Acces par cle toujours OK; auth mot de passe SSH root encore active (`passwordauthentication yes`).
+- Prochaine etape: Desactiver l'auth mot de passe SSH root et conserver l'acces par cle uniquement.
+- Action: Politique SSH ajustee et testee (`PermitRootLogin prohibit-password`) + test reel cle OK / mot de passe root KO.
+- Impact: Root est maintenant utilisable en SSH par cle uniquement.
+- Prochaine etape: Continuer le durcissement general (rotation secrets, audit logs, backup/reprise).
+- Action: Creation du guide `RESSOURCES/ACCES_VPS_SSH_PAR_CLE.md` (terminal + WinSCP + depannage).
+- Impact: Procedure d'acces VPS documentee en langage simple, disponible a tout moment.
+- Prochaine etape: Valider Vision Kim v1, puis finaliser setup de base.
+- Action: Vision Kim v1 relue et approuvee par Pauline.
+- Impact: Alignement vision/documentation valide en version finale.
+- Prochaine etape: Finaliser setup de base (Google auth, Discord, voix, routine).
+- Action: Unification persona runtime (`/root/.hermes/SOUL.md` unique) + suppression des doublons `Soul`.
+- Impact: Source de verite persona clarifiee, plus de conflit entre fichiers `SOUL`.
+- Prochaine etape: Aligner le reste des fichiers Kim sur ce socle unique.
+- Action: Refonte runtime appliquee: `Identity.md`, `Users.md`, `Agents.md`, `Brain.md`, `Knowledge.md`, `Heartbeat.md` (version simplifiee V1).
+- Impact: Cerveau/knowledge/runtime plus lisibles, plus executables, sans references obsoletes.
+- Prochaine etape: Expliquer puis refondre `Tools.md`, puis finaliser `Memory.md` (Honcho).
+- Action: Import des cles depuis `Assets/SECRET.md` vers `/root/.hermes/.env` + restart `hermes-gateway`.
+- Impact: Runtime credentials aligns (OpenRouter + Discord ID presentes), service actif apres restart.
+- Prochaine etape: Terminer OAuth Google et setup vocal ElevenLabs/Vapi.
+- Action: Refonte `Tools.md` validee par Pauline puis injectee dans `/root/.hermes/kim/Tools.md` (backup inclus).
+- Impact: Politique outils simplifiee, claire, et alignee sur validation par tiers.
+- Prochaine etape: setup vocal (ElevenLabs/Vapi) + cadrage Honcho.
+- Action: Alignement des fichiers agent dans `05-AGENTS` (`README.md`, `NOTES.md`, fichier de reprise de l'epoque).
+- Impact: contexte agentique synchronise avec l etat runtime actuel.
+- Prochaine etape: poursuivre setup vocal et memoire externe.
+
+## 2026-04-11
+- Action: Realignement initial de la documentation sur le runtime VPS actif.
+- Impact: Suppression des ambiguities entre anciens setups locaux et exploitation reelle.
+- Prochaine etape: Structurer runbook, monitoring et securite operationnelle.

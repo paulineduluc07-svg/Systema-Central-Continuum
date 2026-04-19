@@ -1,70 +1,43 @@
-# AGENTS.md
+# 05-AGENTS
 
-Ce fichier est la source de verite unique des regles agents pour ce depot.
-Tout le reste doit rester aligne avec ce fichier.
-Les autres documents systeme ne doivent pas reporter la meme gouvernance en double.
+## Rôle
+Ce dossier sert à cadrer les agents dans SCC.
 
-## Portee
-- Systeme multi-agent base sur role + contexte.
-- Aucune regle specifique a un modele IA particulier.
-- Interdit de creer des fichiers de regles dedies a une IA particuliere hors bureau agent autorise.
-- Source de verite : ce repo uniquement.
+Il doit permettre de :
+- fixer les règles stables de travail des agents
+- éviter les improvisations
+- séparer cadre agent, projets, runtime et archives
 
-## Ordre de lecture obligatoire
-1. `AGENTS.md`
-2. `SCC-PROJECTS/<Projet>/AGENT-INSTRUCTIONS.md` (si projet cible)
-3. `SCC-RESSOURCES/Agent-Bureaux/<NomAgent>/WELCOME.md` puis les fichiers de bureau associes (si bureau agent existe)
-4. `SCC-RESSOURCES/Workflows/<Workflow>.md` (si un workflow est utile ou explicitement demande)
-5. Tout autre fichier explicitement demande par la mission
+## Règles
+- Un agent ne doit pas inventer sa propre méthode.
+- Il lit d'abord ce cadre, puis les fichiers projet explicitement demandés.
+- Il travaille dans le bon périmètre.
+- Il met à jour la documentation active seulement si l'état réel a changé.
+- Il laisse une trace courte dans le `WORKLOG.md` concerné quand une action réelle a été faite.
 
-## Architecture utile du SCC
-- `SCC-PROJECTS/` : travail reel par projet.
-- `SCC-PROJECTS/Creation-SCC/` : gouvernance, maintenance, verification et evolution du SCC.
-- `SCC-RESSOURCES/Workflows/` : methodes de travail par role et environnement.
-- `SCC-RESSOURCES/Agent-Bureaux/` : personnalisation de collaboration par agent, secondaire et subordonnee.
-- `SCC-AREAS/` : contexte de responsabilites continues.
-- `SCC-INBOX/` : capture et transit, a garder legers.
-- `SCC-ARCHIVES/` : elements termines.
+## Workflow standard
+- Debut de session:
+  - lire `05-AGENTS/README.md`
+  - puis lire les fichiers projet demandes par l'utilisateur
+  - ordre standard projet:`README.md`, `WORKLOG.md`, `TODO.md`, `NOTES.md`, `NOTES_DE_PAULINE.md` 
+  - lire les fichiers de `RESSOURCES/`
+  - analyser l'organisation et la cohérence des instructions et des fichiers du projet et donner le résultat de l'analyse à l'utilisateur
+  - attendre les instructions de l'utilisateur
 
-## Regles operationnelles
-1. Zero doublon actif.
-2. Comprendre l'existant avant de modifier.
-3. Interdit : sabotage, ralentissement volontaire, ecrasement ou effacement sans justification claire.
-4. `Code/`, `Prompts/`, `Todo.md`, `Roadmap.md` : modification autorisee dans le scope demande.
-5. `Notes/` : mise a jour autorisee pour garder une memoire utile et coherente.
-6. `Notes-Perso/` : strictement interdit aux agents.
-7. Demander validation a Paw avant :
-   - suppression
-   - refactor majeur
-   - nouvelle feature majeure
-8. Commit/push/PR uniquement sur demande explicite.
-9. Les changements de gouvernance SCC se traitent dans `SCC-PROJECTS/Creation-SCC/`.
-10. Les bureaux agents sont maintenus dans `SCC-RESSOURCES/Agent-Bureaux/` et n'outrepasse jamais `AGENTS.md`.
-11. Si une contradiction apparait, `AGENTS.md` fait foi.
 
-## Amelioration continue disciplinee
-- Chercher une option plus pertinente quand le besoin reel le justifie.
-- Ne pas changer pour la nouveaute seule.
-- Ne pas reecrire largement sans benefice concret.
-- Integrer les ameliorations proprement, progressivement et de facon stable.
+- Fin de session:
+  - mettre a jour `TODO.md` si l'etat des taches a change
+  - mettre a jour `NOTES.md` si une decision, une question ouverte ou un repere actif a change
+  - mettre a jour `WORKLOG.md` si une action reelle a ete faite
+  - ne pas creer de fichier intermediaire de reprise ou de workflow
 
-## Tracabilite minimale
-- Laisser une trace si : decision, erreur trouvee, warning, ambiguite bloquante, changement important.
-- Trace projet par defaut : `SCC-PROJECTS/<Projet>/Notes/`
-- Trace transverse SCC : `SCC-PROJECTS/Creation-SCC/Notes/`
-- Si une regle globale change, la mise a jour peut vivre directement dans le fichier systeme source de verite concerne.
-- Si l'information est deja suffisamment portee par les fichiers modifies et par la note pertinente, ne pas creer de trace supplementaire.
-- Une trace = une source principale + renvoi court si necessaire.
 
-## Notes projet
-- `Notes/` = memoire operationnelle partagee.
-- Mettre a jour une note existante si le sujet reste le meme.
-- Creer une nouvelle note seulement si le sujet change nettement ou si la note deviendrait confuse.
+## Ce qui appartient ici
+- règles stables des agents
+- notes sur le comportement des agents dans SCC
+- observations sur les dossiers ou fichiers auto-créés par des outils
 
-## Convention de commit
-`[NomAgent] [NomProjet] : Description courte et claire`
-
-Exemple :
-`[Agent IDE] [Systema-Agency] : Clarifie gouvernance SCC`
-
-Mis a jour: 2026-03-19
+## Ce qui n'appartient pas ici
+- état runtime d'un projet
+- détails VPS, secrets ou commandes d'exploitation
+- suivi opérationnel d'un projet particulier

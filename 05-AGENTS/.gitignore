@@ -1,0 +1,11 @@
+.gemini/
+.codex/
+oauth_creds.json
+google_accounts.json
+installation_id
+projects.json
+settings.json
+state.json
+trustedFolders.json
+history/
+tmp/

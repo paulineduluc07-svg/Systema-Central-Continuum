@@ -1,0 +1,6 @@
+WSL_HERMES_EXPORTS/
+.tmp.drivedownload/
+.tmp.driveupload/
+*.json
+*.env
+*.env.backup
