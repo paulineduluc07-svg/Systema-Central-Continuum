@@ -1,0 +1,6 @@
+# Secrets — ne jamais commiter
+**/Assets/SECRETS.md
+**/Assets/SECRET.md
+**/.env
+**/.env.*
+*.env

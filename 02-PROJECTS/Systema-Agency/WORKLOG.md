@@ -4,14 +4,19 @@ Trace du travail effectué avec dates.
 
 ---
 
-## 2026-04-19
+## 2026-04-23
 
-**Session :** Synchronisation SCC Local -> GitHub
+**Session :** Alignement structurel et nettoyage
 
 **Ce qui a été fait :**
-- Restructuration complète du GitHub en format IPARA (01-05).
-- Synchronisation de toute la documentation locale vers GitHub.
-- Mise en place de `.gitignore` pour la protection des secrets (OAuth, API keys, logs).
-- Archivage de l'ancienne structure GitHub dans `03-ARCHIVES`.
+- Comparaison avec le dépôt GitHub (version locale confirmée comme plus récente).
+- Création des dossiers manquants (`RESSOURCES/`, `Livrables/`) pour alignement SCC.
+- Mise à jour de la documentation (`README.md`, `TODO.md`) pour refléter la structure réelle.
+- Analyse du projet technique `Code/`.
+- Refonte de l'architecture du layout :
+    - Création de `MainLayout` et `Navbar` (Glassmorphism, sticky).
+    - Déplacement de la navigation (Home, Prompt Vault, Suivi) dans le header.
+    - Centralisation de l'arrière-plan et de la barre d'outils (Thème, Auth, Paramètres).
+    - Nettoyage de `Home.tsx` pour cohérence.
 
 **Statut :** terminé

@@ -1,0 +1,2 @@
+Voici l'espace que tu peut utiliser pour ton travaille avec moi et ou tu peut mettre tes dossiers. tu peut mettre les fichiers que tu veut tant que sa reste a l'intérieur du dossier .claude
+tu peut commencer par lire le README.md du dossier 05-AGENTS. 

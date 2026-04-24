@@ -9,3 +9,5 @@ state.json
 trustedFolders.json
 history/
 tmp/
+.claude/.claude.json
+.claude/bin/
