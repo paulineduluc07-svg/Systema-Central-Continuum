@@ -9,31 +9,34 @@ Il sert à :
 - conserver ses assets, son code et ses livrables
 - éviter que les informations du projet soient dispersées
 
-## Statut actuel
-Projet présent dans `02-PROJECTS`.
+## Vision
+Dashboard personnel sobre et fonctionnel, organisé autour de 3 entrées fixes :
+- **Prompt Vault** — bibliothèque de prompts IA
+- **Suivi médicament** — suivi de prises avec sync DB
+- **Tableau blanc** — notes volantes synchronisées entre appareils
 
-À ce stade, la vision détaillée, le périmètre exact et les objectifs finaux ne sont pas encore validés dans la documentation active.
+Interface glassmorphism, minimaliste, orientée utilité réelle. Pas de RPG, pas de tarot, pas d'avatar.
 
-## Ce qui est certain
-- le projet a un dossier dédié dans SCC
-- il doit suivre la structure standard projet
-- sa documentation active doit vivre ici
-- ce README ne doit pas inventer des éléments non confirmés
+## Statut
+Production déployée et stable — `systema-agency.vercel.app`
 
-## Ce qui reste à clarifier
-- vision
-- objectif long terme
-- portée réelle du projet
-- statut opérationnel
-- prochaines étapes concrètes
+## Stack technique
+- TypeScript + React 19 + Vite + Tailwind v4 + shadcn/ui
+- tRPC + Drizzle ORM + Neon PostgreSQL
+- Auth : email/password auto-contenu (OWNER_EMAIL + OWNER_PASSWORD, crypto Node.js natif)
+- Session : cookie JWT via `jose`
+- Deploy : Vercel
 
-## Structure attendue
+## Structure
 ```text
 Systema-Agency/
-├── README.md
-├── TODO.md
-├── NOTES.md
-├── WORKLOG.md
-├── Assets/
-├── Code/
-└── Livrables/
+├── README.md           # Cadrage et vision
+├── TODO.md             # Suivi des tâches
+├── NOTES.md            # Notes et décisions
+├── NOTES_DE_PAULINE.md # Instructions de Pauline
+├── WORKLOG.md          # Historique des sessions
+├── Assets/             # Assets, secrets et médias
+├── Code/               # Code source de l'application
+├── RESSOURCES/         # Documentation technique et ressources
+└── Livrables/          # Documents finaux et exports
+```
