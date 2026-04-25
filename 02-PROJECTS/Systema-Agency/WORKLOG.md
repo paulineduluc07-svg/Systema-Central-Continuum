@@ -40,3 +40,43 @@ Trace du travail effectué avec dates.
 - Push sur `main` — repo GitHub maintenant identique au SCC local.
 
 **Statut :** terminé
+
+---
+
+## 2026-04-24 (session V2 — refonte page principale)
+
+**Session :** Démarrage refonte itérative de la page principale (HomeV2)
+
+**Ce qui a été fait :**
+- Étape 1 — Page principale en page blanche avec fond cyberpunk rose :
+    - Image générée par Pauline (ChatGPT) optimisée PNG → JPG q85 (1867 Ko → 195 Ko, -89%) et déposée dans `Code/client/public/backgrounds/main-v2.jpg`.
+    - Création de `Code/client/src/pages/HomeV2.tsx` (page minimale, fond plein écran via `bg-cover bg-center`, cancel du `pt-20` du MainLayout pour fond edge-to-edge).
+    - Mise à jour de `Code/client/src/App.tsx` : route `/` → `HomeV2`, route `/v1` ajoutée pointant vers l'ancienne `Home` (préservée intacte).
+- Brand navbar : « Systema » → « Systema Agency » dans `Code/client/src/components/Navbar.tsx`.
+- Aperçu HTML statique pour validation visuelle hors dev server : `Code/client/public/preview-v2.html` (debug local, non destiné à la prod).
+- Documentation de réparation locale : `Code/DEV-SETUP.md` (procédure pnpm install après corruption Google Drive, contenu `.env` requis, scripts disponibles).
+
+**Constat technique :**
+- Le `node_modules` du projet sur Google Drive est partiellement corrompu (sync Drive incomplet) — packages `@epic-web/invariant`, `esbuild`, `rollup` introuvables au runtime. La validation locale via `pnpm dev` n'a pas pu être faite cette session. Procédure de réparation documentée dans `DEV-SETUP.md`.
+- Validation visuelle faite via `preview-v2.html` ouvert en `file://` — Pauline a validé le rendu Étape 1.
+
+**Prochaines étapes (séquentielles) :**
+- Étape 2 — Ajout des 5 boutons stylisés à droite (Syncer Gmail, Générer mes tâches, Prompts, Suivis, Supplément). Routes branchées pour Prompts (`/prompt-vault`) et Suivis (`/suivi`), placeholders « À venir » pour les 3 autres.
+- Étape 3+ — Implémentation des nouvelles features (Syncer Gmail, Générer mes tâches, Supplément).
+
+**Statut :** Étape 1 terminée — déployée en prod.
+
+**Pendant le déploiement, découvertes critiques :**
+
+1. **Désalignement majeur SCC ↔ GitHub découvert** — ~35 fichiers `Code/` diffèrent entre SCC local (Google Drive) et le repo GitHub. La session 2026-04-24 (« alignement complet ») n'avait synchronisé que la documentation/structure, pas le code. La prod actuelle tournait depuis un build Vercel CLI antérieur, sans miroir GitHub.
+
+2. **Bug bloquant trouvé dans `Home.tsx`** — un `</div>` orphelin à la ligne 361 sans balise ouvrante correspondante. Erreur `BABEL_PARSER_SYNTAX_ERROR: UnwrappedAdjacentJSXElements` qui faisait échouer toute build. Ce bug expliquait pourquoi la prod ne pouvait plus être redéployée depuis le 2026-04-23. Fix : suppression de la ligne 361 (orphan close tag). Build verte ensuite.
+
+**Actions de remédiation :**
+- Fix `Home.tsx` (suppression `</div>` orphelin ligne 361).
+- Deploy Vercel CLI réussi : `https://systema.enterprises` + alias `https://systema-agency-oaxgnwq0g-paulines-projects-a8216a05.vercel.app` (déploiement `dpl_2uoJiRmg9m4nrLpUJiyF8BAPiV4c`).
+- Realign complet SCC `Code/` → `SCC-github-clone/Code/` via robocopy (exclusions : `node_modules`, `dist`, `test-results`, `.vercel`, `.env`, `preview-v2.html`).
+- Création `02-PROJECTS/Systema-Agency/NOTES.md` avec la **règle de déploiement** : tout `vercel --prod` doit être suivi immédiatement d'un push GitHub correspondant (cf. NOTES.md pour détails).
+- Mise à jour `TODO.md` (étape 2 en cours, étapes 3+ listées, réparation node_modules locale, création .env local).
+
+**Prochain push GitHub :** commit unique « Realign SCC ↔ GitHub + HomeV2 étape 1 + fix Home.tsx ».

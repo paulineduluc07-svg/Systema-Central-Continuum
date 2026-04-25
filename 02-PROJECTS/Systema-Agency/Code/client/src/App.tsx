@@ -8,7 +8,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { GlobalSyncIndicator } from "./components/GlobalSyncIndicator";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { ConfigProvider } from "./contexts/ConfigContext";
+import MainLayout from "./components/MainLayout";
 
+const HomeV2 = lazy(() => import("./pages/HomeV2"));
 const Home = lazy(() => import("./pages/Home"));
 const SuiviPage = lazy(async () => {
   const module = await import("./pages/Suivi");
@@ -32,15 +34,18 @@ function RouteLoadingFallback() {
 
 function Router() {
   return (
-    <Suspense fallback={<RouteLoadingFallback />}>
-      <Switch>
-        <Route path={"/"} component={Home} />
-        <Route path={"/suivi"} component={SuiviPage} />
-        <Route path={"/prompt-vault"} component={PromptVault} />
-        <Route path={"/404"} component={NotFound} />
-        <Route component={NotFound} />
-      </Switch>
-    </Suspense>
+    <MainLayout>
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <Switch>
+          <Route path={"/"} component={HomeV2} />
+          <Route path={"/v1"} component={Home} />
+          <Route path={"/suivi"} component={SuiviPage} />
+          <Route path={"/prompt-vault"} component={PromptVault} />
+          <Route path={"/404"} component={NotFound} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
+    </MainLayout>
   );
 }
 
