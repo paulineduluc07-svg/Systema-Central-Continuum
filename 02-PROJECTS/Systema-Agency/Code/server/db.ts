@@ -1,7 +1,7 @@
 import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import { InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences } from "../drizzle/schema";
+import { InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences } from "../drizzle/schema.js";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -199,7 +199,7 @@ export async function upsertUserPreferences(userId: number, prefs: Partial<Inser
 
 // ============== CUSTOM TABS ==============
 
-import { customTabs, canvasData, InsertCustomTab, InsertCanvasData } from "../drizzle/schema";
+import { customTabs, canvasData, InsertCustomTab, InsertCanvasData } from "../drizzle/schema.js";
 
 export async function getCustomTabsByUser(userId: number) {
   const db = await getDb();
@@ -256,7 +256,7 @@ export async function deleteCanvasData(userId: number, tabId: string) {
 
 // ============== SUIVI ENTRIES ==============
 
-import { suiviEntries, InsertSuiviEntry } from "../drizzle/schema";
+import { suiviEntries, InsertSuiviEntry } from "../drizzle/schema.js";
 
 export async function getSuiviEntriesByUser(userId: number) {
   const db = await getDb();
@@ -287,7 +287,7 @@ export async function replaceSuiviEntries(userId: number, entries: Omit<InsertSu
 
 // ============== PROMPT VAULT ==============
 
-import { promptVaultData } from "../drizzle/schema";
+import { promptVaultData } from "../drizzle/schema.js";
 
 export async function getPromptVaultData(userId: number) {
   const db = await getDb();

@@ -1,11 +1,11 @@
-import { BACKUP_SCHEMA_VERSION, COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { BACKUP_SCHEMA_VERSION, COOKIE_NAME, ONE_YEAR_MS } from "../shared/const.js";
 import { TRPCError } from "@trpc/server";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
-import { sdk } from "./_core/sdk";
-import { ENV } from "./_core/env";
+import { getSessionCookieOptions } from "./_core/cookies.js";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc.js";
+import { sdk } from "./_core/sdk.js";
+import { ENV } from "./_core/env.js";
 import { z } from "zod";
-import * as db from "./db";
+import * as db from "./db.js";
 
 const PROMPT_VAULT_MAX_PAYLOAD_CHARS = 1_000_000;
 const SUIVI_MAX_ENTRIES_PER_REPLACE = 2_000;

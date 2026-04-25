@@ -1,15 +1,13 @@
 import "dotenv/config";
+import express from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { appRouter } from "../../server/routers";
-import { createContext } from "../../server/_core/context";
-import { consumeRateLimit, getClientIp } from "../../server/_core/rateLimit";
+import { appRouter } from "../../server/routers.js";
+import { createContext } from "../../server/_core/context.js";
+import { consumeRateLimit, getClientIp } from "../../server/_core/rateLimit.js";
 
-const trpcHandler = createExpressMiddleware({
-  router: appRouter,
-  createContext,
-});
+const app = express();
 
-export default function handler(req: any, res: any) {
+app.use((req, res, next) => {
   const ip = getClientIp(req);
   const limit = consumeRateLimit(`vercel-trpc:${ip}`, 120, 60_000);
 
@@ -21,7 +19,15 @@ export default function handler(req: any, res: any) {
     return;
   }
 
-  return trpcHandler(req, res, () => {
-    res.status(404).end();
-  });
-}
+  next();
+});
+
+app.use(
+  "/api/trpc",
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  })
+);
+
+export default app;
