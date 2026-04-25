@@ -1,14 +1,64 @@
 # TODO - Systema-Agency
 
 ## En cours
-- [ ] Étape 2 — Page principale : ajouter les 5 boutons stylisés à droite (Syncer Gmail, Générer mes tâches, Prompts, Suivis, Supplément). Routes branchées pour Prompts/Suivis, placeholders « À venir » pour les 3 autres.
+*(rien — session 2026-04-24 V2 fermée, plan ci-dessous pour la prochaine)*
 
-## À faire
-- [ ] Étape 3+ — Implémenter Syncer Gmail (intégration Gmail API)
-- [ ] Étape 3+ — Implémenter Générer mes tâches (génération IA de tâches)
-- [ ] Étape 3+ — Implémenter Supplément (suivi de prises, lié ou séparé de Suivi médicament à clarifier)
-- [ ] Réparer `node_modules` local (procédure dans `Code/DEV-SETUP.md`) pour permettre `pnpm dev` local et tests avant deploy
-- [ ] Créer `.env` local à partir de `.env.example` (DATABASE_URL Neon + JWT_SECRET + OWNER_EMAIL/PASSWORD — voir SECRETS dans Assets)
+## À faire — Plan dicté par Pauline (2026-04-24)
+
+### PHASE 1 — Nettoyage avant tout nouveau set-up (ordre strict)
+
+#### Étape 1 — Réparer la synchronisation appareils + sessions
+- [ ] **À clarifier en début de session** : symptômes exacts du bug — quelles données ne se sync pas (notes ? tâches ? préférences ?) ? Sur quels appareils ? Et le bug de session = déconnexion inattendue ou autre ?
+- [ ] Diagnostiquer la cause (côté DB Neon ? côté hooks `useSyncedData` ? côté cookies/JWT ?)
+- [ ] Fix
+- **Validation Pauline :** se connecter sur 2 appareils → modifier une note ou une tâche sur l'un → l'autre reflète le changement en quelques secondes ; rester connectée entre 2 sessions sans relogin forcé
+
+#### Étape 2 — Réactiver l'authentification email + mot de passe
+- [ ] **À clarifier en début de session** : symptôme actuel — login qui échoue ? compte verrouillé ? variables Vercel mal configurées ? prompt qui ne s'affiche plus ?
+- [ ] Diagnostiquer (vérifier `OWNER_EMAIL` / `OWNER_PASSWORD` côté Vercel env vars + flux `LoginModal` + JWT)
+- [ ] Fix
+- **Validation Pauline :** logout → login avec mes credentials → accès complet à l'app sur prod
+
+#### Étape 3 — Supprimer les boutons obsolètes de la navbar
+- [ ] Retirer le bouton « Lune » (toggle dark mode) — obsolète, ne fonctionne plus
+- [ ] Retirer le bouton « Réglage » (gear settings) — obsolète, ne fonctionne plus
+- [ ] Nettoyer les imports morts (`Moon`, `Sun`, `Settings` de lucide-react ; hooks/contexts associés si plus rien ne les utilise)
+- **Validation Pauline :** navbar plus propre, les deux icônes ne sont plus là, aucune ligne morte
+
+#### Étape 4 — Supprimer le lien « Accueil » de la navbar
+- [ ] Retirer l'item « Accueil » de `navLinks` dans `Navbar.tsx` (le brand « Systema Agency » fait déjà le retour `/`)
+- [ ] Vérifier qu'il reste : « Systema Agency » (clic = `/`) + « Prompt Vault » + « Suivi »
+- [ ] Décision : ajouter ou non un lien discret vers `/v1` (l'ancienne home n'est accessible qu'à l'URL pour l'instant — Pauline à choisir)
+- **Validation Pauline :** navbar simple, redondance supprimée
+
+---
+
+### PHASE 2 — Vrai set-up (lance-toi UNIQUEMENT quand Phase 1 est validée par Pauline, sans bug de code)
+
+#### Étape 5a — Notes volantes en widgets déplaçables (priorité haute)
+- [ ] Refondre le « Tableau blanc » actuel en widgets de notes draggables
+- [ ] Chaque note = widget glassmorphism, déplaçable librement (drag-and-drop), persistance de la position
+- [ ] Style cohérent avec le reste de l'app (glassmorphism rose)
+- [ ] Sync inter-appareils (dépend de l'étape 1 réparée)
+- **Validation Pauline :** créer une note → la déplacer → recharger la page → position conservée ; ouvrir sur un autre appareil → même état
+- **Tech notes :** `react-rnd` est déjà dans `package.json` (drag-and-drop resize), à utiliser. `@dnd-kit/*` aussi présent.
+
+#### Étape 5b — Espace d'archivage des notes (long terme)
+- [ ] Pouvoir archiver une note (la sortir du tableau actif sans la supprimer)
+- [ ] Vue d'archives consultable, possibilité de désarchiver
+- **Validation Pauline :** flux archivage/désarchivage fonctionnel
+
+#### Étape 5c — Fonctions email sync + autres (Syncer Gmail, Générer mes tâches, Supplément)
+- [ ] **Bloqué tant que Phase 1 et 5a-5b ne sont pas vraiment propres** — règle explicite de Pauline
+- [ ] Implémenter Syncer Gmail (intégration Gmail API)
+- [ ] Implémenter Générer mes tâches (génération IA de tâches)
+- [ ] Implémenter Supplément (suivi de prises, à clarifier vs Suivi médicament)
+
+---
+
+### Tâches techniques transverses (à faire au moment opportun)
+- [ ] Réparer `node_modules` local (procédure dans `Code/DEV-SETUP.md`) — pour pouvoir `pnpm dev` localement et tester avant deploy
+- [ ] Créer `.env` local à partir de `.env.example` (DATABASE_URL Neon + JWT_SECRET + OWNER_EMAIL/PASSWORD depuis `Assets/SECRETS*.md`)
 
 ## Terminé
 - [x] Refonte de l'architecture du layout (Header sticky glassmorphism).

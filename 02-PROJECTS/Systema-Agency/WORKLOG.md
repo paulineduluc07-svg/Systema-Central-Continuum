@@ -79,4 +79,21 @@ Trace du travail effectué avec dates.
 - Création `02-PROJECTS/Systema-Agency/NOTES.md` avec la **règle de déploiement** : tout `vercel --prod` doit être suivi immédiatement d'un push GitHub correspondant (cf. NOTES.md pour détails).
 - Mise à jour `TODO.md` (étape 2 en cours, étapes 3+ listées, réparation node_modules locale, création .env local).
 
-**Prochain push GitHub :** commit unique « Realign SCC ↔ GitHub + HomeV2 étape 1 + fix Home.tsx ».
+**Prochain push GitHub :** commit unique « Realign SCC ↔ GitHub + HomeV2 étape 1 + fix Home.tsx ». ✅ Effectué (commit `58e9c18`).
+
+---
+
+**Fin de session 2026-04-24 V2 — plan dicté pour la prochaine session :**
+
+Phase 1 (cleanup avant Phase 2) — ordre strict :
+1. Réparer sync appareils/sessions (cassé — symptômes à clarifier en début de prochaine session)
+2. Réactiver auth email/password (cassé — symptômes à clarifier)
+3. Supprimer boutons « Lune » et « Réglage » obsolètes de la navbar
+4. Supprimer lien « Accueil » de la navbar (redondant avec brand « Systema Agency »)
+
+Phase 2 (vrai set-up — uniquement après validation Phase 1) :
+- 5a. Notes volantes en widgets glassmorphism déplaçables (priorité haute)
+- 5b. Espace d'archivage des notes (long terme)
+- 5c. Fonctions email sync / Générer mes tâches / Supplément (bloqué tant que 1-5b pas clean)
+
+Détails complets et critères de validation : `TODO.md`. Intent qualitatif et règles : `NOTES_DE_PAULINE.md`.
