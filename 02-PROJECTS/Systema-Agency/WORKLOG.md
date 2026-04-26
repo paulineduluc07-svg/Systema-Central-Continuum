@@ -97,3 +97,33 @@ Phase 2 (vrai set-up — uniquement après validation Phase 1) :
 - 5c. Fonctions email sync / Générer mes tâches / Supplément (bloqué tant que 1-5b pas clean)
 
 Détails complets et critères de validation : `TODO.md`. Intent qualitatif et règles : `NOTES_DE_PAULINE.md`.
+
+---
+
+## 2026-04-25
+
+**Session :** Phase 1 étapes 1 + 2 — réparation auth + sync cloud
+
+**Symptôme rapporté par Pauline :** impossible de se connecter au cloud avec email/mot de passe — donc pas de synchronisation entre appareils.
+
+**Investigation et causes racines :**
+
+1. **Couche 1 — `/api/trpc/*` mort en prod :** la function serverless plantait avec `ERR_MODULE_NOT_FOUND: Cannot find module '/var/task/server/routers'`. Cause : runtime Node ESM strict de Vercel ne résout pas les imports relatifs sans extension `.js` ni les alias TypeScript (`@shared/...`). Le `tsconfig` est en `moduleResolution: "bundler"` — OK en dev, KO en prod sans bundler. Le redéploiement V2 du 24-04 avait réinjecté le code source brut, sans bundle.
+
+2. **Couche 2 — JWT signé avec `appId` vide :** une fois la function réparée, le login retournait 200 mais l'app restait en « Mode local ». Diagnostic via DevTools : cookie posé chez le navigateur, envoyé avec les requêtes suivantes, mais `verifySession` retournait `null`. Le payload du JWT contenait `{"appId":"",...}` — la variable d'env `VITE_APP_ID` n'était pas définie dans Vercel Production (vérifié via `vercel env ls`). Le code `verifySession` rejette tout JWT avec un `appId` vide → chaque nouveau login posait un cookie immédiatement invalide.
+
+   *Note :* sur le cellulaire, l'auth fonctionnait toujours grâce à un vieux cookie d'avant le changement de config (signé avec un `appId` non-vide encore valide pendant 1 an).
+
+**Ce qui a été fait :**
+
+- Imports relatifs patchés dans la chaîne `api/trpc/[trpc].ts` → `server/routers.ts` + `server/db.ts` + `server/_core/{sdk,context,trpc}.ts` (extensions `.js` ajoutées, alias `@shared/const` remplacé par chemins relatifs).
+- `api/trpc/[trpc].ts` réécrit en mini-app Express (`app.use("/api/trpc", createExpressMiddleware(...))`) pour fournir `req.body` parsé et `res.cookie/clearCookie` attendus par les routers.
+- Deploy `dpl_Ew1MaJ9xGqYd7vbEsMzY9dDR7NwR` puis sync GitHub : commit `2913dd9` poussé sur `main`.
+- Variable d'env `VITE_APP_ID="systema-agency"` ajoutée dans Vercel Production via `vercel env add`.
+- Redeploy `dpl_oV6TCiVRRcjGt5o6kzgo88fq4wyH`.
+- Tests endpoint OK (curl) : `auth.me` 200/null sans cookie, `auth.login` wrong creds 401.
+- Validation Pauline : login OK sur ordi + cellulaire, sync 2-sens validée.
+
+**Détour `systema.enterprises` :** premier essai de login fait sur ce custom domain → échec. Décidé en accord avec Pauline (option 3) d'abandonner `systema.enterprises` comme URL d'usage et de standardiser sur `systema-agency.vercel.app` partout. Le custom domain reste configuré chez Vercel mais n'est plus l'URL recommandée.
+
+**Statut :** Phase 1 étapes 1 et 2 bouclées et validées par Pauline. Étapes 3 et 4 (cleanup navbar) restent à faire.

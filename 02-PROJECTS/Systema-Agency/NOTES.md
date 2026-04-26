@@ -28,6 +28,30 @@ Décisions, repères actifs, règles de travail spécifiques au projet.
 
 ---
 
+## Variables d'env requises pour l'auth (2026-04-25)
+
+Le serveur signe les sessions JWT avec un payload `{ openId, appId, name, exp }`. La fonction `verifySession` (`server/_core/sdk.ts`) **rejette** tout JWT dont `appId` est vide. Donc **les 5 variables suivantes doivent être définies dans Vercel Production** sinon l'auth casse silencieusement :
+
+- `OWNER_EMAIL`
+- `OWNER_PASSWORD`
+- `JWT_SECRET`
+- `DATABASE_URL`
+- `VITE_APP_ID` ← oublié historiquement, ajouté en 2026-04-25 (`systema-agency`). Sans cette variable, chaque login pose un cookie qui sera rejeté à la requête suivante.
+
+À vérifier en début de session si l'auth recasse : `vercel env ls production` doit lister les 5.
+
+---
+
+## Imports relatifs en prod Vercel (2026-04-25)
+
+Vercel exécute les API routes (`api/**/*.ts`) en **Node ESM strict**. Sans bundler, ce runtime n'accepte ni les imports relatifs sans extension `.js`, ni les alias TypeScript (`@shared/...`, `@/...`).
+
+**Règle :** dans tous les fichiers de la chaîne d'imports d'`api/**/*.ts` (donc `api/*` + tout `server/*` qu'ils tirent + `shared/*`), les imports relatifs doivent finir par `.js` et les alias `@shared/...` / `@/...` doivent être remplacés par des chemins relatifs.
+
+Le `tsconfig.json` est en `moduleResolution: "bundler"`, ce qui marche en dev (vite/tsx résolvent) mais casse en prod sans bundler. Si on veut un jour récupérer les alias, il faudra ajouter un step esbuild dans le `buildCommand` Vercel qui bundle les API routes.
+
+---
+
 ## Limitation locale connue
 
 Le `node_modules/` du projet sur Google Drive est sujet à corruption partielle (sync Drive incomplet) — packages comme `@epic-web/invariant`, `esbuild`, `rollup` peuvent être manquants au runtime.

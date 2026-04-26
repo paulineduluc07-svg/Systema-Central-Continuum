@@ -1,23 +1,25 @@
 # TODO - Systema-Agency
 
 ## En cours
-*(rien — session 2026-04-24 V2 fermée, plan ci-dessous pour la prochaine)*
+*(rien — étapes 1 et 2 bouclées en session 2026-04-25)*
 
 ## À faire — Plan dicté par Pauline (2026-04-24)
 
 ### PHASE 1 — Nettoyage avant tout nouveau set-up (ordre strict)
 
-#### Étape 1 — Réparer la synchronisation appareils + sessions
-- [ ] **À clarifier en début de session** : symptômes exacts du bug — quelles données ne se sync pas (notes ? tâches ? préférences ?) ? Sur quels appareils ? Et le bug de session = déconnexion inattendue ou autre ?
-- [ ] Diagnostiquer la cause (côté DB Neon ? côté hooks `useSyncedData` ? côté cookies/JWT ?)
-- [ ] Fix
-- **Validation Pauline :** se connecter sur 2 appareils → modifier une note ou une tâche sur l'un → l'autre reflète le changement en quelques secondes ; rester connectée entre 2 sessions sans relogin forcé
+#### Étape 1 — Réparer la synchronisation appareils + sessions ✅ (2026-04-25)
+- [x] Cause racine : la même que l'étape 2 (sans login pas de sync, et le login était cassé en prod). Voir détails étape 2.
+- [x] Fix
+- [x] **Validation Pauline :** sync ordi ↔ cellulaire validée dans les 2 sens (note créée sur un appareil apparaît sur l'autre).
 
-#### Étape 2 — Réactiver l'authentification email + mot de passe
-- [ ] **À clarifier en début de session** : symptôme actuel — login qui échoue ? compte verrouillé ? variables Vercel mal configurées ? prompt qui ne s'affiche plus ?
-- [ ] Diagnostiquer (vérifier `OWNER_EMAIL` / `OWNER_PASSWORD` côté Vercel env vars + flux `LoginModal` + JWT)
-- [ ] Fix
-- **Validation Pauline :** logout → login avec mes credentials → accès complet à l'app sur prod
+#### Étape 2 — Réactiver l'authentification email + mot de passe ✅ (2026-04-25)
+- [x] Cause racine en deux couches :
+  1. La function `/api/trpc/[trpc]` plantait au runtime Vercel (`ERR_MODULE_NOT_FOUND`) à cause d'imports relatifs sans extension `.js` et de l'alias `@shared/...` non résolu en Node ESM strict.
+  2. Le JWT de session était signé avec `appId: ""` (variable d'env `VITE_APP_ID` absente dans Vercel) — et `verifySession` rejette tout JWT avec `appId` vide. Donc chaque nouveau login posait un cookie immédiatement invalide.
+- [x] Fix appliqué :
+  1. `.js` ajouté à tous les imports relatifs de la chaîne `api/trpc/[trpc] → server/routers → server/_core/*` ; alias `@shared/const` remplacé par chemins relatifs ; function wrappée dans une mini-app Express pour fournir `req.body` parsé + `res.cookie/clearCookie`. Commit `2913dd9` sur GitHub.
+  2. Variable d'env `VITE_APP_ID="systema-agency"` ajoutée dans Vercel Production + redeploy `dpl_oV6TCiVRRcjGt5o6kzgo88fq4wyH`.
+- [x] **Validation Pauline :** logout → login avec credentials → accès complet à l'app + sync cloud active sur ordi et cellulaire.
 
 #### Étape 3 — Supprimer les boutons obsolètes de la navbar
 - [ ] Retirer le bouton « Lune » (toggle dark mode) — obsolète, ne fonctionne plus
