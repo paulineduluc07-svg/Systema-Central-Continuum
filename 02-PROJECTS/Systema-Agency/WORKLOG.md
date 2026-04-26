@@ -126,4 +126,16 @@ Détails complets et critères de validation : `TODO.md`. Intent qualitatif et r
 
 **Détour `systema.enterprises` :** premier essai de login fait sur ce custom domain → échec. Décidé en accord avec Pauline (option 3) d'abandonner `systema.enterprises` comme URL d'usage et de standardiser sur `systema-agency.vercel.app` partout. Le custom domain reste configuré chez Vercel mais n'est plus l'URL recommandée.
 
-**Statut :** Phase 1 étapes 1 et 2 bouclées et validées par Pauline. Étapes 3 et 4 (cleanup navbar) restent à faire.
+**Statut couches 1+2 :** Phase 1 étapes 1 et 2 bouclées et validées par Pauline.
+
+**Phase 1 étapes 3 + 4 (suite directe de la même session) :**
+
+- Réécriture de `Code/client/src/components/Navbar.tsx` :
+  - Suppression du bouton toggle Lune/Soleil (dark mode) et de tout son state (`darkMode/setDarkMode` via `useSyncedPreferences`).
+  - Suppression du bouton Réglage (engrenage) et de tout son state (`isAdminOpen` + import + render de `AdminPanel`).
+  - Suppression de l'item « Accueil » de `navLinks`. Le brand « Systema Agency » reste le retour vers `/`.
+  - Imports nettoyés : retirés `Moon`, `Sun`, `Settings`, `Home` (lucide-react), `useSyncedPreferences`, `AdminPanel`. `useSyncedPreferences` reste utilisé par MainLayout/useSyncedData donc le hook lui-même est conservé. `AdminPanel.tsx` n'est plus référencé mais le fichier est conservé (pas demandé explicitement de le supprimer).
+- Décision routage `/v1` (option a choisie par Pauline) : pas de lien navbar, accès uniquement par URL directe. URL documentée dans `NOTES.md` section « Routes de l'app » pour repère pérenne.
+- Deploy Vercel `dpl_mx2uoelpt`. Validation visuelle Pauline : navbar nettoyée, /v1 toujours accessible par URL.
+
+**Statut Phase 1 complète :** ✅ étapes 1, 2, 3, 4 toutes bouclées et validées. Phase 2 (notes volantes draggables, archivage, Gmail/tâches/supplément) reste à attaquer en prochaine session.

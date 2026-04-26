@@ -21,17 +21,16 @@
   2. Variable d'env `VITE_APP_ID="systema-agency"` ajoutée dans Vercel Production + redeploy `dpl_oV6TCiVRRcjGt5o6kzgo88fq4wyH`.
 - [x] **Validation Pauline :** logout → login avec credentials → accès complet à l'app + sync cloud active sur ordi et cellulaire.
 
-#### Étape 3 — Supprimer les boutons obsolètes de la navbar
-- [ ] Retirer le bouton « Lune » (toggle dark mode) — obsolète, ne fonctionne plus
-- [ ] Retirer le bouton « Réglage » (gear settings) — obsolète, ne fonctionne plus
-- [ ] Nettoyer les imports morts (`Moon`, `Sun`, `Settings` de lucide-react ; hooks/contexts associés si plus rien ne les utilise)
-- **Validation Pauline :** navbar plus propre, les deux icônes ne sont plus là, aucune ligne morte
+#### Étape 3 — Supprimer les boutons obsolètes de la navbar ✅ (2026-04-25)
+- [x] Bouton « Lune » (toggle dark mode) retiré de `Navbar.tsx`
+- [x] Bouton « Réglage » (gear settings) retiré de `Navbar.tsx`
+- [x] Imports morts nettoyés dans `Navbar.tsx` : `Moon`, `Sun`, `Settings`, `Home` (lucide-react), `useSyncedPreferences`, `AdminPanel`, state `isAdminOpen`. `useSyncedPreferences` reste utilisé ailleurs (MainLayout, useSyncedData) donc le hook lui-même est conservé.
+- [x] **Validation Pauline :** navbar nettoyée, les deux icônes parties, aucune ligne morte côté Navbar.
 
-#### Étape 4 — Supprimer le lien « Accueil » de la navbar
-- [ ] Retirer l'item « Accueil » de `navLinks` dans `Navbar.tsx` (le brand « Systema Agency » fait déjà le retour `/`)
-- [ ] Vérifier qu'il reste : « Systema Agency » (clic = `/`) + « Prompt Vault » + « Suivi »
-- [ ] Décision : ajouter ou non un lien discret vers `/v1` (l'ancienne home n'est accessible qu'à l'URL pour l'instant — Pauline à choisir)
-- **Validation Pauline :** navbar simple, redondance supprimée
+#### Étape 4 — Supprimer le lien « Accueil » de la navbar ✅ (2026-04-25)
+- [x] Item « Accueil » retiré de `navLinks` dans `Navbar.tsx`. Reste : « Systema Agency » (brand → `/`) + « Prompt Vault » + « Suivi ».
+- [x] Décision /v1 (option a) : aucun lien dans la navbar, accès uniquement via URL directe `https://systema-agency.vercel.app/v1`. URL documentée dans `NOTES.md` section « Routes de l'app » pour repère facile.
+- [x] **Validation Pauline :** navbar simple, redondance supprimée.
 
 ---
 

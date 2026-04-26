@@ -4,6 +4,21 @@ Décisions, repères actifs, règles de travail spécifiques au projet.
 
 ---
 
+## Routes de l'app (2026-04-25)
+
+Pages accessibles dans l'app :
+
+| Route | Page | Lien dans la navbar ? |
+|---|---|---|
+| `/` | **HomeV2** — page principale (page blanche, fond cyberpunk rose) | Oui (clic sur le brand « Systema Agency ») |
+| `/prompt-vault` | Prompt Vault — bibliothèque de prompts | Oui |
+| `/suivi` | Suivi médicament | Oui |
+| `/v1` | **Ancienne home** (Home.tsx, préservée intacte) | ❌ **Non, accès uniquement par URL directe** |
+
+**Pour accéder à l'ancienne home :** taper directement `https://systema-agency.vercel.app/v1` dans la barre d'adresse.
+
+---
+
 ## Règle de déploiement (2026-04-24)
 
 **Tout déploiement Vercel CLI (`vercel --prod`) doit être suivi immédiatement d'un push GitHub correspondant.**
