@@ -3,6 +3,8 @@
 ## Rôle
 Ce dossier sert à cadrer les agents dans SCC.
 
+**Note de structure :** `05-AGENTS` est un dossier de gouvernance et de cadrage. Il ne suit pas la logique de "dossier projet" définie dans `02-PROJECTS` (README/TODO/WORKLOG/NOTES) car il définit les règles transversales applicables à tous les agents.
+
 Il doit permettre de :
 - fixer les règles stables de travail des agents
 - éviter les improvisations

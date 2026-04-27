@@ -46,4 +46,5 @@ Important :
 ├── WORKLOG.md     ← trace courte des actions effectuées
 ├── Assets/        ← images, références visuelles, ressources
 ├── Code/          ← code source, scripts, structure technique
+├── RESSOURCES/    ← documentation technique, runbooks, spécifications
 └── Livrables/     ← exports, versions remises, fichiers finaux

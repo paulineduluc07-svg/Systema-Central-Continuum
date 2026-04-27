@@ -13,6 +13,7 @@ Il sert à :
 - ne pas confondre documentation, runtime, archives et backups
 - ne pas laisser un ancien setup se faire passer pour l'actif
 - toute modification importante doit être reflétée dans le `WORKLOG.md` concerné
+- **Synchronisation :** À chaque fin de passe (session), la synchronisation entre le REPO et le local doit être effectuée. De même, pour les projets distants (ex: Anima), la synchronisation entre le VPS et le SCC local doit être systématique.
 
 ## Structure
 - `01-INBOX` = entrées brutes à trier
