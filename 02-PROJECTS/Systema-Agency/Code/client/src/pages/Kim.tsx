@@ -25,12 +25,24 @@ function isChatMessage(
 
 export default function Kim() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const utils = trpc.useUtils();
 
   const chatMutation = trpc.ai.chat.useMutation({
     onSuccess: (data) => {
+      void utils.promptVault.get.invalidate();
       setMessages((current) => [
         ...current,
-        { role: "assistant", content: data.reply },
+        {
+          role: "assistant",
+          content: [
+            data.reply,
+            ...data.appliedActions.map((action) => (
+              action.type === "promptVault.addPrompt"
+                ? `\nAjouté dans Prompt Vault : ${action.title}`
+                : ""
+            )),
+          ].filter(Boolean).join("\n"),
+        },
       ]);
     },
     onError: (error) => {

@@ -77,9 +77,8 @@ export const appRouter = router({
           content: z.string().trim().min(1).max(8_000),
         })).min(1).max(20),
       }))
-      .mutation(async ({ input }) => {
-        const reply = await askKim(input.messages);
-        return { reply };
+      .mutation(async ({ ctx, input }) => {
+        return askKim(ctx.user.id, input.messages);
       }),
   }),
 
