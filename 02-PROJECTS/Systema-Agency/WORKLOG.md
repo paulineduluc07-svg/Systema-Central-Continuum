@@ -166,3 +166,22 @@ Détails complets et critères de validation : `TODO.md`. Intent qualitatif et r
 - Smoke test prod `https://systema-agency.vercel.app/` → HTTP 200, nouveau bundle servi.
 
 **Statut :** ✅ déployé, GitHub aligné, validé visuellement par Pauline en local avant deploy.
+
+---
+
+## 2026-04-26 (suite — fix auto-deploy GitHub ↔ Vercel)
+
+**Session :** Activation de l'auto-deploy Vercel sur push GitHub
+
+**Constat de départ :** aucun lien entre push sur `main` et déploiement Vercel. À chaque session : `vercel --prod` manuel obligatoire. Le seul workflow (`ci-pr.yml`) avait en plus un path désaligné (`Projects/` au lieu de `02-PROJECTS/`).
+
+**Ce qui a été fait :**
+- Connexion native Vercel → GitHub via `vercel git connect https://github.com/paulineduluc07-svg/Systema-Central-Continuum.git` (CLI, sans interaction).
+- Config **Root Directory = `02-PROJECTS/Systema-Agency/Code`** côté dashboard Vercel (Pauline). Premier essai foiré : un espace s'était glissé devant `02-PROJECTS` (collé depuis Claude). Repris à la main, OK au 2e save.
+- Fix `ci-pr.yml` : tous les paths `Projects/Systema-Agency/...` → `02-PROJECTS/Systema-Agency/...` (push commit `10b10c9`).
+- Test : commit `10b10c9` a déclenché un auto-deploy Vercel ✅ (la connexion fonctionne) — mais build en Error car Root Directory pas encore fixé. Une fois la config corrigée, redeploy via CLI = `dpl_lv05zrouf` Ready en 46s.
+
+**Conséquence :**
+- À partir de maintenant, **tout push sur `main`** qui touche `02-PROJECTS/Systema-Agency/Code/` déclenche un build + deploy prod automatique.
+- Plus besoin de `vercel --prod` manuel à chaque session.
+- La règle de NOTES.md « tout vercel --prod doit être suivi d'un push GitHub » devient implicitement satisfaite : la prod = le contenu de `main` sur GitHub.

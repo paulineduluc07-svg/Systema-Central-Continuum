@@ -19,16 +19,19 @@ Pages accessibles dans l'app :
 
 ---
 
-## Règle de déploiement (2026-04-24)
+## Règle de déploiement (révisée 2026-04-26)
 
-**Tout déploiement Vercel CLI (`vercel --prod`) doit être suivi immédiatement d'un push GitHub correspondant.**
+**Voie nominale : push sur `main` (clone GitHub) → auto-deploy Vercel.** Activé le 2026-04-26 via `vercel git connect` + Root Directory `02-PROJECTS/Systema-Agency/Code` configuré côté dashboard Vercel. Plus besoin de `vercel --prod` manuel.
 
-**Pourquoi :** la session 2026-04-24 V2 a découvert un désalignement majeur (~35 fichiers Code/) entre SCC local et GitHub. La cause : les sessions précédentes utilisaient `vercel --prod` pour déployer en prod sans synchroniser GitHub derrière. Résultat : prod fonctionnait correctement (déployée depuis local) mais GitHub était figé sur du vieux code, rendant tout futur clone/CI/redéploiement Git-based impossible.
+**Workflow standard :**
+1. Modifier le code dans `Mon disque\SCC\02-PROJECTS\Systema-Agency\Code\`.
+2. Synchroniser les fichiers modifiés vers `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code\`.
+3. Commit + push depuis le clone.
+4. Vercel pickup automatiquement et déploie. Vérifier `vercel list` pour le statut.
 
-**Comment l'appliquer :**
-- Après tout `vercel --prod` réussi → faire immédiatement la synchronisation `SCC → SCC-github-clone` sur les fichiers `Code/` modifiés, puis commit + push.
-- En fin de session : vérifier `git status` du clone, ne jamais laisser de divergence non commitée.
-- Avant tout deploy : `git status` du clone doit être clean ; si non, sync d'abord.
+**Voie de secours `vercel --prod` :** reste utilisable pour un déploiement urgent sans passer par GitHub. Dans ce cas (exception), la règle historique s'applique encore : push GitHub immédiatement après pour ne pas laisser de désalignement.
+
+**Pourquoi cette règle existe :** la session 2026-04-24 V2 a découvert un désalignement majeur (~35 fichiers `Code/`) entre SCC local et GitHub, causé par des `vercel --prod` répétés sans push derrière. Avec l'auto-deploy actif, la prod = le contenu de `main` par construction — le risque disparaît tant qu'on passe par la voie nominale.
 
 ---
 
