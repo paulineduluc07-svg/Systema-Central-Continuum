@@ -76,3 +76,23 @@ Le `node_modules/` du projet sur Google Drive est sujet à corruption partielle 
 **Workaround :** `vercel --prod` ne dépend pas du `node_modules` local (Vercel fait sa propre install dans le cloud), donc le deploy reste fonctionnel.
 
 **Solution permanente documentée dans `Code/DEV-SETUP.md`.**
+
+---
+
+## `.env` local = vars de prod (2026-04-26)
+
+Le `.env` local de `Code/.env` a été créé via `vercel env pull --environment=production`. Conséquence importante :
+
+**Le dev local utilise les mêmes credentials et la même DB Neon que la prod.** Toute donnée créée/modifiée en `pnpm dev` (notes, prompts, prises de médicament, sessions) **va en prod**.
+
+C'est volontaire — Pauline travaille avec la même base partout — mais à garder en tête : ne pas créer de données de test en local. Si on veut un jour une DB de dev séparée, il faudra créer une nouvelle base Neon et mettre son URL uniquement dans `.env` local.
+
+---
+
+## Navbar responsive (2026-04-26)
+
+`Navbar.tsx` a un comportement responsive :
+- **≥ 768px (md)** : liens nav inline à côté du brand.
+- **< 768px** : un bouton hamburger (`Menu`/`X` lucide) ouvre un drawer glassmorphism positionné en absolu sous la navbar. Fond `bg-white/70 backdrop-blur-xl` (testé visuellement : `bg-white/20` initial illisible sur fond rose). Fermeture au clic sur un lien et au clic en dehors (handler `mousedown` sur `document` via `useEffect` conditionnel).
+
+Pour ajouter un nouvel onglet : ajouter une entrée à `navLinks` (ligne 14) — il apparaît automatiquement dans les deux modes.

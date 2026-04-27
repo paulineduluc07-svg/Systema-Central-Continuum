@@ -139,3 +139,24 @@ Détails complets et critères de validation : `TODO.md`. Intent qualitatif et r
 - Deploy Vercel `dpl_mx2uoelpt`. Validation visuelle Pauline : navbar nettoyée, /v1 toujours accessible par URL.
 
 **Statut Phase 1 complète :** ✅ étapes 1, 2, 3, 4 toutes bouclées et validées. Phase 2 (notes volantes draggables, archivage, Gmail/tâches/supplément) reste à attaquer en prochaine session.
+
+---
+
+## 2026-04-26
+
+**Session :** Tâches transverses + fix navbar mobile
+
+**Ce qui a été fait :**
+
+- **Tâche transverse — réparation environnement local :**
+  - `node_modules` cassé (12 entrées top-level / 60 attendues, dont `esbuild`, `rollup`, `@epic-web/invariant` manquants). Réparé via `corepack pnpm install` avec Drive en pause — 42.7s.
+  - `.env` local créé via `vercel env pull .env --environment=production` (mêmes 5 vars que la prod : `DATABASE_URL`, `JWT_SECRET`, `OWNER_EMAIL`, `OWNER_PASSWORD`, `VITE_APP_ID`). **Conséquence : le dev local pointe sur la même DB Neon que la prod** — toute donnée créée en local va en prod.
+  - Validation : `pnpm dev` démarre sur `http://localhost:3000/`, endpoint tRPC `auth.me` répond HTTP 200.
+
+- **Fix navbar mobile (rapporté par Pauline via screenshot) :** en dessous de 768px (mobile portrait + desktop rétréci), les liens « Prompt Vault » et « Suivi » étaient invisibles à cause du `hidden md:flex` sur `Navbar.tsx:28`, et aucune alternative mobile n'existait.
+  - Solution choisie par Pauline parmi 3 options : **menu hamburger** (drawer glassmorphism) — choix motivé par sa volonté d'ajouter d'autres onglets à terme.
+  - Implémentation : bouton `Menu`/`X` (lucide) visible uniquement < 768px, drawer absolu sous la navbar avec `bg-white/70 backdrop-blur-xl` (opacité bumpée après retour visuel de Pauline — `bg-white/20` initial était illisible sur fond rose). Texte slate-700/900 sur fond clair, white/80 sur fond sombre. Fermeture au clic sur lien et au clic en dehors (handler `mousedown` sur `document`).
+  - Bug TS préexistant fixé au passage : `Cloud`/`CloudOff` recevaient `title=` non typé par Lucide — wrappés dans `<span title="...">`.
+  - `pnpm check` passe ✅, `pnpm build` passe ✅ (5.51s).
+
+**Statut :** prêt à push GitHub → auto-deploy Vercel (option 2a choisie pour respecter la règle de NOTES.md « pas de désalignement SCC ↔ GitHub »).

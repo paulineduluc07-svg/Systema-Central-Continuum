@@ -58,10 +58,11 @@
 ---
 
 ### Tâches techniques transverses (à faire au moment opportun)
-- [ ] Réparer `node_modules` local (procédure dans `Code/DEV-SETUP.md`) — pour pouvoir `pnpm dev` localement et tester avant deploy
-- [ ] Créer `.env` local à partir de `.env.example` (DATABASE_URL Neon + JWT_SECRET + OWNER_EMAIL/PASSWORD depuis `Assets/SECRETS*.md`)
+- [x] Réparer `node_modules` local (`corepack pnpm install` avec Drive en pause — 42.7s) — fait 2026-04-26
+- [x] Créer `.env` local — fait 2026-04-26 via `vercel env pull .env --environment=production` (mêmes 5 vars que la prod)
 
 ## Terminé
+- [x] Navbar responsive — menu hamburger glassmorphism en mobile (< 768px), desktop inchangé. (2026-04-26)
 - [x] Refonte de l'architecture du layout (Header sticky glassmorphism).
 - [x] Déplacement de la navigation dans le header.
 - [x] Alignement structurel local complet (RESSOURCES, Livrables).
