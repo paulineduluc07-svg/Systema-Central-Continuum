@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "Projects/Systema-Agency/**"
-      - "Projects/Systema-Agency/Code/.github/workflows/ci-pr.yml"
+      - "02-PROJECTS/Systema-Agency/**"
+      - "02-PROJECTS/Systema-Agency/Code/.github/workflows/ci-pr.yml"
   workflow_dispatch:
 
 permissions:
@@ -19,7 +19,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Projects/Systema-Agency/Code
+        working-directory: 02-PROJECTS/Systema-Agency/Code
 
     steps:
       - name: Checkout repository
@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: Projects/Systema-Agency/Code/pnpm-lock.yaml
+          cache-dependency-path: 02-PROJECTS/Systema-Agency/Code/pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
