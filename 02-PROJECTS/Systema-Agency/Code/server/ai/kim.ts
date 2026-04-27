@@ -84,6 +84,28 @@ const PROMPT_VAULT_CATEGORIES = [
 
 const CATEGORY_IDS = new Set(PROMPT_VAULT_CATEGORIES.map((category) => category.id));
 
+function normalizeCategoryId(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const normalized = value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  const aliases: Record<string, string> = {
+    "categorie-meta": "meta",
+    "meta-prompt": "meta",
+    "metaprompt": "meta",
+    "creative": "creativite",
+    "creativite": "creativite",
+    "clarte": "clarte",
+  };
+
+  return aliases[normalized] ?? normalized;
+}
+
 function parseKimPayload(rawText: string): KimModelPayload {
   try {
     const parsed = JSON.parse(rawText) as Partial<KimModelPayload>;
@@ -149,7 +171,7 @@ async function addPromptToVault(userId: number, action: KimAction): Promise<KimA
   }
 
   const availableCategoryIds = new Set(snapshot.cats.map((category) => category.id));
-  const requestedCategory = action.category?.trim();
+  const requestedCategory = normalizeCategoryId(action.category);
   const category = requestedCategory && CATEGORY_IDS.has(requestedCategory) && availableCategoryIds.has(requestedCategory)
     ? requestedCategory
     : "tech";

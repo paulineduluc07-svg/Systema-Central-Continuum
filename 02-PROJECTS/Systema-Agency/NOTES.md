@@ -80,6 +80,11 @@ Le `node_modules/` du projet sur Google Drive est sujet à corruption partielle 
 
 **Solution permanente documentée dans `Code/DEV-SETUP.md`.**
 
+**Décision pratique 2026-04-27 :** pour les validations techniques fiables (`pnpm check`, `pnpm build`), utiliser en priorité le clone hors Drive :
+`C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code`.
+
+Raison : `node_modules` dans Google Drive se corrompt ou devient incomplet trop facilement, surtout pour les dépendances natives optionnelles comme Rollup/esbuild. Le dossier Google Drive reste la source de travail/documentation SCC, mais le clone GitHub est l'environnement de build/test le plus stable.
+
 ---
 
 ## `.env` local = vars de prod (2026-04-26)

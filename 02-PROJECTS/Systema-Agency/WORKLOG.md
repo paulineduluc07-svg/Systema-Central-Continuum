@@ -43,6 +43,30 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-27 (suite)
+
+**Session :** Kim peut ajouter des prompts dans Prompt Vault
+
+**Ce qui a été fait :**
+- Correction de périmètre : le tableau blanc n'est pas encore prêt, donc l'action Kim cible uniquement Prompt Vault.
+- Ajout d'un outil serveur `promptVault.addPrompt` piloté par Kim dans `server/ai/kim.ts`.
+- Kim peut maintenant créer un prompt avec titre, contenu, catégorie et tags.
+- Kim ne peut toujours pas modifier, archiver ou supprimer des éléments existants.
+- L'interface `/kim` affiche une confirmation quand un prompt est ajouté.
+- Cache client Prompt Vault invalidé après action Kim.
+
+**Validation :**
+- `pnpm check` OK depuis le clone GitHub hors Drive.
+- `pnpm build` OK depuis le clone GitHub hors Drive.
+
+**Note environnement :**
+- Le build depuis Google Drive a échoué à cause de `node_modules` corrompu/incomplet (`@rollup/rollup-linux-x64-gnu` manquant).
+- Décision pratique : utiliser le clone `SCC-github-clone` comme environnement de build/test fiable.
+
+**Statut :** commit GitHub poussé (`056aea2`), déploiement Vercel en cours au moment de la trace.
+
+---
+
 ## 2026-04-23
 
 **Session :** Alignement structurel et nettoyage
