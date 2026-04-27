@@ -4,6 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies.js";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc.js";
 import { sdk } from "./_core/sdk.js";
 import { ENV } from "./_core/env.js";
+import { askKim } from "./ai/kim.js";
 import { z } from "zod";
 import * as db from "./db.js";
 
@@ -68,6 +69,20 @@ const backupPromptVaultSchema = z
   }, `Le snapshot Prompt Vault est invalide ou depasse ${PROMPT_VAULT_MAX_PAYLOAD_CHARS} caracteres.`);
 
 export const appRouter = router({
+  ai: router({
+    chat: protectedProcedure
+      .input(z.object({
+        messages: z.array(z.object({
+          role: z.enum(["user", "assistant"]),
+          content: z.string().trim().min(1).max(8_000),
+        })).min(1).max(20),
+      }))
+      .mutation(async ({ input }) => {
+        const reply = await askKim(input.messages);
+        return { reply };
+      }),
+  }),
+
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
 

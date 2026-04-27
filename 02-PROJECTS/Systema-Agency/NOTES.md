@@ -99,3 +99,28 @@ C'est volontaire — Pauline travaille avec la même base partout — mais à ga
 - **< 768px** : un bouton hamburger (`Menu`/`X` lucide) ouvre un drawer glassmorphism positionné en absolu sous la navbar. Fond `bg-white/70 backdrop-blur-xl` (testé visuellement : `bg-white/20` initial illisible sur fond rose). Fermeture au clic sur un lien et au clic en dehors (handler `mousedown` sur `document` via `useEffect` conditionnel).
 
 Pour ajouter un nouvel onglet : ajouter une entrée à `navLinks` (ligne 14) — il apparaît automatiquement dans les deux modes.
+
+---
+
+## Kim intégrée dans Systema (2026-04-27)
+
+Décision : intégrer Kim comme agente active dans `Systema Agency`, mais par petites passes fermées.
+
+Architecture cible :
+1. Page `/kim` pour discuter avec Kim.
+2. Serveur tRPC comme couche de sécurité.
+3. OpenAI appelé côté serveur seulement.
+4. Outils Systema ajoutés progressivement : lire, créer, modifier, archiver.
+
+Passe 1 commencée :
+- route `/kim` ajoutée ;
+- lien « Kim » ajouté dans la navbar ;
+- endpoint protégé `ai.chat` ajouté ;
+- `server/ai/kim.ts` ajouté ;
+- Kim est limitée à la conversation seulement.
+
+Règles actives :
+- aucune clé OpenAI dans le navigateur ;
+- `OPENAI_API_KEY` doit être configurée côté serveur/Vercel ;
+- création/modification de données reportée aux passes suivantes ;
+- suppression directe interdite au départ.

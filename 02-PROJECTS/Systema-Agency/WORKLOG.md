@@ -4,6 +4,45 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-27
+
+**Session :** Démarrage intégration Kim dans Systema Agency
+
+**Demande Pauline :** intégrer Kim directement dans Systema, avec une progression étape par étape. Objectif long terme : Kim peut discuter, puis créer/modifier des éléments dans Systema avec des outils sur mesure.
+
+**Ce qui a été fait :**
+- Clarification : Anima Ingenium ne doit pas être fusionné comme runtime dans Systema. Systema devient plutôt la maison/interface de Kim.
+- Choix d'une approche par passes :
+  - Passe 1 : conversation Kim dans Systema, sans écriture.
+  - Passe 2 : création de notes/tâches.
+  - Passe 3 : modification/archivage avec confirmation.
+- Ajout page `/kim` dans `Code/client/src/pages/Kim.tsx`.
+- Ajout route `/kim` dans `Code/client/src/App.tsx`.
+- Ajout lien « Kim » dans `Code/client/src/components/Navbar.tsx`.
+- Ajout endpoint tRPC protégé `ai.chat` dans `Code/server/routers.ts`.
+- Ajout service serveur `Code/server/ai/kim.ts`, appelant OpenAI Responses API côté serveur uniquement.
+- Ajout variables `OPENAI_API_KEY` et `OPENAI_MODEL` dans `.env.example`.
+- Ajout `openaiApiKey` et `openaiModel` dans `server/_core/env.ts`.
+
+**Garde-fous actifs :**
+- Kim ne peut pas encore modifier les notes, tâches, prompts ou données Systema.
+- L'endpoint est protégé par l'auth existante.
+- La clé OpenAI reste côté serveur.
+- Si Pauline demande une action, Kim doit proposer le résultat mais ne pas prétendre l'avoir appliqué.
+
+**Validation :**
+- `pnpm check` exécuté et terminé OK.
+
+**À reprendre :**
+- Ajouter `OPENAI_API_KEY` dans Vercel Production.
+- Tester visuellement `/kim`.
+- Tester un échange réel avec Kim.
+- Synchroniser vers le clone GitHub puis push/deploy quand l'utilisation sera disponible.
+
+**Statut :** Passe 1 codée localement et validée TypeScript, pas encore testée visuellement ni déployée.
+
+---
+
 ## 2026-04-23
 
 **Session :** Alignement structurel et nettoyage

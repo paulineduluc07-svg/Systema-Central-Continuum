@@ -5,5 +5,7 @@ export const ENV = {
   // Owner credentials for email/password auth
   ownerEmail: process.env.OWNER_EMAIL ?? "",
   ownerPassword: process.env.OWNER_PASSWORD ?? "",
+  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  openaiModel: process.env.OPENAI_MODEL ?? "gpt-5",
   isProduction: process.env.NODE_ENV === "production",
 };

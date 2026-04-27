@@ -1,7 +1,18 @@
 # TODO - Systema-Agency
 
 ## En cours
-*(rien — étapes 1 et 2 bouclées en session 2026-04-25)*
+
+### Kim intégrée dans Systema — Passe 1 conversation
+- [x] Ajouter une page `/kim` dans l'app.
+- [x] Ajouter le lien « Kim » dans la navbar desktop + mobile.
+- [x] Brancher un endpoint tRPC protégé `ai.chat`.
+- [x] Appeler OpenAI côté serveur uniquement via `OPENAI_API_KEY`.
+- [x] Garder Kim en lecture/conversation seulement pour cette passe.
+- [x] Validation TypeScript : `pnpm check` OK.
+- [ ] Ajouter `OPENAI_API_KEY` dans Vercel Production avant test réel.
+- [ ] Tester visuellement `/kim` en local ou prod.
+- [ ] Tester un échange réel avec Kim.
+- [ ] Déployer/synchroniser GitHub quand Pauline reprend.
 
 ## À faire — Plan dicté par Pauline (2026-04-24)
 
@@ -54,6 +65,12 @@
 - [ ] Implémenter Syncer Gmail (intégration Gmail API)
 - [ ] Implémenter Générer mes tâches (génération IA de tâches)
 - [ ] Implémenter Supplément (suivi de prises, à clarifier vs Suivi médicament)
+
+#### Étape 5d — Kim agente active dans Systema
+- [ ] Passe 1 : conversation dans `/kim` sans outils d'écriture.
+- [ ] Passe 2 : permettre à Kim de créer des notes/tâches.
+- [ ] Passe 3 : permettre à Kim de modifier/archiver avec confirmation.
+- [ ] Suppression directe interdite au départ.
 
 ---
 

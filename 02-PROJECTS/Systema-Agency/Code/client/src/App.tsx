@@ -17,6 +17,7 @@ const SuiviPage = lazy(async () => {
   return { default: module.SuiviPage };
 });
 const PromptVault = lazy(() => import("./pages/PromptVault"));
+const Kim = lazy(() => import("./pages/Kim"));
 
 function RouteLoadingFallback() {
   return (
@@ -41,6 +42,7 @@ function Router() {
           <Route path={"/v1"} component={Home} />
           <Route path={"/suivi"} component={SuiviPage} />
           <Route path={"/prompt-vault"} component={PromptVault} />
+          <Route path={"/kim"} component={Kim} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>
