@@ -159,4 +159,10 @@ Détails complets et critères de validation : `TODO.md`. Intent qualitatif et r
   - Bug TS préexistant fixé au passage : `Cloud`/`CloudOff` recevaient `title=` non typé par Lucide — wrappés dans `<span title="...">`.
   - `pnpm check` passe ✅, `pnpm build` passe ✅ (5.51s).
 
-**Statut :** prêt à push GitHub → auto-deploy Vercel (option 2a choisie pour respecter la règle de NOTES.md « pas de désalignement SCC ↔ GitHub »).
+**Déploiement :**
+- Commit `4da48fa` poussé sur `main` (clone GitHub).
+- Découverte : aucun auto-deploy GitHub → Vercel actif sur ce projet (le seul workflow `ci-pr.yml` est sur `pull_request` uniquement, et son path est désaligné `Projects/` vs `02-PROJECTS/`). Pas un blocage aujourd'hui mais à savoir pour les futures sessions.
+- Deploy via `vercel --prod` : `dpl_GCM7FGVYmUFjYMvyxVNtgNW19gHh` (build 23s, total 45s).
+- Smoke test prod `https://systema-agency.vercel.app/` → HTTP 200, nouveau bundle servi.
+
+**Statut :** ✅ déployé, GitHub aligné, validé visuellement par Pauline en local avant deploy.
