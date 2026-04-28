@@ -86,10 +86,37 @@ Trace du travail effectué avec dates.
 **Synchronisation :**
 - SCC local et clone GitHub local synchronisés sur les fichiers documentaires modifiés.
 - Commit local créé dans `SCC-github-clone` : `docs: aligne etat Kim Systema`.
-- Push distant GitHub tenté mais bloqué par l'auth HTTPS non interactive (`could not read Username for 'https://github.com'`). À pousser depuis un terminal/GitHub Desktop authentifié.
+- Premier push distant GitHub bloqué par l'auth HTTPS non interactive côté WSL (`could not read Username for 'https://github.com'`).
+- Après reconnexion de Pauline, push réussi via Git Windows / PowerShell : `d8dd4a6 docs: aligne etat Kim Systema` sur `main`.
 
 **Reste à faire :**
 - Corriger le texte visible dans `/kim`, qui dit encore « Passe 1 : conversation active seulement » alors que Kim peut déjà ajouter des prompts.
+
+---
+
+## 2026-04-28
+
+**Session :** Diagnostic synchronisation Google Drive pour Systema Agency
+
+**Demande Pauline :** vérifier pourquoi le projet Systema ne semble pas se synchroniser avec Google Drive.
+
+**Constats :**
+- Google Drive est lancé côté Windows (`GoogleDriveFS.exe` actif).
+- Le dossier `Systema-Agency` est petit : environ 4.2 MB et 165 fichiers.
+- Aucun dossier lourd ou instable trouvé dans le dossier Drive : pas de `node_modules`, `dist`, `.git`, `.vercel`, `test-results`.
+- Les fichiers récents du projet ont des attributs Windows normaux côté fichiers (`Archive`) ; les dossiers en `ReadOnly, Directory` sont courants côté Windows/Drive et ne suffisent pas à expliquer le souci.
+- La base locale Google Drive contient bien le dossier `Systema-Agency`.
+
+**Cause probable trouvée :**
+- Google Drive ne détecte pas toujours les modifications faites depuis WSL/Codex dans `C:\Users\pauli\Mon disque`.
+- Exemple : `TODO.md` sur disque faisait 6845 octets après modification, mais Google Drive le voyait encore à 5212 octets dans sa base miroir.
+- Même type de décalage observé pour `NOTES.md` et `WORKLOG.md`.
+- Google Drive indiquait `pending_uploads = 0`, `queued_uploads = 0`, `pending_deletes = 0`, donc il ne considérait pas ces modifications comme en attente.
+
+**Décision pratique :**
+- Continuer à utiliser `SCC-github-clone` pour Git/build/test.
+- Pour synchroniser vers Google Drive, privilégier une action côté Windows (PowerShell, Git Windows, GitHub Desktop, VS Code Windows ou Explorateur), car cela déclenche mieux Google Drive qu'une écriture directe WSL.
+- Ne pas considérer `Mon disque\SCC` comme synchronisé avec Drive uniquement parce qu'un fichier a changé depuis WSL.
 
 ---
 

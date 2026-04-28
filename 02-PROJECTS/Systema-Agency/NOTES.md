@@ -151,3 +151,28 @@ Règle obligatoire en fin de passe :
 3. Mettre à jour `WORKLOG.md` si une action réelle a été faite.
 4. Synchroniser `C:\Users\pauli\Mon disque\SCC` avec `C:\Users\pauli\SCC-github-clone`.
 5. Vérifier que la prod, le repo et la documentation ne racontent pas trois histoires différentes.
+
+---
+
+## Google Drive et modifications depuis WSL/Codex (2026-04-28)
+
+Diagnostic : le dossier `Systema-Agency` dans `C:\Users\pauli\Mon disque\SCC` n'a pas de problème évident de volume ou de fichiers bloquants :
+- environ 4.2 MB ;
+- environ 165 fichiers ;
+- pas de `node_modules`, `dist`, `.git`, `.vercel` ou `test-results` dans le dossier Drive ;
+- pas de chemins trop longs détectés.
+
+Le problème observé : Google Drive ne détecte pas toujours les modifications faites depuis WSL/Codex dans `Mon disque`.
+
+Preuve relevée dans la base locale Google Drive :
+- `TODO.md` sur disque : 6845 octets, modifié le 2026-04-27 ;
+- Google Drive voyait encore `TODO.md` à 5212 octets, état du 2026-04-25 ;
+- même symptôme pour `NOTES.md` et `WORKLOG.md` ;
+- `pending_uploads = 0`, `queued_uploads = 0`, `pending_deletes = 0`.
+
+Conclusion pratique : Drive ne disait pas « j'essaie et j'échoue », il disait plutôt « je n'ai rien vu à envoyer ».
+
+Règle pratique :
+- Le clone GitHub hors Drive reste l'environnement fiable pour Git/build/test.
+- Pour remettre à jour `Mon disque\SCC` et réveiller Google Drive, privilégier une synchronisation côté Windows : PowerShell, Git Windows, GitHub Desktop, VS Code Windows ou Explorateur.
+- Éviter de compter uniquement sur des écritures WSL directes dans `Mon disque` pour déclencher Google Drive.

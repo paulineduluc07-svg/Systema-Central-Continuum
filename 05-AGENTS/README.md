@@ -18,6 +18,7 @@ Il doit permettre de :
 - Il laisse une trace courte dans le `WORKLOG.md` concerné quand une action réelle a été faite.
 - Toute passe ou action réelle doit être documentée dans les dossiers actifs du projet concerné.
 - La synchronisation local ↔ repo doit être faite à chaque fin de passe, sinon l'état réel devient flou et du temps est perdu à revérifier.
+- Si un dossier dans Google Drive (`Mon disque`) doit être synchronisé réellement, privilégier une action côté Windows (PowerShell, Git Windows, GitHub Desktop, VS Code Windows ou Explorateur), car les écritures WSL directes peuvent ne pas être détectées par Google Drive.
 
 ## Workflow standard
 - Debut de session:
@@ -34,6 +35,7 @@ Il doit permettre de :
   - mettre a jour `NOTES.md` si une decision, une question ouverte ou un repere actif a change
   - mettre a jour `WORKLOG.md` si une action reelle a ete faite
   - synchroniser le SCC local avec le clone GitHub quand le projet existe dans les deux emplacements
+  - pour les dossiers Google Drive, verifier que la synchronisation est déclenchée côté Windows quand c'est nécessaire
   - verifier que la prod, le repo et la documentation racontent le meme etat
   - ne pas creer de fichier intermediaire de reprise ou de workflow
 

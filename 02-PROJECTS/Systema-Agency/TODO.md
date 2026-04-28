@@ -20,6 +20,7 @@
 - À chaque passe/action réelle : mettre à jour `TODO.md`, `NOTES.md` et `WORKLOG.md` dans le dossier projet concerné.
 - À chaque passe/action réelle : synchroniser SCC local (`Mon disque\SCC`) et clone GitHub (`SCC-github-clone`) avant de clôturer.
 - À chaque passe/action réelle : vérifier que la prod, le repo et la documentation décrivent le même état.
+- Si Google Drive doit capter une modification dans `Mon disque`, privilégier une synchronisation côté Windows plutôt qu'une écriture WSL directe.
 
 ## À faire — Plan dicté par Pauline (2026-04-24)
 
