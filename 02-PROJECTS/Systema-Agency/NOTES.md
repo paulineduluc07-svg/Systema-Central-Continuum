@@ -176,3 +176,4 @@ Règle pratique :
 - Le clone GitHub hors Drive reste l'environnement fiable pour Git/build/test.
 - Pour remettre à jour `Mon disque\SCC` et réveiller Google Drive, privilégier une synchronisation côté Windows : PowerShell, Git Windows, GitHub Desktop, VS Code Windows ou Explorateur.
 - Éviter de compter uniquement sur des écritures WSL directes dans `Mon disque` pour déclencher Google Drive.
+- Un simple changement de date (`touch`) côté Windows n'a pas suffi pendant le diagnostic : Drive gardait encore les anciennes tailles dans sa base. Si Drive reste bloqué, faire une vraie copie/réécriture côté Windows ou relancer Google Drive.

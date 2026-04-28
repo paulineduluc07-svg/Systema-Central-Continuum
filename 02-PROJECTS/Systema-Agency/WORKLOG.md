@@ -118,6 +118,12 @@ Trace du travail effectué avec dates.
 - Pour synchroniser vers Google Drive, privilégier une action côté Windows (PowerShell, Git Windows, GitHub Desktop, VS Code Windows ou Explorateur), car cela déclenche mieux Google Drive qu'une écriture directe WSL.
 - Ne pas considérer `Mon disque\SCC` comme synchronisé avec Drive uniquement parce qu'un fichier a changé depuis WSL.
 
+**Vérification après documentation :**
+- Les docs ont été copiées vers le clone via PowerShell puis poussées sur GitHub (`a2d01f6 docs: documente sync Google Drive`).
+- SCC local et clone GitHub local sont alignés.
+- Un simple `touch` Windows sur les fichiers Drive n'a pas suffi : la base Drive voyait encore les anciennes tailles pour `TODO.md`, `NOTES.md` et `WORKLOG.md`, avec `pending_uploads = 0` et `queued_uploads = 0`.
+- Si Google Drive reste figé, prochaine action recommandée : vraie recopie/réécriture côté Windows ou redémarrage de Google Drive.
+
 ---
 
 ## 2026-04-23
