@@ -16,11 +16,13 @@ Il doit permettre de :
 - Il travaille dans le bon périmètre.
 - Il met à jour la documentation active seulement si l'état réel a changé.
 - Il laisse une trace courte dans le `WORKLOG.md` concerné quand une action réelle a été faite.
+- Toute passe ou action réelle doit être documentée dans les dossiers actifs du projet concerné.
+- La synchronisation local ↔ repo doit être faite à chaque fin de passe, sinon l'état réel devient flou et du temps est perdu à revérifier.
 
 ## Workflow standard
 - Debut de session:
   - lire `05-AGENTS/README.md`
-  - puis lire les fichiers projet demandes par l'utilisateur
+  - puis lire les fichiers projet demandes par l'utilisateur ; si aucun projet n'est mentionne par l'utilisateur, revenir dans la conversation pour attendre des instructions
   - ordre standard projet:`README.md`, `WORKLOG.md`, `TODO.md`, `NOTES.md`, `NOTES_DE_PAULINE.md` 
   - lire les fichiers de `RESSOURCES/`
   - analyser l'organisation et la cohérence des instructions et des fichiers du projet et donner le résultat de l'analyse à l'utilisateur
@@ -31,6 +33,8 @@ Il doit permettre de :
   - mettre a jour `TODO.md` si l'etat des taches a change
   - mettre a jour `NOTES.md` si une decision, une question ouverte ou un repere actif a change
   - mettre a jour `WORKLOG.md` si une action reelle a ete faite
+  - synchroniser le SCC local avec le clone GitHub quand le projet existe dans les deux emplacements
+  - verifier que la prod, le repo et la documentation racontent le meme etat
   - ne pas creer de fichier intermediaire de reprise ou de workflow
 
 

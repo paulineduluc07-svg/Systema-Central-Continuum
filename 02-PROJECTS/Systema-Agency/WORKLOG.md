@@ -67,6 +67,32 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-27 (mise à jour état Kim)
+
+**Session :** Vérification exacte de Kim dans Systema + réalignement documentaire
+
+**Constat vérifié :**
+- La route `/kim` répond en prod.
+- L'endpoint `ai.chat` est protégé par l'auth.
+- Le build production passe depuis le clone GitHub hors Drive.
+- Pauline confirme que `OPENAI_API_KEY` est bien configurée en Vercel Production et que Kim répond.
+- Le code réel permet déjà à Kim d'ajouter des prompts dans Prompt Vault via `promptVault.addPrompt`.
+
+**Désalignement corrigé dans la documentation :**
+- `TODO.md` ne doit plus indiquer que la clé OpenAI, le test réel ou la synchronisation sont encore à faire.
+- `NOTES.md` ne doit plus dire que Kim est limitée à la conversation seulement.
+- Règle ajoutée : chaque passe/action réelle doit mettre à jour `TODO.md`, `NOTES.md`, `WORKLOG.md` et synchroniser SCC local ↔ clone GitHub avant clôture.
+
+**Synchronisation :**
+- SCC local et clone GitHub local synchronisés sur les fichiers documentaires modifiés.
+- Commit local créé dans `SCC-github-clone` : `docs: aligne etat Kim Systema`.
+- Push distant GitHub tenté mais bloqué par l'auth HTTPS non interactive (`could not read Username for 'https://github.com'`). À pousser depuis un terminal/GitHub Desktop authentifié.
+
+**Reste à faire :**
+- Corriger le texte visible dans `/kim`, qui dit encore « Passe 1 : conversation active seulement » alors que Kim peut déjà ajouter des prompts.
+
+---
+
 ## 2026-04-23
 
 **Session :** Alignement structurel et nettoyage

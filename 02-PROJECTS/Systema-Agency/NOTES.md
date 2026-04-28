@@ -111,21 +111,43 @@ Pour ajouter un nouvel onglet : ajouter une entrée à `navLinks` (ligne 14) —
 
 Décision : intégrer Kim comme agente active dans `Systema Agency`, mais par petites passes fermées.
 
-Architecture cible :
+Architecture réelle actuelle :
 1. Page `/kim` pour discuter avec Kim.
 2. Serveur tRPC comme couche de sécurité.
 3. OpenAI appelé côté serveur seulement.
-4. Outils Systema ajoutés progressivement : lire, créer, modifier, archiver.
+4. `OPENAI_API_KEY` configurée en Vercel Production.
+5. Kim répond en prod.
+6. Kim peut déjà ajouter des prompts dans Prompt Vault via un outil serveur `promptVault.addPrompt`.
 
-Passe 1 commencée :
+Ce qui est en place :
 - route `/kim` ajoutée ;
 - lien « Kim » ajouté dans la navbar ;
 - endpoint protégé `ai.chat` ajouté ;
 - `server/ai/kim.ts` ajouté ;
-- Kim est limitée à la conversation seulement.
+- appel OpenAI côté serveur seulement ;
+- création de prompt dans Prompt Vault avec titre, contenu, catégorie et tags ;
+- confirmation affichée dans `/kim` après ajout ;
+- cache client Prompt Vault invalidé après action Kim.
 
 Règles actives :
 - aucune clé OpenAI dans le navigateur ;
-- `OPENAI_API_KEY` doit être configurée côté serveur/Vercel ;
-- création/modification de données reportée aux passes suivantes ;
+- `OPENAI_API_KEY` doit rester configurée côté serveur/Vercel ;
+- Kim ne peut pas encore créer de notes ou tâches ;
+- Kim ne peut pas encore modifier ni archiver ;
 - suppression directe interdite au départ.
+
+Point à corriger côté UI :
+- le texte visible dans `/kim` dit encore « Passe 1 : conversation active seulement », ce qui n'est plus exact depuis l'ajout de `promptVault.addPrompt`.
+
+---
+
+## Règle de synchronisation documentaire (2026-04-27)
+
+Chaque passe ou action réelle doit laisser une trace dans les dossiers actifs, sinon on perd du temps à revérifier l'état réel.
+
+Règle obligatoire en fin de passe :
+1. Mettre à jour `TODO.md` si une tâche change d'état.
+2. Mettre à jour `NOTES.md` si une décision, règle, limite ou vérité active change.
+3. Mettre à jour `WORKLOG.md` si une action réelle a été faite.
+4. Synchroniser `C:\Users\pauli\Mon disque\SCC` avec `C:\Users\pauli\SCC-github-clone`.
+5. Vérifier que la prod, le repo et la documentation ne racontent pas trois histoires différentes.

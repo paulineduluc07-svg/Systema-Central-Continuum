@@ -2,17 +2,24 @@
 
 ## En cours
 
-### Kim intégrée dans Systema — Passe 1 conversation
+### Kim intégrée dans Systema — état réel vérifié
 - [x] Ajouter une page `/kim` dans l'app.
 - [x] Ajouter le lien « Kim » dans la navbar desktop + mobile.
 - [x] Brancher un endpoint tRPC protégé `ai.chat`.
 - [x] Appeler OpenAI côté serveur uniquement via `OPENAI_API_KEY`.
-- [x] Garder Kim en lecture/conversation seulement pour cette passe.
+- [x] Garder Kim en conversation seulement pendant la première passe.
 - [x] Validation TypeScript : `pnpm check` OK.
-- [ ] Ajouter `OPENAI_API_KEY` dans Vercel Production avant test réel.
-- [ ] Tester visuellement `/kim` en local ou prod.
-- [ ] Tester un échange réel avec Kim.
-- [ ] Déployer/synchroniser GitHub quand Pauline reprend.
+- [x] Ajouter `OPENAI_API_KEY` dans Vercel Production.
+- [x] Tester visuellement `/kim` en prod.
+- [x] Tester un échange réel avec Kim — confirmé par Pauline, Kim répond.
+- [x] Déployer/synchroniser GitHub.
+- [x] Permettre à Kim d'ajouter des prompts dans Prompt Vault.
+- [ ] Mettre à jour le texte visible de `/kim`, qui dit encore « Passe 1 : conversation active seulement » alors que Kim peut déjà ajouter des prompts.
+
+### Règle anti-désalignement — active immédiatement
+- À chaque passe/action réelle : mettre à jour `TODO.md`, `NOTES.md` et `WORKLOG.md` dans le dossier projet concerné.
+- À chaque passe/action réelle : synchroniser SCC local (`Mon disque\SCC`) et clone GitHub (`SCC-github-clone`) avant de clôturer.
+- À chaque passe/action réelle : vérifier que la prod, le repo et la documentation décrivent le même état.
 
 ## À faire — Plan dicté par Pauline (2026-04-24)
 
@@ -67,7 +74,8 @@
 - [ ] Implémenter Supplément (suivi de prises, à clarifier vs Suivi médicament)
 
 #### Étape 5d — Kim agente active dans Systema
-- [ ] Passe 1 : conversation dans `/kim` sans outils d'écriture.
+- [x] Passe 1 : conversation dans `/kim`.
+- [x] Passe 1b : permettre à Kim de créer des prompts dans Prompt Vault.
 - [ ] Passe 2 : permettre à Kim de créer des notes/tâches.
 - [ ] Passe 3 : permettre à Kim de modifier/archiver avec confirmation.
 - [ ] Suppression directe interdite au départ.
