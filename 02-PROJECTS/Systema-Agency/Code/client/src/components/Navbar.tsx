@@ -1,6 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { cn } from "@/lib/utils";
-import { Cloud, CloudOff, LogIn, LogOut, BookOpen, Activity, Menu, X, Sparkles } from "lucide-react";
+import { Cloud, CloudOff, LogIn, LogOut, BookOpen, Activity, Menu, X, Sparkles, StickyNote } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { LoginModal } from "./LoginModal";
@@ -14,6 +14,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/kim", label: "Kim", icon: Sparkles },
+    { href: "/notes", label: "Notes", icon: StickyNote },
     { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
     { href: "/suivi", label: "Suivi", icon: Activity },
   ];

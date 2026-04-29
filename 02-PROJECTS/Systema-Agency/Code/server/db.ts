@@ -314,3 +314,61 @@ export async function deletePromptVaultData(userId: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(promptVaultData).where(eq(promptVaultData.userId, userId));
 }
+
+// ============== FLOATING NOTES ==============
+
+import { floatingNotes, InsertFloatingNote } from "../drizzle/schema.js";
+
+export async function listActiveFloatingNotes(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(floatingNotes)
+    .where(and(eq(floatingNotes.userId, userId), eq(floatingNotes.archived, false)))
+    .orderBy(floatingNotes.createdAt);
+}
+
+export async function listArchivedFloatingNotes(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(floatingNotes)
+    .where(and(eq(floatingNotes.userId, userId), eq(floatingNotes.archived, true)))
+    .orderBy(desc(floatingNotes.archivedAt));
+}
+
+export async function createFloatingNote(note: InsertFloatingNote) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(floatingNotes).values(note).returning();
+  return result[0];
+}
+
+export async function updateFloatingNote(id: number, userId: number, data: Partial<InsertFloatingNote>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(floatingNotes)
+    .set({ ...data, updatedAt: new Date() })
+    .where(and(eq(floatingNotes.id, id), eq(floatingNotes.userId, userId)));
+}
+
+export async function archiveFloatingNote(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await db.update(floatingNotes)
+    .set({ archived: true, archivedAt: now, updatedAt: now })
+    .where(and(eq(floatingNotes.id, id), eq(floatingNotes.userId, userId)));
+}
+
+export async function restoreFloatingNote(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(floatingNotes)
+    .set({ archived: false, archivedAt: null, updatedAt: new Date() })
+    .where(and(eq(floatingNotes.id, id), eq(floatingNotes.userId, userId)));
+}
+
+export async function deleteFloatingNote(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(floatingNotes).where(and(eq(floatingNotes.id, id), eq(floatingNotes.userId, userId)));
+}

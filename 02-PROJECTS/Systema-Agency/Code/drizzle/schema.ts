@@ -2,6 +2,8 @@ import { integer, pgEnum, pgTable, text, timestamp, varchar, boolean, serial } f
 
 export const roleEnum = pgEnum("role", ["user", "admin"]);
 export const tabTypeEnum = pgEnum("tabType", ["widgets", "whiteboard"]);
+export const floatingNoteAccentEnum = pgEnum("floatingNoteAccent", ["pink", "violet", "lavender", "cyan", "mint"]);
+export const floatingNoteStyleEnum = pgEnum("floatingNoteStyle", ["neon", "frost", "holo"]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -111,3 +113,24 @@ export const promptVaultData = pgTable("prompt_vault_data", {
 
 export type PromptVaultDataRow = typeof promptVaultData.$inferSelect;
 export type InsertPromptVaultData = typeof promptVaultData.$inferInsert;
+
+export const floatingNotes = pgTable("floating_notes", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull().default(""),
+  body: text("body").notNull().default(""),
+  checklist: text("checklist").notNull().default("[]"),
+  x: integer("x").notNull().default(120),
+  y: integer("y").notNull().default(120),
+  w: integer("w").notNull().default(240),
+  h: integer("h").notNull().default(220),
+  accent: floatingNoteAccentEnum("accent").notNull().default("pink"),
+  style: floatingNoteStyleEnum("style"),
+  archived: boolean("archived").notNull().default(false),
+  archivedAt: timestamp("archivedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type FloatingNoteRow = typeof floatingNotes.$inferSelect;
+export type InsertFloatingNote = typeof floatingNotes.$inferInsert;

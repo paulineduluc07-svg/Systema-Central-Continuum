@@ -68,6 +68,99 @@ const backupPromptVaultSchema = z
     }
   }, `Le snapshot Prompt Vault est invalide ou depasse ${PROMPT_VAULT_MAX_PAYLOAD_CHARS} caracteres.`);
 
+const FLOATING_NOTE_TITLE_MAX = 200;
+const FLOATING_NOTE_BODY_MAX = 20_000;
+const FLOATING_NOTE_CHECKLIST_MAX_ITEMS = 100;
+const FLOATING_NOTE_CHECKLIST_TEXT_MAX = 500;
+const FLOATING_NOTE_BOARD_MAX = 20_000;
+const FLOATING_NOTE_SIZE_MAX = 2_000;
+
+const floatingNoteAccentSchema = z.enum(["pink", "violet", "lavender", "cyan", "mint"]);
+const floatingNoteStyleSchema = z.enum(["neon", "frost", "holo"]).nullable();
+const floatingNoteChecklistSchema = z
+  .array(z.object({
+    text: z.string().max(FLOATING_NOTE_CHECKLIST_TEXT_MAX),
+    done: z.boolean(),
+  }))
+  .max(FLOATING_NOTE_CHECKLIST_MAX_ITEMS);
+
+const floatingNoteCreateSchema = z.object({
+  title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
+  body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
+  checklist: floatingNoteChecklistSchema.optional(),
+  x: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX),
+  y: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX),
+  w: z.number().int().min(180).max(FLOATING_NOTE_SIZE_MAX),
+  h: z.number().int().min(160).max(FLOATING_NOTE_SIZE_MAX),
+  accent: floatingNoteAccentSchema.optional(),
+  style: floatingNoteStyleSchema.optional(),
+});
+
+const floatingNoteUpdateSchema = z.object({
+  id: z.number().int(),
+  title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
+  body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
+  checklist: floatingNoteChecklistSchema.optional(),
+  x: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX).optional(),
+  y: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX).optional(),
+  w: z.number().int().min(180).max(FLOATING_NOTE_SIZE_MAX).optional(),
+  h: z.number().int().min(160).max(FLOATING_NOTE_SIZE_MAX).optional(),
+  accent: floatingNoteAccentSchema.optional(),
+  style: floatingNoteStyleSchema.optional(),
+});
+
+type FloatingNoteDbRow = {
+  id: number;
+  title: string;
+  body: string;
+  checklist: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  accent: "pink" | "violet" | "lavender" | "cyan" | "mint";
+  style: "neon" | "frost" | "holo" | null;
+  archived: boolean;
+  archivedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+function toFloatingNoteDto(row: FloatingNoteDbRow) {
+  let checklist: { text: string; done: boolean }[] = [];
+  try {
+    const parsed = JSON.parse(row.checklist) as unknown;
+    if (Array.isArray(parsed)) {
+      checklist = parsed
+        .filter((item): item is { text: unknown; done: unknown } =>
+          typeof item === "object" && item !== null,
+        )
+        .map((item) => ({
+          text: typeof item.text === "string" ? item.text : "",
+          done: typeof item.done === "boolean" ? item.done : false,
+        }));
+    }
+  } catch {
+    checklist = [];
+  }
+  return {
+    id: row.id,
+    title: row.title,
+    body: row.body,
+    checklist,
+    x: row.x,
+    y: row.y,
+    w: row.w,
+    h: row.h,
+    accent: row.accent,
+    style: row.style,
+    archived: row.archived,
+    archivedAt: row.archivedAt ? row.archivedAt.toISOString() : null,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
 export const appRouter = router({
   ai: router({
     chat: protectedProcedure
@@ -518,6 +611,70 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await db.upsertPromptVaultData(ctx.user.id, input.data);
         return { success: true };
+      }),
+  }),
+
+  // Floating Notes API
+  floatingNotes: router({
+    listActive: protectedProcedure.query(async ({ ctx }) => {
+      const rows = await db.listActiveFloatingNotes(ctx.user.id);
+      return rows.map(toFloatingNoteDto);
+    }),
+
+    listArchived: protectedProcedure.query(async ({ ctx }) => {
+      const rows = await db.listArchivedFloatingNotes(ctx.user.id);
+      return rows.map(toFloatingNoteDto);
+    }),
+
+    create: protectedProcedure
+      .input(floatingNoteCreateSchema)
+      .mutation(async ({ ctx, input }) => {
+        const row = await db.createFloatingNote({
+          userId: ctx.user.id,
+          title: input.title ?? "",
+          body: input.body ?? "",
+          checklist: JSON.stringify(input.checklist ?? []),
+          x: input.x,
+          y: input.y,
+          w: input.w,
+          h: input.h,
+          accent: input.accent ?? "pink",
+          style: input.style ?? null,
+        });
+        return toFloatingNoteDto(row);
+      }),
+
+    update: protectedProcedure
+      .input(floatingNoteUpdateSchema)
+      .mutation(async ({ ctx, input }) => {
+        const { id, checklist, ...rest } = input;
+        const patch: Record<string, unknown> = { ...rest };
+        if (checklist !== undefined) {
+          patch.checklist = JSON.stringify(checklist);
+        }
+        await db.updateFloatingNote(id, ctx.user.id, patch);
+        return { success: true } as const;
+      }),
+
+    archive: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.archiveFloatingNote(input.id, ctx.user.id);
+        return { success: true } as const;
+      }),
+
+    restore: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.restoreFloatingNote(input.id, ctx.user.id);
+        return { success: true } as const;
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.deleteFloatingNote(input.id, ctx.user.id);
+        return { success: true } as const;
       }),
   }),
 
