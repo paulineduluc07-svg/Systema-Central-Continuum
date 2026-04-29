@@ -56,12 +56,27 @@
 ### PHASE 2 — Vrai set-up (lance-toi UNIQUEMENT quand Phase 1 est validée par Pauline, sans bug de code)
 
 #### Étape 5a — Notes volantes en widgets déplaçables (priorité haute)
-- [ ] Refondre le « Tableau blanc » actuel en widgets de notes draggables
-- [ ] Chaque note = widget glassmorphism, déplaçable librement (drag-and-drop), persistance de la position
-- [ ] Style cohérent avec le reste de l'app (glassmorphism rose)
-- [ ] Sync inter-appareils (dépend de l'étape 1 réparée)
-- **Validation Pauline :** créer une note → la déplacer → recharger la page → position conservée ; ouvrir sur un autre appareil → même état
-- **Tech notes :** `react-rnd` est déjà dans `package.json` (drag-and-drop resize), à utiliser. `@dnd-kit/*` aussi présent.
+- [x] Implémentation Passe A — desktop (2026-04-29) :
+  - Nouvelle table `floating_notes` (Drizzle + migration `0004_floating_notes.sql`)
+  - Router tRPC `floatingNotes` (listActive/listArchived/create/update/archive/restore/delete)
+  - Page `/notes` (`pages/FloatingNotes.tsx`) avec board free-form, FAB, drawer Tiroir
+  - Trois styles glass (neon/frost/holo) + 5 accents (pink/violet/lavender/cyan/mint), grain, grille
+  - Persistance optimistic + debounce 600 ms par note
+  - Lien « Notes » ajouté dans la navbar (icône StickyNote)
+- [x] Migration `floating_notes` appliquée sur Neon via `scripts/apply-floating-notes-migration.mjs` (2026-04-29).
+- [x] `pnpm check` + `pnpm build` validés depuis le clone.
+- [x] Smoke tests endpoints OK en local et en prod (auth.me 200, floatingNotes.listActive 401 protégé).
+- [x] Commit `7d3aa26` poussé sur `main`, auto-deploy Vercel passé. Page accessible : `https://systema-agency.vercel.app/notes`.
+- [ ] **Validation visuelle Pauline (à faire) :** ouvrir `https://systema-agency.vercel.app/notes` et tester :
+  - Créer (bouton + en bas à droite + double-clic sur le tableau)
+  - Déplacer (attraper la barre du haut de la note)
+  - Redimensionner (coin bas-droit avec les 3 traits)
+  - Éditer titre / texte / cocher des cases / ajouter une tâche
+  - Archiver (bouton archive dans la barre du haut)
+  - Ouvrir le tiroir (bouton « Tiroir » en haut à droite), restaurer, supprimer définitivement
+  - **Test sync :** créer → recharger la page → la note doit être à la même place ; ouvrir sur un autre appareil → même état
+- [ ] Passe B — vue mobile masonry + bottom sheet (à planifier après validation A).
+- **Tech notes :** `react-rnd` non utilisé finalement (les pointer events natifs collent au design handoff) ; le drawer reste simple sans `vaul` pour cette passe.
 
 #### Étape 5b — Espace d'archivage des notes (long terme)
 - [ ] Pouvoir archiver une note (la sortir du tableau actif sans la supprimer)

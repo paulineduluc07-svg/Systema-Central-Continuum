@@ -20,6 +20,7 @@ Décisions, repères actifs et règles stables du projet.
 |---|---|---|
 | `/` | Page principale HomeV2 | Brand `Systema Agency` |
 | `/kim` | Conversation avec Kim | Oui |
+| `/notes` | Notes volantes (board glassmorphism + tiroir d'archives) | Oui |
 | `/prompt-vault` | Bibliothèque de prompts | Oui |
 | `/suivi` | Suivi médicament | Oui |
 | `/v1` | Ancienne home conservée | Non, URL directe seulement |
@@ -112,8 +113,19 @@ Si l'auth recasse, vérifier d'abord que `VITE_APP_ID` existe et vaut `systema-a
 
 ## Priorités produit ouvertes
 
-1. Notes volantes en widgets glassmorphism déplaçables.
-2. Archivage/désarchivage des notes.
-3. Kim capable de créer des notes/tâches.
+1. ~~Notes volantes en widgets glassmorphism déplaçables~~ — Passe A desktop livrée 2026-04-29 (à valider en local).
+2. Vue mobile masonry + bottom sheet pour `/notes` (Passe B).
+3. Kim capable de créer des notes (peut maintenant pointer sur la table `floating_notes`).
 4. Images associées aux prompts dans Prompt Vault.
 5. Fonctions Gmail / génération de tâches / supplément, seulement quand la base est propre.
+
+---
+
+## Floating Notes — repères techniques
+
+- Source design : `RESSOURCES/design_handoff_floating_notes_unzip/design_handoff_floating_notes/`.
+- Table dédiée `floating_notes` (volontairement séparée de `notes` qui sert au widget historique).
+- Tweaks fixés (defaults du handoff) : style `neon`, accent `pink`, blur 22, opacity 0.9, grain on, grille on. Aucun panneau utilisateur n'est exposé (le handoff dit explicitement « do NOT ship »). Un panneau pourra être ajouté plus tard si besoin.
+- Persistance : optimistic local + debounce 600 ms par note pour les éditions de texte/position. Mutations archive/restore/delete invalidatent les listes.
+- Champ `style` par note volontairement nullable (`null` = hérite du global).
+- Migration à appliquer côté Neon : `pnpm db:push` (génère + applique). Le SQL `0004_floating_notes.sql` est déjà fourni en backup et est idempotent.

@@ -4,6 +4,54 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-29
+
+**Session :** Implémentation Passe A des notes volantes (`/notes`)
+
+**Source design :** `RESSOURCES/design_handoff_floating_notes_unzip/design_handoff_floating_notes/` (zip extrait depuis `Documents/Downloads/systema agency.zip`).
+
+**Décisions de design retenues avec Pauline :**
+- URL `/notes`.
+- Tweaks panel exclu (handoff dit « do NOT ship ») ; defaults : style `neon`, accent `pink`, blur 22, opacity 0.9, grain on, grille on.
+- Fond : `/backgrounds/main-v2.jpg` (cohérent avec HomeV2/Kim) au lieu du `room-bg.png` du handoff.
+- Passe A = desktop ; Passe B = mobile masonry + bottom sheet (à venir).
+- Ne pas toucher au tableau blanc historique. La page `/notes` est une nouvelle route séparée.
+
+**Ce qui a été fait :**
+- `drizzle/schema.ts` : nouvelle table `floating_notes` + enums `floatingNoteAccent`, `floatingNoteStyle`. Champs : id, userId, title, body, checklist (JSON dans text), x/y/w/h, accent, style nullable, archived, archivedAt, createdAt, updatedAt.
+- `drizzle/0004_floating_notes.sql` : migration idempotente (CREATE TYPE/TABLE/INDEX IF NOT EXISTS + bloc DO $$ pour le FK).
+- `server/db.ts` : helpers `listActiveFloatingNotes`, `listArchivedFloatingNotes`, `createFloatingNote`, `updateFloatingNote`, `archiveFloatingNote`, `restoreFloatingNote`, `deleteFloatingNote`.
+- `server/routers.ts` : router tRPC `floatingNotes` (listActive/listArchived/create/update/archive/restore/delete), schémas Zod, mapper DTO `toFloatingNoteDto`.
+- `client/src/pages/FloatingNotes.tsx` : page complète — board free-form 100vh, FAB bottom-right (au-dessus du sync indicator), drawer Tiroir glassmorphism à droite, trois traitements glass (neon/frost/holo), 5 accents, grain SVG, grille de fond, pointer events natifs pour drag/resize, optimistic + debounce 600 ms par note.
+- `client/src/App.tsx` : route lazy `/notes` ajoutée.
+- `client/src/components/Navbar.tsx` : lien « Notes » + icône `StickyNote` ajouté entre Kim et Prompt Vault.
+
+**Validation locale (depuis le clone, env Windows) :**
+- Réinstallation `node_modules` depuis PowerShell (l'install initiale via WSL avait posé des symlinks non lisibles côté Windows natif).
+- `pnpm check` ✅ exit 0 — aucune erreur TypeScript.
+- `pnpm build` ✅ exit 0 — bundle `FloatingNotes-BpUZKgdS.js` 24.88 kB (gzip 6.57 kB), 2118 modules transformés en 3.31s.
+
+**Migration DB :**
+- `pnpm db:push` non utilisé (le journal Drizzle local était désynchronisé avec la prod — risque de regénérer toutes les migrations).
+- À la place : script `scripts/apply-floating-notes-migration.mjs` qui applique directement le SQL `0004_floating_notes.sql` via `@neondatabase/serverless`. Idempotent (CREATE ... IF NOT EXISTS + DO $$). Réutilisable.
+- Vérification post-migration : la table `floating_notes` existe sur Neon avec les 15 colonnes attendues.
+
+**Smoke tests (dev local + prod) :**
+- Local `pnpm dev` : `auth.me` HTTP 200, `floatingNotes.listActive` HTTP 401 "Please login" (= route protégée branchée correctement).
+- Prod `https://systema-agency.vercel.app` : `/notes` HTTP 200, `auth.me` HTTP 200, `floatingNotes.listActive` HTTP 401 — déploiement Vercel auto-passé après le push.
+
+**Push :**
+- Commit `7d3aa26` poussé sur `main` (8 fichiers, +1534/-1 lignes).
+- Auto-deploy Vercel déclenché et complété.
+
+**Reste à faire (Pauline) :**
+1. **Test visuel sur prod** : `https://systema-agency.vercel.app/notes` (ou en local via `pnpm dev` puis `http://localhost:3000/notes`).
+2. Tester : création (FAB en bas à droite + double-clic sur le tableau), drag (barre du haut), resize (coin bas-droit), édition titre/body/checklist, archivage (bouton archive dans la barre), tiroir (bouton « Tiroir » en haut à droite), restauration, suppression définitive.
+
+**Statut :** ✅ Passe A desktop **livrée en prod**. Passe B (mobile masonry + bottom sheet) à planifier.
+
+---
+
 ## 2026-04-28 (suite 2)
 
 **Session :** Nettoyage de `NOTES.md`
