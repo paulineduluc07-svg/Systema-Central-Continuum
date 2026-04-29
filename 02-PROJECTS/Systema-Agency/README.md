@@ -3,6 +3,11 @@
 ## Rôle du dossier
 Ce dossier regroupe les éléments de travail liés à `Systema-Agency`.
 
+⚠️ FICHIER EN LECTURE SEULE
+
+INTERDICTION ABSOLUE de modifier, supprimer, ajouter, reformater, renommer ou remplacer ce fichier.
+
+
 Il sert à :
 - cadrer le projet
 - centraliser sa documentation
@@ -10,10 +15,12 @@ Il sert à :
 - éviter que les informations du projet soient dispersées
 
 ## Vision
-Dashboard personnel sobre et fonctionnel, organisé autour de 3 entrées fixes :
-- **Prompt Vault** — bibliothèque de prompts IA
+Dashboard personnel
+Onglet actif a ce jour:
+- **Prompt Vault** — bibliothèque de prompts IA 
 - **Suivi médicament** — suivi de prises avec sync DB
-- **Tableau blanc** — notes volantes synchronisées entre appareils
+- **IA kim**
+
 
 Interface glassmorphism, minimaliste, orientée utilité réelle. Pas de RPG, pas de tarot, pas d'avatar.
 

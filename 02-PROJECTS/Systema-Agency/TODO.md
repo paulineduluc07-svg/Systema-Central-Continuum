@@ -14,7 +14,7 @@
 - [x] Tester un échange réel avec Kim — confirmé par Pauline, Kim répond.
 - [x] Déployer/synchroniser GitHub.
 - [x] Permettre à Kim d'ajouter des prompts dans Prompt Vault.
-- [ ] Mettre à jour le texte visible de `/kim`, qui dit encore « Passe 1 : conversation active seulement » alors que Kim peut déjà ajouter des prompts.
+- [x] Mettre à jour le texte visible de `/kim`, qui disait encore « Passe 1 : conversation active seulement » alors que Kim peut déjà ajouter des prompts. (2026-04-28)
 
 ### Règle anti-désalignement — active immédiatement
 - À chaque passe/action réelle : mettre à jour `TODO.md`, `NOTES.md` et `WORKLOG.md` dans le dossier projet concerné.

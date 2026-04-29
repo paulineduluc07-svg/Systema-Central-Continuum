@@ -4,6 +4,23 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-28 (suite)
+
+**Session :** Alignement documentaire + texte Kim
+
+**Ce qui a été fait :**
+- Confirmation que les bandeaux « fichier en lecture seule » dans la documentation active viennent de Pauline et doivent être conservés.
+- Synchronisation vers le clone GitHub des versions Drive de `README.md` et `NOTES_DE_PAULINE.md`.
+- Correction du texte visible dans `/kim` : il ne dit plus « Passe 1 : conversation active seulement ».
+- Nouveau texte aligné sur l'état réel : Kim peut discuter et ajouter des prompts dans Prompt Vault ; création de notes, modification et archivage restent des étapes futures.
+
+**Validation :**
+- `pnpm check` OK depuis le clone GitHub.
+
+**Statut :** terminé, en attente du push GitHub.
+
+---
+
 ## 2026-04-27
 
 **Session :** Démarrage intégration Kim dans Systema Agency

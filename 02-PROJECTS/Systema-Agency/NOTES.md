@@ -136,8 +136,8 @@ Règles actives :
 - Kim ne peut pas encore modifier ni archiver ;
 - suppression directe interdite au départ.
 
-Point à corriger côté UI :
-- le texte visible dans `/kim` dit encore « Passe 1 : conversation active seulement », ce qui n'est plus exact depuis l'ajout de `promptVault.addPrompt`.
+Texte UI :
+- le texte visible dans `/kim` est aligné depuis le 2026-04-28 : Kim peut discuter et ajouter des prompts dans Prompt Vault ; les notes, modifications et archives restent des étapes futures.
 
 ---
 

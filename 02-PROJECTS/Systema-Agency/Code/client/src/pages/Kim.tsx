@@ -83,7 +83,7 @@ export default function Kim() {
             </div>
           </div>
           <p className="mt-4 max-w-2xl text-sm leading-6 text-white/80">
-            Passe 1 : conversation active seulement. Les outils pour créer et modifier dans Systema seront ajoutés une étape à la fois.
+            Kim peut discuter avec toi et ajouter des prompts dans Prompt Vault. Les outils pour créer des notes, modifier ou archiver viendront une étape à la fois.
           </p>
         </div>
 
