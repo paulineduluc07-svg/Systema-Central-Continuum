@@ -4,6 +4,20 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-04-28 (suite 2)
+
+**Session :** Nettoyage de `NOTES.md`
+
+**Ce qui a été fait :**
+- Réduction de `NOTES.md` aux décisions, repères actifs et règles stables.
+- Retrait du narratif d'incident et des détails historiques déjà conservés dans `WORKLOG.md`.
+- Conservation des points vraiment utiles : état actuel, routes, Kim, déploiement, auth/env, dev local, sync Drive/GitHub et priorités ouvertes.
+- Reformatage de `NOTES_DE_PAULINE.md` en Markdown lisible, sans changement de fond.
+
+**Statut :** terminé ; commit/push de clôture demandé par Pauline.
+
+---
+
 ## 2026-04-28 (suite)
 
 **Session :** Alignement documentaire + texte Kim
