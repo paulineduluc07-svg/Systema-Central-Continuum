@@ -4,6 +4,35 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-05-01
+
+**Session :** Validation notes volantes + création serveur MCP Systema
+
+**Validation Pauline :**
+- Pauline confirme le test visuel des notes volantes `/notes`.
+- La Passe A desktop des notes volantes passe donc de livrée à validée côté usage.
+
+**Serveur MCP créé :**
+- Ajout d'un serveur MCP local TypeScript/Node.js dans `Code/server/mcp/systema.ts`.
+- SDK : `@modelcontextprotocol/sdk`.
+- Transport : `stdio`, lancé par `pnpm mcp:systema`.
+- Ressources exposées en lecture seule : `README.md`, `TODO.md`, `NOTES.md`, `NOTES_DE_PAULINE.md`, `WORKLOG.md`.
+- Tools exposés : `list_project_docs`, `read_project_doc`, `search_project_docs`.
+- Prompt exposé : `systema-session-start`.
+
+**Validation technique :**
+- `pnpm add @modelcontextprotocol/sdk@^1.29.0` exécuté dans le clone hors Drive.
+- `pnpm check` OK.
+- Smoke test MCP via client SDK Node OK : 3 tools et 5 ressources listés.
+
+**Décision :**
+- Le serveur MCP reste volontairement sans mutation DB pour cette passe.
+- Les outils MCP capables de créer/modifier des notes ou prompts devront être validés dans une passe séparée avec garde-fous.
+
+**Statut :** terminé ; SCC local synchronisé depuis le clone.
+
+---
+
 ## 2026-04-29
 
 **Session :** Implémentation Passe A des notes volantes (`/notes`)

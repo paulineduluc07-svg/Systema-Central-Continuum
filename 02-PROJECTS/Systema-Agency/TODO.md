@@ -67,7 +67,8 @@
 - [x] `pnpm check` + `pnpm build` validés depuis le clone.
 - [x] Smoke tests endpoints OK en local et en prod (auth.me 200, floatingNotes.listActive 401 protégé).
 - [x] Commit `7d3aa26` poussé sur `main`, auto-deploy Vercel passé. Page accessible : `https://systema-agency.vercel.app/notes`.
-- [ ] **Validation visuelle Pauline (à faire) :** ouvrir `https://systema-agency.vercel.app/notes` et tester :
+- [x] **Validation visuelle Pauline :** confirmée par Pauline le 2026-05-01 sur `https://systema-agency.vercel.app/notes`.
+- [x] Scénarios de validation couverts :
   - Créer (bouton + en bas à droite + double-clic sur le tableau)
   - Déplacer (attraper la barre du haut de la note)
   - Redimensionner (coin bas-droit avec les 3 traits)
@@ -101,6 +102,7 @@
 ### Tâches techniques transverses (à faire au moment opportun)
 - [x] Réparer `node_modules` local (`corepack pnpm install` avec Drive en pause — 42.7s) — fait 2026-04-26
 - [x] Créer `.env` local — fait 2026-04-26 via `vercel env pull .env --environment=production` (mêmes 5 vars que la prod)
+- [x] Créer un serveur MCP local TypeScript/Node.js pour exposer le contexte Systema aux clients MCP — fait 2026-05-01 (`pnpm mcp:systema`, SDK `@modelcontextprotocol/sdk`).
 
 ## Terminé
 - [x] Navbar responsive — menu hamburger glassmorphism en mobile (< 768px), desktop inchangé. (2026-04-26)

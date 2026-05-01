@@ -111,9 +111,23 @@ Si l'auth recasse, vérifier d'abord que `VITE_APP_ID` existe et vaut `systema-a
 
 ---
 
+## Serveur MCP local
+
+- Serveur MCP TypeScript/Node.js ajouté côté `Code/server/mcp/systema.ts`.
+- SDK utilisé : `@modelcontextprotocol/sdk`.
+- Transport : `stdio`, pour usage local par un client MCP qui lance le process.
+- Commande : `pnpm mcp:systema` depuis `Code/`.
+- Surface actuelle volontairement en lecture seule :
+  - ressources `systema://project/readme`, `todo`, `notes`, `notes-de-pauline`, `worklog` ;
+  - tools `list_project_docs`, `read_project_doc`, `search_project_docs` ;
+  - prompt `systema-session-start`.
+- Les mutations DB via MCP sont à traiter dans une passe séparée avec validation explicite.
+
+---
+
 ## Priorités produit ouvertes
 
-1. ~~Notes volantes en widgets glassmorphism déplaçables~~ — Passe A desktop livrée 2026-04-29 (à valider en local).
+1. ~~Notes volantes en widgets glassmorphism déplaçables~~ — Passe A desktop livrée 2026-04-29, validation visuelle Pauline confirmée 2026-05-01.
 2. Vue mobile masonry + bottom sheet pour `/notes` (Passe B).
 3. Kim capable de créer des notes (peut maintenant pointer sur la table `floating_notes`).
 4. Images associées aux prompts dans Prompt Vault.

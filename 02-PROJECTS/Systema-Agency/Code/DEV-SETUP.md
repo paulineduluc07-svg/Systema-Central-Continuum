@@ -107,6 +107,7 @@ celui défini dans `PORT`). Ouvrir `http://localhost:5000/` dans le navigateur.
 | `pnpm test` | Tests unitaires (vitest) |
 | `pnpm test:e2e` | Tests Playwright (e2e) |
 | `pnpm build` | Build prod (client + server) |
+| `pnpm mcp:systema` | Serveur MCP local Systema Agency en transport `stdio` |
 | `pnpm verify:step` | `pnpm test && pnpm build` (cycle de validation rapide) |
 | `pnpm verify:full` | `pnpm check && pnpm test && pnpm build` (avant push) |
 
