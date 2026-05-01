@@ -11,8 +11,8 @@ export function useAuth() {
   });
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: () => {
-      utils.auth.me.invalidate();
+    onSuccess: async () => {
+      await utils.auth.me.invalidate();
     },
   });
 
@@ -25,8 +25,9 @@ export function useAuth() {
   const login = useCallback(
     async (email: string, password: string) => {
       await loginMutation.mutateAsync({ email, password });
+      await utils.auth.me.refetch();
     },
-    [loginMutation]
+    [loginMutation, utils.auth.me]
   );
 
   const logout = useCallback(async () => {

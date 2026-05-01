@@ -4,6 +4,47 @@ Trace du travail effectué avec dates.
 
 ---
 
+## 2026-05-01 (suite 2)
+
+**Session :** Correctif modal de connexion
+
+**Problème :**
+- Le modal de connexion s'ouvrait, mais les champs email et mot de passe pouvaient être impossibles à remplir.
+- Cause : `LoginModal` est rendu dans `Navbar`, dont le header parent utilise `pointer-events-none`; sans réactivation explicite sur l'overlay, les clics ne ciblent pas correctement le formulaire.
+
+**Ce qui a été fait :**
+- `LoginModal.tsx` : ajout de `pointer-events-auto` sur l'overlay fixe du modal.
+- `useAuth.ts` : après login, invalidation puis refetch explicite de `auth.me` pour stabiliser le passage en état connecté.
+
+**Validation :**
+- API locale : `auth.login` 200, cookie `app_session_id`, puis `auth.me` 200.
+- `pnpm build` OK depuis le clone GitHub.
+
+**Statut :** prêt à pousser/déployer.
+
+---
+
+## 2026-05-01 (suite)
+
+**Session :** Correctif accessibilité notes volantes
+
+**Problème :**
+- Les notes pouvaient être positionnées (via drag ou création) sous la navbar (z-index 50), rendant leur barre de contrôle (archive/supprimer) inaccessible.
+
+**Ce qui a été fait :**
+- `FloatingNotes.tsx` :
+  - Augmentation du `z-index` de la note focalisée à **60** (au lieu de 30). Désormais, cliquer sur une note la fait passer *devant* la navbar, permettant de la récupérer si elle était coincée.
+  - Ajout d'un clamping `y >= 0` et `x >= 0` dans la logique de drag (`move` et `up`).
+  - Validation TypeScript et build local OK.
+
+**Validation :**
+- Poussé sur GitHub (`61133c4`), déploiement Vercel automatique.
+- Sync SCC local (Drive) effectuée via PowerShell.
+
+**Statut :** terminé, correctif en ligne.
+
+---
+
 ## 2026-05-01
 
 **Session :** Validation notes volantes + création serveur MCP Systema

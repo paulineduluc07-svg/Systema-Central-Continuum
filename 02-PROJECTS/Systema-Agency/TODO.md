@@ -103,6 +103,7 @@
 - [x] Réparer `node_modules` local (`corepack pnpm install` avec Drive en pause — 42.7s) — fait 2026-04-26
 - [x] Créer `.env` local — fait 2026-04-26 via `vercel env pull .env --environment=production` (mêmes 5 vars que la prod)
 - [x] Créer un serveur MCP TypeScript/Node.js pour exposer le contexte Systema aux clients MCP — fait 2026-05-01 (`pnpm mcp:systema`, SDK `@modelcontextprotocol/sdk`, endpoint public `/mcp`).
+- [x] Corriger le modal de connexion non cliquable quand il est rendu dans la navbar `pointer-events-none` — fait 2026-05-01.
 
 ## Terminé
 - [x] Navbar responsive — menu hamburger glassmorphism en mobile (< 768px), desktop inchangé. (2026-04-26)

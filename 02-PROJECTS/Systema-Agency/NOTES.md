@@ -80,6 +80,8 @@ Variables IA :
 
 Si l'auth recasse, vérifier d'abord que `VITE_APP_ID` existe et vaut `systema-agency`.
 
+Si le modal s'ouvre mais que les champs email/mot de passe ne prennent pas le focus, vérifier `LoginModal.tsx` : le modal est rendu depuis `Navbar`, dont le header parent est en `pointer-events-none`; l'overlay du modal doit donc rester en `pointer-events-auto`.
+
 ---
 
 ## Développement local

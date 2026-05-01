@@ -23,7 +23,7 @@ export function LoginModal({ onClose }: { onClose: () => void }) {
   const errorMsg = localError || (loginError ? "Email ou mot de passe incorrect" : "");
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[#11061d]/55 backdrop-blur-md px-4">
+    <div className="pointer-events-auto fixed inset-0 z-[60] flex items-center justify-center bg-[#11061d]/55 backdrop-blur-md px-4">
       <div className="w-full max-w-md rounded-3xl border border-white/50 bg-white/85 p-6 shadow-2xl backdrop-blur-xl">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-base font-semibold text-[#2a1738]">Connexion</h2>
