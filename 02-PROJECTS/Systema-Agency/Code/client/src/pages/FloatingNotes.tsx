@@ -273,15 +273,17 @@ export default function FloatingNotesPage() {
 
         <CreateFAB onCreate={() => handleCreate()} disabled={createMutation.isPending} />
       </div>
-
-      <VaultDrawer
-        open={vaultOpen}
-        archived={archived}
-        loading={archivedQuery.isLoading}
-        onClose={() => setVaultOpen(false)}
-        onRestore={handleRestore}
-        onDelete={handlePurge}
-      />
+<VaultDrawer
+  open={vaultOpen}
+  activeNotes={notes}
+  archived={archived}
+  loading={archivedQuery.isLoading}
+  onClose={() => setVaultOpen(false)}
+  onRestore={handleRestore}
+  onDelete={handlePurge}
+  onArchive={handleArchive}
+  onRescue={rescueNotes}
+/>
     </main>
   );
 }
@@ -827,7 +829,17 @@ type VaultDrawerProps = {
   onRescue: () => void;
 };
 
-function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, onRescue }: VaultDrawerProps) {
+function VaultDrawer({
+  open,
+  activeNotes,
+  archived,
+  loading,
+  onClose,
+  onRestore,
+  onDelete,
+  onArchive,
+  onRescue,
+}: VaultDrawerProps) {
   return (
     <>
       <div
@@ -845,7 +857,7 @@ function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, on
       />
       <aside
         role="dialog"
-        aria-label="Tiroir des notes archivées"
+        aria-label="Tiroir des notes"
         style={{
           position: "fixed",
           top: 12,
@@ -888,7 +900,7 @@ function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, on
                 textTransform: "uppercase",
               }}
             >
-              Archives
+              Systema
             </div>
             <h2 style={{ margin: "4px 0 0", fontSize: 19, fontWeight: 600, color: "white", letterSpacing: "-0.02em" }}>
               Tiroir des notes
@@ -943,47 +955,97 @@ function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, on
             padding: "14px 16px",
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            gap: 20,
           }}
         >
-          {loading && (
+          {/* Section Notes Actives (Failsafe) */}
+          {activeNotes.length > 0 && (
+            <section>
+              <div
+                style={{
+                  fontSize: 10,
+                  fontFamily: "JetBrains Mono, monospace",
+                  color: "oklch(95% 0.04 320 / 0.5)",
+                  textTransform: "uppercase",
+                  marginBottom: 10,
+                  paddingLeft: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "oklch(75% 0.2 160)" }} />
+                Notes sur le tableau
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {activeNotes.map((n) => (
+                  <ActiveNoteCard
+                    key={n.id}
+                    note={n}
+                    onArchive={() => onArchive(n.id)}
+                    onDelete={() => onDelete(n.id)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Section Archives */}
+          <section>
             <div
               style={{
-                padding: "24px 18px",
-                textAlign: "center",
-                color: "oklch(95% 0.04 320 / 0.6)",
-                fontSize: 12,
-                fontFamily: "JetBrains Mono, ui-monospace, monospace",
+                fontSize: 10,
+                fontFamily: "JetBrains Mono, monospace",
+                color: "oklch(95% 0.04 320 / 0.5)",
+                textTransform: "uppercase",
+                marginBottom: 10,
+                paddingLeft: 4,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
               }}
             >
-              Chargement…
+              <div style={{ width: 4, height: 4, borderRadius: "50%", background: "oklch(75% 0.2 320)" }} />
+              Notes archivées
             </div>
-          )}
-          {!loading && archived.length === 0 && (
-            <div
-              style={{
-                padding: "36px 18px",
-                textAlign: "center",
-                color: "oklch(95% 0.04 320 / 0.6)",
-                fontSize: 13,
-                fontFamily: "JetBrains Mono, ui-monospace, monospace",
-                letterSpacing: "0.04em",
-              }}
-            >
-              <div style={{ fontSize: 28, marginBottom: 10, opacity: 0.5 }}>◇</div>
-              Aucune note archivée.
-              <br />
-              <span style={{ opacity: 0.7 }}>Archivez une note depuis le tableau.</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {loading && (
+                <div
+                  style={{
+                    padding: "24px 18px",
+                    textAlign: "center",
+                    color: "oklch(95% 0.04 320 / 0.6)",
+                    fontSize: 12,
+                    fontFamily: "JetBrains Mono, ui-monospace, monospace",
+                  }}
+                >
+                  Chargement…
+                </div>
+              )}
+              {!loading && archived.length === 0 && (
+                <div
+                  style={{
+                    padding: "36px 18px",
+                    textAlign: "center",
+                    color: "oklch(95% 0.04 320 / 0.6)",
+                    fontSize: 13,
+                    fontFamily: "JetBrains Mono, ui-monospace, monospace",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Aucune note archivée.
+                </div>
+              )}
+              {archived.map((n) => (
+                <ArchivedCard
+                  key={n.id}
+                  note={n}
+                  onRestore={() => onRestore(n.id)}
+                  onDelete={() => onDelete(n.id)}
+                />
+              ))}
             </div>
-          )}
-          {archived.map((n) => (
-            <ArchivedCard
-              key={n.id}
-              note={n}
-              onRestore={() => onRestore(n.id)}
-              onDelete={() => onDelete(n.id)}
-            />
-          ))}
+          </section>
         </div>
         <footer
           style={{
@@ -999,7 +1061,7 @@ function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, on
           }}
         >
           <span>
-            {archived.length} note{archived.length !== 1 ? "s" : ""}
+            {archived.length + activeNotes.length} note{archived.length + activeNotes.length !== 1 ? "s" : ""}
           </span>
           <span>· vault</span>
         </footer>
@@ -1102,6 +1164,65 @@ function ArchivedCard({
   );
 }
 
+function ActiveNoteCard({
+  note,
+  onArchive,
+  onDelete,
+}: {
+  note: Note;
+  onArchive: () => void;
+  onDelete: () => void;
+}) {
+  const accentH = ACCENT_HUES[note.accent ?? "pink"];
+  return (
+    <div
+      style={{
+        padding: "10px 12px",
+        borderRadius: 12,
+        background: "rgba(255, 255, 255, 0.05)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 500,
+            color: "white",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {note.title || <span style={{ opacity: 0.4 }}>Sans titre</span>}
+        </div>
+        <div style={{ fontSize: 9, color: "rgba(255,255,255,0.4)", fontFamily: "JetBrains Mono" }}>
+          Pos: {note.x}, {note.y}
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 6 }}>
+        <button
+          onClick={onArchive}
+          title="Archiver"
+          style={{ ...vaultIconBtnStyle, borderColor: `oklch(75% 0.1 ${accentH} / 0.3)` }}
+        >
+          <ArchiveIcon className="h-3 w-3" />
+        </button>
+        <button
+          onClick={onDelete}
+          title="Supprimer"
+          style={{ ...vaultIconBtnStyle, color: "#ff6b6b", borderColor: "rgba(255,107,107,0.3)" }}
+        >
+          <CloseIcon className="h-3 w-3" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 const vaultIconBtnStyle: React.CSSProperties = {
   width: 22,
   height: 22,
@@ -1115,7 +1236,6 @@ const vaultIconBtnStyle: React.CSSProperties = {
   placeItems: "center",
   opacity: 0.85,
 };
-
 // ============================================================
 // FAB
 // ============================================================
