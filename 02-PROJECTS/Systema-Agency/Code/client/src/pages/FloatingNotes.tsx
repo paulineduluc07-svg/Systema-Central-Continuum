@@ -1,4 +1,5 @@
 import { trpc } from "@/lib/trpc";
+import { Activity } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -823,9 +824,10 @@ type VaultDrawerProps = {
   onClose: () => void;
   onRestore: (id: number) => void;
   onDelete: (id: number) => void;
+  onRescue: () => void;
 };
 
-function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete }: VaultDrawerProps) {
+function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete, onRescue }: VaultDrawerProps) {
   return (
     <>
       <div
@@ -892,24 +894,47 @@ function VaultDrawer({ open, archived, loading, onClose, onRestore, onDelete }: 
               Tiroir des notes
             </h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            title="Fermer"
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              border: "1px solid oklch(95% 0.04 320 / 0.3)",
-              background: "oklch(95% 0.04 320 / 0.1)",
-              color: "white",
-              cursor: "pointer",
-              display: "grid",
-              placeItems: "center",
-            }}
-          >
-            <CloseIcon className="h-3 w-3" />
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={onRescue}
+              title="Débloquer toutes les notes (les ramener au centre)"
+              style={{
+                height: 28,
+                borderRadius: 8,
+                border: "1px solid oklch(75% 0.2 350 / 0.4)",
+                background: "oklch(75% 0.2 350 / 0.15)",
+                color: "oklch(95% 0.04 350)",
+                padding: "0 10px",
+                fontSize: 10,
+                fontFamily: "JetBrains Mono, monospace",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <Activity className="h-3 w-3" />
+              <span>Rescue</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              title="Fermer"
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 8,
+                border: "1px solid oklch(95% 0.04 320 / 0.3)",
+                background: "oklch(95% 0.04 320 / 0.1)",
+                color: "white",
+                cursor: "pointer",
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
+              <CloseIcon className="h-3 w-3" />
+            </button>
+          </div>
         </header>
         <div
           style={{
@@ -1158,6 +1183,19 @@ function CloseIcon({ className }: { className?: string }) {
 // ============================================================
 // Utils
 // ============================================================
+
+function formatDate(iso: string | null) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return (
+    d.toLocaleDateString("fr-CA", { day: "2-digit", month: "short" }) +
+    " · " +
+    d.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" })
+  );
+}
+
+=============================================
 
 function formatDate(iso: string | null) {
   if (!iso) return "";
