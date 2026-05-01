@@ -182,7 +182,7 @@ export default function FloatingNotesPage() {
   const handleCreate = (clientX?: number, clientY?: number) => {
     const rect = boardRef.current?.getBoundingClientRect();
     let x = 200 + Math.floor(Math.random() * 200);
-    let y = 120 + Math.floor(Math.random() * 160);
+    let y = 160 + Math.floor(Math.random() * 160);
     if (rect && clientX != null && clientY != null) {
       x = Math.max(0, Math.round(clientX - rect.left - TWEAKS.defaultSize.w / 2));
       y = Math.max(0, Math.round(clientY - rect.top - TWEAKS.defaultSize.h / 2));

@@ -16,7 +16,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
 
       {/* Main Content */}
-      <div className="relative z-10 pt-20">
+      <div className="relative pt-20">
         {children}
       </div>
     </div>
