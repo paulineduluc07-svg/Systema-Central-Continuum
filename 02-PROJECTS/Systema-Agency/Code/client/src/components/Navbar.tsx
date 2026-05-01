@@ -31,8 +31,8 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-center px-4">
-      <nav className="relative flex w-full max-w-7xl items-center justify-between rounded-full border border-white/30 bg-white/20 px-4 py-2 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-black/20">
+    <header className="fixed top-0 left-0 right-0 z-40 flex h-16 items-center justify-center px-4 pointer-events-none">
+      <nav className="relative flex w-full max-w-7xl items-center justify-between rounded-full border border-white/30 bg-white/20 px-4 py-2 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-black/20 pointer-events-auto">
         <div className="flex items-center gap-6">
           <Link href="/">
             <span className="cursor-pointer text-xl font-bold tracking-tight text-white drop-shadow-sm">

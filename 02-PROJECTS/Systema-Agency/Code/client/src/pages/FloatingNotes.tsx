@@ -365,7 +365,7 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
         position: "absolute",
         left: pos.x,
         top: pos.y,
-        zIndex: focused ? 60 : 10,
+        zIndex: focused ? 60 : 45,
       }}
       onPointerDown={onFocus}
     >
