@@ -113,6 +113,24 @@ celui défini dans `PORT`). Ouvrir `http://localhost:5000/` dans le navigateur.
 
 ---
 
+## 4.1 Endpoint MCP public
+
+En dev local, le serveur Express expose aussi l'endpoint MCP Streamable HTTP sur :
+
+```text
+http://localhost:3000/mcp
+```
+
+En production Vercel, l'URL publique attendue est :
+
+```text
+https://systema-agency.vercel.app/mcp
+```
+
+La surface MCP reste en lecture seule dans cette passe.
+
+---
+
 ## 5. Aperçu visuel sans dev server
 
 Si on veut juste **voir le rendu visuel** d'une page sans démarrer Vite/Express

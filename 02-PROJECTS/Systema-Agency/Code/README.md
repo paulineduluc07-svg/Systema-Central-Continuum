@@ -63,13 +63,17 @@ pnpm verify:full # check + test + build
 
 ## Serveur MCP local
 
-Systema expose un serveur MCP local en TypeScript/Node.js pour donner le contexte projet aux clients MCP.
+Systema expose un serveur MCP en TypeScript/Node.js pour donner le contexte projet aux clients MCP.
 
 ```bash
 pnpm mcp:systema
 ```
 
-Transport : `stdio`. Surface actuelle : lecture seule sur les documents projet (`README`, `TODO`, `NOTES`, `NOTES_DE_PAULINE`, `WORKLOG`) + recherche textuelle simple. Les mutations DB ne sont pas exposées dans cette première passe.
+Transports :
+- local : `stdio` via `pnpm mcp:systema`
+- public HTTPS : Streamable HTTP stateless sur `/mcp` (`/api/mcp` côté Vercel)
+
+Surface actuelle : lecture seule sur les documents projet (`README`, `TODO`, `NOTES`, `NOTES_DE_PAULINE`, `WORKLOG`) + recherche textuelle simple. Les mutations DB ne sont pas exposées dans cette première passe.
 
 ## Auth (email/password)
 

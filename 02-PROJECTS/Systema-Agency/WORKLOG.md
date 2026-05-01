@@ -13,9 +13,11 @@ Trace du travail effectué avec dates.
 - La Passe A desktop des notes volantes passe donc de livrée à validée côté usage.
 
 **Serveur MCP créé :**
-- Ajout d'un serveur MCP local TypeScript/Node.js dans `Code/server/mcp/systema.ts`.
+- Ajout d'un serveur MCP TypeScript/Node.js dans `Code/server/mcp/`.
 - SDK : `@modelcontextprotocol/sdk`.
 - Transport : `stdio`, lancé par `pnpm mcp:systema`.
+- Transport public : Streamable HTTP stateless exposé par `Code/api/mcp.ts` et réécrit depuis `/mcp` via Vercel.
+- URL publique attendue après déploiement : `https://systema-agency.vercel.app/mcp`.
 - Ressources exposées en lecture seule : `README.md`, `TODO.md`, `NOTES.md`, `NOTES_DE_PAULINE.md`, `WORKLOG.md`.
 - Tools exposés : `list_project_docs`, `read_project_doc`, `search_project_docs`.
 - Prompt exposé : `systema-session-start`.
@@ -23,7 +25,10 @@ Trace du travail effectué avec dates.
 **Validation technique :**
 - `pnpm add @modelcontextprotocol/sdk@^1.29.0` exécuté dans le clone hors Drive.
 - `pnpm check` OK.
+- `pnpm build` OK.
 - Smoke test MCP via client SDK Node OK : 3 tools et 5 ressources listés.
+- Smoke test MCP Streamable HTTP local OK sur `/mcp` : 3 tools et 5 ressources listés.
+- Type-check ciblé `api/mcp.ts` OK.
 
 **Décision :**
 - Le serveur MCP reste volontairement sans mutation DB pour cette passe.

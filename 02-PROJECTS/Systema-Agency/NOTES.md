@@ -113,14 +113,18 @@ Si l'auth recasse, vérifier d'abord que `VITE_APP_ID` existe et vaut `systema-a
 
 ## Serveur MCP local
 
-- Serveur MCP TypeScript/Node.js ajouté côté `Code/server/mcp/systema.ts`.
+- Serveur MCP TypeScript/Node.js ajouté côté `Code/server/mcp/`.
 - SDK utilisé : `@modelcontextprotocol/sdk`.
-- Transport : `stdio`, pour usage local par un client MCP qui lance le process.
+- Transports :
+  - `stdio`, pour usage local par un client MCP qui lance le process ;
+  - Streamable HTTP stateless sur `/mcp` pour usage public HTTPS.
 - Commande : `pnpm mcp:systema` depuis `Code/`.
+- URL publique après déploiement : `https://systema-agency.vercel.app/mcp`.
 - Surface actuelle volontairement en lecture seule :
   - ressources `systema://project/readme`, `todo`, `notes`, `notes-de-pauline`, `worklog` ;
   - tools `list_project_docs`, `read_project_doc`, `search_project_docs` ;
   - prompt `systema-session-start`.
+- Sur Vercel, le serveur peut relire les docs depuis GitHub raw si les fichiers SCC hors `Code/` ne sont pas disponibles dans la fonction serverless.
 - Les mutations DB via MCP sont à traiter dans une passe séparée avec validation explicite.
 
 ---

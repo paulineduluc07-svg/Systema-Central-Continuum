@@ -7,6 +7,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { createApiRateLimitMiddleware } from "./rateLimit";
+import { createSystemaMcpHttpApp } from "../mcp/http";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -45,6 +46,9 @@ async function startServer() {
       createContext,
     })
   );
+
+  app.use("/mcp", createSystemaMcpHttpApp());
+  app.use("/api/mcp", createSystemaMcpHttpApp());
 
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
