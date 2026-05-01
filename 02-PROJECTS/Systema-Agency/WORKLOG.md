@@ -29,6 +29,7 @@ Trace du travail effectué avec dates.
 - Smoke test MCP via client SDK Node OK : 3 tools et 5 ressources listés.
 - Smoke test MCP Streamable HTTP local OK sur `/mcp` : 3 tools et 5 ressources listés.
 - Type-check ciblé `api/mcp.ts` OK.
+- Validation publique après auto-déploiement Vercel OK : `https://systema-agency.vercel.app/mcp` répond en Streamable HTTP, client SDK connecté, `read_project_doc` lit `TODO.md`.
 
 **Décision :**
 - Le serveur MCP reste volontairement sans mutation DB pour cette passe.
