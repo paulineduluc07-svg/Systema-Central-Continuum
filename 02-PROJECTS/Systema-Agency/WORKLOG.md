@@ -16,6 +16,9 @@ Trace Gemini :
 - Un marqueur texte accidentel `=====` etait reste dans `FloatingNotes.tsx`, ce qui a casse le build Vercel du premier push.
 - Fix build : `b8214fc`.
 
+Nettoyage Vercel :
+- Ancien projet archive `kim-frontend-staging` deconnecte du repo GitHub pour ne plus creer de faux echecs a chaque push Systema.
+
 Statut : termine, en ligne.
 
 ---
