@@ -317,13 +317,13 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
     setDragging(true);
     const move = (ev: PointerEvent) => {
       setPos({
-        x: start.x + (ev.clientX - start.mx),
-        y: start.y + (ev.clientY - start.my),
+        x: Math.max(0, start.x + (ev.clientX - start.mx)),
+        y: Math.max(0, start.y + (ev.clientY - start.my)),
       });
     };
     const up = (ev: PointerEvent) => {
-      const nx = Math.round(start.x + (ev.clientX - start.mx));
-      const ny = Math.round(start.y + (ev.clientY - start.my));
+      const nx = Math.max(0, Math.round(start.x + (ev.clientX - start.mx)));
+      const ny = Math.max(0, Math.round(start.y + (ev.clientY - start.my)));
       setDragging(false);
       onChange({ x: nx, y: ny });
       window.removeEventListener("pointermove", move);
@@ -365,7 +365,7 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
         position: "absolute",
         left: pos.x,
         top: pos.y,
-        zIndex: focused ? 30 : 10,
+        zIndex: focused ? 60 : 10,
       }}
       onPointerDown={onFocus}
     >
