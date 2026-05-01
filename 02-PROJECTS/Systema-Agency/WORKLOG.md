@@ -19,8 +19,9 @@ Trace du travail effectué avec dates.
 **Validation :**
 - API locale : `auth.login` 200, cookie `app_session_id`, puis `auth.me` 200.
 - `pnpm build` OK depuis le clone GitHub.
+- Premier déploiement Vercel du commit `7d5a33e` échoué à cause d'un marqueur texte accidentel restant dans `FloatingNotes.tsx`; correction de ce fichier à pousser dans le commit suivant.
 
-**Statut :** prêt à pousser/déployer.
+**Statut :** correctif auth poussé ; déploiement à reprendre après correction du build Vercel.
 
 ---
 

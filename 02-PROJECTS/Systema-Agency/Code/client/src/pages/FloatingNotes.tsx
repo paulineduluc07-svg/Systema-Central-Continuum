@@ -180,6 +180,26 @@ export default function FloatingNotesPage() {
     deleteMutation.mutate({ id });
   };
 
+  const rescueNotes = () => {
+    const rect = boardRef.current?.getBoundingClientRect();
+    const boardWidth = rect?.width ?? window.innerWidth;
+    const boardHeight = rect?.height ?? Math.max(window.innerHeight - 80, TWEAKS.defaultSize.h);
+    const baseX = Math.max(16, Math.round((boardWidth - TWEAKS.defaultSize.w) / 2));
+    const baseY = Math.max(16, Math.round((boardHeight - TWEAKS.defaultSize.h) / 2));
+
+    notes.forEach((note, index) => {
+      const offset = (index % 8) * 24;
+      const maxX = Math.max(0, Math.round(boardWidth - note.w - 16));
+      const maxY = Math.max(0, Math.round(boardHeight - note.h - 16));
+      updateNote(note.id, {
+        x: Math.min(Math.max(0, baseX + offset), maxX),
+        y: Math.min(Math.max(0, baseY + offset), maxY),
+      });
+    });
+
+    toast.success("Notes ramenées dans la zone visible.");
+  };
+
   const handleCreate = (clientX?: number, clientY?: number) => {
     const rect = boardRef.current?.getBoundingClientRect();
     let x = 200 + Math.floor(Math.random() * 200);
@@ -821,11 +841,13 @@ function ChecklistRow({ item, accentH, styleKey, textColor, onToggle, onText, on
 
 type VaultDrawerProps = {
   open: boolean;
+  activeNotes: Note[];
   archived: Note[];
   loading: boolean;
   onClose: () => void;
   onRestore: (id: number) => void;
   onDelete: (id: number) => void;
+  onArchive: (id: number) => void;
   onRescue: () => void;
 };
 
@@ -1314,17 +1336,3 @@ function formatDate(iso: string | null) {
     d.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" })
   );
 }
-
-=============================================
-
-function formatDate(iso: string | null) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
-  return (
-    d.toLocaleDateString("fr-CA", { day: "2-digit", month: "short" }) +
-    " · " +
-    d.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit" })
-  );
-}
-
