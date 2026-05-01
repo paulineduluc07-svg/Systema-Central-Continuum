@@ -20,8 +20,10 @@ Trace du travail effectué avec dates.
 - API locale : `auth.login` 200, cookie `app_session_id`, puis `auth.me` 200.
 - `pnpm build` OK depuis le clone GitHub.
 - Premier déploiement Vercel du commit `7d5a33e` échoué à cause d'un marqueur texte accidentel restant dans `FloatingNotes.tsx`; correction de ce fichier à pousser dans le commit suivant.
+- Déploiement Vercel principal `systema-agency` réussi sur `b8214fc`.
+- Production vérifiée : nouveau bundle `index-Cej18bkv.js` avec `pointer-events-auto` dans `LoginModal`, puis `auth.login` 200 et `auth.me` 200 sur `https://systema-agency.vercel.app`.
 
-**Statut :** correctif auth poussé ; déploiement à reprendre après correction du build Vercel.
+**Statut :** terminé, correctif en ligne.
 
 ---
 
