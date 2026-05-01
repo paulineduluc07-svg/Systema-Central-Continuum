@@ -326,11 +326,11 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
       const ny = Math.max(0, Math.round(start.y + (ev.clientY - start.my)));
       setDragging(false);
       onChange({ x: nx, y: ny });
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", up);
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", up);
   };
 
   const startResize = (e: React.PointerEvent) => {
@@ -349,11 +349,11 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
       const nh = Math.max(MIN_H, Math.round(start.h + (ev.clientY - start.my)));
       setDragging(false);
       onChange({ w: nw, h: nh });
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", up);
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    document.addEventListener("pointermove", move);
+    document.addEventListener("pointerup", up);
   };
 
   const accentH = ACCENT_HUES[note.accent ?? TWEAKS.accent];
@@ -366,6 +366,7 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
         left: pos.x,
         top: pos.y,
         zIndex: focused ? 60 : 45,
+        touchAction: "none",
       }}
       onPointerDown={onFocus}
     >
