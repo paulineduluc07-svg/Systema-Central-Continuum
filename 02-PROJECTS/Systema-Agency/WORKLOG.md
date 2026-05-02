@@ -11,6 +11,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - `MCP_VERSION` passe a `0.3.1`.
 - Tests ajoutes : header valide, query valide, sans secret 401, mauvais query secret 401.
 - Validation locale : `pnpm check`, `pnpm test -- server/mcp/writes.test.ts`, `pnpm build` OK.
+- Convention ajoutee : plans/patchs agents dans `RESSOURCES/AGENT_PLANS/`; `NOTES_DE_PAULINE.md` reste personnel et hors MCP.
 
 Statut : pret a deployer; apres deploy, configurer Cowork avec l'URL contenant `?secret=`.
 

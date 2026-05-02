@@ -11,6 +11,8 @@ Repères stables et décisions actives. Garder ce fichier court.
 - Source SCC : `C:\Users\pauli\Mon disque\SCC\02-PROJECTS\Systema-Agency`.
 - Clone Git/build/test : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency`.
 - Base de donnees : Neon PostgreSQL partagee entre prod et dev local.
+- Plans/patchs agents : `RESSOURCES/AGENT_PLANS/`.
+- `NOTES_DE_PAULINE.md` reste personnel a Pauline et n'est pas expose via MCP.
 
 ---
 

@@ -73,7 +73,7 @@ Transports :
 - local : `stdio` via `pnpm mcp:systema`
 - public HTTPS : Streamable HTTP stateless sur `/mcp` (`/api/mcp` côté Vercel)
 
-Surface actuelle : lecture seule sur les documents projet (`README`, `TODO`, `NOTES`, `NOTES_DE_PAULINE`, `WORKLOG`) + recherche textuelle simple. Les mutations DB ne sont pas exposées dans cette première passe.
+Surface actuelle : lecture sur les documents projet (`README`, `TODO`, `NOTES`, `WORKLOG`) + recherche textuelle simple. Les notes personnelles de Pauline restent uniquement dans Google Drive. Les mutations DB sont exposées par tools MCP protégés par secret.
 
 ## Auth (email/password)
 
