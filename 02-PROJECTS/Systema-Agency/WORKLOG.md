@@ -11,8 +11,11 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - Lecture MCP conservee sans secret; writes HTTP rejetes 401 sans `x-systema-mcp-secret`.
 - Tests ajoutes : `server/mcp/writes.test.ts`.
 - Validation locale : `pnpm check` OK; `pnpm test -- server/mcp/writes.test.ts` OK.
+- Commit/push : `0a000dd`.
+- Variables Vercel Production ajoutees/reecrites via CLI.
+- Validation prod : `/mcp` expose 20 tools; write sans secret rejete 401; `create_task` puis `delete_task` avec secret OK.
 
-Statut : code pret localement; activation prod depend des variables Vercel et du deploy.
+Statut : livre en prod; reste a connecter Cowork/Kim avec le header secret.
 
 ---
 
