@@ -79,8 +79,11 @@ Incident a conserver :
 - Serveur MCP local/public ajoute dans `Code/server/mcp/`.
 - Commande locale : `pnpm mcp:systema`.
 - Endpoint public : `https://systema-agency.vercel.app/mcp`.
-- Surface actuelle : lecture seule des docs projet + outils de recherche/lecture.
-- Les mutations DB via MCP doivent etre traitees dans une passe separee.
+- Surface lecture : docs projet + outils de recherche/lecture sans secret.
+- Surface write cote code : tasks, notes, notes volantes et custom tabs.
+- Writes HTTP proteges par `x-systema-mcp-secret`; fail-closed si `SYSTEMA_MCP_SECRET` absent.
+- Variables requises pour activer les writes : `SYSTEMA_MCP_USER_OPEN_ID`, `SYSTEMA_MCP_SECRET`.
+- README garde intact; details operationnels suivis ici/TODO/WORKLOG.
 
 ---
 

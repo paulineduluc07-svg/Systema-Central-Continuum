@@ -4,6 +4,18 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-02 - MCP writes Systema prepares
+
+- Ajout auth MCP : `SYSTEMA_MCP_USER_OPEN_ID` pour resoudre Paw, `SYSTEMA_MCP_SECRET` pour les writes HTTP.
+- Ajout tools MCP DB : tasks, notes, notes volantes, custom tabs.
+- Lecture MCP conservee sans secret; writes HTTP rejetes 401 sans `x-systema-mcp-secret`.
+- Tests ajoutes : `server/mcp/writes.test.ts`.
+- Validation locale : `pnpm check` OK; `pnpm test -- server/mcp/writes.test.ts` OK.
+
+Statut : code pret localement; activation prod depend des variables Vercel et du deploy.
+
+---
+
 ## 2026-05-01 - Login repare et prod validee
 
 - Probleme : le modal de connexion s'ouvrait, mais les champs email/mot de passe pouvaient ne pas accepter le focus.

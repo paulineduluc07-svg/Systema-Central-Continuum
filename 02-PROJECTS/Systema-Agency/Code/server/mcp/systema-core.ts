@@ -3,14 +3,152 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import { z } from "zod";
+import * as db from "../db.js";
+import { resolveMcpUserId } from "./auth.js";
 
-export const MCP_VERSION = "0.2.0";
+export const MCP_VERSION = "0.3.0";
 export const DOC_FILES = ["README.md", "TODO.md", "NOTES.md", "NOTES_DE_PAULINE.md", "WORKLOG.md"] as const;
+export const WRITE_TOOL_NAMES = [
+  "create_task",
+  "update_task",
+  "complete_task",
+  "delete_task",
+  "create_note",
+  "update_note",
+  "delete_note",
+  "create_floating_note",
+  "update_floating_note",
+  "archive_floating_note",
+  "create_tab",
+  "update_tab",
+  "delete_tab",
+] as const;
 
 type DocFile = (typeof DOC_FILES)[number];
 
 const DEFAULT_REMOTE_DOCS_BASE_URL =
   "https://raw.githubusercontent.com/paulineduluc07-svg/Systema-Central-Continuum/main/02-PROJECTS/Systema-Agency";
+const FLOATING_NOTE_TITLE_MAX = 200;
+const FLOATING_NOTE_BODY_MAX = 20_000;
+const FLOATING_NOTE_CHECKLIST_MAX_ITEMS = 100;
+const FLOATING_NOTE_CHECKLIST_TEXT_MAX = 500;
+const FLOATING_NOTE_BOARD_MAX = 20_000;
+const FLOATING_NOTE_SIZE_MAX = 2_000;
+
+const successOutputSchema = z.object({ success: z.boolean() });
+const dateStringSchema = z.string();
+const taskSchema = z.object({
+  id: z.number(),
+  tabId: z.string(),
+  title: z.string(),
+  completed: z.boolean(),
+  sortOrder: z.number(),
+  createdAt: dateStringSchema,
+  updatedAt: dateStringSchema,
+});
+const noteSchema = z.object({
+  id: z.number(),
+  tabId: z.string(),
+  content: z.string(),
+  sortOrder: z.number(),
+  createdAt: dateStringSchema,
+  updatedAt: dateStringSchema,
+});
+const floatingNoteAccentSchema = z.enum(["pink", "violet", "lavender", "cyan", "mint"]);
+const floatingNoteStyleSchema = z.enum(["neon", "frost", "holo"]).nullable();
+const floatingNoteChecklistSchema = z
+  .array(
+    z.object({
+      text: z.string().max(FLOATING_NOTE_CHECKLIST_TEXT_MAX),
+      done: z.boolean(),
+    })
+  )
+  .max(FLOATING_NOTE_CHECKLIST_MAX_ITEMS);
+const floatingNoteSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  body: z.string(),
+  checklist: floatingNoteChecklistSchema,
+  x: z.number(),
+  y: z.number(),
+  w: z.number(),
+  h: z.number(),
+  accent: floatingNoteAccentSchema,
+  style: floatingNoteStyleSchema,
+  archived: z.boolean(),
+  archivedAt: z.string().nullable(),
+  createdAt: dateStringSchema,
+  updatedAt: dateStringSchema,
+});
+const tabSchema = z.object({
+  id: z.number(),
+  tabId: z.string(),
+  label: z.string(),
+  color: z.string(),
+  icon: z.string(),
+  tabType: z.enum(["widgets", "whiteboard"]),
+  sortOrder: z.number(),
+  createdAt: dateStringSchema,
+  updatedAt: dateStringSchema,
+});
+const taskPatchSchema = z
+  .object({
+    id: z.number().int(),
+    title: z.string().min(1).max(500).optional(),
+    completed: z.boolean().optional(),
+    sortOrder: z.number().int().min(0).optional(),
+  })
+  .refine(({ title, completed, sortOrder }) => title !== undefined || completed !== undefined || sortOrder !== undefined, {
+    message: "At least one field must be provided.",
+  });
+const notePatchSchema = z
+  .object({
+    id: z.number().int(),
+    content: z.string().max(20_000).optional(),
+    sortOrder: z.number().int().min(0).optional(),
+  })
+  .refine(({ content, sortOrder }) => content !== undefined || sortOrder !== undefined, {
+    message: "At least one field must be provided.",
+  });
+const floatingNoteCreateSchema = z.object({
+  title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
+  body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
+  checklist: floatingNoteChecklistSchema.optional(),
+  x: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX),
+  y: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX),
+  w: z.number().int().min(180).max(FLOATING_NOTE_SIZE_MAX),
+  h: z.number().int().min(160).max(FLOATING_NOTE_SIZE_MAX),
+  accent: floatingNoteAccentSchema.optional(),
+  style: floatingNoteStyleSchema.optional(),
+});
+const floatingNoteUpdateSchema = z
+  .object({
+    id: z.number().int(),
+    title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
+    body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
+    checklist: floatingNoteChecklistSchema.optional(),
+    x: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX).optional(),
+    y: z.number().int().min(-FLOATING_NOTE_BOARD_MAX).max(FLOATING_NOTE_BOARD_MAX).optional(),
+    w: z.number().int().min(180).max(FLOATING_NOTE_SIZE_MAX).optional(),
+    h: z.number().int().min(160).max(FLOATING_NOTE_SIZE_MAX).optional(),
+    accent: floatingNoteAccentSchema.optional(),
+    style: floatingNoteStyleSchema.optional(),
+  })
+  .refine(
+    ({ id: _id, ...fields }) => Object.values(fields).some((value) => value !== undefined),
+    { message: "At least one field must be provided." }
+  );
+const tabPatchSchema = z
+  .object({
+    tabId: z.string().min(1).max(64),
+    label: z.string().min(1).max(128).optional(),
+    color: z.string().max(32).optional(),
+    icon: z.string().max(64).optional(),
+    sortOrder: z.number().int().min(0).optional(),
+  })
+  .refine(({ label, color, icon, sortOrder }) => {
+    return label !== undefined || color !== undefined || icon !== undefined || sortOrder !== undefined;
+  }, { message: "At least one field must be provided." });
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(currentFile);
@@ -98,6 +236,135 @@ async function searchProjectDocs(query: string, limit: number) {
 
 function docSlug(file: DocFile) {
   return file.replace(/\.md$/i, "").toLowerCase().replace(/_/g, "-");
+}
+
+function toIso(value: Date | string | null | undefined) {
+  if (!value) return "";
+  return value instanceof Date ? value.toISOString() : value;
+}
+
+function toNullableIso(value: Date | string | null | undefined) {
+  if (!value) return null;
+  return value instanceof Date ? value.toISOString() : value;
+}
+
+function parseChecklist(value: string) {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((item): item is { text?: unknown; done?: unknown } => typeof item === "object" && item !== null)
+      .map((item) => ({
+        text: typeof item.text === "string" ? item.text : "",
+        done: typeof item.done === "boolean" ? item.done : false,
+      }));
+  } catch {
+    return [];
+  }
+}
+
+function toTaskDto(row: {
+  id: number;
+  tabId: string;
+  title: string;
+  completed: boolean;
+  sortOrder: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}) {
+  return {
+    id: row.id,
+    tabId: row.tabId,
+    title: row.title,
+    completed: row.completed,
+    sortOrder: row.sortOrder,
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+function toNoteDto(row: {
+  id: number;
+  tabId: string;
+  content: string;
+  sortOrder: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}) {
+  return {
+    id: row.id,
+    tabId: row.tabId,
+    content: row.content,
+    sortOrder: row.sortOrder,
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+function toFloatingNoteDto(row: {
+  id: number;
+  title: string;
+  body: string;
+  checklist: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  accent: "pink" | "violet" | "lavender" | "cyan" | "mint";
+  style: "neon" | "frost" | "holo" | null;
+  archived: boolean;
+  archivedAt: Date | string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}) {
+  return {
+    id: row.id,
+    title: row.title,
+    body: row.body,
+    checklist: parseChecklist(row.checklist),
+    x: row.x,
+    y: row.y,
+    w: row.w,
+    h: row.h,
+    accent: row.accent,
+    style: row.style,
+    archived: row.archived,
+    archivedAt: toNullableIso(row.archivedAt),
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+function toTabDto(row: {
+  id: number;
+  tabId: string;
+  label: string;
+  color: string;
+  icon: string;
+  tabType: "widgets" | "whiteboard";
+  sortOrder: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}) {
+  return {
+    id: row.id,
+    tabId: row.tabId,
+    label: row.label,
+    color: row.color,
+    icon: row.icon,
+    tabType: row.tabType,
+    sortOrder: row.sortOrder,
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+function jsonToolResult<T extends Record<string, unknown>>(payload: T) {
+  return {
+    content: [{ type: "text" as const, text: JSON.stringify(payload, null, 2) }],
+    structuredContent: payload,
+  };
 }
 
 function registerProjectDocResource(server: McpServer, file: DocFile) {
@@ -246,6 +513,294 @@ export function createSystemaMcpServer() {
         content: [{ type: "text", text: JSON.stringify({ query, results }, null, 2) }],
         structuredContent: { query, results },
       };
+    }
+  );
+
+  server.registerTool(
+    "create_task",
+    {
+      title: "Créer une tâche Systema",
+      description: "Crée une tâche pour l'utilisateur MCP Systema configuré.",
+      inputSchema: z.object({
+        tabId: z.string().min(1).max(64),
+        title: z.string().min(1).max(500),
+        sortOrder: z.number().int().min(0).default(0),
+      }),
+      outputSchema: z.object({ task: taskSchema }),
+    },
+    async ({ tabId, title, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      const task = toTaskDto(await db.createTask({ userId, tabId, title, sortOrder, completed: false }));
+      return jsonToolResult({ task });
+    }
+  );
+
+  server.registerTool(
+    "update_task",
+    {
+      title: "Modifier une tâche Systema",
+      description: "Modifie le titre, l'état ou l'ordre d'une tâche existante.",
+      inputSchema: taskPatchSchema,
+      outputSchema: successOutputSchema,
+    },
+    async ({ id, title, completed, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      await db.updateTask(id, userId, { title, completed, sortOrder });
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "complete_task",
+    {
+      title: "Compléter une tâche Systema",
+      description: "Marque une tâche comme complétée.",
+      inputSchema: z.object({ id: z.number().int() }),
+      outputSchema: successOutputSchema,
+    },
+    async ({ id }) => {
+      const userId = await resolveMcpUserId();
+      await db.updateTask(id, userId, { completed: true });
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "delete_task",
+    {
+      title: "Supprimer une tâche Systema",
+      description: "Supprime une tâche existante pour l'utilisateur MCP Systema.",
+      inputSchema: z.object({ id: z.number().int() }),
+      outputSchema: successOutputSchema,
+    },
+    async ({ id }) => {
+      const userId = await resolveMcpUserId();
+      await db.deleteTask(id, userId);
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "list_tasks",
+    {
+      title: "Lister les tâches Systema",
+      description: "Liste les tâches de l'utilisateur MCP Systema, optionnellement filtrées par onglet.",
+      inputSchema: z.object({ tabId: z.string().min(1).max(64).optional() }),
+      outputSchema: z.object({ tasks: z.array(taskSchema) }),
+    },
+    async ({ tabId }) => {
+      const userId = await resolveMcpUserId();
+      const rows = tabId ? await db.getTasksByUserAndTab(userId, tabId) : await db.getAllTasksByUser(userId);
+      return jsonToolResult({ tasks: rows.map(toTaskDto) });
+    }
+  );
+
+  server.registerTool(
+    "create_note",
+    {
+      title: "Créer une note Systema",
+      description: "Crée une note dans un onglet Systema.",
+      inputSchema: z.object({
+        tabId: z.string().min(1).max(64),
+        content: z.string().max(20_000),
+        sortOrder: z.number().int().min(0).default(0),
+      }),
+      outputSchema: z.object({ note: noteSchema }),
+    },
+    async ({ tabId, content, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      const note = toNoteDto(await db.createNote({ userId, tabId, content, sortOrder }));
+      return jsonToolResult({ note });
+    }
+  );
+
+  server.registerTool(
+    "update_note",
+    {
+      title: "Modifier une note Systema",
+      description: "Modifie le contenu ou l'ordre d'une note existante.",
+      inputSchema: notePatchSchema,
+      outputSchema: successOutputSchema,
+    },
+    async ({ id, content, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      await db.updateNote(id, userId, { content, sortOrder });
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "delete_note",
+    {
+      title: "Supprimer une note Systema",
+      description: "Supprime une note existante pour l'utilisateur MCP Systema.",
+      inputSchema: z.object({ id: z.number().int() }),
+      outputSchema: successOutputSchema,
+    },
+    async ({ id }) => {
+      const userId = await resolveMcpUserId();
+      await db.deleteNote(id, userId);
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "list_notes",
+    {
+      title: "Lister les notes Systema",
+      description: "Liste les notes de l'utilisateur MCP Systema, optionnellement filtrées par onglet.",
+      inputSchema: z.object({ tabId: z.string().min(1).max(64).optional() }),
+      outputSchema: z.object({ notes: z.array(noteSchema) }),
+    },
+    async ({ tabId }) => {
+      const userId = await resolveMcpUserId();
+      const rows = tabId ? await db.getNotesByUserAndTab(userId, tabId) : await db.getAllNotesByUser(userId);
+      return jsonToolResult({ notes: rows.map(toNoteDto) });
+    }
+  );
+
+  server.registerTool(
+    "create_floating_note",
+    {
+      title: "Créer une note volante Systema",
+      description: "Crée une note volante sur le board Systema.",
+      inputSchema: floatingNoteCreateSchema,
+      outputSchema: z.object({ floatingNote: floatingNoteSchema }),
+    },
+    async ({ title, body, checklist, x, y, w, h, accent, style }) => {
+      const userId = await resolveMcpUserId();
+      const floatingNote = toFloatingNoteDto(
+        await db.createFloatingNote({
+          userId,
+          title: title ?? "",
+          body: body ?? "",
+          checklist: JSON.stringify(checklist ?? []),
+          x,
+          y,
+          w,
+          h,
+          accent: accent ?? "pink",
+          style: style ?? null,
+        })
+      );
+      return jsonToolResult({ floatingNote });
+    }
+  );
+
+  server.registerTool(
+    "update_floating_note",
+    {
+      title: "Modifier une note volante Systema",
+      description: "Modifie les champs d'une note volante existante.",
+      inputSchema: floatingNoteUpdateSchema,
+      outputSchema: successOutputSchema,
+    },
+    async ({ id, checklist, ...fields }) => {
+      const userId = await resolveMcpUserId();
+      const patch: Record<string, unknown> = { ...fields };
+      if (checklist !== undefined) {
+        patch.checklist = JSON.stringify(checklist);
+      }
+      await db.updateFloatingNote(id, userId, patch);
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "archive_floating_note",
+    {
+      title: "Archiver une note volante Systema",
+      description: "Archive une note volante existante.",
+      inputSchema: z.object({ id: z.number().int() }),
+      outputSchema: successOutputSchema,
+    },
+    async ({ id }) => {
+      const userId = await resolveMcpUserId();
+      await db.archiveFloatingNote(id, userId);
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "list_floating_notes",
+    {
+      title: "Lister les notes volantes Systema",
+      description: "Liste les notes volantes actives, avec option pour inclure les archives.",
+      inputSchema: z.object({ includeArchived: z.boolean().default(false) }),
+      outputSchema: z.object({ floatingNotes: z.array(floatingNoteSchema) }),
+    },
+    async ({ includeArchived }) => {
+      const userId = await resolveMcpUserId();
+      const activeRows = await db.listActiveFloatingNotes(userId);
+      const archivedRows = includeArchived ? await db.listArchivedFloatingNotes(userId) : [];
+      return jsonToolResult({ floatingNotes: [...activeRows, ...archivedRows].map(toFloatingNoteDto) });
+    }
+  );
+
+  server.registerTool(
+    "create_tab",
+    {
+      title: "Créer un onglet Systema",
+      description: "Crée un onglet personnalisé Systema.",
+      inputSchema: z.object({
+        tabId: z.string().min(1).max(64),
+        label: z.string().min(1).max(128),
+        color: z.string().max(32).default("#FF69B4"),
+        icon: z.string().max(64).default("file"),
+        tabType: z.enum(["widgets", "whiteboard"]).default("whiteboard"),
+        sortOrder: z.number().int().min(0).default(0),
+      }),
+      outputSchema: z.object({ tab: tabSchema }),
+    },
+    async ({ tabId, label, color, icon, tabType, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      const tab = toTabDto(await db.createCustomTab({ userId, tabId, label, color, icon, tabType, sortOrder }));
+      return jsonToolResult({ tab });
+    }
+  );
+
+  server.registerTool(
+    "list_tabs",
+    {
+      title: "Lister les onglets Systema",
+      description: "Liste les onglets personnalisés de l'utilisateur MCP Systema.",
+      inputSchema: z.object({}),
+      outputSchema: z.object({ tabs: z.array(tabSchema) }),
+    },
+    async () => {
+      const userId = await resolveMcpUserId();
+      const tabs = (await db.getCustomTabsByUser(userId)).map(toTabDto);
+      return jsonToolResult({ tabs });
+    }
+  );
+
+  server.registerTool(
+    "update_tab",
+    {
+      title: "Modifier un onglet Systema",
+      description: "Modifie un onglet personnalisé Systema à partir de son tabId.",
+      inputSchema: tabPatchSchema,
+      outputSchema: successOutputSchema,
+    },
+    async ({ tabId, label, color, icon, sortOrder }) => {
+      const userId = await resolveMcpUserId();
+      await db.updateCustomTabByTabId(tabId, userId, { label, color, icon, sortOrder });
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "delete_tab",
+    {
+      title: "Supprimer un onglet Systema",
+      description: "Supprime un onglet personnalisé Systema à partir de son tabId.",
+      inputSchema: z.object({ tabId: z.string().min(1).max(64) }),
+      outputSchema: successOutputSchema,
+    },
+    async ({ tabId }) => {
+      const userId = await resolveMcpUserId();
+      await db.deleteCustomTabByTabId(tabId, userId);
+      return jsonToolResult({ success: true });
     }
   );
 

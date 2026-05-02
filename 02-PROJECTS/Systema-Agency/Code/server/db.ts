@@ -114,8 +114,8 @@ export async function replaceTasksByUser(userId: number, taskEntries: Omit<Inser
 export async function createTask(task: InsertTask) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(tasks).values(task).returning({ id: tasks.id });
-  return { id: result[0].id, ...task };
+  const result = await db.insert(tasks).values(task).returning();
+  return result[0];
 }
 
 export async function updateTask(id: number, userId: number, data: Partial<InsertTask>) {
@@ -161,8 +161,8 @@ export async function replaceNotesByUser(userId: number, noteEntries: Omit<Inser
 export async function createNote(note: InsertNote) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(notes).values(note).returning({ id: notes.id });
-  return { id: result[0].id, ...note };
+  const result = await db.insert(notes).values(note).returning();
+  return result[0];
 }
 
 export async function updateNote(id: number, userId: number, data: Partial<InsertNote>) {
@@ -210,8 +210,8 @@ export async function getCustomTabsByUser(userId: number) {
 export async function createCustomTab(tab: InsertCustomTab) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(customTabs).values(tab).returning({ id: customTabs.id });
-  return { id: result[0].id, ...tab };
+  const result = await db.insert(customTabs).values(tab).returning();
+  return result[0];
 }
 
 export async function updateCustomTab(id: number, userId: number, data: Partial<InsertCustomTab>) {
@@ -220,10 +220,22 @@ export async function updateCustomTab(id: number, userId: number, data: Partial<
   await db.update(customTabs).set(data).where(and(eq(customTabs.id, id), eq(customTabs.userId, userId)));
 }
 
+export async function updateCustomTabByTabId(tabId: string, userId: number, data: Partial<InsertCustomTab>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(customTabs).set(data).where(and(eq(customTabs.tabId, tabId), eq(customTabs.userId, userId)));
+}
+
 export async function deleteCustomTab(id: number, userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(customTabs).where(and(eq(customTabs.id, id), eq(customTabs.userId, userId)));
+}
+
+export async function deleteCustomTabByTabId(tabId: string, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(customTabs).where(and(eq(customTabs.tabId, tabId), eq(customTabs.userId, userId)));
 }
 
 // ============== CANVAS DATA ==============

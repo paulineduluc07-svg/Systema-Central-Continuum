@@ -20,7 +20,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Sync cloud fonctionnelle apres login.
 - Kim repond dans `/kim` et peut ajouter des prompts dans Prompt Vault.
 - Notes volantes desktop `/notes` livrees, corrigees et validees visuellement.
-- Serveur MCP Systema expose `/mcp` en lecture seule.
+- Serveur MCP Systema expose `/mcp`; lecture sans secret, writes codes avec secret.
 
 ---
 
@@ -34,9 +34,16 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 ### Kim dans Systema
 
-- [ ] Passe 2 : permettre a Kim de creer des notes/taches.
+- [ ] Passe 2 : configurer les variables MCP write dans Vercel puis valider create_task/create_note en prod.
 - [ ] Passe 3 : permettre a Kim de modifier/archiver avec confirmation.
 - [ ] Garder la suppression directe interdite au depart.
+
+### MCP Systema
+
+- [ ] Ajouter `SYSTEMA_MCP_USER_OPEN_ID` dans Vercel.
+- [ ] Generer et ajouter `SYSTEMA_MCP_SECRET` dans Vercel.
+- [ ] Tester `tools/list` et un write HTTP avec header secret apres deploy.
+- [ ] Configurer Cowork/Kim pour envoyer `x-systema-mcp-secret`.
 
 ### Prompt Vault
 
