@@ -6,7 +6,7 @@ import { createSystemaMcpServer, WRITE_TOOL_NAMES } from "./systema-core.js";
 import { verifyMcpSecret } from "./auth.js";
 
 // HTTP keeps read-only tools available without a secret for Cowork compatibility.
-// DB write tools require x-systema-mcp-secret and fail closed when SYSTEMA_MCP_SECRET is unset.
+// DB write tools accept x-systema-mcp-secret or ?secret=... and fail closed when SYSTEMA_MCP_SECRET is unset.
 const writeToolNames = new Set<string>(WRITE_TOOL_NAMES);
 
 function setCorsHeaders(res: express.Response) {

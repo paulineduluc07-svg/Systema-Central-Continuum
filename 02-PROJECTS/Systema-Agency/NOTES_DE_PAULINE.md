@@ -1,115 +1,90 @@
-# Notes de vision de pauline — Fonctionnalités à développer
+# Patch — Accepter le secret MCP en query parameter
 
-## Règle générale pour les agents
+**Projet** : `02-PROJECTS/Systema-Agency`
+**Suite de** : `PLAN_CLAUDE_CODE_MCP_WRITE.md` (déjà implémenté)
 
-Ce fichier sert à documenter des idées, intentions et directions produit.
+## Pourquoi
 
-Ne pas modifier, supprimer, déplacer ou réorganiser du code uniquement à partir de ces notes sans validation claire.
+Cowork (le client MCP utilisé par Paw) **ne permet pas de configurer des headers HTTP custom** sur les MCP connectors. L'auth via header `x-systema-mcp-secret` qu'on a mis en place ne peut pas être utilisée. Résultat : tous les appels aux outils d'écriture sont bloqués 401, et Cowork affiche "This connector requires authentication".
 
-Avant toute modification importante :
+**Solution court terme** : aussi accepter le secret en **query parameter** dans l'URL. Pauline configurera l'URL du connecteur comme `https://systema-agency.vercel.app/mcp?secret=<SECRET>` au lieu d'ajouter un header.
 
-1. Lire le contexte existant du projet.
-2. Identifier les fichiers concernés.
-3. Proposer un plan court.
-4. Attendre une validation si le changement touche l’architecture, les données ou l’interface principale.
+**À noter** : le secret se retrouvera dans les logs serveur (Vercel) et dans l'historique de la fenêtre Cowork. C'est moins propre que le header, mais acceptable pour une app perso. Une migration future vers OAuth 2.0 (Option C dans la discussion) reste possible.
 
----
+## Modification à faire
 
-# 1. Vision — Notes volantes
+**Fichier** : `Code/server/mcp/http.ts` (et tout autre endroit où le secret est vérifié — probablement un middleware Express).
 
-## Objectif
+**Comportement actuel** : le serveur lit `req.headers["x-systema-mcp-secret"]` et compare à `process.env.SYSTEMA_MCP_SECRET`.
 
-Créer un système de notes volantes dans l’application.
+**Comportement à ajouter** : aussi accepter `req.query.secret` (string). Si **l'un OU l'autre** matche `SYSTEMA_MCP_SECRET`, la requête est autorisée. Le header reste supporté (rétrocompatibilité).
 
-Ces notes doivent fonctionner comme des petits widgets libres que l’utilisateur peut placer sur un tableau blanc.
+### Snippet de référence (à adapter)
 
-L’idée est de permettre une prise de notes rapide, visuelle et flexible, sans imposer une structure rigide.
+```ts
+function getProvidedSecret(req: express.Request): string | undefined {
+  const headerSecret = req.headers["x-systema-mcp-secret"];
+  if (typeof headerSecret === "string" && headerSecret.length > 0) {
+    return headerSecret;
+  }
 
-## Comportement souhaité
+  const querySecret = req.query.secret;
+  if (typeof querySecret === "string" && querySecret.length > 0) {
+    return querySecret;
+  }
 
-Les notes volantes doivent :
+  return undefined;
+}
 
-- apparaître sur le tableau blanc principal ;
-- être déplaçables librement en drag-and-drop ;
-- pouvoir être placées où je veux sur l’écran ;
-- rester visibles comme des widgets ;
-- avoir un style cohérent avec le reste de l’application ;
-- utiliser un effet glassmorphism ;
-- être simples, légères et rapides à utiliser.
+function verifyMcpSecret(req: express.Request): boolean {
+  const expected = process.env.SYSTEMA_MCP_SECRET;
+  if (!expected) {
+    // Fail-closed : si la var d'env n'est pas configurée côté serveur, refuser tout.
+    return false;
+  }
 
-## Style visuel
+  const provided = getProvidedSecret(req);
+  if (!provided) return false;
 
-Le style doit être :
+  // Comparaison à temps constant pour éviter le timing attack
+  if (provided.length !== expected.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < provided.length; i++) {
+    mismatch |= provided.charCodeAt(i) ^ expected.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+```
 
-- glassmorphism ;
-- semi-transparent ;
-- doux visuellement ;
-- cohérent avec le design général de l’app ;
-- moderne, propre et pas trop chargé.
+Adapter selon comment l'auth est actuellement structurée dans `http.ts`.
 
-## Vision long terme
+## Tests à mettre à jour
 
-À long terme, je veux aussi avoir un espace de rangement pour les notes.
+Dans le fichier de tests existants (probablement `Code/server/mcp/writes.test.ts` ou équivalent) :
 
-Cet espace servirait à :
+1. Garder le test existant qui valide l'auth via header.
+2. **Ajouter** un test qui valide l'auth via `?secret=...` en query.
+3. **Ajouter** un test qui valide qu'une requête **sans** secret (ni header ni query) est rejetée 401.
+4. **Ajouter** un test qui valide qu'un faux secret en query est rejeté 401.
 
-- ranger les notes en trop ;
-- archiver les notes que je ne veux plus voir sur le tableau blanc ;
-- garder les anciennes notes accessibles sans encombrer l’écran principal.
+## Documentation
 
-## Important
+- `02-PROJECTS/Systema-Agency/README.md` : section MCP — documenter les deux modes d'auth (header OU query param), avec exemple d'URL pour la query param.
+- `WORKLOG.md` : entrée datée résumant le patch.
+- Bump `MCP_VERSION` dans `systema-core.ts` → `"0.3.1"`.
 
-Ne pas construire tout le système d’archive immédiatement si ce n’est pas nécessaire.
+## Critères d'acceptation
 
-Pour une première version, prioriser :
+- [ ] L'URL `https://systema-agency.vercel.app/mcp?secret=<bon_secret>` autorise les write tools (200 OK sur `tools/call`).
+- [ ] L'URL `https://systema-agency.vercel.app/mcp?secret=mauvais` est rejetée 401.
+- [ ] L'URL `https://systema-agency.vercel.app/mcp` (sans secret) est rejetée 401 sur les writes.
+- [ ] Les outils en lecture (`list_project_docs`, `read_project_doc`, `search_project_docs`) restent accessibles sans secret (rétrocompatibilité Cowork existante).
+- [ ] Les tests passent.
+- [ ] Le déploiement Vercel réussit.
+- [ ] `WORKLOG.md` mis à jour.
 
-1. affichage des notes sur le tableau blanc ;
-2. déplacement libre des notes ;
-3. style visuel glassmorphism ;
-4. structure prête à évoluer vers un système d’archivage plus tard.
+## Notes
 
----
-
-# 2. Modification souhaitée — Prompt Vault
-
-## Objectif
-
-Améliorer le Prompt Vault pour permettre d’associer une image à un prompt.
-
-Certains prompts servent à générer des designs, des images ou des visuels. Dans ces cas-là, je veux pouvoir voir le résultat visuel directement dans le Prompt Vault.
-
-## Fonctionnalité souhaitée
-
-Ajouter une option pour joindre ou afficher une image liée à un prompt.
-
-Chaque prompt pourrait éventuellement avoir :
-
-- un titre ;
-- le texte du prompt ;
-- une catégorie ou un tag ;
-- une image associée ;
-- un aperçu visuel sur la page principale.
-
-## Page principale du Prompt Vault
-
-Sur la page principale, là où tous les prompts sont affichés, je veux pouvoir voir l’image associée au prompt si elle existe.
-
-Comportement souhaité :
-
-- si un prompt a une image, afficher un aperçu de l’image directement dans la carte du prompt ;
-- si un prompt n’a pas d’image, afficher seulement le texte ou un placeholder discret ;
-- l’image ne doit pas prendre toute la place ;
-- le visuel doit rester propre et lisible ;
-- l’image doit aider à reconnaître rapidement le prompt.
-
-## Cas d’usage
-
-Exemples :
-
-- prompt pour générer un dashboard ;
-- prompt pour créer un design glassmorphism ;
-- prompt pour une image de branding ;
-- prompt pour une interface UI ;
-- prompt pour une image esthétique ou créative.
-
-Dans ces cas-là, voir l’image directement aide à retrouver le bon prompt plus vite.
+- Pas besoin de toucher à `systema-core.ts` ni aux outils eux-mêmes. C'est juste la couche transport HTTP qui change.
+- Pas besoin de changer les variables d'env Vercel — `SYSTEMA_MCP_SECRET` est déjà là.
+- Une fois déployé, Pauline mettra à jour l'URL du connecteur Systema-Agency dans Cowork (de `https://systema-agency.vercel.app/mcp` vers `...?secret=<valeur>`).

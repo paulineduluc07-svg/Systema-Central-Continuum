@@ -43,7 +43,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - [x] Ajouter `SYSTEMA_MCP_USER_OPEN_ID` dans Vercel.
 - [x] Generer et ajouter `SYSTEMA_MCP_SECRET` dans Vercel.
 - [x] Tester `tools/list` et un write HTTP avec header secret apres deploy.
-- [ ] Configurer Cowork/Kim pour envoyer `x-systema-mcp-secret`.
+- [ ] Configurer Cowork/Kim avec l'URL `https://systema-agency.vercel.app/mcp?secret=<secret>`.
 
 ### Prompt Vault
 

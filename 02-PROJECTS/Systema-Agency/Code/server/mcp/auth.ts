@@ -1,4 +1,5 @@
 import type express from "express";
+import { timingSafeEqual } from "crypto";
 import { getUserByOpenId } from "../db.js";
 
 let cachedMcpUserId: number | null = null;
@@ -22,14 +23,34 @@ export async function resolveMcpUserId() {
   return cachedMcpUserId;
 }
 
+function getProvidedSecret(req: express.Request) {
+  const headerSecret = req.header("x-systema-mcp-secret")?.trim();
+  if (headerSecret) {
+    return headerSecret;
+  }
+
+  const querySecret = req.query.secret;
+  if (typeof querySecret === "string" && querySecret.length > 0) {
+    return querySecret;
+  }
+
+  return undefined;
+}
+
 export function verifyMcpSecret(req: express.Request) {
   const expected = process.env.SYSTEMA_MCP_SECRET?.trim();
   if (!expected) {
     return false;
   }
 
-  const received = req.header("x-systema-mcp-secret")?.trim();
-  return received === expected;
+  const received = getProvidedSecret(req);
+  if (!received) {
+    return false;
+  }
+
+  const expectedBuffer = Buffer.from(expected);
+  const receivedBuffer = Buffer.from(received);
+  return expectedBuffer.length === receivedBuffer.length && timingSafeEqual(expectedBuffer, receivedBuffer);
 }
 
 export function resetMcpUserCacheForTests() {

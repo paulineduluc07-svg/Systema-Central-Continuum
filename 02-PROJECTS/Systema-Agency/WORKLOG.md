@@ -4,6 +4,18 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-02 - Patch MCP secret query
+
+- Probleme : Cowork ne permet pas les headers HTTP custom pour les connectors MCP.
+- Patch : le transport HTTP accepte maintenant le secret via `x-systema-mcp-secret` ou `?secret=...`.
+- `MCP_VERSION` passe a `0.3.1`.
+- Tests ajoutes : header valide, query valide, sans secret 401, mauvais query secret 401.
+- Validation locale : `pnpm check`, `pnpm test -- server/mcp/writes.test.ts`, `pnpm build` OK.
+
+Statut : pret a deployer; apres deploy, configurer Cowork avec l'URL contenant `?secret=`.
+
+---
+
 ## 2026-05-02 - MCP writes Systema prepares
 
 - Ajout auth MCP : `SYSTEMA_MCP_USER_OPEN_ID` pour resoudre Paw, `SYSTEMA_MCP_SECRET` pour les writes HTTP.

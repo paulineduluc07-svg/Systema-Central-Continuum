@@ -81,9 +81,10 @@ Incident a conserver :
 - Endpoint public : `https://systema-agency.vercel.app/mcp`.
 - Surface lecture : docs projet + outils de recherche/lecture sans secret.
 - Surface write active en prod : tasks, notes, notes volantes et custom tabs.
-- Writes HTTP proteges par `x-systema-mcp-secret`; fail-closed si `SYSTEMA_MCP_SECRET` absent.
+- Writes HTTP proteges par `x-systema-mcp-secret` ou `?secret=...`; fail-closed si `SYSTEMA_MCP_SECRET` absent.
 - Variables requises pour activer les writes : `SYSTEMA_MCP_USER_OPEN_ID`, `SYSTEMA_MCP_SECRET`.
 - Validation prod 2026-05-02 : write sans secret rejete 401; `create_task` + `delete_task` avec secret OK.
+- Patch Cowork 2026-05-02 : query param supporte car Cowork ne permet pas les headers custom.
 - README garde intact; details operationnels suivis ici/TODO/WORKLOG.
 
 ---

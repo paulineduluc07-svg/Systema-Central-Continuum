@@ -1,7 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Server } from "node:http";
 
 type MockUser = {
   id: number;
@@ -82,6 +81,47 @@ async function createMcpClient() {
       await server.close();
     },
   };
+}
+
+async function withHttpServer<T>(callback: (baseUrl: string) => Promise<T>) {
+  const app = createSystemaMcpHttpApp();
+  const server = app.listen(0);
+
+  try {
+    await new Promise<void>((resolve) => server.once("listening", resolve));
+    const address = server.address();
+    if (!address || typeof address === "string") {
+      throw new Error("Unable to start test server.");
+    }
+
+    return await callback(`http://127.0.0.1:${address.port}/mcp`);
+  } finally {
+    await new Promise<void>((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
+  }
+}
+
+async function callHttpWrite(baseUrl: string, options?: { headerSecret?: string; querySecret?: string }) {
+  const url = options?.querySecret ? `${baseUrl}?secret=${encodeURIComponent(options.querySecret)}` : baseUrl;
+  const headers: Record<string, string> = {
+    "content-type": "application/json",
+    accept: "application/json, text/event-stream",
+  };
+  if (options?.headerSecret) {
+    headers["x-systema-mcp-secret"] = options.headerSecret;
+  }
+
+  return fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: { name: "create_task", arguments: { tabId: "today", title: "HTTP write" } },
+    }),
+  });
 }
 
 describe("Systema MCP write tools", () => {
@@ -184,41 +224,43 @@ describe("Systema MCP write tools", () => {
     }
   });
 
-  it("rejects HTTP write calls without the shared secret", async () => {
-    const app = createSystemaMcpHttpApp();
-    let server: Server | undefined;
-
-    try {
-      server = app.listen(0);
-      await new Promise<void>((resolve) => server?.once("listening", resolve));
-      const address = server.address();
-      if (!address || typeof address === "string") {
-        throw new Error("Unable to start test server.");
-      }
-
-      const response = await fetch(`http://127.0.0.1:${address.port}/mcp`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          id: 1,
-          method: "tools/call",
-          params: { name: "create_task", arguments: { tabId: "today", title: "blocked" } },
-        }),
+  it("accepts HTTP write calls with the shared secret header", async () => {
+    await withHttpServer(async (baseUrl) => {
+      const response = await callHttpWrite(baseUrl, { headerSecret: "test-secret" });
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toMatchObject({
+        result: { structuredContent: { task: { tabId: "today", title: "HTTP write" } } },
       });
+    });
+  });
 
+  it("accepts HTTP write calls with the shared secret query param", async () => {
+    await withHttpServer(async (baseUrl) => {
+      const response = await callHttpWrite(baseUrl, { querySecret: "test-secret" });
+      expect(response.status).toBe(200);
+      await expect(response.json()).resolves.toMatchObject({
+        result: { structuredContent: { task: { tabId: "today", title: "HTTP write" } } },
+      });
+    });
+  });
+
+  it("rejects HTTP write calls without the shared secret", async () => {
+    await withHttpServer(async (baseUrl) => {
+      const response = await callHttpWrite(baseUrl);
       expect(response.status).toBe(401);
       await expect(response.json()).resolves.toMatchObject({
         error: { message: "Unauthorized Systema MCP write tool call." },
       });
-    } finally {
-      await new Promise<void>((resolve, reject) => {
-        if (!server) {
-          resolve();
-          return;
-        }
-        server.close((error) => (error ? reject(error) : resolve()));
+    });
+  });
+
+  it("rejects HTTP write calls with a bad query secret", async () => {
+    await withHttpServer(async (baseUrl) => {
+      const response = await callHttpWrite(baseUrl, { querySecret: "wrong-secret" });
+      expect(response.status).toBe(401);
+      await expect(response.json()).resolves.toMatchObject({
+        error: { message: "Unauthorized Systema MCP write tool call." },
       });
-    }
+    });
   });
 });

@@ -6,7 +6,7 @@ import { z } from "zod";
 import * as db from "../db.js";
 import { resolveMcpUserId } from "./auth.js";
 
-export const MCP_VERSION = "0.3.0";
+export const MCP_VERSION = "0.3.1";
 export const DOC_FILES = ["README.md", "TODO.md", "NOTES.md", "NOTES_DE_PAULINE.md", "WORKLOG.md"] as const;
 export const WRITE_TOOL_NAMES = [
   "create_task",
