@@ -25,8 +25,9 @@ Repères stables et décisions actives. Garder ce fichier court.
 | `/notes` | Notes volantes | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
 | `/suivi` | Suivi medicament | Oui |
+| `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
 | `/v1` | Ancienne home | Non |
-| `/mcp` | Serveur MCP lecture seule | Non |
+| `/mcp` | Serveur MCP docs + writes proteges | Non |
 
 ---
 
@@ -55,9 +56,9 @@ Etat actuel :
 - Kim repond dans `/kim`.
 - L'appel OpenAI reste cote serveur.
 - Kim peut ajouter des prompts dans Prompt Vault.
+- Les customTabs crees par MCP apparaissent dans la nav et ouvrent `/tab/:tabId`.
 
 Limites actives :
-- Kim ne peut pas encore creer de notes/taches.
 - Kim ne peut pas encore modifier ni archiver.
 - Suppression directe interdite au depart.
 

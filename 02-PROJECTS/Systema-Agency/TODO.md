@@ -21,6 +21,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Kim repond dans `/kim` et peut ajouter des prompts dans Prompt Vault.
 - Notes volantes desktop `/notes` livrees, corrigees et validees visuellement.
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
+- CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 
 ---
 
@@ -34,7 +35,8 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 ### Kim dans Systema
 
-- [ ] Passe 2 : connecter Cowork/Kim aux tools MCP write de Systema.
+- [x] Passe 2 : connecter Cowork/Kim aux tools MCP write de Systema.
+- [x] Afficher les customTabs crees via MCP dans la nav principale.
 - [ ] Passe 3 : permettre a Kim de modifier/archiver avec confirmation.
 - [ ] Garder la suppression directe interdite au depart.
 
@@ -43,7 +45,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - [x] Ajouter `SYSTEMA_MCP_USER_OPEN_ID` dans Vercel.
 - [x] Generer et ajouter `SYSTEMA_MCP_SECRET` dans Vercel.
 - [x] Tester `tools/list` et un write HTTP avec header secret apres deploy.
-- [ ] Configurer Cowork/Kim avec l'URL `https://systema-agency.vercel.app/mcp?secret=<secret>`.
+- [x] Configurer Cowork/Kim avec l'URL `https://systema-agency.vercel.app/mcp?secret=<secret>`.
 
 ### Prompt Vault
 

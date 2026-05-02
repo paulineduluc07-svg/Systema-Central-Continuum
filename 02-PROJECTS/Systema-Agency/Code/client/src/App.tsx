@@ -19,6 +19,7 @@ const SuiviPage = lazy(async () => {
 const PromptVault = lazy(() => import("./pages/PromptVault"));
 const Kim = lazy(() => import("./pages/Kim"));
 const FloatingNotes = lazy(() => import("./pages/FloatingNotes"));
+const CustomTabPage = lazy(() => import("./pages/CustomTabPage"));
 
 function RouteLoadingFallback() {
   return (
@@ -45,6 +46,7 @@ function Router() {
           <Route path={"/prompt-vault"} component={PromptVault} />
           <Route path={"/kim"} component={Kim} />
           <Route path={"/notes"} component={FloatingNotes} />
+          <Route path={"/tab/:tabId"} component={CustomTabPage} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />
         </Switch>

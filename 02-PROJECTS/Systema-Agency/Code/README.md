@@ -75,6 +75,8 @@ Transports :
 
 Surface actuelle : lecture sur les documents projet (`README`, `TODO`, `NOTES`, `WORKLOG`) + recherche textuelle simple. Les notes personnelles de Pauline restent uniquement dans Google Drive. Les mutations DB sont exposées par tools MCP protégés par secret.
 
+Les `customTabs` crees via MCP sont rendus dans la navigation principale et ouvrent `/tab/:tabId`. Les onglets de type `widgets` affichent les tasks/notes du `tabId`; les onglets `whiteboard` ont un placeholder pour l'instant.
+
 ## Auth (email/password)
 
 - Login via `auth.login` (tRPC) avec `OWNER_EMAIL` + `OWNER_PASSWORD`.

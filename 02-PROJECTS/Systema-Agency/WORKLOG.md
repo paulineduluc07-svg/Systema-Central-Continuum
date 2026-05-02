@@ -4,6 +4,18 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-02 - CustomTabs visibles dans la nav
+
+- Probleme : les `customTabs` crees via MCP etaient en DB mais invisibles dans l'UI.
+- Ajout route dynamique `/tab/:tabId` avec page `CustomTabPage`.
+- La navbar charge `customTabs.list` et affiche les onglets custom apres les sections built-in.
+- Les tabs `widgets` affichent tasks + notes persistantes; les tabs `whiteboard` affichent un placeholder.
+- Validation locale : `pnpm check`, `pnpm build`, `pnpm test` OK.
+
+Statut : pret a deployer; valider ensuite que `Test Cowork` apparait en prod.
+
+---
+
 ## 2026-05-02 - Patch MCP secret query
 
 - Probleme : Cowork ne permet pas les headers HTTP custom pour les connectors MCP.

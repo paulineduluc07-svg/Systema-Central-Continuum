@@ -1,4 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { getCustomTabIcon, normalizeTabColor } from "@/lib/customTabIcons";
+import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
 import { Cloud, CloudOff, LogIn, LogOut, BookOpen, Activity, Menu, X, Sparkles, StickyNote } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -11,6 +13,11 @@ export function Navbar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const customTabsQuery = trpc.customTabs.list.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: true,
+    refetchInterval: 30_000,
+  });
 
   const navLinks = [
     { href: "/kim", label: "Kim", icon: Sparkles },
@@ -18,6 +25,13 @@ export function Navbar() {
     { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
     { href: "/suivi", label: "Suivi", icon: Activity },
   ];
+  const customLinks = (customTabsQuery.data ?? []).map((tab) => ({
+    href: `/tab/${encodeURIComponent(tab.tabId)}`,
+    label: tab.label,
+    icon: getCustomTabIcon(tab.icon),
+    color: normalizeTabColor(tab.color),
+    id: tab.id,
+  }));
 
   useEffect(() => {
     if (!isMobileMenuOpen) return;
@@ -40,7 +54,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <div className="hidden items-center gap-4 md:flex">
+          <div className="hidden items-center gap-3 md:flex">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href}>
                 <span className={cn(
@@ -51,6 +65,26 @@ export function Navbar() {
                 </span>
               </Link>
             ))}
+            {customLinks.map((link) => {
+              const Icon = link.icon;
+              const active = location === link.href;
+              return (
+                <Link key={link.id} href={link.href}>
+                  <span
+                    className={cn(
+                      "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium transition-colors hover:bg-white/20 hover:text-white",
+                      active
+                        ? "border-white/50 bg-white/20 text-white"
+                        : "border-white/15 bg-white/5 text-white/75"
+                    )}
+                    style={{ boxShadow: active ? `inset 0 -2px 0 ${link.color}` : undefined }}
+                  >
+                    <Icon className="h-3.5 w-3.5" style={{ color: link.color }} />
+                    {link.label}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -116,6 +150,26 @@ export function Navbar() {
                     )}
                   >
                     <Icon className="h-4 w-4" />
+                    {link.label}
+                  </span>
+                </Link>
+              );
+            })}
+            {customLinks.map((link) => {
+              const Icon = link.icon;
+              const active = location === link.href;
+              return (
+                <Link key={link.id} href={link.href}>
+                  <span
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-slate-900/10 text-slate-900 dark:bg-white/20 dark:text-white"
+                        : "text-slate-700 hover:bg-slate-900/5 hover:text-slate-900 dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" style={{ color: link.color }} />
                     {link.label}
                   </span>
                 </Link>
