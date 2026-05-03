@@ -20,12 +20,19 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Sync cloud fonctionnelle apres login.
 - Kim repond dans `/kim` et peut ajouter des prompts dans Prompt Vault.
 - Notes volantes desktop `/notes` livrees, corrigees et validees visuellement.
+- Agenda hebdomadaire `/agenda` livre : evenements, objectifs et habitudes persistants par semaine.
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 
 ---
 
 ## Prochaines passes
+
+### Agenda
+
+- [ ] Ajouter un editeur detail evenement : heure, titre, couleur, suppression.
+- [ ] Ajouter une adaptation mobile complete pour `/agenda`.
+- [ ] Inclure les donnees Agenda dans le backup/export global si necessaire.
 
 ### Notes volantes
 

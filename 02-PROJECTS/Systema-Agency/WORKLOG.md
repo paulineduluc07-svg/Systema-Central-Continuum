@@ -4,6 +4,20 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-03 - Agenda Liquid Week livre
+
+- Ajout route `/agenda` avec entree Agenda dans la navbar.
+- Implementation du tableau hebdomadaire Liquid Week : navigation semaine, 7 jours, evenements editables, objectifs cochables, habitudes 3 etats.
+- Persistance locale via `localStorage` et persistance cloud authentifiee via tRPC `agenda.get/save`, clee par semaine ISO.
+- Ajout table `agenda_week_data` + migration `drizzle/0005_agenda_week_data.sql`; migration appliquee sur Neon et verifiee.
+- Tests ajoutes : `server/agenda.test.ts`.
+- Validation depuis le clone hors Drive : `pnpm check`, `pnpm test`, `pnpm build` OK.
+- Commit/push sur `main` : `7a49b4e`.
+
+Statut : livre dans GitHub/main; Vercel redeploie automatiquement sur push.
+
+---
+
 ## 2026-05-02 - CustomTabs visibles dans la nav
 
 - Probleme : les `customTabs` crees via MCP etaient en DB mais invisibles dans l'UI.

@@ -23,6 +23,7 @@ Repères stables et décisions actives. Garder ce fichier court.
 | `/` | HomeV2 | Brand |
 | `/kim` | Kim | Oui |
 | `/notes` | Notes volantes | Oui |
+| `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
 | `/suivi` | Suivi medicament | Oui |
 | `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
@@ -74,6 +75,18 @@ Limites actives :
 
 Incident a conserver :
 - 2026-05-01 : un marqueur texte accidentel laisse dans `FloatingNotes.tsx` par Gemini a casse le build Vercel. Correction poussee dans `b8214fc`.
+
+---
+
+## Agenda
+
+- Page active : `/agenda`.
+- Table DB : `agenda_week_data`.
+- Donnees persistees par `weekStart` ISO (`YYYY-MM-DD`, lundi de la semaine).
+- Fallback local : `localStorage` par semaine si non authentifie.
+- Surface actuelle : evenements editables, ajout evenement, objectifs cochables, habitudes 3 etats, accents cyclables.
+- Desktop-first selon le handoff `RESSOURCES/AGENT_PLANS/design_handoff_agenda/`.
+- Suites possibles : detail/suppression evenement, mobile, backup global.
 
 ---
 
