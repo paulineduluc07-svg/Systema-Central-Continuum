@@ -234,22 +234,42 @@ function EditableText({
   onCommit: (value: string) => void;
   ariaLabel: string;
 }) {
+  const [draft, setDraft] = useState(value);
+
+  useEffect(() => {
+    setDraft(value);
+  }, [value]);
+
+  const commit = () => {
+    const next = draft.trim();
+    if (!next) {
+      setDraft(value);
+      return;
+    }
+    if (next !== value) onCommit(next);
+  };
+
   return (
-    <span
+    <input
       aria-label={ariaLabel}
-      className={className}
-      contentEditable
-      suppressContentEditableWarning
+      value={draft}
       spellCheck={false}
-      style={style}
-      onBlur={(event) => {
-        const next = event.currentTarget.textContent?.trim() ?? "";
-        if (next && next !== value) onCommit(next);
-        if (!next) event.currentTarget.textContent = value;
+      onClick={(event) => event.stopPropagation()}
+      onChange={(event) => setDraft(event.currentTarget.value)}
+      onBlur={commit}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.currentTarget.blur();
+        }
+        if (event.key === "Escape") {
+          setDraft(value);
+          event.currentTarget.blur();
+        }
       }}
-    >
-      {value}
-    </span>
+      className={`min-w-0 border-0 bg-transparent p-0 outline-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-white/60 ${className ?? ""}`}
+      style={style}
+    />
   );
 }
 
