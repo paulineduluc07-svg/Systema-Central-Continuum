@@ -1,6 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -31,6 +31,10 @@ type WeekData = {
   goals: Goal[];
   habitsA: Habit[];
   habitsB: Habit[];
+  habitLabels: {
+    habitsA: string;
+    habitsB: string;
+  };
 };
 
 const DAYS: DayKey[] = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
@@ -189,6 +193,10 @@ function createDefaultWeek(weekStart: string): WeekData {
     goals: defaultGoals(),
     habitsA: defaultHabitsA(),
     habitsB: defaultHabitsB(),
+    habitLabels: {
+      habitsA: "Bien-etre",
+      habitsB: "Discipline",
+    },
   };
 }
 
@@ -202,6 +210,13 @@ function normalizeWeekData(input: unknown, weekStart: string): WeekData {
     goals: Array.isArray(value.goals) ? value.goals.slice(0, 3) : fallback.goals,
     habitsA: Array.isArray(value.habitsA) ? value.habitsA : fallback.habitsA,
     habitsB: Array.isArray(value.habitsB) ? value.habitsB : fallback.habitsB,
+    habitLabels:
+      value.habitLabels && typeof value.habitLabels === "object"
+        ? {
+            habitsA: typeof value.habitLabels.habitsA === "string" ? value.habitLabels.habitsA : fallback.habitLabels.habitsA,
+            habitsB: typeof value.habitLabels.habitsB === "string" ? value.habitLabels.habitsB : fallback.habitLabels.habitsB,
+          }
+        : fallback.habitLabels,
   };
 }
 
@@ -454,6 +469,16 @@ export default function AgendaPage() {
     }));
   };
 
+  const deleteEvent = (day: DayKey, eventIndex: number) => {
+    persistWeek((current) => ({
+      ...current,
+      events: {
+        ...current.events,
+        [day]: current.events[day].filter((_, index) => index !== eventIndex),
+      },
+    }));
+  };
+
   const updateGoal = (goalIndex: number, patch: Partial<Goal>) => {
     persistWeek((current) => ({
       ...current,
@@ -482,6 +507,16 @@ export default function AgendaPage() {
     }));
   };
 
+  const updateHabitLabel = (group: "habitsA" | "habitsB", label: string) => {
+    persistWeek((current) => ({
+      ...current,
+      habitLabels: {
+        ...current.habitLabels,
+        [group]: label,
+      },
+    }));
+  };
+
   const cycleHabit = (group: "habitsA" | "habitsB", habitIndex: number, dayIndex: number) => {
     persistWeek((current) => ({
       ...current,
@@ -507,12 +542,12 @@ export default function AgendaPage() {
       }}
     >
       <div className="min-w-[1180px] px-10 pb-10 pt-[104px]">
-        <header className="mb-6 flex items-end justify-between">
+        <header className="relative mb-6 min-h-[86px]">
           <div>
             <Eyebrow>Systema · agenda</Eyebrow>
             <ScriptTitle size={62}>Cette semaine</ScriptTitle>
           </div>
-          <div className="flex items-center gap-3.5">
+          <div className="absolute left-1/2 top-5 flex -translate-x-1/2 items-center gap-8">
             <button
               type="button"
               aria-label="Semaine precedente"
@@ -521,12 +556,12 @@ export default function AgendaPage() {
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <div className="min-w-36 text-center">
+            <div className="min-w-56 text-center">
               <EditableText
                 value={weekData.weekLabel}
                 ariaLabel="Libelle de semaine"
                 onCommit={(value) => persistWeek((current) => ({ ...current, weekLabel: value }))}
-                className="block font-handwriting text-[30px] leading-none text-[oklch(88%_0.18_350)] outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                className="block w-full text-center font-handwriting text-[30px] leading-none text-[oklch(88%_0.18_350)] outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               />
               <Eyebrow>{headerYear}</Eyebrow>
             </div>
@@ -578,12 +613,21 @@ export default function AgendaPage() {
                     return (
                       <div
                         key={`${day}-${eventIndex}`}
-                        className="rounded-lg px-[7px] py-[5px]"
+                        className="group/event relative rounded-lg px-[7px] py-[5px] pr-7"
                         style={{
                           background: `oklch(70% 0.18 ${hue} / 0.22)`,
                           border: `1px solid oklch(80% 0.15 ${hue} / 0.4)`,
                         }}
                       >
+                        <button
+                          type="button"
+                          aria-label="Supprimer l'evenement"
+                          title="Supprimer"
+                          onClick={() => deleteEvent(day, eventIndex)}
+                          className="absolute right-1.5 top-1.5 grid h-4 w-4 place-items-center rounded-full bg-white/10 text-white/55 opacity-70 transition hover:bg-white/25 hover:text-white group-hover/event:opacity-100"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
                         <div className="mb-0.5 flex items-center gap-1">
                           <AccentCycleButton
                             accent={event.color}
@@ -595,7 +639,7 @@ export default function AgendaPage() {
                             value={event.time}
                             ariaLabel="Heure de l'evenement"
                             onCommit={(value) => updateEvent(day, eventIndex, { time: value })}
-                            className="font-mono text-[9px] outline-none focus-visible:ring-1 focus-visible:ring-white/50"
+                            className="w-16 font-mono text-[9px] outline-none focus-visible:ring-1 focus-visible:ring-white/50"
                             style={{ color: `oklch(90% 0.1 ${hue})` }}
                           />
                         </div>
@@ -603,7 +647,7 @@ export default function AgendaPage() {
                           value={event.title}
                           ariaLabel="Titre de l'evenement"
                           onCommit={(value) => updateEvent(day, eventIndex, { title: value })}
-                          className="block text-[11px] leading-tight text-white outline-none focus-visible:ring-1 focus-visible:ring-white/50"
+                          className="block w-full text-[11px] leading-tight text-white outline-none focus-visible:ring-1 focus-visible:ring-white/50"
                         />
                       </div>
                     );
@@ -650,7 +694,7 @@ export default function AgendaPage() {
                       value={goal.title}
                       ariaLabel="Titre de l'objectif"
                       onCommit={(value) => updateGoal(goalIndex, { title: value })}
-                      className="font-handwriting text-[30px] leading-none text-white outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                      className="w-full font-handwriting text-[30px] leading-none text-white outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                       style={{ textShadow: `0 0 18px oklch(75% 0.22 ${hue} / 0.55)` }}
                     />
                   </div>
@@ -692,8 +736,8 @@ export default function AgendaPage() {
 
         <section className="grid grid-cols-2 gap-3.5">
           {[
-            { key: "habitsA" as const, label: "Bien-etre", data: weekData.habitsA },
-            { key: "habitsB" as const, label: "Discipline", data: weekData.habitsB },
+            { key: "habitsA" as const, label: weekData.habitLabels.habitsA, data: weekData.habitsA },
+            { key: "habitsB" as const, label: weekData.habitLabels.habitsB, data: weekData.habitsB },
           ].map(({ key, label, data }) => (
             <div
               key={key}
@@ -707,7 +751,15 @@ export default function AgendaPage() {
               }}
             >
               <div className="mb-3 grid grid-cols-[1fr_repeat(7,24px)] items-end gap-1">
-                <div className="font-handwriting text-2xl leading-none text-white">Habitudes - {label}</div>
+                <div className="flex min-w-0 items-baseline gap-1 font-handwriting text-2xl leading-none text-white">
+                  <span>Habitudes -</span>
+                  <EditableText
+                    value={label}
+                    ariaLabel="Titre du groupe d'habitudes"
+                    onCommit={(value) => updateHabitLabel(key, value)}
+                    className="w-full font-handwriting text-2xl leading-none text-white"
+                  />
+                </div>
                 {DAY_LETTERS.map((dayLetter, index) => (
                   <div key={`${key}-letter-${index}`} className="text-center font-mono text-[9px] text-white/55">
                     {dayLetter}
@@ -728,7 +780,7 @@ export default function AgendaPage() {
                         value={habit.name}
                         ariaLabel="Nom de l'habitude"
                         onCommit={(value) => updateHabit(key, habitIndex, { name: value })}
-                        className="min-w-0 truncate outline-none focus-visible:ring-1 focus-visible:ring-white/50"
+                        className="min-w-0 flex-1 truncate outline-none focus-visible:ring-1 focus-visible:ring-white/50"
                       />
                     </div>
                     {habit.grid.map((value, dayIndex) => (
