@@ -234,40 +234,27 @@ function EditableText({
   onCommit: (value: string) => void;
   ariaLabel: string;
 }) {
-  const [draft, setDraft] = useState(value);
-
-  useEffect(() => {
-    setDraft(value);
-  }, [value]);
-
-  const commit = () => {
-    const next = draft.trim();
-    if (!next) {
-      setDraft(value);
-      return;
-    }
-    if (next !== value) onCommit(next);
-  };
-
   return (
     <input
+      type="text"
       aria-label={ariaLabel}
-      value={draft}
+      value={value}
+      autoComplete="off"
+      autoCorrect="off"
       spellCheck={false}
       onClick={(event) => event.stopPropagation()}
-      onChange={(event) => setDraft(event.currentTarget.value)}
-      onBlur={commit}
+      onChange={(event) => onCommit(event.currentTarget.value)}
+      onBlur={(event) => {
+        const trimmed = event.currentTarget.value.trim();
+        if (trimmed !== event.currentTarget.value) onCommit(trimmed);
+      }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           event.preventDefault();
           event.currentTarget.blur();
         }
-        if (event.key === "Escape") {
-          setDraft(value);
-          event.currentTarget.blur();
-        }
       }}
-      className={`min-w-0 border-0 bg-transparent p-0 outline-none placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-white/60 ${className ?? ""}`}
+      className={`min-w-0 cursor-text rounded border-0 bg-transparent px-1 py-0 outline-none caret-white placeholder:text-white/35 hover:bg-white/10 focus:bg-white/15 focus-visible:ring-1 focus-visible:ring-white/60 ${className ?? ""}`}
       style={style}
     />
   );
