@@ -14,7 +14,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
   - projets allonges sur toute la colonne droite;
   - citation conservee mais reduite;
   - pastilles holo conservees.
-- Ajout de l'asset public `client/public/brand/systema-logo.png`.
+- Logo rendu directement en texte stylise `Pacifico`, sans fond blanc ni nouvel asset image.
 - Ajout des polices `Inter Tight`, `Fraunces` et `VT323` + animation holo globale.
 - Validation depuis le clone : `pnpm check` OK, `pnpm build` OK.
 - Note technique : `pnpm build` a d'abord revele un `node_modules` incomplet (`@rollup/rollup-linux-x64-gnu` absent); repare par `CI=true pnpm install --force`, sans changement `package.json`/`pnpm-lock.yaml`.
@@ -23,7 +23,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
   - navbar globale cachee uniquement sur `/`;
   - pastilles holo transformees en liens vers Kim, Notes, Agenda, Prompt Vault et Suivi;
   - raccourcis internes retires de la carte `Acces rapides`, remplaces par placeholders de sites web a configurer;
-  - logo agrandi et rendu sans carre blanc visible via `mix-blend-multiply`.
+  - logo agrandi et conserve sans carre blanc via rendu texte stylise.
 - Revalidation : `pnpm check` OK, `pnpm build` OK.
 
 Statut : implemente localement; inspection visuelle humaine requise avant push.
