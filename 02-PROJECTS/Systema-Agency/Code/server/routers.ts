@@ -93,6 +93,7 @@ const FLOATING_NOTE_SIZE_MAX = 2_000;
 
 const floatingNoteAccentSchema = z.enum(["pink", "violet", "lavender", "cyan", "mint"]);
 const floatingNoteStyleSchema = z.enum(["neon", "frost", "holo"]).nullable();
+const floatingNoteKindSchema = z.enum(["note", "task"]);
 const floatingNoteChecklistSchema = z
   .array(z.object({
     text: z.string().max(FLOATING_NOTE_CHECKLIST_TEXT_MAX),
@@ -101,6 +102,7 @@ const floatingNoteChecklistSchema = z
   .max(FLOATING_NOTE_CHECKLIST_MAX_ITEMS);
 
 const floatingNoteCreateSchema = z.object({
+  kind: floatingNoteKindSchema.optional(),
   title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
   body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
   checklist: floatingNoteChecklistSchema.optional(),
@@ -114,6 +116,7 @@ const floatingNoteCreateSchema = z.object({
 
 const floatingNoteUpdateSchema = z.object({
   id: z.number().int(),
+  kind: floatingNoteKindSchema.optional(),
   title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
   body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
   checklist: floatingNoteChecklistSchema.optional(),
@@ -127,6 +130,7 @@ const floatingNoteUpdateSchema = z.object({
 
 type FloatingNoteDbRow = {
   id: number;
+  kind: "note" | "task";
   title: string;
   body: string;
   checklist: string;
@@ -161,6 +165,7 @@ function toFloatingNoteDto(row: FloatingNoteDbRow) {
   }
   return {
     id: row.id,
+    kind: row.kind,
     title: row.title,
     body: row.body,
     checklist,
@@ -666,8 +671,10 @@ export const appRouter = router({
     create: protectedProcedure
       .input(floatingNoteCreateSchema)
       .mutation(async ({ ctx, input }) => {
+        const kind = input.kind ?? "note";
         const row = await db.createFloatingNote({
           userId: ctx.user.id,
+          kind,
           title: input.title ?? "",
           body: input.body ?? "",
           checklist: JSON.stringify(input.checklist ?? []),
@@ -675,7 +682,7 @@ export const appRouter = router({
           y: input.y,
           w: input.w,
           h: input.h,
-          accent: input.accent ?? "pink",
+          accent: input.accent ?? (kind === "task" ? "pink" : "lavender"),
           style: input.style ?? null,
         });
         return toFloatingNoteDto(row);

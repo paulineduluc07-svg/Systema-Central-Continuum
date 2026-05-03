@@ -39,8 +39,9 @@ vi.mock("../db.js", () => ({
   getNotesByUserAndTab: vi.fn(async () => []),
   getAllNotesByUser: vi.fn(async () => []),
   createFloatingNote: vi.fn(async (note) => ({
-    id: ++hoisted.floatingNoteId,
+    kind: "note",
     ...note,
+    id: ++hoisted.floatingNoteId,
     archived: false,
     archivedAt: null,
     createdAt: now,
@@ -184,11 +185,13 @@ describe("Systema MCP write tools", () => {
 
       await client.callTool({
         name: "create_floating_note",
-        arguments: { title: "Float", body: "Body", x: 10, y: 20, w: 240, h: 220 },
+        arguments: { kind: "task", title: "Float", body: "Body", x: 10, y: 20, w: 240, h: 220 },
       });
       await client.callTool({ name: "update_floating_note", arguments: { id: 1, title: "Float updated" } });
       await client.callTool({ name: "archive_floating_note", arguments: { id: 1 } });
-      expect(db.createFloatingNote).toHaveBeenCalledWith(expect.objectContaining({ userId: 7, title: "Float" }));
+      expect(db.createFloatingNote).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: 7, kind: "task", title: "Float" }),
+      );
       expect(db.updateFloatingNote).toHaveBeenCalledWith(1, 7, expect.objectContaining({ title: "Float updated" }));
       expect(db.archiveFloatingNote).toHaveBeenCalledWith(1, 7);
 

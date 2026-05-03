@@ -11,11 +11,13 @@ import { toast } from "sonner";
 
 type AccentKey = "pink" | "violet" | "lavender" | "cyan" | "mint";
 type StyleKey = "neon" | "frost" | "holo";
+type NoteKind = "note" | "task";
 
 type ChecklistItem = { text: string; done: boolean };
 
 type Note = {
   id: number;
+  kind: NoteKind;
   title: string;
   body: string;
   checklist: ChecklistItem[];
@@ -29,6 +31,11 @@ type Note = {
   archivedAt: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+const DEFAULT_ACCENT_BY_KIND: Record<NoteKind, AccentKey> = {
+  note: "lavender",
+  task: "pink",
 };
 
 const ACCENT_HUES: Record<AccentKey, number> = {
@@ -200,7 +207,7 @@ export default function FloatingNotesPage() {
     toast.success("Notes ramenées dans la zone visible.");
   };
 
-  const handleCreate = (clientX?: number, clientY?: number) => {
+  const handleCreate = (kind: NoteKind, clientX?: number, clientY?: number) => {
     const rect = boardRef.current?.getBoundingClientRect();
     let x = 200 + Math.floor(Math.random() * 200);
     let y = 160 + Math.floor(Math.random() * 160);
@@ -209,6 +216,7 @@ export default function FloatingNotesPage() {
       y = Math.max(0, Math.round(clientY - rect.top - TWEAKS.defaultSize.h / 2));
     }
     createMutation.mutate({
+      kind,
       title: "",
       body: "",
       checklist: [],
@@ -216,14 +224,14 @@ export default function FloatingNotesPage() {
       y,
       w: TWEAKS.defaultSize.w,
       h: TWEAKS.defaultSize.h,
-      accent: TWEAKS.accent,
+      accent: DEFAULT_ACCENT_BY_KIND[kind],
       style: null,
     });
   };
 
   const onBoardDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target !== boardRef.current) return;
-    handleCreate(e.clientX, e.clientY);
+    handleCreate("note", e.clientX, e.clientY);
   };
 
   return (
@@ -231,6 +239,10 @@ export default function FloatingNotesPage() {
       className="-mt-20 min-h-screen bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url(/backgrounds/main-v2.jpg)" }}
     >
+      <style>{`
+        .floating-note-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+        .floating-note-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+      `}</style>
       {/* Bouton "Tiroir" flottant sous la navbar */}
       <button
         onClick={() => setVaultOpen(true)}
@@ -291,7 +303,7 @@ export default function FloatingNotesPage() {
           />
         ))}
 
-        <CreateFAB onCreate={() => handleCreate()} disabled={createMutation.isPending} />
+        <CreateFAB onCreate={(kind) => handleCreate(kind)} disabled={createMutation.isPending} />
       </div>
 <VaultDrawer
   open={vaultOpen}
@@ -404,7 +416,7 @@ function FloatingNote({ note, focused, onFocus, onChange, onArchive, onDelete }:
         onClose={onDelete}
         onDragHandlePointerDown={startDrag}
       >
-        <NoteBody note={note} styleKey={styleKey} accentH={accentH} onChange={onChange} />
+        <NoteBody note={note} styleKey={styleKey} accentH={accentH} width={size.w} onChange={onChange} />
         {/* Resize handle */}
         <div
           onPointerDown={startResize}
@@ -637,15 +649,24 @@ type NoteBodyProps = {
   note: Note;
   styleKey: StyleKey;
   accentH: number;
+  width: number;
   onChange: (patch: Partial<Note>) => void;
 };
 
-function NoteBody({ note, styleKey, accentH, onChange }: NoteBodyProps) {
+function NoteBody({ note, styleKey, accentH, width, onChange }: NoteBodyProps) {
   const textColor = styleKey === "holo" ? `oklch(98% 0.02 ${accentH})` : `oklch(22% 0.04 ${accentH})`;
   const subTextColor =
     styleKey === "holo" ? `oklch(88% 0.06 ${accentH} / 0.85)` : `oklch(35% 0.04 ${accentH} / 0.85)`;
   const placeholderColor =
     styleKey === "holo" ? `oklch(80% 0.05 ${accentH} / 0.5)` : `oklch(45% 0.04 ${accentH} / 0.5)`;
+
+  // Tailles de police adaptées à la largeur de la pastille
+  // 180px → titre 12 / corps 11 / meta 8.5 ; 360px → titre 15 / corps 13 / meta 9.5
+  const titleFontSize = clamp(12, 12 + ((width - 180) * 3) / 180, 15);
+  const bodyFontSize = clamp(11, 11 + ((width - 180) * 2) / 180, 13);
+  const metaFontSize = clamp(8.5, 8.5 + (width - 180) / 180, 9.5);
+  const padX = width < 220 ? 10 : 14;
+  const padY = width < 220 ? 8 : 12;
 
   const inputBase: React.CSSProperties = {
     width: "100%",
@@ -655,6 +676,8 @@ function NoteBody({ note, styleKey, accentH, onChange }: NoteBodyProps) {
     color: textColor,
     fontFamily: "Inter, sans-serif",
     resize: "none",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   };
 
   const setChecklist = (next: ChecklistItem[]) => onChange({ checklist: next });
@@ -665,8 +688,9 @@ function NoteBody({ note, styleKey, accentH, onChange }: NoteBodyProps) {
 
   return (
     <div
+      className="floating-note-scroll"
       style={{
-        padding: "10px 14px 12px",
+        padding: `10px ${padX}px ${padY}px`,
         display: "flex",
         flexDirection: "column",
         gap: 8,
@@ -680,57 +704,61 @@ function NoteBody({ note, styleKey, accentH, onChange }: NoteBodyProps) {
         onChange={(e) => onChange({ title: e.target.value })}
         placeholder="Titre…"
         onPointerDown={(e) => e.stopPropagation()}
-        style={{ ...inputBase, fontWeight: 600, fontSize: 14, letterSpacing: "-0.01em" }}
+        style={{ ...inputBase, fontWeight: 600, fontSize: titleFontSize, letterSpacing: "-0.01em" }}
       />
-      <textarea
-        value={note.body}
-        onChange={(e) => onChange({ body: e.target.value })}
-        placeholder="Note rapide…"
-        rows={3}
-        onPointerDown={(e) => e.stopPropagation()}
-        style={{ ...inputBase, fontSize: 12.5, lineHeight: 1.5, color: subTextColor, flexShrink: 0 }}
-      />
-      {note.checklist.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 2 }}>
-          {note.checklist.map((item, i) => (
-            <ChecklistRow
-              key={i}
-              item={item}
-              accentH={accentH}
-              styleKey={styleKey}
-              textColor={textColor}
-              onToggle={() => updateItem(i, { done: !item.done })}
-              onText={(t) => updateItem(i, { text: t })}
-              onRemove={() => removeItem(i)}
-            />
-          ))}
-        </div>
+      {note.kind === "note" ? (
+        <textarea
+          value={note.body}
+          onChange={(e) => onChange({ body: e.target.value })}
+          placeholder="Note rapide…"
+          onPointerDown={(e) => e.stopPropagation()}
+          className="floating-note-scroll"
+          style={{ ...inputBase, fontSize: bodyFontSize, lineHeight: 1.5, color: subTextColor, flex: 1, minHeight: 0, overflow: "auto" }}
+        />
+      ) : (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 2 }}>
+            {note.checklist.map((item, i) => (
+              <ChecklistRow
+                key={i}
+                item={item}
+                accentH={accentH}
+                styleKey={styleKey}
+                textColor={textColor}
+                fontSize={bodyFontSize}
+                onToggle={() => updateItem(i, { done: !item.done })}
+                onText={(t) => updateItem(i, { text: t })}
+                onRemove={() => removeItem(i)}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={addItem}
+            onPointerDown={(e) => e.stopPropagation()}
+            style={{
+              alignSelf: "flex-start",
+              background: "transparent",
+              border: `1px dashed ${placeholderColor}`,
+              color: subTextColor,
+              fontSize: metaFontSize + 1,
+              fontFamily: "JetBrains Mono, ui-monospace, monospace",
+              padding: "3px 8px",
+              borderRadius: 6,
+              cursor: "pointer",
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+            }}
+          >
+            + tâche
+          </button>
+        </>
       )}
-      <button
-        type="button"
-        onClick={addItem}
-        onPointerDown={(e) => e.stopPropagation()}
-        style={{
-          alignSelf: "flex-start",
-          background: "transparent",
-          border: `1px dashed ${placeholderColor}`,
-          color: subTextColor,
-          fontSize: 10.5,
-          fontFamily: "JetBrains Mono, ui-monospace, monospace",
-          padding: "3px 8px",
-          borderRadius: 6,
-          cursor: "pointer",
-          letterSpacing: "0.04em",
-          textTransform: "uppercase",
-        }}
-      >
-        + tâche
-      </button>
       <div
         style={{
           marginTop: "auto",
           paddingTop: 6,
-          fontSize: 9.5,
+          fontSize: metaFontSize,
           fontFamily: "JetBrains Mono, ui-monospace, monospace",
           color: placeholderColor,
           letterSpacing: "0.06em",
@@ -741,12 +769,18 @@ function NoteBody({ note, styleKey, accentH, onChange }: NoteBodyProps) {
         }}
       >
         <span>{formatDate(note.createdAt)}</span>
-        <span>
-          {note.checklist.filter((c) => c.done).length}/{note.checklist.length || 0}
-        </span>
+        {note.kind === "task" && (
+          <span>
+            {note.checklist.filter((c) => c.done).length}/{note.checklist.length || 0}
+          </span>
+        )}
       </div>
     </div>
   );
+}
+
+function clamp(min: number, value: number, max: number) {
+  return Math.max(min, Math.min(max, value));
 }
 
 type ChecklistRowProps = {
@@ -754,19 +788,20 @@ type ChecklistRowProps = {
   accentH: number;
   styleKey: StyleKey;
   textColor: string;
+  fontSize: number;
   onToggle: () => void;
   onText: (t: string) => void;
   onRemove: () => void;
 };
 
-function ChecklistRow({ item, accentH, styleKey, textColor, onToggle, onText, onRemove }: ChecklistRowProps) {
+function ChecklistRow({ item, accentH, styleKey, textColor, fontSize, onToggle, onText, onRemove }: ChecklistRowProps) {
   const checkBg = item.done
     ? `oklch(70% 0.2 ${accentH})`
     : styleKey === "holo"
       ? `oklch(95% 0.04 ${accentH} / 0.15)`
       : `oklch(98% 0.02 ${accentH} / 0.5)`;
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize }}>
       <button
         type="button"
         onClick={onToggle}
@@ -804,14 +839,17 @@ function ChecklistRow({ item, accentH, styleKey, textColor, onToggle, onText, on
         placeholder="Tâche…"
         style={{
           flex: 1,
+          minWidth: 0,
           background: "transparent",
           border: "none",
           outline: "none",
           fontFamily: "Inter, sans-serif",
-          fontSize: 12,
+          fontSize,
           color: textColor,
           textDecoration: item.done ? "line-through" : "none",
           opacity: item.done ? 0.55 : 1,
+          overflowWrap: "anywhere",
+          wordBreak: "break-word",
         }}
       />
       <button
@@ -1262,41 +1300,125 @@ const vaultIconBtnStyle: React.CSSProperties = {
 // FAB
 // ============================================================
 
-function CreateFAB({ onCreate, disabled }: { onCreate: () => void; disabled?: boolean }) {
+function CreateFAB({ onCreate, disabled }: { onCreate: (kind: NoteKind) => void; disabled?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onDoc);
+    return () => document.removeEventListener("pointerdown", onDoc);
+  }, [open]);
+
+  const choose = (kind: NoteKind) => {
+    setOpen(false);
+    onCreate(kind);
+  };
+
+  const choiceBtnStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    height: 38,
+    padding: "0 14px 0 12px",
+    borderRadius: 999,
+    border: "1px solid oklch(95% 0.04 320 / 0.4)",
+    background: "linear-gradient(135deg, oklch(95% 0.04 320 / 0.85) 0%, oklch(85% 0.08 320 / 0.85) 100%)",
+    backdropFilter: "blur(14px)",
+    WebkitBackdropFilter: "blur(14px)",
+    boxShadow: "0 12px 28px -10px oklch(40% 0.18 320 / 0.55), inset 0 1px 0 0 rgba(255,255,255,0.5)",
+    color: "oklch(25% 0.05 320)",
+    cursor: "pointer",
+    fontSize: 13,
+    fontWeight: 500,
+    fontFamily: "Inter, sans-serif",
+    letterSpacing: "0.01em",
+  };
+
   return (
-    <button
-      type="button"
-      onClick={onCreate}
-      disabled={disabled}
-      title="Nouvelle note"
-      aria-label="Créer une nouvelle note"
+    <div
+      ref={containerRef}
       style={{
         position: "fixed",
         right: 22,
         bottom: 96,
-        width: 52,
-        height: 52,
-        borderRadius: "50%",
-        border: "1px solid oklch(95% 0.04 350 / 0.4)",
-        background:
-          "linear-gradient(135deg, oklch(75% 0.22 350 / 0.85) 0%, oklch(60% 0.22 320 / 0.85) 100%)",
-        backdropFilter: "blur(14px)",
-        WebkitBackdropFilter: "blur(14px)",
-        boxShadow:
-          "0 16px 36px -10px oklch(50% 0.22 320 / 0.7), inset 0 1px 0 0 rgba(255,255,255,0.4)",
-        color: "white",
-        cursor: disabled ? "wait" : "pointer",
-        display: "grid",
-        placeItems: "center",
-        fontSize: 22,
-        fontWeight: 300,
         zIndex: 40,
-        opacity: disabled ? 0.6 : 1,
-        transition: "opacity 200ms",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        gap: 10,
       }}
     >
-      +
-    </button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: 8,
+          opacity: open ? 1 : 0,
+          transform: open ? "translateY(0)" : "translateY(8px)",
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity 180ms, transform 180ms",
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => choose("note")}
+          style={{
+            ...choiceBtnStyle,
+            background: `linear-gradient(135deg, oklch(95% 0.04 ${ACCENT_HUES.lavender} / 0.9) 0%, oklch(80% 0.12 ${ACCENT_HUES.lavender} / 0.85) 100%)`,
+          }}
+        >
+          <span aria-hidden style={{ fontSize: 14 }}>✎</span>
+          <span>Note</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => choose("task")}
+          style={{
+            ...choiceBtnStyle,
+            background: `linear-gradient(135deg, oklch(95% 0.04 ${ACCENT_HUES.pink} / 0.9) 0%, oklch(80% 0.18 ${ACCENT_HUES.pink} / 0.85) 100%)`,
+          }}
+        >
+          <span aria-hidden style={{ fontSize: 14 }}>✓</span>
+          <span>Tâche</span>
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        disabled={disabled}
+        title={open ? "Fermer" : "Nouvelle pastille"}
+        aria-label={open ? "Fermer le menu de création" : "Créer une nouvelle pastille"}
+        aria-expanded={open}
+        style={{
+          width: 52,
+          height: 52,
+          borderRadius: "50%",
+          border: "1px solid oklch(95% 0.04 350 / 0.4)",
+          background:
+            "linear-gradient(135deg, oklch(75% 0.22 350 / 0.85) 0%, oklch(60% 0.22 320 / 0.85) 100%)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          boxShadow:
+            "0 16px 36px -10px oklch(50% 0.22 320 / 0.7), inset 0 1px 0 0 rgba(255,255,255,0.4)",
+          color: "white",
+          cursor: disabled ? "wait" : "pointer",
+          display: "grid",
+          placeItems: "center",
+          fontSize: 22,
+          fontWeight: 300,
+          opacity: disabled ? 0.6 : 1,
+          transition: "opacity 200ms, transform 200ms",
+          transform: open ? "rotate(45deg)" : "rotate(0)",
+        }}
+      >
+        +
+      </button>
+    </div>
   );
 }
 

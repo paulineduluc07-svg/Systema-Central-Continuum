@@ -4,6 +4,7 @@ export const roleEnum = pgEnum("role", ["user", "admin"]);
 export const tabTypeEnum = pgEnum("tabType", ["widgets", "whiteboard"]);
 export const floatingNoteAccentEnum = pgEnum("floatingNoteAccent", ["pink", "violet", "lavender", "cyan", "mint"]);
 export const floatingNoteStyleEnum = pgEnum("floatingNoteStyle", ["neon", "frost", "holo"]);
+export const floatingNoteKindEnum = pgEnum("floatingNoteKind", ["note", "task"]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -129,6 +130,7 @@ export type InsertAgendaWeekData = typeof agendaWeekData.$inferInsert;
 export const floatingNotes = pgTable("floating_notes", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  kind: floatingNoteKindEnum("kind").notNull().default("note"),
   title: text("title").notNull().default(""),
   body: text("body").notNull().default(""),
   checklist: text("checklist").notNull().default("[]"),

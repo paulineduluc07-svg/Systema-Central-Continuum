@@ -56,6 +56,7 @@ const noteSchema = z.object({
 });
 const floatingNoteAccentSchema = z.enum(["pink", "violet", "lavender", "cyan", "mint"]);
 const floatingNoteStyleSchema = z.enum(["neon", "frost", "holo"]).nullable();
+const floatingNoteKindSchema = z.enum(["note", "task"]);
 const floatingNoteChecklistSchema = z
   .array(
     z.object({
@@ -66,6 +67,7 @@ const floatingNoteChecklistSchema = z
   .max(FLOATING_NOTE_CHECKLIST_MAX_ITEMS);
 const floatingNoteSchema = z.object({
   id: z.number(),
+  kind: floatingNoteKindSchema,
   title: z.string(),
   body: z.string(),
   checklist: floatingNoteChecklistSchema,
@@ -111,6 +113,7 @@ const notePatchSchema = z
     message: "At least one field must be provided.",
   });
 const floatingNoteCreateSchema = z.object({
+  kind: floatingNoteKindSchema.optional(),
   title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
   body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
   checklist: floatingNoteChecklistSchema.optional(),
@@ -124,6 +127,7 @@ const floatingNoteCreateSchema = z.object({
 const floatingNoteUpdateSchema = z
   .object({
     id: z.number().int(),
+    kind: floatingNoteKindSchema.optional(),
     title: z.string().max(FLOATING_NOTE_TITLE_MAX).optional(),
     body: z.string().max(FLOATING_NOTE_BODY_MAX).optional(),
     checklist: floatingNoteChecklistSchema.optional(),
@@ -667,11 +671,13 @@ export function createSystemaMcpServer() {
       inputSchema: floatingNoteCreateSchema,
       outputSchema: z.object({ floatingNote: floatingNoteSchema }),
     },
-    async ({ title, body, checklist, x, y, w, h, accent, style }) => {
+    async ({ kind, title, body, checklist, x, y, w, h, accent, style }) => {
       const userId = await resolveMcpUserId();
+      const resolvedKind = kind ?? "note";
       const floatingNote = toFloatingNoteDto(
         await db.createFloatingNote({
           userId,
+          kind: resolvedKind,
           title: title ?? "",
           body: body ?? "",
           checklist: JSON.stringify(checklist ?? []),
@@ -679,7 +685,7 @@ export function createSystemaMcpServer() {
           y,
           w,
           h,
-          accent: accent ?? "pink",
+          accent: accent ?? (resolvedKind === "task" ? "pink" : "lavender"),
           style: style ?? null,
         })
       );
