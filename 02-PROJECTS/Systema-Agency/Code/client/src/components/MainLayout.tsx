@@ -1,9 +1,12 @@
 import { useSyncedPreferences } from "@/hooks/useSyncedData";
 import { cn } from "@/lib/utils";
+import { useLocation } from "wouter";
 import { Navbar } from "./Navbar";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { darkMode } = useSyncedPreferences();
+  const [location] = useLocation();
+  const isHome = location === "/";
 
   return (
     <div className={cn("relative min-h-screen overflow-hidden transition-colors", darkMode && "dark")}>
@@ -13,10 +16,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <div className="absolute right-10 top-14 h-40 w-40 rounded-full bg-[#ffe6b8]/40 blur-3xl dark:bg-[#8f6d35]/30" />
       <div className="absolute bottom-10 left-1/4 h-48 w-48 rounded-full bg-[#fff2d8]/40 blur-3xl dark:bg-[#5f3e77]/25" />
 
-      <Navbar />
+      {!isHome && <Navbar />}
 
       {/* Main Content */}
-      <div className="relative pt-20">
+      <div className={cn("relative", !isHome && "pt-20")}>
         {children}
       </div>
     </div>

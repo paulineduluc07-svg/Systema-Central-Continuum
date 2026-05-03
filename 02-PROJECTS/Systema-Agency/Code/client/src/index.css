@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&family=Caveat:wght@400;500;600;700&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&family=Caveat:wght@400;500;600;700&family=Pacifico&family=VT323&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -48,6 +48,15 @@
 
 .animate-float {
   animation: float-gentle 5s ease-in-out infinite;
+}
+
+@keyframes systema-holo {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.animate-systema-holo {
+  animation: systema-holo 6s linear infinite;
 }
 
 /* Vision Board Background */

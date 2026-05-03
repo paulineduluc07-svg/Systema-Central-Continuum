@@ -24,10 +24,20 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 - Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
+- Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
 
 ---
 
 ## Prochaines passes
+
+### Home dashboard
+
+- [x] Implementer la V4 modifiee selon les annotations de Pauline.
+- [x] Passer les pastilles holo en boutons vers les pages Systema et reserver les raccourcis aux sites web.
+- [ ] Brancher les vraies news du matin quand Cowork fournira le flux.
+- [ ] Brancher le mini widget meteo sur une vraie source si necessaire.
+- [ ] Remplacer les donnees projets statiques par une source persistante quand la structure projet sera decidee.
+- [ ] Configurer les vrais liens web dans les raccourcis.
 
 ### Agenda
 

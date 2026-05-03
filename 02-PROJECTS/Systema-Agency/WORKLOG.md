@@ -4,6 +4,32 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-03 - Home dashboard V4 modifie
+
+- Implementation de la page `/` dans `HomeV2.tsx` a partir du handoff `design_handoff_onebrain_v4`, avec les annotations Pauline :
+  - logo Systema agrandi;
+  - suppression de OneBrain, greeting/date, recherche, notification, grosse meteo, stats et agenda;
+  - raccourcis deplaces dans la zone gauche haute;
+  - news du jour allongees;
+  - projets allonges sur toute la colonne droite;
+  - citation conservee mais reduite;
+  - pastilles holo conservees.
+- Ajout de l'asset public `client/public/brand/systema-logo.png`.
+- Ajout des polices `Inter Tight`, `Fraunces` et `VT323` + animation holo globale.
+- Validation depuis le clone : `pnpm check` OK, `pnpm build` OK.
+- Note technique : `pnpm build` a d'abord revele un `node_modules` incomplet (`@rollup/rollup-linux-x64-gnu` absent); repare par `CI=true pnpm install --force`, sans changement `package.json`/`pnpm-lock.yaml`.
+- Verification navigateur : serveur local demarre sur `http://localhost:3000/`; capture Playwright bloquee par librairie WSL manquante `libnspr4.so`.
+- Deuxieme passe selon screenshot Pauline :
+  - navbar globale cachee uniquement sur `/`;
+  - pastilles holo transformees en liens vers Kim, Notes, Agenda, Prompt Vault et Suivi;
+  - raccourcis internes retires de la carte `Acces rapides`, remplaces par placeholders de sites web a configurer;
+  - logo agrandi et rendu sans carre blanc visible via `mix-blend-multiply`.
+- Revalidation : `pnpm check` OK, `pnpm build` OK.
+
+Statut : implemente localement; inspection visuelle humaine requise avant push.
+
+---
+
 ## 2026-05-03 - Notes volantes : split note/tache + polish visuel
 
 - Ajout colonne `kind` (`note` | `task`) sur `floating_notes`; migration `drizzle/0006_floating_notes_kind.sql` + script `scripts/apply-floating-notes-kind-migration.mjs`. Backfill: `kind = 'task'` si checklist non vide, sinon `'note'`. Migration appliquee sur Neon, 1 ligne existante taguee `note`.

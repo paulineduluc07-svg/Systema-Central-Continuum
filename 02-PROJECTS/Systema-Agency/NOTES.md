@@ -20,7 +20,7 @@ Repères stables et décisions actives. Garder ce fichier court.
 
 | Route | Role | Navbar |
 |---|---|---|
-| `/` | HomeV2 | Brand |
+| `/` | Dashboard accueil V4 modifie | Brand |
 | `/kim` | Kim | Oui |
 | `/notes` | Notes volantes | Oui |
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
@@ -62,6 +62,17 @@ Etat actuel :
 Limites actives :
 - Kim ne peut pas encore modifier ni archiver.
 - Suppression directe interdite au depart.
+
+---
+
+## Home dashboard
+
+- Page active : `/`.
+- Base visuelle : handoff `RESSOURCES/AGENT_PLANS/design_handoff_onebrain_v4/`, adaptee selon screenshot Pauline.
+- Elements retires du handoff : bloc OneBrain, greeting/date, recherche, notification, grosse meteo, stats, agenda.
+- Structure actuelle : navbar globale cachee sur `/`, logo Systema agrandi, pastilles holo conservees et utilisees comme navigation interne, raccourcis web a gauche, mini meteo simple, news du jour allongees, projets allonges, citation plus petite.
+- Donnees actuelles statiques en front; a brancher plus tard sur Cowork/news, meteo et source projets.
+- Les raccourcis ne servent pas aux pages internes; ils sont reserves aux futurs sites web de Pauline.
 
 ---
 
