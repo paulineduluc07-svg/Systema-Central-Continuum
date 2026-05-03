@@ -68,7 +68,13 @@ Limites actives :
 ## Notes volantes
 
 - Page active : `/notes`.
-- Table DB : `floating_notes`.
+- Table DB : `floating_notes` avec colonne `kind` (`note` | `task`, default `note`).
+- Deux types de pastilles, choisis via le FAB qui se deplie :
+  - `note` : titre + zone texte libre. Accent par defaut : lavender.
+  - `task` : titre + checklist + bouton `+ tâche`. Accent par defaut : pink.
+- Toggle de `kind` exposé en API (`floatingNotes.update`/MCP `update_floating_note`) mais pas dans l'UI; un changement manuel reste possible via MCP si besoin.
+- Scrollbar interne cachee (CSS injecte dans la page `/notes`, classe `floating-note-scroll`).
+- Tailles de police et padding s'adaptent a la largeur (180-360px).
 - Passe A desktop validee.
 - Passe B mobile a faire.
 - Les notes doivent rester recuperables meme si une position/interaction les coince.

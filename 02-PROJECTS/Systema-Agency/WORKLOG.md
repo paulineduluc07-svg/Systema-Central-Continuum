@@ -4,6 +4,24 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-03 - Notes volantes : split note/tache + polish visuel
+
+- Ajout colonne `kind` (`note` | `task`) sur `floating_notes`; migration `drizzle/0006_floating_notes_kind.sql` + script `scripts/apply-floating-notes-kind-migration.mjs`. Backfill: `kind = 'task'` si checklist non vide, sinon `'note'`. Migration appliquee sur Neon, 1 ligne existante taguee `note`.
+- tRPC `floatingNotes.create` accepte `kind` (default `note`); accent par defaut: `lavender` pour note, `pink` pour task.
+- Outil MCP `create_floating_note` accepte `kind`; test `writes.test.ts` mis a jour.
+- UI `/notes` :
+  - Le FAB `+` se deplie en deux choix : Note (lavender) / Tache (pink).
+  - Pastilles `note` : titre + zone texte libre uniquement.
+  - Pastilles `task` : titre + checklist + bouton `+ tâche` uniquement; compteur affiche.
+  - Scrollbar interne cachee (`scrollbar-width: none`, `::-webkit-scrollbar` masque).
+  - Tailles de police adaptees a la largeur (titre 12-15px, corps 11-13px, meta 8.5-9.5px); padding plus serre sous 220px de large; `overflow-wrap: anywhere` + `word-break: break-word` pour eviter les debordements.
+- Validation locale depuis le clone : `pnpm check`, `pnpm test` (36/36), `pnpm build` OK.
+- Commit/push sur `main` : `237bdea`.
+
+Statut : pousse; Vercel redeploie automatiquement.
+
+---
+
 ## 2026-05-03 - Agenda Liquid Week livre
 
 - Ajout route `/agenda` avec entree Agenda dans la navbar.

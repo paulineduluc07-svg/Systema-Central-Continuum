@@ -23,6 +23,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Agenda hebdomadaire `/agenda` livre : evenements, objectifs et habitudes persistants par semaine.
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
+- Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
 
 ---
 
@@ -36,6 +37,8 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 ### Notes volantes
 
+- [x] Split pastilles en deux types : `note` (texte libre) et `task` (checklist), avec accents par defaut differents.
+- [x] Cacher la scrollbar interne et adapter les tailles de police a la largeur de la pastille.
 - [ ] Passe B : vue mobile masonry + bottom sheet pour `/notes`.
 - [ ] Revalider le flux mobile : creer, editer, archiver, restaurer, supprimer.
 - [ ] Garder le bouton/flux de recuperation des notes coincées tant que le drag mobile n'est pas parfaitement valide.
