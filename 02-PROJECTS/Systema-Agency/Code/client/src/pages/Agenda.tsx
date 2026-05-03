@@ -51,90 +51,65 @@ const ACCENT_HUES: Record<AccentKey, number> = {
 const ACCENT_ORDER: AccentKey[] = ["pink", "violet", "lavender", "cyan", "mint"];
 
 const emptyEvents = (): Record<DayKey, AgendaEvent[]> => ({
-  LUN: [
-    { time: "10:20", title: "Zoom Design Team", color: "pink" },
-    { time: "12:00", title: "Lunch @ Cafesanto w/ Julie", color: "lavender" },
-    { time: "13:30", title: "PT", color: "mint" },
-  ],
-  MAR: [
-    { time: "10:20", title: "Zoom Develop. Team", color: "pink" },
-    { time: "14:00", title: "UI/UX Team presentation", color: "violet" },
-    { time: "13:30", title: "PT", color: "mint" },
-  ],
-  MER: [
-    { time: "10:00", title: "Bible Study", color: "lavender" },
-    { time: "14:30", title: "Meeting Marketing", color: "violet" },
-    { time: "18:35", title: "Worship Practice", color: "pink" },
-  ],
-  JEU: [
-    { time: ".", title: "Day-off", color: "mint" },
-    { time: "16:30", title: "Hair Salon", color: "pink" },
-  ],
-  VEN: [
-    { time: "10:00", title: "Bible Study", color: "lavender" },
-    { time: "13:30", title: "Lunch w/ Sarah", color: "lavender" },
-    { time: "18:35", title: "Etsy Seminar", color: "cyan" },
-  ],
-  SAM: [
-    { time: "11:00", title: "Website launch", color: "cyan" },
-    { time: "12:30", title: "Lunch w/ Emily", color: "lavender" },
-  ],
-  DIM: [
-    { time: "09:30", title: "Worship Practice", color: "pink" },
-    { time: "13:30", title: "Small Group @ N24", color: "violet" },
-  ],
+  LUN: [],
+  MAR: [],
+  MER: [],
+  JEU: [],
+  VEN: [],
+  SAM: [],
+  DIM: [],
 });
 
 const defaultGoals = (): Goal[] => [
   {
-    title: "Build Endurance",
+    title: "",
     accent: "pink",
     items: [
-      { text: "Marathon training 1/sem", done: false },
-      { text: "3-4 short runs / sem", done: true },
-      { text: "Track Progress (app)", done: false },
-      { text: "Join a Running Group", done: false },
-      { text: "Weight Training 2/sem", done: true },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
     ],
   },
   {
-    title: "Improve Nutrition",
+    title: "",
     accent: "mint",
     items: [
-      { text: "Consult a Nutritionist", done: true },
-      { text: "Diet plan that supports running", done: false },
-      { text: "Meal Planning", done: false },
-      { text: "Hydration Strategy", done: true },
-      { text: "Track Intake", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
     ],
   },
   {
-    title: "Mental Toughness",
+    title: "",
     accent: "violet",
     items: [
-      { text: "Daily Visualization", done: true },
-      { text: "Spend 5-10 min / visualizing", done: false },
-      { text: "Mindfulness Practice", done: false },
-      { text: "Read Inspiring Stories", done: true },
-      { text: "Set Small Challenges", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
     ],
   },
 ];
 
 const defaultHabitsA = (): Habit[] => [
-  { name: "Workout 45 min", grid: [1, 1, 0, 1, 1, 0, 2], accent: "pink" },
-  { name: "Stretching", grid: [1, 1, 1, 0, 1, 1, 1], accent: "lavender" },
-  { name: "Meditation 10 min", grid: [2, 1, 1, 1, 0, 1, 1], accent: "violet" },
-  { name: "Lecture 30 min", grid: [1, 0, 1, 1, 1, 0, 1], accent: "cyan" },
-  { name: "Famille / Diner", grid: [1, 1, 1, 1, 1, 1, 2], accent: "mint" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "pink" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "lavender" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "violet" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "cyan" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "mint" },
 ];
 
 const defaultHabitsB = (): Habit[] => [
-  { name: "Hydratation 2L", grid: [2, 2, 1, 2, 1, 2, 1], accent: "cyan" },
-  { name: "Pas de sucre raffine", grid: [1, 0, 0, 1, 1, 0, 1], accent: "pink" },
-  { name: "Coucher avant 23 h", grid: [1, 1, 0, 1, 0, 1, 1], accent: "violet" },
-  { name: "Journal du soir", grid: [1, 1, 1, 1, 1, 0, 1], accent: "lavender" },
-  { name: "Pas de reseaux apres 21 h", grid: [0, 1, 1, 0, 1, 1, 0], accent: "mint" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "cyan" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "pink" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "violet" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "lavender" },
+  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "mint" },
 ];
 
 function clone<T>(value: T): T {
@@ -194,8 +169,8 @@ function createDefaultWeek(weekStart: string): WeekData {
     habitsA: defaultHabitsA(),
     habitsB: defaultHabitsB(),
     habitLabels: {
-      habitsA: "Bien-etre",
-      habitsB: "Discipline",
+      habitsA: "",
+      habitsB: "",
     },
   };
 }
@@ -464,7 +439,7 @@ export default function AgendaPage() {
       ...current,
       events: {
         ...current.events,
-        [day]: [...current.events[day], { time: "12:00", title: "Nouvel evenement", color: "pink" }],
+        [day]: [...current.events[day], { time: "", title: "", color: "pink" }],
       },
     }));
   };
