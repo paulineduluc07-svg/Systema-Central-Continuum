@@ -15,6 +15,7 @@ const SUIVI_MAX_REASON_LENGTH = 160;
 const SUIVI_MAX_NOTE_LENGTH = 5_000;
 const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_24H_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
+const AGENDA_WEEK_MAX_PAYLOAD_CHARS = 500_000;
 const promptVaultDataSchema = z
   .string()
   .max(
@@ -29,6 +30,21 @@ const promptVaultDataSchema = z
       return false;
     }
   }, "Le snapshot Prompt Vault doit etre un JSON valide.");
+
+const agendaWeekDataSchema = z
+  .string()
+  .max(
+    AGENDA_WEEK_MAX_PAYLOAD_CHARS,
+    `La semaine Agenda depasse la limite (${AGENDA_WEEK_MAX_PAYLOAD_CHARS} caracteres).`,
+  )
+  .refine((value) => {
+    try {
+      const parsed = JSON.parse(value) as unknown;
+      return parsed !== null && typeof parsed === "object";
+    } catch {
+      return false;
+    }
+  }, "La semaine Agenda doit etre un JSON valide.");
 
 const suiviEntryInputSchema = z.object({
   timestamp: z.string().datetime({ offset: true }),
@@ -611,6 +627,27 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await db.upsertPromptVaultData(ctx.user.id, input.data);
         return { success: true };
+      }),
+  }),
+
+  // Agenda API
+  agenda: router({
+    get: protectedProcedure
+      .input(z.object({
+        weekStart: z.string().regex(DATE_ISO_REGEX, "La date doit etre au format YYYY-MM-DD."),
+      }))
+      .query(async ({ ctx, input }) => {
+        return db.getAgendaWeekData(ctx.user.id, input.weekStart);
+      }),
+
+    save: protectedProcedure
+      .input(z.object({
+        weekStart: z.string().regex(DATE_ISO_REGEX, "La date doit etre au format YYYY-MM-DD."),
+        data: agendaWeekDataSchema,
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.upsertAgendaWeekData(ctx.user.id, input.weekStart, input.data);
+        return { success: true } as const;
       }),
   }),
 

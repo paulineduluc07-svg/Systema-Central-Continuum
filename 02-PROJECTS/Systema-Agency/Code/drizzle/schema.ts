@@ -114,6 +114,18 @@ export const promptVaultData = pgTable("prompt_vault_data", {
 export type PromptVaultDataRow = typeof promptVaultData.$inferSelect;
 export type InsertPromptVaultData = typeof promptVaultData.$inferInsert;
 
+export const agendaWeekData = pgTable("agenda_week_data", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  weekStart: varchar("weekStart", { length: 10 }).notNull(),
+  data: text("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type AgendaWeekDataRow = typeof agendaWeekData.$inferSelect;
+export type InsertAgendaWeekData = typeof agendaWeekData.$inferInsert;
+
 export const floatingNotes = pgTable("floating_notes", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),

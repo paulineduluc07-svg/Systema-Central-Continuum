@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&family=Caveat:wght@400;500;600;700&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@700&family=Caveat:wght@400;500;600;700&family=Pacifico&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -99,6 +99,7 @@
   
   --font-display: "Space Grotesk", "Fredoka", sans-serif;
   --font-body: "Inter", "Quicksand", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --font-handwriting: "Caveat", "Patrick Hand", cursive;
   --font-calligraphic: "Pacifico", "Caveat", cursive;
 }

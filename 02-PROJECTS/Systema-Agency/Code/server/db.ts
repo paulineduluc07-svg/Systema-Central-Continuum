@@ -299,7 +299,7 @@ export async function replaceSuiviEntries(userId: number, entries: Omit<InsertSu
 
 // ============== PROMPT VAULT ==============
 
-import { promptVaultData } from "../drizzle/schema.js";
+import { agendaWeekData, promptVaultData } from "../drizzle/schema.js";
 
 export async function getPromptVaultData(userId: number) {
   const db = await getDb();
@@ -325,6 +325,28 @@ export async function deletePromptVaultData(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(promptVaultData).where(eq(promptVaultData.userId, userId));
+}
+
+// ============== AGENDA WEEK DATA ==============
+
+export async function getAgendaWeekData(userId: number, weekStart: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(agendaWeekData)
+    .where(and(eq(agendaWeekData.userId, userId), eq(agendaWeekData.weekStart, weekStart)))
+    .limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function upsertAgendaWeekData(userId: number, weekStart: string, data: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(agendaWeekData)
+    .values({ userId, weekStart, data })
+    .onConflictDoUpdate({
+      target: [agendaWeekData.userId, agendaWeekData.weekStart],
+      set: { data, updatedAt: new Date() },
+    });
 }
 
 // ============== FLOATING NOTES ==============
