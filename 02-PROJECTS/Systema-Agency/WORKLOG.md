@@ -16,6 +16,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - Correctif UX : remplacement des `contentEditable` par de vrais inputs transparents, puis passage en sauvegarde immediate a chaque frappe pour rendre l'edition fiable; validation `pnpm check`, `pnpm test`, `pnpm build` OK.
 - Ajustements UI demandes : suppression d'evenements via bouton `X`, navigation de semaine centree, titres des groupes d'habitudes editables et persistants.
 - Ajustement usage : les semaines neuves et les nouveaux evenements demarrent maintenant vides pour eviter d'effacer les donnees demo.
+- Ajustement visuel : accents Agenda adoucis en pastels lumineux pour alleger les pastilles, evenements, objectifs et habitudes.
 
 Statut : livre dans GitHub/main; Vercel redeploie automatiquement sur push.
 

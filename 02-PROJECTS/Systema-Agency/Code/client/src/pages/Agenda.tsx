@@ -42,11 +42,11 @@ const DAYS_FULL = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", 
 const DAY_LETTERS = ["L", "M", "M", "J", "V", "S", "D"];
 const MONTHS = ["janv.", "fevr.", "mars", "avr.", "mai", "juin", "juil.", "aout", "sept.", "oct.", "nov.", "dec."];
 const ACCENT_HUES: Record<AccentKey, number> = {
-  pink: 350,
-  violet: 310,
-  lavender: 280,
-  cyan: 220,
-  mint: 160,
+  pink: 345,
+  violet: 305,
+  lavender: 272,
+  cyan: 205,
+  mint: 155,
 };
 const ACCENT_ORDER: AccentKey[] = ["pink", "violet", "lavender", "cyan", "mint"];
 
@@ -264,7 +264,7 @@ function ScriptTitle({ children, size = 42, hue = 350 }: { children: React.React
       className="font-handwriting font-bold leading-none text-white"
       style={{
         fontSize: size,
-        textShadow: `0 0 24px oklch(75% 0.22 ${hue} / 0.55)`,
+        textShadow: `0 0 24px oklch(86% 0.13 ${hue} / 0.55)`,
       }}
     >
       {children}
@@ -297,8 +297,8 @@ function AccentCycleButton({
       style={{
         width: size,
         height: size,
-        background: `oklch(75% 0.22 ${hue})`,
-        boxShadow: `0 0 8px oklch(75% 0.22 ${hue} / 0.8)`,
+        background: `oklch(88% 0.12 ${hue})`,
+        boxShadow: `0 0 10px oklch(86% 0.14 ${hue} / 0.75)`,
       }}
     />
   );
@@ -325,9 +325,9 @@ function AgendaCheckbox({
       }}
       className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-[4px]"
       style={{
-        border: `1.2px solid oklch(80% 0.1 ${hue} / 0.55)`,
-        background: checked ? `oklch(72% 0.22 ${hue})` : "rgba(255,255,255,0.06)",
-        boxShadow: checked ? `0 0 8px oklch(72% 0.22 ${hue} / 0.7)` : "none",
+        border: `1.2px solid oklch(90% 0.08 ${hue} / 0.65)`,
+        background: checked ? `oklch(84% 0.13 ${hue})` : "rgba(255,255,255,0.06)",
+        boxShadow: checked ? `0 0 10px oklch(84% 0.14 ${hue} / 0.65)` : "none",
       }}
     >
       {checked && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
@@ -353,16 +353,16 @@ function HabitBead({
       onClick={onClick}
       className="h-[22px] w-[22px] rounded-full transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/60"
       style={{
-        border: value === 0 ? "1px solid rgba(255,255,255,0.25)" : `1px solid oklch(85% 0.14 ${hue} / 0.7)`,
+        border: value === 0 ? "1px solid rgba(255,255,255,0.25)" : `1px solid oklch(92% 0.08 ${hue} / 0.78)`,
         opacity: value === 0 ? 0.7 : value === 2 ? 0.6 : 1,
         background:
           value === 0
             ? "transparent"
-            : `radial-gradient(circle at 35% 30%, oklch(90% 0.15 ${hue}) 0%, oklch(65% 0.22 ${hue}) 76%)`,
+            : `radial-gradient(circle at 35% 30%, oklch(97% 0.06 ${hue}) 0%, oklch(82% 0.13 ${hue}) 76%)`,
         boxShadow:
           value === 0
             ? "none"
-            : `0 0 10px oklch(70% 0.22 ${hue} / 0.7), inset 0 1px 2px rgba(255,255,255,0.5)`,
+            : `0 0 12px oklch(86% 0.13 ${hue} / 0.68), inset 0 1px 2px rgba(255,255,255,0.58)`,
       }}
     />
   );
@@ -561,15 +561,15 @@ export default function AgendaPage() {
                 className="min-h-[180px] rounded-2xl p-2.5"
                 style={{
                   background: isToday
-                    ? "linear-gradient(160deg, oklch(70% 0.18 350 / 0.32) 0%, oklch(60% 0.18 320 / 0.18) 100%)"
+                    ? "linear-gradient(160deg, oklch(84% 0.11 345 / 0.28) 0%, oklch(80% 0.09 305 / 0.16) 100%)"
                     : "linear-gradient(160deg, oklch(95% 0.04 320 / 0.10) 0%, oklch(95% 0.04 320 / 0.04) 100%)",
                   border: isToday
-                    ? "1px solid oklch(80% 0.2 350 / 0.6)"
+                    ? "1px solid oklch(92% 0.08 345 / 0.55)"
                     : "1px solid oklch(95% 0.04 320 / 0.2)",
                   backdropFilter: "blur(20px) saturate(140%)",
                   WebkitBackdropFilter: "blur(20px) saturate(140%)",
                   boxShadow: isToday
-                    ? "0 18px 40px -16px oklch(50% 0.22 350 / 0.6), inset 0 1px 0 0 rgba(255,255,255,0.3)"
+                    ? "0 18px 40px -16px oklch(84% 0.13 345 / 0.45), inset 0 1px 0 0 rgba(255,255,255,0.3)"
                     : "0 12px 28px -16px oklch(20% 0.05 320 / 0.5), inset 0 1px 0 0 rgba(255,255,255,0.2)",
                 }}
               >
@@ -577,7 +577,7 @@ export default function AgendaPage() {
                   <div className="font-handwriting text-[22px] leading-none text-white">{DAYS_FULL[dayIndex]}</div>
                   <div
                     className="font-mono text-sm font-semibold"
-                    style={{ color: isToday ? "oklch(90% 0.18 350)" : "rgba(255,255,255,0.55)" }}
+                    style={{ color: isToday ? "oklch(94% 0.08 345)" : "rgba(255,255,255,0.55)" }}
                   >
                     {date.getDate()}
                   </div>
@@ -590,8 +590,9 @@ export default function AgendaPage() {
                         key={`${day}-${eventIndex}`}
                         className="group/event relative rounded-lg px-[7px] py-[5px] pr-7"
                         style={{
-                          background: `oklch(70% 0.18 ${hue} / 0.22)`,
-                          border: `1px solid oklch(80% 0.15 ${hue} / 0.4)`,
+                          background: `oklch(86% 0.10 ${hue} / 0.30)`,
+                          border: `1px solid oklch(92% 0.08 ${hue} / 0.55)`,
+                          boxShadow: `0 8px 22px -16px oklch(86% 0.13 ${hue} / 0.65), inset 0 1px 0 rgba(255,255,255,0.24)`,
                         }}
                       >
                         <button
@@ -615,7 +616,7 @@ export default function AgendaPage() {
                             ariaLabel="Heure de l'evenement"
                             onCommit={(value) => updateEvent(day, eventIndex, { time: value })}
                             className="w-16 font-mono text-[9px] outline-none focus-visible:ring-1 focus-visible:ring-white/50"
-                            style={{ color: `oklch(90% 0.1 ${hue})` }}
+                            style={{ color: `oklch(95% 0.07 ${hue})` }}
                           />
                         </div>
                         <EditableText
@@ -651,11 +652,11 @@ export default function AgendaPage() {
                   key={goalIndex}
                   className="rounded-[22px] px-5 py-4"
                   style={{
-                    background: `linear-gradient(135deg, oklch(85% 0.15 ${hue} / 0.15) 0%, oklch(60% 0.18 ${hue} / 0.08) 100%)`,
-                    border: `1px solid oklch(85% 0.12 ${hue} / 0.35)`,
+                    background: `linear-gradient(135deg, oklch(90% 0.09 ${hue} / 0.16) 0%, oklch(78% 0.11 ${hue} / 0.09) 100%)`,
+                    border: `1px solid oklch(92% 0.08 ${hue} / 0.38)`,
                     backdropFilter: "blur(20px) saturate(140%)",
                     WebkitBackdropFilter: "blur(20px) saturate(140%)",
-                    boxShadow: `0 16px 40px -18px oklch(50% 0.22 ${hue} / 0.5), inset 0 1px 0 0 rgba(255,255,255,0.25)`,
+                    boxShadow: `0 16px 40px -18px oklch(82% 0.13 ${hue} / 0.42), inset 0 1px 0 0 rgba(255,255,255,0.25)`,
                   }}
                 >
                   <div className="mb-1.5 flex items-center gap-2">
@@ -670,12 +671,12 @@ export default function AgendaPage() {
                       ariaLabel="Titre de l'objectif"
                       onCommit={(value) => updateGoal(goalIndex, { title: value })}
                       className="w-full font-handwriting text-[30px] leading-none text-white outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                      style={{ textShadow: `0 0 18px oklch(75% 0.22 ${hue} / 0.55)` }}
+                      style={{ textShadow: `0 0 18px oklch(86% 0.13 ${hue} / 0.55)` }}
                     />
                   </div>
                   <div
                     className="mb-3 font-mono text-[9.5px] uppercase tracking-[0.18em]"
-                    style={{ color: `oklch(85% 0.15 ${hue})` }}
+                    style={{ color: `oklch(92% 0.08 ${hue})` }}
                   >
                     {doneCount}/{goal.items.length} completes
                   </div>
