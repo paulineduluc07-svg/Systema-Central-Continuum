@@ -18,15 +18,16 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - Ajout des polices `Inter Tight`, `Fraunces` et `VT323` + animation holo globale.
 - Validation depuis le clone : `pnpm check` OK, `pnpm build` OK.
 - Note technique : `pnpm build` a d'abord revele un `node_modules` incomplet (`@rollup/rollup-linux-x64-gnu` absent); repare par `CI=true pnpm install --force`, sans changement `package.json`/`pnpm-lock.yaml`.
-- Verification navigateur : serveur local demarre sur `http://localhost:3000/`; capture Playwright bloquee par librairie WSL manquante `libnspr4.so`.
+- Verification navigateur : serveur local demarre sur `http://localhost:3000/`; capture Playwright bloquee par librairie WSL manquante `libnspr4.so`; prod verifiee par Pauline apres redeploiement Vercel.
 - Deuxieme passe selon screenshot Pauline :
   - navbar globale cachee uniquement sur `/`;
   - pastilles holo transformees en liens vers Kim, Notes, Agenda, Prompt Vault et Suivi;
   - raccourcis internes retires de la carte `Acces rapides`, remplaces par placeholders de sites web a configurer;
   - logo agrandi et conserve sans carre blanc via rendu texte stylise.
 - Revalidation : `pnpm check` OK, `pnpm build` OK.
+- Commits/push sur `main` : `75dd45d`, puis correction doc `4e872b1`.
 
-Statut : implemente localement; inspection visuelle humaine requise avant push.
+Statut : pousse; prod visible sur `https://systema-agency.vercel.app`.
 
 ---
 
