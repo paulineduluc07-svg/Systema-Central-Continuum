@@ -819,6 +819,7 @@ export function createSystemaMcpServer() {
     meta: z.string().max(200).optional(),
     hot: z.boolean().optional(),
     color: z.string().max(32).optional(),
+    url: z.string().max(500).optional(),
   });
 
   const homeProjectSchema = z.object({
