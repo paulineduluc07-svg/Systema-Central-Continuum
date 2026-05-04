@@ -22,6 +22,8 @@ export const WRITE_TOOL_NAMES = [
   "create_tab",
   "update_tab",
   "delete_tab",
+  "set_home_news",
+  "set_home_projects",
 ] as const;
 
 type DocFile = (typeof DOC_FILES)[number];
@@ -806,6 +808,119 @@ export function createSystemaMcpServer() {
     async ({ tabId }) => {
       const userId = await resolveMcpUserId();
       await db.deleteCustomTabByTabId(tabId, userId);
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  const homeNewsItemSchema = z.object({
+    id: z.string().max(64),
+    category: z.string().max(40),
+    title: z.string().max(500),
+    meta: z.string().max(200).optional(),
+    hot: z.boolean().optional(),
+    color: z.string().max(32).optional(),
+  });
+
+  const homeProjectSchema = z.object({
+    id: z.string().max(64),
+    name: z.string().max(200),
+    detail: z.string().max(500).optional(),
+    progress: z.number().int().min(0).max(100),
+    due: z.string().max(100).optional(),
+    color: z.string().max(32).optional(),
+    status: z.enum(["active", "planned", "queued"]).optional(),
+  });
+
+  server.registerTool(
+    "get_home_data",
+    {
+      title: "Lire les données de la home Systema",
+      description: "Retourne les raccourcis, news et projets actuels de la home page.",
+      inputSchema: z.object({}),
+      outputSchema: z.object({
+        shortcuts: z.array(z.object({
+          id: z.string(),
+          label: z.string(),
+          url: z.string(),
+          color: z.string().optional(),
+        })),
+        news: z.array(homeNewsItemSchema),
+        projects: z.array(homeProjectSchema),
+      }),
+    },
+    async () => {
+      const userId = await resolveMcpUserId();
+      const row = await db.getHomeData(userId);
+      const empty = { shortcuts: [], news: [], projects: [] };
+      if (!row) return jsonToolResult(empty);
+      try {
+        const parsed = JSON.parse(row.data) as unknown;
+        if (parsed !== null && typeof parsed === "object") {
+          return jsonToolResult(parsed as typeof empty);
+        }
+      } catch {
+        // fall through
+      }
+      return jsonToolResult(empty);
+    }
+  );
+
+  server.registerTool(
+    "set_home_news",
+    {
+      title: "Écrire les news de la home Systema",
+      description: "Remplace la liste complète des news du jour affichées sur la home page. Les items existants sont écrasés.",
+      inputSchema: z.object({
+        items: z.array(homeNewsItemSchema).max(20),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ items }) => {
+      const userId = await resolveMcpUserId();
+      const row = await db.getHomeData(userId);
+      let current: { shortcuts: unknown[]; news: unknown[]; projects: unknown[] } = { shortcuts: [], news: [], projects: [] };
+      if (row) {
+        try {
+          const parsed = JSON.parse(row.data) as unknown;
+          if (parsed !== null && typeof parsed === "object") {
+            current = parsed as typeof current;
+          }
+        } catch {
+          // use empty default
+        }
+      }
+      const updated = { ...current, news: items };
+      await db.upsertHomeData(userId, JSON.stringify(updated));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "set_home_projects",
+    {
+      title: "Écrire les projets de la home Systema",
+      description: "Remplace la liste complète des projets en cours affichés sur la home page. Les items existants sont écrasés.",
+      inputSchema: z.object({
+        items: z.array(homeProjectSchema).max(20),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ items }) => {
+      const userId = await resolveMcpUserId();
+      const row = await db.getHomeData(userId);
+      let current: { shortcuts: unknown[]; news: unknown[]; projects: unknown[] } = { shortcuts: [], news: [], projects: [] };
+      if (row) {
+        try {
+          const parsed = JSON.parse(row.data) as unknown;
+          if (parsed !== null && typeof parsed === "object") {
+            current = parsed as typeof current;
+          }
+        } catch {
+          // use empty default
+        }
+      }
+      const updated = { ...current, projects: items };
+      await db.upsertHomeData(userId, JSON.stringify(updated));
       return jsonToolResult({ success: true });
     }
   );
