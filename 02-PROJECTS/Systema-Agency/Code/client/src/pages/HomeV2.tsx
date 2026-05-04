@@ -625,7 +625,6 @@ export default function HomeV2() {
               src="/logo-systema-agency.png"
               alt="Systema Agency"
               className="w-[170px] sm:w-[210px] mix-blend-multiply"
-              style={{ filter: "drop-shadow(0 4px 14px rgba(255,45,138,.18))" }}
             />
           </div>
 
