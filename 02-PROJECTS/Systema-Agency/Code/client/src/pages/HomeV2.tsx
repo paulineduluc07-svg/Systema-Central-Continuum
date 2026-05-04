@@ -621,13 +621,12 @@ export default function HomeV2() {
       <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-5">
         <header className="flex items-start justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div
-              aria-label="Systema Agency"
-              className="font-['Pacifico'] leading-[0.88] text-[#ff2d8a] drop-shadow-[0_6px_16px_rgba(255,45,138,.22)]"
-            >
-              <span className="block text-[40px] sm:text-[50px]">Systema</span>
-              <span className="block pl-4 text-[40px] sm:text-[50px]">Agency</span>
-            </div>
+            <img
+              src="/logo-systema-agency.png"
+              alt="Systema Agency"
+              className="w-[170px] sm:w-[210px] mix-blend-multiply"
+              style={{ filter: "drop-shadow(0 4px 14px rgba(255,45,138,.18))" }}
+            />
           </div>
 
           <nav className="flex flex-wrap items-center justify-end gap-3 pt-2" aria-label="Navigation rapide">
