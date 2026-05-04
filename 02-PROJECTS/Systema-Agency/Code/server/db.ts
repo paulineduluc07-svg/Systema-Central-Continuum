@@ -349,6 +349,30 @@ export async function upsertAgendaWeekData(userId: number, weekStart: string, da
     });
 }
 
+// ============== HOME DATA ==============
+
+import { homeData } from "../drizzle/schema.js";
+
+export async function getHomeData(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(homeData)
+    .where(eq(homeData.userId, userId))
+    .limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function upsertHomeData(userId: number, data: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(homeData)
+    .values({ userId, data })
+    .onConflictDoUpdate({
+      target: homeData.userId,
+      set: { data, updatedAt: new Date() },
+    });
+}
+
 // ============== FLOATING NOTES ==============
 
 import { floatingNotes, InsertFloatingNote } from "../drizzle/schema.js";

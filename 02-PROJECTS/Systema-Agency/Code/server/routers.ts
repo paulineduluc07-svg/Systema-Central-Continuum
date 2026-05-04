@@ -722,6 +722,58 @@ export const appRouter = router({
       }),
   }),
 
+  // Home Data API
+  home: router({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      const row = await db.getHomeData(ctx.user.id);
+      if (!row) return { shortcuts: [], news: [], projects: [] };
+      try {
+        const parsed = JSON.parse(row.data) as unknown;
+        if (parsed !== null && typeof parsed === "object") {
+          return parsed as {
+            shortcuts: { id: string; label: string; url: string; color?: string }[];
+            news: { id: string; category: string; title: string; meta?: string; hot?: boolean; color?: string }[];
+            projects: { id: string; name: string; detail?: string; progress: number; due?: string; color?: string; status?: string }[];
+          };
+        }
+      } catch {
+        // fall through to default
+      }
+      return { shortcuts: [], news: [], projects: [] };
+    }),
+
+    save: protectedProcedure
+      .input(z.object({
+        shortcuts: z.array(z.object({
+          id: z.string().max(64),
+          label: z.string().max(80),
+          url: z.string().max(500),
+          color: z.string().max(32).optional(),
+        })).max(12),
+        news: z.array(z.object({
+          id: z.string().max(64),
+          category: z.string().max(40),
+          title: z.string().max(500),
+          meta: z.string().max(200).optional(),
+          hot: z.boolean().optional(),
+          color: z.string().max(32).optional(),
+        })).max(20),
+        projects: z.array(z.object({
+          id: z.string().max(64),
+          name: z.string().max(200),
+          detail: z.string().max(500).optional(),
+          progress: z.number().int().min(0).max(100),
+          due: z.string().max(100).optional(),
+          color: z.string().max(32).optional(),
+          status: z.enum(["active", "planned", "queued"]).optional(),
+        })).max(20),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.upsertHomeData(ctx.user.id, JSON.stringify(input));
+        return { success: true };
+      }),
+  }),
+
   // Suivi medicament API
   suivi: router({
     list: protectedProcedure.query(async ({ ctx }) => {

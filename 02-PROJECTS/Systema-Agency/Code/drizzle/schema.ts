@@ -148,3 +148,14 @@ export const floatingNotes = pgTable("floating_notes", {
 
 export type FloatingNoteRow = typeof floatingNotes.$inferSelect;
 export type InsertFloatingNote = typeof floatingNotes.$inferInsert;
+
+export const homeData = pgTable("home_data", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  data: text("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type HomeDataRow = typeof homeData.$inferSelect;
+export type InsertHomeData = typeof homeData.$inferInsert;

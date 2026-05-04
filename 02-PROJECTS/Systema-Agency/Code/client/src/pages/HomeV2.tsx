@@ -3,95 +3,52 @@ import {
   BookOpen,
   CalendarDays,
   Cloud,
+  CloudLightning,
   CloudRain,
+  CloudSnow,
   CloudSun,
   ExternalLink,
-  FileText,
   Globe2,
-  Newspaper,
-  PiggyBank,
+  Loader2,
+  Plus,
   Sparkles,
   StickyNote,
   Sun,
+  X,
 } from "lucide-react";
+import React, { type ComponentType, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
+import { trpc } from "../lib/trpc";
 
-const newsItems = [
-  {
-    category: "Brief",
-    title: "Le résumé du matin pourra être déposé ici par Cowork à 8 h.",
-    meta: "Systema · en attente de connexion",
-    hot: true,
-    color: "#ff2d8a",
-  },
-  {
-    category: "Tech",
-    title: "Surveiller les nouveautés IA utiles pour automatiser Systema et Kim.",
-    meta: "Veille IA · priorité haute",
-    color: "#a78bfa",
-  },
-  {
-    category: "Business",
-    title: "Garder les opportunités, idées de revenus et signaux marché dans un flux lisible.",
-    meta: "Agence · suivi quotidien",
-    color: "#10b981",
-  },
-  {
-    category: "Perso",
-    title: "Ajouter les nouvelles importantes sans mélanger le dashboard avec les notes volantes.",
-    meta: "Organisation · repère",
-    color: "#fbbf24",
-  },
-  {
-    category: "Design",
-    title: "Réserver cette zone aux inspirations utiles, pas aux distractions.",
-    meta: "Créatif · sélection courte",
-    color: "#67e8f9",
-  },
-];
+// ─── Types ───────────────────────────────────────────────────────────────────
 
-const projects = [
-  {
-    name: "Systema Agency — Dashboard accueil",
-    detail: "Implémenter la V4 modifiée",
-    progress: 68,
-    due: "cette passe",
-    color: "#ff2d8a",
-    status: "active",
-  },
-  {
-    name: "Prompt Vault — images",
-    detail: "Préparer les visuels liés aux prompts",
-    progress: 32,
-    due: "à planifier",
-    color: "#a78bfa",
-    status: "planned",
-  },
-  {
-    name: "Budget & finances",
-    detail: "Nouvelle page paiements et budget",
-    progress: 18,
-    due: "plus tard",
-    color: "#fbbf24",
-    status: "planned",
-  },
-  {
-    name: "Kim dans Systema",
-    detail: "Modifier et archiver avec confirmation",
-    progress: 45,
-    due: "prochaine passe",
-    color: "#67e8f9",
-    status: "active",
-  },
-  {
-    name: "Notes volantes mobile",
-    detail: "Masonry + bottom sheet",
-    progress: 26,
-    due: "à faire",
-    color: "#10b981",
-    status: "queued",
-  },
-];
+type HomeShortcut = { id: string; label: string; url: string; color?: string };
+type HomeNewsItem = {
+  id: string;
+  category: string;
+  title: string;
+  meta?: string;
+  hot?: boolean;
+  color?: string;
+};
+type HomeProject = {
+  id: string;
+  name: string;
+  detail?: string;
+  progress: number;
+  due?: string;
+  color?: string;
+  status?: "active" | "planned" | "queued";
+};
+type HomeData = {
+  shortcuts: HomeShortcut[];
+  news: HomeNewsItem[];
+  projects: HomeProject[];
+};
+
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+const SHORTCUT_COLORS = ["#ff2d8a", "#a78bfa", "#67e8f9", "#fbbf24", "#10b981", "#f97316"];
 
 const pageNav = [
   { label: "Kim", href: "/kim", icon: Sparkles, color: "#ff2d8a" },
@@ -101,20 +58,127 @@ const pageNav = [
   { label: "Suivi", href: "/suivi", icon: Activity, color: "#10b981" },
 ];
 
-const webShortcuts = [
-  { label: "Site web", note: "à configurer", icon: Globe2, color: "#ff2d8a" },
-  { label: "Espace client", note: "à configurer", icon: ExternalLink, color: "#a78bfa" },
-  { label: "Factures", note: "à configurer", icon: FileText, color: "#67e8f9" },
-  { label: "Budget", note: "à configurer", icon: PiggyBank, color: "#fbbf24" },
-  { label: "Veille", note: "à configurer", icon: Newspaper, color: "#10b981" },
-  { label: "Ressource", note: "à configurer", icon: BookOpen, color: "#f97316" },
-];
+// ─── Weather helpers ──────────────────────────────────────────────────────────
 
-const weatherStates = [
-  { label: "Soleil", icon: Sun, active: true },
-  { label: "Nuage", icon: Cloud },
-  { label: "Pluie", icon: CloudRain },
-];
+type WeatherIcon = ComponentType<{ className?: string }>;
+
+const WMO_DESCRIPTIONS: Record<number, string> = {
+  0: "Ciel dégagé",
+  1: "Généralement dégagé",
+  2: "Partiellement nuageux",
+  3: "Couvert",
+  45: "Brouillard",
+  48: "Brouillard givrant",
+  51: "Bruine légère",
+  53: "Bruine",
+  55: "Bruine forte",
+  61: "Pluie légère",
+  63: "Pluie",
+  65: "Pluie forte",
+  71: "Neige légère",
+  73: "Neige",
+  75: "Neige forte",
+  77: "Grains de neige",
+  80: "Averses légères",
+  81: "Averses",
+  82: "Averses fortes",
+  85: "Averses de neige",
+  86: "Averses de neige fortes",
+  95: "Orage",
+  96: "Orage avec grêle",
+  99: "Orage violent",
+};
+
+const WMO_ICONS: Record<number, WeatherIcon> = {
+  0: Sun,
+  1: Sun,
+  2: CloudSun,
+  3: Cloud,
+  45: Cloud,
+  48: Cloud,
+  51: CloudRain,
+  53: CloudRain,
+  55: CloudRain,
+  61: CloudRain,
+  63: CloudRain,
+  65: CloudRain,
+  71: CloudSnow,
+  73: CloudSnow,
+  75: CloudSnow,
+  77: CloudSnow,
+  80: CloudRain,
+  81: CloudRain,
+  82: CloudRain,
+  85: CloudSnow,
+  86: CloudSnow,
+  95: CloudLightning,
+  96: CloudLightning,
+  99: CloudLightning,
+};
+
+function getWmoInfo(code: number) {
+  const label = WMO_DESCRIPTIONS[code] ?? "Conditions inconnues";
+  const icon = WMO_ICONS[code] ?? Cloud;
+  return { label, icon };
+}
+
+type WeatherData = {
+  temperature: number;
+  apparentTemperature: number;
+  weatherCode: number;
+};
+
+async function fetchWeather(lat: number, lon: number): Promise<WeatherData> {
+  const url = new URL("https://api.open-meteo.com/v1/forecast");
+  url.searchParams.set("latitude", lat.toString());
+  url.searchParams.set("longitude", lon.toString());
+  url.searchParams.set("current", "temperature_2m,apparent_temperature,weather_code");
+  url.searchParams.set("temperature_unit", "celsius");
+  url.searchParams.set("timezone", "auto");
+
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`Open-Meteo ${res.status}`);
+  const data = (await res.json()) as {
+    current: { temperature_2m: number; apparent_temperature: number; weather_code: number };
+  };
+  return {
+    temperature: Math.round(data.current.temperature_2m),
+    apparentTemperature: Math.round(data.current.apparent_temperature),
+    weatherCode: data.current.weather_code,
+  };
+}
+
+function useWeather() {
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function load(lat: number, lon: number) {
+      fetchWeather(lat, lon)
+        .then((w) => { if (!cancelled) { setWeather(w); setLoading(false); } })
+        .catch(() => { if (!cancelled) { setError(true); setLoading(false); } });
+    }
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => load(pos.coords.latitude, pos.coords.longitude),
+        () => load(45.5017, -73.5673), // Montréal fallback
+        { timeout: 4000 },
+      );
+    } else {
+      load(45.5017, -73.5673);
+    }
+
+    return () => { cancelled = true; };
+  }, []);
+
+  return { weather, loading, error };
+}
+
+// ─── Base components ──────────────────────────────────────────────────────────
 
 function HoloBubble({
   children,
@@ -175,7 +239,55 @@ function SegmentedProgress({ value, color }: { value: number; color: string }) {
   );
 }
 
-function ShortcutsCard() {
+// ─── Shortcuts Card ───────────────────────────────────────────────────────────
+
+function ShortcutsCard({
+  shortcuts,
+  onSave,
+  saving,
+}: {
+  shortcuts: HomeShortcut[];
+  onSave: (s: HomeShortcut[]) => void;
+  saving: boolean;
+}) {
+  const [adding, setAdding] = useState(false);
+  const [newLabel, setNewLabel] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+  const labelRef = useRef<HTMLInputElement>(null);
+
+  function openForm() {
+    setAdding(true);
+    setNewLabel("");
+    setNewUrl("");
+    setTimeout(() => labelRef.current?.focus(), 50);
+  }
+
+  function cancelForm() {
+    setAdding(false);
+    setNewLabel("");
+    setNewUrl("");
+  }
+
+  function addShortcut() {
+    const label = newLabel.trim();
+    let url = newUrl.trim();
+    if (!label || !url) return;
+    if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
+    const color = SHORTCUT_COLORS[shortcuts.length % SHORTCUT_COLORS.length];
+    const next = [...shortcuts, { id: `${Date.now()}-${Math.random().toString(36).slice(2, 5)}`, label, url, color }];
+    onSave(next);
+    cancelForm();
+  }
+
+  function removeShortcut(id: string) {
+    onSave(shortcuts.filter((s) => s.id !== id));
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter") addShortcut();
+    if (e.key === "Escape") cancelForm();
+  }
+
   return (
     <DashboardCard className="lg:[grid-area:shortcuts]">
       <div className="mb-4 flex items-center justify-between">
@@ -189,73 +301,149 @@ function ShortcutsCard() {
       </div>
 
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
-        {webShortcuts.map((shortcut) => {
-          const Icon = shortcut.icon;
-          return (
+        {shortcuts.map((shortcut) => (
+          <a
+            key={shortcut.id}
+            href={shortcut.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative flex w-full flex-col items-center gap-1.5 rounded-xl border border-white/70 bg-white/35 px-2 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:bg-white/55"
+          >
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-[12px] text-white shadow-[0_3px_0_rgba(0,0,0,.12),0_8px_18px_rgba(255,45,138,.12),inset_0_1px_0_rgba(255,255,255,.45)]"
+              style={{
+                background: `linear-gradient(135deg, ${shortcut.color ?? "#ff2d8a"}, ${shortcut.color ?? "#ff2d8a"}cc)`,
+              }}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </span>
+            <span className="max-w-full truncate text-[11px] font-semibold text-[#1f0a18]/65">
+              {shortcut.label}
+            </span>
             <button
-              key={shortcut.label}
-              className="group flex w-full cursor-default flex-col items-center gap-1.5 rounded-xl border border-white/70 bg-white/35 px-2 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:bg-white/55"
+              onClick={(e) => { e.preventDefault(); removeShortcut(shortcut.id); }}
+              className="absolute right-1 top-1 hidden h-5 w-5 items-center justify-center rounded-full bg-[#ff2d8a]/10 text-[#ff2d8a] transition hover:bg-[#ff2d8a]/25 group-hover:flex"
+              title="Supprimer"
               type="button"
             >
-              <span
-                className="flex h-11 w-11 items-center justify-center rounded-[12px] text-white shadow-[0_3px_0_rgba(0,0,0,.12),0_8px_18px_rgba(255,45,138,.12),inset_0_1px_0_rgba(255,255,255,.45)]"
-                style={{
-                  background: `linear-gradient(135deg, ${shortcut.color}, ${shortcut.color}cc)`,
-                }}
-              >
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="max-w-full truncate text-[11px] font-semibold text-[#1f0a18]/65">
-                {shortcut.label}
-              </span>
-              <span className="max-w-full truncate text-[9px] font-semibold text-[#1f0a18]/35">
-                {shortcut.note}
-              </span>
+              <X className="h-3 w-3" />
             </button>
-          );
-        })}
+          </a>
+        ))}
+
+        {shortcuts.length < 12 && !adding && (
+          <button
+            onClick={openForm}
+            className="flex w-full flex-col items-center gap-1.5 rounded-xl border border-dashed border-[#ff2d8a]/30 bg-[#ff2d8a]/04 px-2 py-3 text-center transition hover:border-[#ff2d8a]/50 hover:bg-[#ff2d8a]/08"
+            type="button"
+            disabled={saving}
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-[#ff2d8a]/25 text-[#ff2d8a]">
+              <Plus className="h-5 w-5" />
+            </span>
+            <span className="text-[11px] font-semibold text-[#ff2d8a]/60">Ajouter</span>
+          </button>
+        )}
       </div>
+
+      {adding && (
+        <div className="mt-3 rounded-xl border border-[#ff2d8a]/20 bg-white/50 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,.8)]">
+          <div className="flex flex-col gap-2">
+            <input
+              ref={labelRef}
+              value={newLabel}
+              onChange={(e) => setNewLabel(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Nom du raccourci"
+              className="w-full rounded-lg border border-[#ff2d8a]/20 bg-white/70 px-3 py-1.5 text-[12px] text-[#1f0a18] placeholder-[#1f0a18]/30 outline-none focus:border-[#ff2d8a]/50 focus:ring-1 focus:ring-[#ff2d8a]/20"
+            />
+            <input
+              value={newUrl}
+              onChange={(e) => setNewUrl(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="https://..."
+              className="w-full rounded-lg border border-[#ff2d8a]/20 bg-white/70 px-3 py-1.5 text-[12px] text-[#1f0a18] placeholder-[#1f0a18]/30 outline-none focus:border-[#ff2d8a]/50 focus:ring-1 focus:ring-[#ff2d8a]/20"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={cancelForm}
+                className="rounded-lg px-3 py-1 text-[11px] font-semibold text-[#1f0a18]/45 transition hover:text-[#1f0a18]/70"
+                type="button"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={addShortcut}
+                disabled={!newLabel.trim() || !newUrl.trim() || saving}
+                className="rounded-lg bg-[#ff2d8a] px-3 py-1 text-[11px] font-semibold text-white shadow-[0_2px_0_rgba(255,45,138,.5)] transition disabled:opacity-40 hover:enabled:brightness-110"
+                type="button"
+              >
+                Ajouter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardCard>
   );
 }
 
+// ─── Weather Card ─────────────────────────────────────────────────────────────
+
 function WeatherMiniCard() {
+  const { weather, loading, error } = useWeather();
+
+  const info = weather ? getWmoInfo(weather.weatherCode) : null;
+  const WeatherIcon = info?.icon ?? CloudSun;
+
   return (
     <DashboardCard className="lg:[grid-area:weather]">
       <div className="flex h-full items-center justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <Eyebrow>Météo</Eyebrow>
-          <div className="mt-1 font-['Fraunces'] text-[22px] font-medium italic leading-tight">
-            Aujourd'hui
-          </div>
-          <div className="mt-2 text-xs font-medium text-[#1f0a18]/55">
-            Widget simple, prêt pour la vraie météo.
-          </div>
-        </div>
-        <div className="flex gap-2">
-          {weatherStates.map((state) => {
-            const Icon = state.icon;
-            return (
-              <div
-                key={state.label}
-                className={`flex h-12 w-12 items-center justify-center rounded-full border ${
-                  state.active
-                    ? "border-white/80 bg-[#ff2d8a] text-white shadow-[0_5px_18px_rgba(255,45,138,.28)]"
-                    : "border-white/80 bg-white/55 text-[#ff2d8a]"
-                }`}
-                title={state.label}
-              >
-                <Icon className="h-5 w-5" />
+          {loading && (
+            <div className="mt-2 flex items-center gap-2 text-[#1f0a18]/40">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="text-xs">Chargement…</span>
+            </div>
+          )}
+          {error && !loading && (
+            <div className="mt-1 font-['Fraunces'] text-[18px] font-medium italic leading-tight text-[#1f0a18]/50">
+              Indisponible
+            </div>
+          )}
+          {weather && !loading && (
+            <>
+              <div className="mt-1 font-['Fraunces'] text-[34px] font-medium italic leading-none text-[#1f0a18]">
+                {weather.temperature}°C
               </div>
-            );
-          })}
+              <div className="mt-0.5 text-[11px] font-medium text-[#1f0a18]/50">
+                {info?.label}
+              </div>
+              <div className="mt-0.5 text-[10px] font-medium text-[#1f0a18]/35">
+                Ressenti {weather.apparentTemperature}°C
+              </div>
+            </>
+          )}
+        </div>
+
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/80 shadow-[0_5px_18px_rgba(255,45,138,.18)]"
+          style={{ background: loading || error ? "rgba(255,255,255,0.55)" : "#ff2d8a" }}
+        >
+          <WeatherIcon
+            className="h-7 w-7"
+            style={{ color: loading || error ? "#ff2d8a" : "white" }}
+          />
         </div>
       </div>
     </DashboardCard>
   );
 }
 
-function NewsCard() {
+// ─── News Card ────────────────────────────────────────────────────────────────
+
+function NewsCard({ news }: { news: HomeNewsItem[] }) {
   return (
     <DashboardCard className="lg:[grid-area:news]">
       <div className="mb-4 flex items-baseline justify-between gap-4">
@@ -265,40 +453,54 @@ function NewsCard() {
             Ce qui bouge
           </h2>
         </div>
-        <button className="text-xs font-bold text-[#ff2d8a]">Tout voir</button>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
-        {newsItems.map((item, index) => (
-          <article
-            key={item.title}
-            className="grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-t border-[#ff2d8a]/10 py-4 first:border-t-0 first:pt-1"
-          >
-            <span
-              className={`h-fit rounded-md px-2 py-1 text-center text-[10px] font-bold uppercase tracking-[.08em] ${
-                item.hot ? "text-white shadow-[0_2px_0_rgba(255,45,138,.65)]" : ""
-              }`}
-              style={{
-                background: item.hot ? item.color : `${item.color}22`,
-                color: item.hot ? "#fff" : item.color,
-              }}
+      {news.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+          <Sparkles className="h-6 w-6 text-[#ff2d8a]/30" />
+          <p className="text-[12px] font-medium text-[#1f0a18]/30">
+            Aucune news pour le moment.
+          </p>
+          <p className="text-[11px] text-[#1f0a18]/22">
+            Demande à Kim de rédiger le brief du matin via MCP.
+          </p>
+        </div>
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
+          {news.map((item) => (
+            <article
+              key={item.id}
+              className="grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-t border-[#ff2d8a]/10 py-4 first:border-t-0 first:pt-1"
             >
-              {item.category}
-            </span>
-            <div className="min-w-0">
-              <h3 className="text-[15px] font-semibold leading-snug text-[#1f0a18]">
-                {item.title}
-              </h3>
-              <p className="mt-1 text-[11px] font-medium text-[#1f0a18]/38">{item.meta}</p>
-            </div>
-          </article>
-        ))}
-      </div>
+              <span
+                className={`h-fit rounded-md px-2 py-1 text-center text-[10px] font-bold uppercase tracking-[.08em]`}
+                style={{
+                  background: item.hot ? (item.color ?? "#ff2d8a") : `${item.color ?? "#ff2d8a"}22`,
+                  color: item.hot ? "#fff" : (item.color ?? "#ff2d8a"),
+                  boxShadow: item.hot ? `0_2px_0_${item.color ?? "#ff2d8a"}a6` : undefined,
+                }}
+              >
+                {item.category}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-[15px] font-semibold leading-snug text-[#1f0a18]">
+                  {item.title}
+                </h3>
+                {item.meta && (
+                  <p className="mt-1 text-[11px] font-medium text-[#1f0a18]/38">{item.meta}</p>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </DashboardCard>
   );
 }
 
-function ProjectsCard() {
+// ─── Projects Card ────────────────────────────────────────────────────────────
+
+function ProjectsCard({ projects }: { projects: HomeProject[] }) {
   return (
     <DashboardCard className="lg:[grid-area:projects]">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -308,48 +510,63 @@ function ProjectsCard() {
             Priorités actives
           </h2>
         </div>
-        <button className="rounded-full bg-[#ff2d8a] px-4 py-2 text-xs font-bold text-white shadow-[0_2px_0_rgba(255,45,138,.75),0_8px_18px_rgba(255,45,138,.28)]">
-          Nouveau
-        </button>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
-        {projects.map((project) => (
-          <article
-            key={project.name}
-            className="rounded-2xl border border-white/85 bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,.75)]"
-          >
-            <div className="mb-3 flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="h-2.5 w-2.5 shrink-0 rotate-45 rounded-[2px]"
-                    style={{ background: project.color }}
-                  />
-                  <h3 className="truncate text-[15px] font-bold leading-tight text-[#1f0a18]">
-                    {project.name}
-                  </h3>
+      {projects.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
+          <Sparkles className="h-6 w-6 text-[#ff2d8a]/30" />
+          <p className="text-[12px] font-medium text-[#1f0a18]/30">
+            Aucun projet pour le moment.
+          </p>
+          <p className="text-[11px] text-[#1f0a18]/22">
+            Demande à Kim de mettre à jour les projets actifs via MCP.
+          </p>
+        </div>
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
+          {projects.map((project) => (
+            <article
+              key={project.id}
+              className="rounded-2xl border border-white/85 bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,.75)]"
+            >
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="h-2.5 w-2.5 shrink-0 rotate-45 rounded-[2px]"
+                      style={{ background: project.color ?? "#ff2d8a" }}
+                    />
+                    <h3 className="truncate text-[15px] font-bold leading-tight text-[#1f0a18]">
+                      {project.name}
+                    </h3>
+                  </div>
+                  {project.detail && (
+                    <p className="mt-1 pl-[18px] text-xs font-medium text-[#1f0a18]/48">
+                      {project.detail}
+                    </p>
+                  )}
                 </div>
-                <p className="mt-1 pl-[18px] text-xs font-medium text-[#1f0a18]/48">
-                  {project.detail}
-                </p>
+                {project.due && (
+                  <span className="shrink-0 rounded-full bg-[#ff2d8a]/10 px-2.5 py-1 font-['VT323'] text-[17px] leading-none text-[#ff2d8a]">
+                    {project.due}
+                  </span>
+                )}
               </div>
-              <span className="shrink-0 rounded-full bg-[#ff2d8a]/10 px-2.5 py-1 font-['VT323'] text-[17px] leading-none text-[#ff2d8a]">
-                {project.due}
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <SegmentedProgress value={project.progress} color={project.color} />
-              <span className="min-w-10 text-right font-['VT323'] text-[22px] leading-none text-[#ff2d8a]">
-                {project.progress}%
-              </span>
-            </div>
-          </article>
-        ))}
-      </div>
+              <div className="flex items-center gap-3">
+                <SegmentedProgress value={project.progress} color={project.color ?? "#ff2d8a"} />
+                <span className="min-w-10 text-right font-['VT323'] text-[22px] leading-none text-[#ff2d8a]">
+                  {project.progress}%
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </DashboardCard>
   );
 }
+
+// ─── Quote Card ───────────────────────────────────────────────────────────────
 
 function QuoteCard() {
   return (
@@ -357,12 +574,12 @@ function QuoteCard() {
       <div className="relative z-10">
         <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.1em] text-white/85">
           <Sparkles className="h-3.5 w-3.5" />
-          Inspiration du jour
+          Citation du jour
         </div>
         <p className="font-['Fraunces'] text-[15px] italic leading-snug">
-          Le design, c'est comment ça fonctionne.
+          La discipline est le pont entre les objectifs et leur accomplissement.
         </p>
-        <p className="mt-2 text-[11px] font-semibold text-white/90">Steve Jobs</p>
+        <p className="mt-2 text-[11px] font-semibold text-white/90">Jim Rohn</p>
       </div>
       <div className="pointer-events-none absolute -bottom-14 right-0 font-['Fraunces'] text-[170px] italic leading-none text-white/15">
         "
@@ -371,7 +588,28 @@ function QuoteCard() {
   );
 }
 
+// ─── Main component ───────────────────────────────────────────────────────────
+
 export default function HomeV2() {
+  const homeQuery = trpc.home.get.useQuery(undefined, {
+    retry: 1,
+    staleTime: 30_000,
+  });
+  const utils = trpc.useUtils();
+  const saveMutation = trpc.home.save.useMutation({
+    onSuccess: () => utils.home.get.invalidate(),
+  });
+
+  const homeData: HomeData = homeQuery.data ?? { shortcuts: [], news: [], projects: [] };
+
+  const handleSaveShortcuts = useCallback(
+    (shortcuts: HomeShortcut[]) => {
+      saveMutation.mutate({ ...homeData, shortcuts });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [homeData, saveMutation],
+  );
+
   return (
     <main
       className="min-h-screen overflow-y-auto bg-[linear-gradient(135deg,#fff5fa_0%,#ffeaf3_48%,#f5e8ff_100%)] px-4 pb-8 pt-8 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
@@ -385,10 +623,10 @@ export default function HomeV2() {
           <div className="flex items-center gap-4">
             <div
               aria-label="Systema Agency"
-              className="rotate-[-3deg] font-['Pacifico'] text-[44px] leading-[0.9] text-[#ff2d8a] drop-shadow-[0_8px_18px_rgba(255,45,138,.2)] sm:text-[54px]"
+              className="font-['Pacifico'] leading-[0.88] text-[#ff2d8a] drop-shadow-[0_6px_16px_rgba(255,45,138,.22)]"
             >
-              <span className="block">Systema</span>
-              <span className="block pl-5">Agency</span>
+              <span className="block text-[40px] sm:text-[50px]">Systema</span>
+              <span className="block pl-4 text-[40px] sm:text-[50px]">Agency</span>
             </div>
           </div>
 
@@ -403,19 +641,20 @@ export default function HomeV2() {
                 </Link>
               );
             })}
-            <HoloBubble className="h-10 w-10 sm:h-12 sm:w-12" title="Météo">
-              <CloudSun className="h-5 w-5" />
-            </HoloBubble>
           </nav>
         </header>
 
         <div
           className="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:grid-rows-[auto_minmax(96px,0.55fr)_minmax(118px,0.65fr)] lg:[grid-template-areas:'shortcuts_news_projects'_'weather_news_projects'_'quote_news_projects']"
         >
-          <ShortcutsCard />
+          <ShortcutsCard
+            shortcuts={homeData.shortcuts}
+            onSave={handleSaveShortcuts}
+            saving={saveMutation.isPending}
+          />
           <WeatherMiniCard />
-          <NewsCard />
-          <ProjectsCard />
+          <NewsCard news={homeData.news} />
+          <ProjectsCard projects={homeData.projects} />
           <QuoteCard />
         </div>
       </div>
