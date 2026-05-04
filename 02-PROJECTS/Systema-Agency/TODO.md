@@ -25,6 +25,15 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 - Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
 - Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
+- Home dashboard dynamique livre (PR `e4782c5`) : raccourcis editables, meteo reelle, news/projets via MCP, persistes dans la table `home_data`.
+
+---
+
+## Priorite immediate (avant toute nouvelle feature)
+
+- [ ] **Reparer la dependance `@neondatabase/serverless` non resolue par Node 24 + pnpm**. Symptome : `ERR_MODULE_NOT_FOUND` lors de `node --env-file=.env scripts/apply-home-data-migration.mjs`, malgre symlink pnpm present (`node_modules/@neondatabase/serverless -> .pnpm/...`). Reproduit en PowerShell ET en Git Bash sous Node 24.14.1. Pistes a tester : `pnpm install` propre depuis le clone, downgrade Node 22 LTS, ou ajouter `node-linker=hoisted` dans `.npmrc`.
+- [ ] Exposer `pnpm` dans le PATH PowerShell de Pauline (corepack ou install global) pour qu'elle puisse executer `pnpm install` / `pnpm check` elle-meme sans dependre de WSL/Git Bash.
+- [ ] Documenter dans `NOTES.md` la marche a suivre pour les migrations DB futures (commande exacte, environnement requis, fallback si Node ne resout pas la dep).
 
 ---
 
@@ -34,10 +43,9 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 - [x] Implementer la V4 modifiee selon les annotations de Pauline.
 - [x] Passer les pastilles holo en boutons vers les pages Systema et reserver les raccourcis aux sites web.
-- [ ] Brancher les vraies news du matin quand Cowork fournira le flux.
-- [ ] Brancher le mini widget meteo sur une vraie source si necessaire.
-- [ ] Remplacer les donnees projets statiques par une source persistante quand la structure projet sera decidee.
-- [ ] Configurer les vrais liens web dans les raccourcis.
+- [x] Raccourcis editables, meteo reelle, news/projets dynamiques via MCP livres (table `home_data` migree).
+- [ ] Configurer les vrais liens web dans les raccourcis cote UI (saisie utilisateur).
+- [ ] Verifier que le flux MCP news/projets repond bien en prod une fois Cowork branche.
 
 ### Agenda
 
@@ -84,3 +92,4 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Auth 2026-04-25 : verifier d'abord `VITE_APP_ID=systema-agency` si la session recasse.
 - Modal login 2026-05-01 : `LoginModal` doit rester en `pointer-events-auto`, car il est rendu dans la navbar.
 - Incident Gemini 2026-05-01 : un marqueur texte `=====` laisse dans `FloatingNotes.tsx` a casse le build Vercel; corrige par `b8214fc`.
+- pnpm/Node 24 2026-05-04 : `node --env-file=.env scripts/apply-home-data-migration.mjs` echoue avec `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` malgre symlink pnpm valide; contourne ce coup-ci par import via chemin absolu `file:///.../node_modules/.pnpm/.../index.mjs`. Bloquant pour les futures migrations executees depuis Windows. A reparer en priorite.

@@ -4,6 +4,19 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-04 - Home dashboard dynamique livre + incident pnpm/Node 24
+
+- PR `claude/read-agent-config-1PXEI` merge sur `main` (`e4782c5 feat(home): raccourcis editables, meteo reelle, news/projets dynamiques via MCP`, +710/-212).
+- Ajouts : table `home_data` (`drizzle/0007_home_data.sql`), schema Drizzle, helper `server/db.ts`, router tRPC, tools MCP dans `systema-core.ts`, refonte `HomeV2.tsx`, script `scripts/apply-home-data-migration.mjs`.
+- Migration `home_data` appliquee sur Neon : table creee avec colonnes `id`, `userId`, `data` (text JSON), `createdAt`, `updatedAt`.
+- Incident d'execution : `node --env-file=.env scripts/apply-home-data-migration.mjs` echoue avec `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` malgre symlink pnpm correct (`node_modules/@neondatabase/serverless -> .pnpm/@neondatabase+serverless@1.0.2/...`). Reproduit en PowerShell ET en Git Bash sous Node 24.14.1. Contournement utilise : import via chemin absolu `file:///.../node_modules/.pnpm/.../index.mjs` depuis un script tampon.
+- Autre frottement : `pnpm` n'est pas dans le PATH PowerShell, donc `pnpm install` impossible depuis cette console.
+- Statut : code en prod (Vercel auto-deploy), DB migree, mais incident dependance non resolu => priorite session suivante.
+
+Statut : livre; pnpm/Node 24 a fixer en priorite avant nouvelles features.
+
+---
+
 ## 2026-05-03 - Home dashboard V4 modifie
 
 - Implementation de la page `/` dans `HomeV2.tsx` a partir du handoff `design_handoff_onebrain_v4`, avec les annotations Pauline :

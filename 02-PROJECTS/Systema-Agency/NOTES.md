@@ -70,8 +70,8 @@ Limites actives :
 - Page active : `/`.
 - Base visuelle : handoff `RESSOURCES/AGENT_PLANS/design_handoff_onebrain_v4/`, adaptee selon screenshot Pauline.
 - Elements retires du handoff : bloc OneBrain, greeting/date, recherche, notification, grosse meteo, stats, agenda.
-- Structure actuelle : navbar globale cachee sur `/`, logo Systema agrandi, pastilles holo conservees et utilisees comme navigation interne, raccourcis web a gauche, mini meteo simple, news du jour allongees, projets allonges, citation plus petite.
-- Donnees actuelles statiques en front; a brancher plus tard sur Cowork/news, meteo et source projets.
+- Structure actuelle : navbar globale cachee sur `/`, logo Systema agrandi, pastilles holo conservees et utilisees comme navigation interne, raccourcis web a gauche, mini meteo, news du jour allongees, projets allonges, citation plus petite.
+- Donnees dynamiques : raccourcis editables, meteo reelle, news/projets exposes via tools MCP. Persistance dans la table `home_data` (`userId` unique, JSON dans la colonne `data`).
 - Les raccourcis ne servent pas aux pages internes; ils sont reserves aux futurs sites web de Pauline.
 
 ---
@@ -135,6 +135,15 @@ Notes :
 - Ne pas utiliser `vercel --prod` sauf urgence.
 - Les modifications faites depuis WSL dans `Mon disque` ne sont pas toujours vues par Google Drive.
 - Pour forcer Drive, privilegier une action cote Windows : PowerShell, Git Windows, VS Code Windows, Explorateur ou redemarrage Drive.
+
+---
+
+## Migrations DB
+
+- Migrations Drizzle dans `Code/drizzle/NNNN_*.sql`; helper one-shot dans `Code/scripts/apply-*.mjs`.
+- Commande nominale (depuis le clone) : `node --env-file=.env scripts/apply-<nom>-migration.mjs`.
+- **Bloquant connu 2026-05-04** : sous Node 24.14.1, ces scripts echouent avec `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` malgre symlink pnpm valide. Reproduit en PowerShell et Git Bash. Contournement temporaire : import via chemin absolu vers `node_modules/.pnpm/@neondatabase+serverless@1.0.2/node_modules/@neondatabase/serverless/index.mjs`. A reparer en priorite (cf. TODO).
+- `pnpm` n'est pas dans le PATH PowerShell de Pauline; pour le moment, les commandes `pnpm` se lancent depuis WSL/Git Bash ou cote agent.
 
 ---
 
