@@ -30,6 +30,7 @@ type HomeNewsItem = {
   meta?: string;
   hot?: boolean;
   color?: string;
+  url?: string;
 };
 type HomeProject = {
   id: string;
@@ -289,7 +290,7 @@ function ShortcutsCard({
   }
 
   return (
-    <DashboardCard className="lg:[grid-area:shortcuts]">
+    <DashboardCard className="flex flex-col lg:[grid-area:shortcuts]">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <Eyebrow>Accès web</Eyebrow>
@@ -443,10 +444,58 @@ function WeatherMiniCard() {
 
 // ─── News Card ────────────────────────────────────────────────────────────────
 
+function NewsItem({ item }: { item: HomeNewsItem }) {
+  const baseClass =
+    "grid grid-cols-[88px_minmax(0,1fr)] items-start gap-3 border-t border-[#ff2d8a]/10 py-4 first:border-t-0 first:pt-1";
+
+  const badge = (
+    <span
+      className="h-fit rounded-md px-2 py-1 text-center text-[10px] font-bold uppercase tracking-[.08em]"
+      style={{
+        background: item.hot ? (item.color ?? "#ff2d8a") : `${item.color ?? "#ff2d8a"}22`,
+        color: item.hot ? "#fff" : (item.color ?? "#ff2d8a"),
+        boxShadow: item.hot ? `0 2px 0 ${item.color ?? "#ff2d8a"}a6` : undefined,
+      }}
+    >
+      {item.category}
+    </span>
+  );
+
+  const body = (
+    <div className="min-w-0">
+      <h3 className="text-[15px] font-semibold leading-snug text-[#1f0a18]">{item.title}</h3>
+      {item.meta && (
+        <p className="mt-1 text-[11px] font-medium text-[#1f0a18]/38">{item.meta}</p>
+      )}
+    </div>
+  );
+
+  if (item.url) {
+    return (
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${baseClass} -mx-1 cursor-pointer rounded-xl px-1 transition-colors hover:bg-[#ff2d8a]/[0.05]`}
+      >
+        {badge}
+        {body}
+      </a>
+    );
+  }
+
+  return (
+    <article className={baseClass}>
+      {badge}
+      {body}
+    </article>
+  );
+}
+
 function NewsCard({ news }: { news: HomeNewsItem[] }) {
   return (
-    <DashboardCard className="lg:[grid-area:news]">
-      <div className="mb-4 flex items-baseline justify-between gap-4">
+    <DashboardCard className="flex flex-col lg:[grid-area:news]">
+      <div className="mb-4 flex shrink-0 items-baseline justify-between gap-4">
         <div>
           <Eyebrow>News du jour</Eyebrow>
           <h2 className="mt-1 font-['Fraunces'] text-[28px] font-medium italic leading-none text-[#1f0a18]">
@@ -468,29 +517,7 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
       ) : (
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pr-1">
           {news.map((item) => (
-            <article
-              key={item.id}
-              className="grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-t border-[#ff2d8a]/10 py-4 first:border-t-0 first:pt-1"
-            >
-              <span
-                className={`h-fit rounded-md px-2 py-1 text-center text-[10px] font-bold uppercase tracking-[.08em]`}
-                style={{
-                  background: item.hot ? (item.color ?? "#ff2d8a") : `${item.color ?? "#ff2d8a"}22`,
-                  color: item.hot ? "#fff" : (item.color ?? "#ff2d8a"),
-                  boxShadow: item.hot ? `0_2px_0_${item.color ?? "#ff2d8a"}a6` : undefined,
-                }}
-              >
-                {item.category}
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-[15px] font-semibold leading-snug text-[#1f0a18]">
-                  {item.title}
-                </h3>
-                {item.meta && (
-                  <p className="mt-1 text-[11px] font-medium text-[#1f0a18]/38">{item.meta}</p>
-                )}
-              </div>
-            </article>
+            <NewsItem key={item.id} item={item} />
           ))}
         </div>
       )}
@@ -502,7 +529,7 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
 
 function ProjectsCard({ projects }: { projects: HomeProject[] }) {
   return (
-    <DashboardCard className="lg:[grid-area:projects]">
+    <DashboardCard className="flex flex-col lg:[grid-area:projects]">
       <div className="mb-4 flex items-center justify-between gap-4">
         <div>
           <Eyebrow>Projets en cours</Eyebrow>
@@ -618,7 +645,7 @@ export default function HomeV2() {
       <div className="pointer-events-none absolute right-[-120px] top-[-90px] h-96 w-96 rounded-full bg-[#ff2d8a]/15 blur-3xl" />
       <div className="pointer-events-none absolute bottom-[-130px] left-[-110px] h-[420px] w-[420px] rounded-full bg-[#a78bfa]/20 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-5">
+      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] lg:min-h-0 lg:h-[calc(100vh-5rem)] w-full max-w-7xl flex-col gap-5">
         <header className="flex items-start justify-between gap-6">
           <div className="flex items-center gap-4">
             <img
@@ -643,7 +670,7 @@ export default function HomeV2() {
         </header>
 
         <div
-          className="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:grid-rows-[auto_minmax(96px,0.55fr)_minmax(118px,0.65fr)] lg:[grid-template-areas:'shortcuts_news_projects'_'weather_news_projects'_'quote_news_projects']"
+          className="grid flex-1 min-h-0 grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:grid-rows-[1fr_auto_auto] lg:[grid-template-areas:'shortcuts_news_projects'_'weather_news_projects'_'quote_news_projects']"
         >
           <ShortcutsCard
             shortcuts={homeData.shortcuts}

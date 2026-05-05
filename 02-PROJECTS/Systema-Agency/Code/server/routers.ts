@@ -732,7 +732,7 @@ export const appRouter = router({
         if (parsed !== null && typeof parsed === "object") {
           return parsed as {
             shortcuts: { id: string; label: string; url: string; color?: string }[];
-            news: { id: string; category: string; title: string; meta?: string; hot?: boolean; color?: string }[];
+            news: { id: string; category: string; title: string; meta?: string; hot?: boolean; color?: string; url?: string }[];
             projects: { id: string; name: string; detail?: string; progress: number; due?: string; color?: string; status?: string }[];
           };
         }
@@ -757,6 +757,7 @@ export const appRouter = router({
           meta: z.string().max(200).optional(),
           hot: z.boolean().optional(),
           color: z.string().max(32).optional(),
+          url: z.string().max(500).optional(),
         })).max(20),
         projects: z.array(z.object({
           id: z.string().max(64),
