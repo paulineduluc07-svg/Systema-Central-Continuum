@@ -290,7 +290,7 @@ function ShortcutsCard({
   }
 
   return (
-    <DashboardCard className="flex flex-col lg:[grid-area:shortcuts]">
+    <DashboardCard className="flex flex-col">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <Eyebrow>Accès web</Eyebrow>
@@ -398,7 +398,7 @@ function WeatherMiniCard() {
   const WeatherIcon = info?.icon ?? CloudSun;
 
   return (
-    <DashboardCard className="lg:[grid-area:weather]">
+    <DashboardCard>
       <div className="flex h-full items-center justify-between gap-4">
         <div className="min-w-0">
           <Eyebrow>Météo</Eyebrow>
@@ -494,7 +494,7 @@ function NewsItem({ item }: { item: HomeNewsItem }) {
 
 function NewsCard({ news }: { news: HomeNewsItem[] }) {
   return (
-    <DashboardCard className="flex flex-col lg:[grid-area:news]">
+    <DashboardCard className="flex flex-col lg:h-[85vh]">
       <div className="mb-4 flex shrink-0 items-baseline justify-between gap-4">
         <div>
           <Eyebrow>News du jour</Eyebrow>
@@ -529,7 +529,7 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
 
 function ProjectsCard({ projects }: { projects: HomeProject[] }) {
   return (
-    <DashboardCard className="flex flex-col lg:[grid-area:projects]">
+    <DashboardCard className="flex flex-col lg:h-[85vh]">
       <div className="mb-4 flex items-center justify-between gap-4">
         <div>
           <Eyebrow>Projets en cours</Eyebrow>
@@ -597,7 +597,7 @@ function ProjectsCard({ projects }: { projects: HomeProject[] }) {
 
 function QuoteCard() {
   return (
-    <DashboardCard className="bg-[linear-gradient(135deg,#ff2d8a_0%,#ff8fbf_58%,#a78bfa_100%)] text-white lg:[grid-area:quote]">
+    <DashboardCard className="bg-[linear-gradient(135deg,#ff2d8a_0%,#ff8fbf_58%,#a78bfa_100%)] text-white">
       <div className="relative z-10">
         <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.1em] text-white/85">
           <Sparkles className="h-3.5 w-3.5" />
@@ -645,8 +645,8 @@ export default function HomeV2() {
       <div className="pointer-events-none absolute right-[-120px] top-[-90px] h-96 w-96 rounded-full bg-[#ff2d8a]/15 blur-3xl" />
       <div className="pointer-events-none absolute bottom-[-130px] left-[-110px] h-[420px] w-[420px] rounded-full bg-[#a78bfa]/20 blur-3xl" />
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] lg:min-h-0 lg:h-[calc(100vh-5rem)] w-full max-w-7xl flex-col gap-5">
-        <header className="flex items-start justify-between gap-6">
+      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-5">
+        <header className="flex items-start gap-10">
           <div className="flex items-center gap-4">
             <img
               src="/logo-systema-agency.png"
@@ -669,18 +669,18 @@ export default function HomeV2() {
           </nav>
         </header>
 
-        <div
-          className="grid flex-1 min-h-0 grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:grid-rows-[1fr_auto_auto] lg:[grid-template-areas:'shortcuts_news_projects'_'weather_news_projects'_'quote_news_projects']"
-        >
-          <ShortcutsCard
-            shortcuts={homeData.shortcuts}
-            onSave={handleSaveShortcuts}
-            saving={saveMutation.isPending}
-          />
-          <WeatherMiniCard />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:items-start">
+          <div className="flex flex-col gap-4">
+            <ShortcutsCard
+              shortcuts={homeData.shortcuts}
+              onSave={handleSaveShortcuts}
+              saving={saveMutation.isPending}
+            />
+            <WeatherMiniCard />
+            <QuoteCard />
+          </div>
           <NewsCard news={homeData.news} />
           <ProjectsCard projects={homeData.projects} />
-          <QuoteCard />
         </div>
       </div>
     </main>
