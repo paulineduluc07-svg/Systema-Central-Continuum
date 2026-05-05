@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getCustomTabIcon, normalizeTabColor } from "@/lib/customTabIcons";
 import { trpc } from "@/lib/trpc";
 import { cn } from "@/lib/utils";
-import { Cloud, CloudOff, LogIn, LogOut, BookOpen, Activity, Menu, X, Sparkles, StickyNote, CalendarDays } from "lucide-react";
+import { Cloud, CloudOff, LogIn, LogOut, BookOpen, Menu, X, StickyNote, CalendarDays } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { LoginModal } from "./LoginModal";
@@ -20,11 +20,9 @@ export function Navbar() {
   });
 
   const navLinks = [
-    { href: "/kim", label: "Kim", icon: Sparkles },
     { href: "/notes", label: "Notes", icon: StickyNote },
     { href: "/agenda", label: "Agenda", icon: CalendarDays },
     { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
-    { href: "/suivi", label: "Suivi", icon: Activity },
   ];
   const customLinks = (customTabsQuery.data ?? []).map((tab) => ({
     href: `/tab/${encodeURIComponent(tab.tabId)}`,

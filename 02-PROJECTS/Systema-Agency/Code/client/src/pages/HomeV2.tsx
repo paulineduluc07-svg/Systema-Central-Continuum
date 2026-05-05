@@ -1,5 +1,4 @@
 import {
-  Activity,
   BookOpen,
   CalendarDays,
   Cloud,
@@ -52,11 +51,9 @@ type HomeData = {
 const SHORTCUT_COLORS = ["#ff2d8a", "#a78bfa", "#67e8f9", "#fbbf24", "#10b981", "#f97316"];
 
 const pageNav = [
-  { label: "Kim", href: "/kim", icon: Sparkles, color: "#ff2d8a" },
   { label: "Notes", href: "/notes", icon: StickyNote, color: "#a78bfa" },
   { label: "Agenda", href: "/agenda", icon: CalendarDays, color: "#67e8f9" },
   { label: "Prompts", href: "/prompt-vault", icon: BookOpen, color: "#fbbf24" },
-  { label: "Suivi", href: "/suivi", icon: Activity, color: "#10b981" },
 ];
 
 // ─── Weather helpers ──────────────────────────────────────────────────────────
@@ -511,7 +508,7 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
             Aucune news pour le moment.
           </p>
           <p className="text-[11px] text-[#1f0a18]/22">
-            Demande à Kim de rédiger le brief du matin via MCP.
+            Les news du jour apparaîtront ici.
           </p>
         </div>
       ) : (
@@ -546,7 +543,7 @@ function ProjectsCard({ projects }: { projects: HomeProject[] }) {
             Aucun projet pour le moment.
           </p>
           <p className="text-[11px] text-[#1f0a18]/22">
-            Demande à Kim de mettre à jour les projets actifs via MCP.
+            Les projets actifs apparaîtront ici.
           </p>
         </div>
       ) : (

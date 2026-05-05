@@ -11,22 +11,11 @@ vi.mock("./db", () => ({
   getAllNotesByUser: vi.fn().mockResolvedValue([
     { tabId: "tableau-blanc", content: "N1", sortOrder: 0 },
   ]),
-  getSuiviEntriesByUser: vi.fn().mockResolvedValue([
-    {
-      timestamp: new Date("2026-03-31T12:00:00.000Z"),
-      date: "2026-03-31",
-      prise: "12:00",
-      dose: 60,
-      reasons: JSON.stringify(["focus"]),
-      note: "ok",
-    },
-  ]),
   getPromptVaultData: vi.fn().mockResolvedValue({
     data: JSON.stringify({ list: [], cats: [], favs: [], brightness: 70 }),
   }),
   replaceTasksByUser: vi.fn().mockResolvedValue(undefined),
   replaceNotesByUser: vi.fn().mockResolvedValue(undefined),
-  replaceSuiviEntries: vi.fn().mockResolvedValue(undefined),
   upsertPromptVaultData: vi.fn().mockResolvedValue(undefined),
   deletePromptVaultData: vi.fn().mockResolvedValue(undefined),
 }));
@@ -71,7 +60,6 @@ describe("backup router", () => {
     expect(result.version).toBe(BACKUP_SCHEMA_VERSION);
     expect(result.data.tasks).toHaveLength(1);
     expect(result.data.notes).toHaveLength(1);
-    expect(result.data.suivi).toHaveLength(1);
     expect(result.data.promptVault).toEqual({ list: [], cats: [], favs: [], brightness: 70 });
   });
 
@@ -83,16 +71,6 @@ describe("backup router", () => {
       data: {
         tasks: [{ tabId: "tableau-blanc", title: "T2", completed: true, sortOrder: 0 }],
         notes: [{ tabId: "tableau-blanc", content: "N2", sortOrder: 0 }],
-        suivi: [
-          {
-            timestamp: "2026-03-31T12:00:00.000Z",
-            date: "2026-03-31",
-            prise: "12:00",
-            dose: 60,
-            reasons: ["focus"],
-            note: "ok",
-          },
-        ],
         promptVault: { list: [], cats: [], favs: [], brightness: 55 },
       },
     };
@@ -101,7 +79,6 @@ describe("backup router", () => {
     expect(result).toEqual({ success: true });
     expect(db.replaceTasksByUser).toHaveBeenCalledTimes(1);
     expect(db.replaceNotesByUser).toHaveBeenCalledTimes(1);
-    expect(db.replaceSuiviEntries).toHaveBeenCalledTimes(1);
     expect(db.upsertPromptVaultData).toHaveBeenCalledTimes(1);
   });
 
@@ -114,7 +91,6 @@ describe("backup router", () => {
         data: {
           tasks: [],
           notes: [],
-          suivi: [],
           promptVault: null,
         },
       }),

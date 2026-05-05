@@ -4,17 +4,11 @@ import { getSessionCookieOptions } from "./_core/cookies.js";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc.js";
 import { sdk } from "./_core/sdk.js";
 import { ENV } from "./_core/env.js";
-import { askKim } from "./ai/kim.js";
 import { z } from "zod";
 import * as db from "./db.js";
 
 const PROMPT_VAULT_MAX_PAYLOAD_CHARS = 1_000_000;
-const SUIVI_MAX_ENTRIES_PER_REPLACE = 2_000;
-const SUIVI_MAX_REASONS_PER_ENTRY = 30;
-const SUIVI_MAX_REASON_LENGTH = 160;
-const SUIVI_MAX_NOTE_LENGTH = 5_000;
 const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const TIME_24H_REGEX = /^([01]\d|2[0-3]):[0-5]\d$/;
 const AGENDA_WEEK_MAX_PAYLOAD_CHARS = 500_000;
 const promptVaultDataSchema = z
   .string()
@@ -45,17 +39,6 @@ const agendaWeekDataSchema = z
       return false;
     }
   }, "La semaine Agenda doit etre un JSON valide.");
-
-const suiviEntryInputSchema = z.object({
-  timestamp: z.string().datetime({ offset: true }),
-  date: z.string().regex(DATE_ISO_REGEX, "La date doit etre au format YYYY-MM-DD."),
-  prise: z.string().regex(TIME_24H_REGEX, "L'heure doit etre au format HH:mm."),
-  dose: z.number().int().min(1).max(1_000),
-  reasons: z
-    .array(z.string().trim().min(1).max(SUIVI_MAX_REASON_LENGTH))
-    .max(SUIVI_MAX_REASONS_PER_ENTRY),
-  note: z.string().max(SUIVI_MAX_NOTE_LENGTH),
-});
 
 const backupTaskSchema = z.object({
   tabId: z.string().min(1).max(120),
@@ -183,19 +166,6 @@ function toFloatingNoteDto(row: FloatingNoteDbRow) {
 }
 
 export const appRouter = router({
-  ai: router({
-    chat: protectedProcedure
-      .input(z.object({
-        messages: z.array(z.object({
-          role: z.enum(["user", "assistant"]),
-          content: z.string().trim().min(1).max(8_000),
-        })).min(1).max(20),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        return askKim(ctx.user.id, input.messages);
-      }),
-  }),
-
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
 
@@ -438,10 +408,9 @@ export const appRouter = router({
   // Backup API
   backup: router({
     export: protectedProcedure.query(async ({ ctx }) => {
-      const [taskRows, noteRows, suiviRows, promptVaultRow] = await Promise.all([
+      const [taskRows, noteRows, promptVaultRow] = await Promise.all([
         db.getAllTasksByUser(ctx.user.id),
         db.getAllNotesByUser(ctx.user.id),
-        db.getSuiviEntriesByUser(ctx.user.id),
         db.getPromptVaultData(ctx.user.id),
       ]);
 
@@ -469,14 +438,6 @@ export const appRouter = router({
             content: note.content,
             sortOrder: note.sortOrder,
           })),
-          suivi: suiviRows.map((entry) => ({
-            timestamp: entry.timestamp.toISOString(),
-            date: entry.date,
-            prise: entry.prise,
-            dose: entry.dose,
-            reasons: JSON.parse(entry.reasons) as string[],
-            note: entry.note,
-          })),
           promptVault,
         },
       };
@@ -488,7 +449,6 @@ export const appRouter = router({
         data: z.object({
           tasks: z.array(backupTaskSchema).max(10_000),
           notes: z.array(backupNoteSchema).max(10_000),
-          suivi: z.array(suiviEntryInputSchema).max(SUIVI_MAX_ENTRIES_PER_REPLACE),
           promptVault: backupPromptVaultSchema,
         }),
       }))
@@ -516,18 +476,6 @@ export const appRouter = router({
             tabId: note.tabId,
             content: note.content,
             sortOrder: note.sortOrder,
-          })),
-        );
-
-        await db.replaceSuiviEntries(
-          ctx.user.id,
-          input.data.suivi.map((entry) => ({
-            timestamp: new Date(entry.timestamp),
-            date: entry.date,
-            prise: entry.prise,
-            dose: entry.dose,
-            reasons: JSON.stringify(entry.reasons),
-            note: entry.note,
           })),
         );
 
@@ -775,55 +723,6 @@ export const appRouter = router({
       }),
   }),
 
-  // Suivi medicament API
-  suivi: router({
-    list: protectedProcedure.query(async ({ ctx }) => {
-      const rows = await db.getSuiviEntriesByUser(ctx.user.id);
-      return rows.map((r) => ({
-        id: r.id,
-        timestamp: r.timestamp.toISOString(),
-        date: r.date,
-        prise: r.prise,
-        dose: r.dose,
-        reasons: JSON.parse(r.reasons) as string[],
-        note: r.note,
-      }));
-    }),
-
-    add: protectedProcedure
-      .input(suiviEntryInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const result = await db.createSuiviEntry({
-          userId: ctx.user.id,
-          timestamp: new Date(input.timestamp),
-          date: input.date,
-          prise: input.prise,
-          dose: input.dose,
-          reasons: JSON.stringify(input.reasons),
-          note: input.note,
-        });
-        return { id: result.id };
-      }),
-
-    replace: protectedProcedure
-      .input(z.object({
-        entries: z.array(suiviEntryInputSchema).max(SUIVI_MAX_ENTRIES_PER_REPLACE),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        await db.replaceSuiviEntries(
-          ctx.user.id,
-          input.entries.map((e) => ({
-            timestamp: new Date(e.timestamp),
-            date: e.date,
-            prise: e.prise,
-            dose: e.dose,
-            reasons: JSON.stringify(e.reasons),
-            note: e.note,
-          })),
-        );
-        return { success: true };
-      }),
-  }),
 });
 
 export type AppRouter = typeof appRouter;
