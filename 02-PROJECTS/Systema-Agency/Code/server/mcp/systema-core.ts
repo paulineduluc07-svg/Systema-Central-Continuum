@@ -31,7 +31,6 @@ export const WRITE_TOOL_NAMES = [
   "add_prompt",
   "update_prompt",
   "delete_prompt",
-  "add_suivi_entry",
 ] as const;
 
 type DocFile = (typeof DOC_FILES)[number];
@@ -1177,62 +1176,6 @@ export function createSystemaMcpServer() {
       const list = (snap.list as Array<{ id: number }>).filter((p) => p.id !== id);
       await db.upsertPromptVaultData(userId, JSON.stringify({ ...snap, list }));
       return jsonToolResult({ success: true });
-    }
-  );
-
-  // ─── Suivi ────────────────────────────────────────────────────────────────────
-
-  server.registerTool(
-    "list_suivi",
-    {
-      title: "Lister les entrées de suivi Systema",
-      description: "Retourne toutes les entrées du journal de suivi (médication, doses, notes).",
-      inputSchema: z.object({}),
-      outputSchema: z.object({ entries: z.array(z.unknown()) }),
-    },
-    async () => {
-      const userId = await resolveMcpUserId();
-      const rows = await db.getSuiviEntriesByUser(userId);
-      const entries = rows.map((r) => ({
-        id: r.id,
-        timestamp: r.timestamp.toISOString(),
-        date: r.date,
-        prise: r.prise,
-        dose: r.dose,
-        reasons: JSON.parse(r.reasons) as unknown,
-        note: r.note,
-      }));
-      return jsonToolResult({ entries });
-    }
-  );
-
-  server.registerTool(
-    "add_suivi_entry",
-    {
-      title: "Ajouter une entrée de suivi Systema",
-      description: "Enregistre une nouvelle prise dans le journal de suivi.",
-      inputSchema: z.object({
-        timestamp: z.string().datetime({ offset: true }),
-        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format YYYY-MM-DD"),
-        prise: z.string().regex(/^\d{2}:\d{2}$/, "Format HH:mm"),
-        dose: z.number().int().min(1).max(1_000),
-        reasons: z.array(z.string().trim().min(1).max(200)).max(10),
-        note: z.string().max(2_000),
-      }),
-      outputSchema: z.object({ success: z.boolean(), id: z.number() }),
-    },
-    async ({ timestamp, date, prise, dose, reasons, note }) => {
-      const userId = await resolveMcpUserId();
-      const result = await db.createSuiviEntry({
-        userId,
-        timestamp: new Date(timestamp),
-        date,
-        prise,
-        dose,
-        reasons: JSON.stringify(reasons),
-        note,
-      });
-      return jsonToolResult({ success: true, id: result.id });
     }
   );
 
