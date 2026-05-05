@@ -89,20 +89,6 @@ export const canvasData = pgTable("canvas_data", {
 export type CanvasData = typeof canvasData.$inferSelect;
 export type InsertCanvasData = typeof canvasData.$inferInsert;
 
-export const suiviEntries = pgTable("suivi_entries", {
-  id: serial("id").primaryKey(),
-  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
-  timestamp: timestamp("timestamp").notNull(),
-  date: varchar("date", { length: 10 }).notNull(),
-  prise: varchar("prise", { length: 5 }).notNull(),
-  dose: integer("dose").notNull(),
-  reasons: text("reasons").notNull().default("[]"),
-  note: text("note").notNull().default(""),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export type SuiviEntryRow = typeof suiviEntries.$inferSelect;
-export type InsertSuiviEntry = typeof suiviEntries.$inferInsert;
 
 export const promptVaultData = pgTable("prompt_vault_data", {
   id: serial("id").primaryKey(),
