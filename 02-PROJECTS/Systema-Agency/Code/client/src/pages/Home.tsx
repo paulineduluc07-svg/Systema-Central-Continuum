@@ -217,11 +217,6 @@ export default function Home() {
                 Syncer Gmail
               </button>
             </Link>
-            <Link href="/suivi">
-              <button className="rounded-full border border-white/55 bg-[linear-gradient(135deg,#7d354b_0%,#b26f81_45%,#e5b7be_100%)] px-6 py-2.5 text-base font-semibold text-white shadow-[0_8px_24px_rgba(97,44,60,0.35)] transition-transform hover:scale-[1.02]">
-                Générer mes tâches
-              </button>
-            </Link>
           </div>
         </div>
 

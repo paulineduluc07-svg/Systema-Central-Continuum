@@ -7,7 +7,6 @@ import { toast } from "sonner";
 
 const TASKS_PREFIX = "rpg_quests_";
 const NOTES_PREFIX = "rpg_notes_";
-const SUIVI_KEY = "suivi_paw_v1";
 const PROMPT_VAULT_KEY = "prompt_vault_state_v1";
 
 type BackupTask = {
@@ -23,19 +22,9 @@ type BackupNote = {
   sortOrder: number;
 };
 
-type BackupSuiviEntry = {
-  timestamp: string;
-  date: string;
-  prise: string;
-  dose: number;
-  reasons: string[];
-  note: string;
-};
-
 type BackupData = {
   tasks: BackupTask[];
   notes: BackupNote[];
-  suivi: BackupSuiviEntry[];
   promptVault: unknown | null;
 };
 
@@ -99,7 +88,6 @@ function normalizeBackupData(raw: unknown): BackupData {
   const input = raw && typeof raw === "object" ? (raw as Partial<BackupData>) : {};
   const tasks = Array.isArray(input.tasks) ? input.tasks : [];
   const notes = Array.isArray(input.notes) ? input.notes : [];
-  const suivi = Array.isArray(input.suivi) ? input.suivi : [];
   const promptVault = input.promptVault ?? null;
 
   const normalizedTasks: BackupTask[] = tasks
@@ -129,35 +117,16 @@ function normalizeBackupData(raw: unknown): BackupData {
     })
     .filter((note): note is BackupNote => note !== null);
 
-  const normalizedSuivi: BackupSuiviEntry[] = suivi
-    .map((entry) => {
-      if (!entry || typeof entry !== "object") return null;
-      const item = entry as Partial<BackupSuiviEntry>;
-      if (!item.timestamp || !item.date || !item.prise) return null;
-      return {
-        timestamp: String(item.timestamp),
-        date: String(item.date),
-        prise: String(item.prise),
-        dose: Number.isFinite(item.dose) ? Number(item.dose) : 0,
-        reasons: Array.isArray(item.reasons)
-          ? item.reasons.map((reason) => String(reason))
-          : [],
-        note: item.note ? String(item.note) : "",
-      };
-    })
-    .filter((entry): entry is BackupSuiviEntry => entry !== null);
-
   return {
     tasks: normalizedTasks,
     notes: normalizedNotes,
-    suivi: normalizedSuivi,
     promptVault,
   };
 }
 
 function readLocalBackup(): BackupData {
   if (typeof window === "undefined") {
-    return { tasks: [], notes: [], suivi: [], promptVault: null };
+    return { tasks: [], notes: [], promptVault: null };
   }
 
   const tasks: BackupTask[] = [];
@@ -208,14 +177,6 @@ function readLocalBackup(): BackupData {
     }
   }
 
-  let suivi: BackupSuiviEntry[] = [];
-  try {
-    const parsed = JSON.parse(localStorage.getItem(SUIVI_KEY) ?? "[]");
-    suivi = normalizeBackupData({ suivi: parsed }).suivi;
-  } catch {
-    suivi = [];
-  }
-
   let promptVault: unknown | null = null;
   try {
     const raw = localStorage.getItem(PROMPT_VAULT_KEY);
@@ -227,7 +188,6 @@ function readLocalBackup(): BackupData {
   return {
     tasks,
     notes,
-    suivi,
     promptVault,
   };
 }
@@ -277,7 +237,6 @@ function writeLocalBackup(data: BackupData): void {
     localStorage.setItem(`${NOTES_PREFIX}${tabId}`, JSON.stringify(compact));
   });
 
-  localStorage.setItem(SUIVI_KEY, JSON.stringify(data.suivi));
   if (data.promptVault === null) {
     localStorage.removeItem(PROMPT_VAULT_KEY);
   } else {
@@ -365,7 +324,7 @@ export function GlobalBackupPanel() {
       if (!importText.trim()) return;
       const parsed = parseBackupImportFile(importText);
       const confirmed = window.confirm(
-        "Restaurer va remplacer les données actuelles (tâches, notes, suivi, prompt vault). Continuer ?",
+        "Restaurer va remplacer les données actuelles (tâches, notes, prompt vault). Continuer ?",
       );
       if (!confirmed) return;
 

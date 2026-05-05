@@ -35,15 +35,6 @@ type MockState = {
     sortOrder: number;
   }>;
   promptVaultData: string | null;
-  suiviEntries: Array<{
-    id: number;
-    timestamp: string;
-    date: string;
-    prise: string;
-    dose: number;
-    reasons: string[];
-    note: string;
-  }>;
 };
 
 function ok(data: unknown): TrpcSuccess {
@@ -206,14 +197,6 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
                 content: note.content,
                 sortOrder: note.sortOrder,
               })),
-              suivi: state.suiviEntries.map((entry) => ({
-                timestamp: entry.timestamp,
-                date: entry.date,
-                prise: entry.prise,
-                dose: entry.dose,
-                reasons: entry.reasons,
-                note: entry.note,
-              })),
               promptVault: state.promptVaultData ? JSON.parse(state.promptVaultData) : null,
             },
           });
@@ -223,7 +206,6 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
           const payload = ((input as { data?: unknown })?.data ?? input ?? {}) as {
             tasks?: Array<{ tabId: string; title: string; completed: boolean; sortOrder: number }>;
             notes?: Array<{ tabId: string; content: string; sortOrder: number }>;
-            suivi?: Array<{ timestamp: string; date: string; prise: string; dose: number; reasons: string[]; note: string }>;
             promptVault?: unknown;
           };
 
@@ -244,67 +226,12 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
             sortOrder: note.sortOrder,
           }));
 
-          const suivi = Array.isArray(payload.suivi) ? payload.suivi : [];
-          state.suiviEntries = suivi.map((entry, index) => ({
-            id: index + 1,
-            timestamp: entry.timestamp,
-            date: entry.date,
-            prise: entry.prise,
-            dose: entry.dose,
-            reasons: entry.reasons,
-            note: entry.note,
-          }));
-
           if (payload.promptVault === null) {
             state.promptVaultData = null;
           } else if (payload.promptVault !== undefined) {
             state.promptVaultData = JSON.stringify(payload.promptVault);
           }
 
-          return ok({ success: true });
-        }
-
-        case "suivi.list": {
-          return ok(state.suiviEntries);
-        }
-
-        case "suivi.add": {
-          const payload = input as {
-            timestamp: string;
-            date: string;
-            prise: string;
-            dose: number;
-            reasons: string[];
-            note: string;
-          };
-
-          const next = {
-            id: state.suiviEntries.length + 1,
-            timestamp: payload.timestamp,
-            date: payload.date,
-            prise: payload.prise,
-            dose: payload.dose,
-            reasons: payload.reasons,
-            note: payload.note,
-          };
-          state.suiviEntries = [next, ...state.suiviEntries];
-          return ok({ id: next.id });
-        }
-
-        case "suivi.replace": {
-          const entries = Array.isArray((input as { entries?: unknown[] })?.entries)
-            ? (input as { entries: Array<{ timestamp: string; date: string; prise: string; dose: number; reasons: string[]; note: string }> }).entries
-            : [];
-
-          state.suiviEntries = entries.map((entry, index) => ({
-            id: index + 1,
-            timestamp: entry.timestamp,
-            date: entry.date,
-            prise: entry.prise,
-            dose: entry.dose,
-            reasons: entry.reasons,
-            note: entry.note,
-          }));
           return ok({ success: true });
         }
 
@@ -325,7 +252,7 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
   });
 }
 
-test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
+test("login + prompt vault CRUD/sync", async ({ page }) => {
   test.setTimeout(120_000);
 
   const state: MockState = {
@@ -340,7 +267,6 @@ test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
     tasks: [],
     notes: [],
     promptVaultData: null,
-    suiviEntries: [],
   };
 
   await setupTrpcMock(page, state);
@@ -390,33 +316,6 @@ test("login + prompt vault CRUD/sync + suivi import/sync", async ({ page }) => {
     const parsed = JSON.parse(state.promptVaultData) as { list: Array<{ title: string }> };
     return parsed.list.some((entry) => entry.title === "E2E Prompt Updated");
   }).toBe(false);
-
-  await page.goto("/suivi");
-  await page.getByRole("button", { name: /Sauvegarder \/ Restaurer données/ }).click();
-
-  const importedEntry = [
-    {
-      id: 999,
-      timestamp: "2026-03-31T18:45:00.000Z",
-      date: "2026-03-31",
-      prise: "18:45",
-      dose: 40,
-      reasons: ["energie||Boost pour commencer mes tâches"],
-      note: "import e2e",
-    },
-  ];
-
-  await page.getByPlaceholder("Colle tes données ici...").fill(JSON.stringify(importedEntry));
-
-  page.once("dialog", async (dialog) => {
-    await dialog.accept();
-  });
-
-  await page.getByRole("button", { name: "Restaurer" }).click();
-
-  await expect.poll(() => state.suiviEntries.length).toBe(1);
-  await expect.poll(() => state.suiviEntries[0]?.note).toBe("import e2e");
-  await expect.poll(() => state.suiviEntries[0]?.dose).toBe(40);
 });
 
 test("backup panel export + import restores unified cloud state", async ({ page }) => {
@@ -443,17 +342,6 @@ test("backup panel export + import restores unified cloud state", async ({ page 
       favs: [1],
       brightness: 70,
     }),
-    suiviEntries: [
-      {
-        id: 1,
-        timestamp: "2026-03-31T10:00:00.000Z",
-        date: "2026-03-31",
-        prise: "10:00",
-        dose: 30,
-        reasons: ["energie||Boost pour commencer ma journée"],
-        note: "initial",
-      },
-    ],
   };
 
   await setupTrpcMock(page, state);
@@ -483,16 +371,6 @@ test("backup panel export + import restores unified cloud state", async ({ page 
       ],
       notes: [
         { tabId: "tableau-blanc", content: "Cloud note restaurée", sortOrder: 0 },
-      ],
-      suivi: [
-        {
-          timestamp: "2026-03-31T19:31:00.000Z",
-          date: "2026-03-31",
-          prise: "19:31",
-          dose: 50,
-          reasons: ["energie||Maintenir mon élan"],
-          note: "restored",
-        },
       ],
       promptVault: {
         list: [{ id: 77, cat: "tech", title: "Prompt restauré", tags: ["restore"], text: "hello" }],
@@ -528,7 +406,6 @@ test("backup panel export + import restores unified cloud state", async ({ page 
 
   await expect.poll(() => state.tasks[0]?.title).toBe("Cloud Task Restaurée");
   await expect.poll(() => state.notes[0]?.content).toBe("Cloud note restaurée");
-  await expect.poll(() => state.suiviEntries[0]?.note).toBe("restored");
   await expect.poll(() => {
     if (!state.promptVaultData) return "";
     const parsed = JSON.parse(state.promptVaultData) as { list: Array<{ title: string }> };

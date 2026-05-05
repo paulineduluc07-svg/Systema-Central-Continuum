@@ -265,9 +265,13 @@ export default function FloatingNotesPage() {
       <div
         ref={boardRef}
         onDoubleClick={onBoardDoubleClick}
-        className="relative h-[calc(100vh-80px)] w-full overflow-hidden"
+        className="overflow-hidden"
         style={{
-          marginTop: 80,
+          position: "fixed",
+          top: 80,
+          left: 0,
+          right: 0,
+          bottom: 0,
           backgroundImage: TWEAKS.showGrid
             ? `radial-gradient(oklch(95% 0.04 320 / 0.18) 1px, transparent 1px)`
             : "none",
@@ -302,9 +306,9 @@ export default function FloatingNotesPage() {
             onDelete={() => handleDelete(note.id)}
           />
         ))}
-
-        <CreateFAB onCreate={(kind) => handleCreate(kind)} disabled={createMutation.isPending} />
       </div>
+
+      <CreateFAB onCreate={(kind) => handleCreate(kind)} disabled={createMutation.isPending} />
 <VaultDrawer
   open={vaultOpen}
   activeNotes={notes}
