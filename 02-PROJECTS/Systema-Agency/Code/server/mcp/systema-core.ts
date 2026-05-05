@@ -24,6 +24,14 @@ export const WRITE_TOOL_NAMES = [
   "delete_tab",
   "set_home_news",
   "set_home_projects",
+  "set_home_shortcuts",
+  "add_agenda_event",
+  "remove_agenda_event",
+  "set_agenda_goals",
+  "add_prompt",
+  "update_prompt",
+  "delete_prompt",
+  "add_suivi_entry",
 ] as const;
 
 type DocFile = (typeof DOC_FILES)[number];
@@ -923,6 +931,308 @@ export function createSystemaMcpServer() {
       const updated = { ...current, projects: items };
       await db.upsertHomeData(userId, JSON.stringify(updated));
       return jsonToolResult({ success: true });
+    }
+  );
+
+  // ─── Home Shortcuts ───────────────────────────────────────────────────────────
+
+  const homeShortcutSchema = z.object({
+    id: z.string().max(64),
+    label: z.string().max(80),
+    url: z.string().url().max(500),
+    color: z.string().max(32).optional(),
+  });
+
+  server.registerTool(
+    "set_home_shortcuts",
+    {
+      title: "Modifier les raccourcis de la home Systema",
+      description: "Remplace la liste des raccourcis web affichés sur la home page (max 12).",
+      inputSchema: z.object({
+        shortcuts: z.array(homeShortcutSchema).max(12),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ shortcuts }) => {
+      const userId = await resolveMcpUserId();
+      const row = await db.getHomeData(userId);
+      let current: { shortcuts: unknown[]; news: unknown[]; projects: unknown[] } = { shortcuts: [], news: [], projects: [] };
+      if (row) {
+        try {
+          const parsed = JSON.parse(row.data) as unknown;
+          if (parsed !== null && typeof parsed === "object") current = parsed as typeof current;
+        } catch { /* use empty default */ }
+      }
+      await db.upsertHomeData(userId, JSON.stringify({ ...current, shortcuts }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  // ─── Agenda ───────────────────────────────────────────────────────────────────
+
+  const accentKeySchema = z.enum(["pink", "violet", "lavender", "cyan", "mint"]);
+  const dayKeySchema = z.enum(["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"]);
+  const agendaEventSchema = z.object({
+    time: z.string().regex(/^\d{2}:\d{2}$/, "Format HH:mm"),
+    title: z.string().max(300),
+    color: accentKeySchema,
+  });
+  const goalItemSchema = z.object({ text: z.string().max(300), done: z.boolean() });
+  const goalSchema = z.object({
+    title: z.string().max(200),
+    accent: accentKeySchema,
+    items: z.array(goalItemSchema).max(20),
+  });
+
+  const EMPTY_WEEK_EVENTS = () => ({
+    LUN: [], MAR: [], MER: [], JEU: [], VEN: [], SAM: [], DIM: [],
+  });
+
+  async function readWeekData(userId: number, weekStart: string): Promise<Record<string, unknown>> {
+    const row = await db.getAgendaWeekData(userId, weekStart);
+    if (!row?.data) return { weekLabel: weekStart, events: EMPTY_WEEK_EVENTS(), goals: [], habitsA: [], habitsB: [], habitLabels: { habitsA: "Habitudes A", habitsB: "Habitudes B" } };
+    try {
+      const parsed = JSON.parse(row.data) as unknown;
+      if (parsed !== null && typeof parsed === "object") return parsed as Record<string, unknown>;
+    } catch { /* fall through */ }
+    return { weekLabel: weekStart, events: EMPTY_WEEK_EVENTS(), goals: [], habitsA: [], habitsB: [], habitLabels: { habitsA: "Habitudes A", habitsB: "Habitudes B" } };
+  }
+
+  server.registerTool(
+    "get_agenda_week",
+    {
+      title: "Lire l'agenda d'une semaine Systema",
+      description: "Retourne les événements, objectifs et habitudes pour une semaine donnée. weekStart = lundi de la semaine au format YYYY-MM-DD.",
+      inputSchema: z.object({ weekStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) }),
+      outputSchema: z.object({ data: z.unknown() }),
+    },
+    async ({ weekStart }) => {
+      const userId = await resolveMcpUserId();
+      const data = await readWeekData(userId, weekStart);
+      return jsonToolResult({ data });
+    }
+  );
+
+  server.registerTool(
+    "add_agenda_event",
+    {
+      title: "Ajouter un événement à l'agenda Systema",
+      description: "Ajoute un événement à un jour spécifique de la semaine. weekStart = lundi de la semaine YYYY-MM-DD.",
+      inputSchema: z.object({
+        weekStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        day: dayKeySchema,
+        event: agendaEventSchema,
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ weekStart, day, event }) => {
+      const userId = await resolveMcpUserId();
+      const data = await readWeekData(userId, weekStart);
+      const events = (data.events ?? EMPTY_WEEK_EVENTS()) as Record<string, unknown[]>;
+      if (!Array.isArray(events[day])) events[day] = [];
+      events[day].push(event);
+      await db.upsertAgendaWeekData(userId, weekStart, JSON.stringify({ ...data, events }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "remove_agenda_event",
+    {
+      title: "Supprimer un événement de l'agenda Systema",
+      description: "Supprime un événement par son index dans la liste du jour. Utilise get_agenda_week d'abord pour connaître l'index.",
+      inputSchema: z.object({
+        weekStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        day: dayKeySchema,
+        index: z.number().int().min(0),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ weekStart, day, index }) => {
+      const userId = await resolveMcpUserId();
+      const data = await readWeekData(userId, weekStart);
+      const events = (data.events ?? EMPTY_WEEK_EVENTS()) as Record<string, unknown[]>;
+      if (Array.isArray(events[day])) events[day].splice(index, 1);
+      await db.upsertAgendaWeekData(userId, weekStart, JSON.stringify({ ...data, events }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "set_agenda_goals",
+    {
+      title: "Définir les objectifs de la semaine Systema",
+      description: "Remplace la liste des objectifs hebdomadaires de l'agenda.",
+      inputSchema: z.object({
+        weekStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        goals: z.array(goalSchema).max(10),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ weekStart, goals }) => {
+      const userId = await resolveMcpUserId();
+      const data = await readWeekData(userId, weekStart);
+      await db.upsertAgendaWeekData(userId, weekStart, JSON.stringify({ ...data, goals }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  // ─── Prompt Vault ─────────────────────────────────────────────────────────────
+
+  const promptSchema = z.object({
+    id: z.number().int(),
+    cat: z.string().max(60),
+    title: z.string().max(200),
+    tags: z.array(z.string().max(60)).max(10).optional(),
+    text: z.string().max(50_000),
+  });
+
+  async function readPromptSnapshot(userId: number): Promise<{ list: unknown[]; cats: unknown[]; favs: unknown[]; brightness: number }> {
+    const row = await db.getPromptVaultData(userId);
+    const empty = { list: [], cats: [], favs: [], brightness: 70 };
+    if (!row?.data) return empty;
+    try {
+      const parsed = JSON.parse(row.data) as unknown;
+      if (parsed !== null && typeof parsed === "object") return parsed as typeof empty;
+    } catch { /* fall through */ }
+    return empty;
+  }
+
+  server.registerTool(
+    "list_prompts",
+    {
+      title: "Lister les prompts du Prompt Vault Systema",
+      description: "Retourne tous les prompts enregistrés dans le Prompt Vault.",
+      inputSchema: z.object({}),
+      outputSchema: z.object({ prompts: z.array(z.unknown()) }),
+    },
+    async () => {
+      const userId = await resolveMcpUserId();
+      const snap = await readPromptSnapshot(userId);
+      return jsonToolResult({ prompts: snap.list });
+    }
+  );
+
+  server.registerTool(
+    "add_prompt",
+    {
+      title: "Ajouter un prompt au Prompt Vault Systema",
+      description: "Ajoute un nouveau prompt dans le Prompt Vault. L'id est généré automatiquement.",
+      inputSchema: z.object({
+        cat: z.string().max(60),
+        title: z.string().max(200),
+        tags: z.array(z.string().max(60)).max(10).optional(),
+        text: z.string().max(50_000),
+      }),
+      outputSchema: z.object({ success: z.boolean(), id: z.number() }),
+    },
+    async ({ cat, title, tags, text }) => {
+      const userId = await resolveMcpUserId();
+      const snap = await readPromptSnapshot(userId);
+      const list = snap.list as Array<{ id: number }>;
+      const maxId = list.reduce((m, p) => Math.max(m, p.id ?? 0), 0);
+      const newPrompt = { id: maxId + 1, cat, title, tags: tags ?? [], text };
+      const updated = { ...snap, list: [...list, newPrompt] };
+      await db.upsertPromptVaultData(userId, JSON.stringify(updated));
+      return jsonToolResult({ success: true, id: newPrompt.id });
+    }
+  );
+
+  server.registerTool(
+    "update_prompt",
+    {
+      title: "Modifier un prompt du Prompt Vault Systema",
+      description: "Met à jour un prompt existant par son id.",
+      inputSchema: z.object({
+        id: z.number().int(),
+        cat: z.string().max(60).optional(),
+        title: z.string().max(200).optional(),
+        tags: z.array(z.string().max(60)).max(10).optional(),
+        text: z.string().max(50_000).optional(),
+      }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ id, ...patch }) => {
+      const userId = await resolveMcpUserId();
+      const snap = await readPromptSnapshot(userId);
+      const list = (snap.list as Array<Record<string, unknown>>).map((p) =>
+        p.id === id ? { ...p, ...Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined)) } : p
+      );
+      await db.upsertPromptVaultData(userId, JSON.stringify({ ...snap, list }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  server.registerTool(
+    "delete_prompt",
+    {
+      title: "Supprimer un prompt du Prompt Vault Systema",
+      description: "Supprime définitivement un prompt par son id.",
+      inputSchema: z.object({ id: z.number().int() }),
+      outputSchema: z.object({ success: z.boolean() }),
+    },
+    async ({ id }) => {
+      const userId = await resolveMcpUserId();
+      const snap = await readPromptSnapshot(userId);
+      const list = (snap.list as Array<{ id: number }>).filter((p) => p.id !== id);
+      await db.upsertPromptVaultData(userId, JSON.stringify({ ...snap, list }));
+      return jsonToolResult({ success: true });
+    }
+  );
+
+  // ─── Suivi ────────────────────────────────────────────────────────────────────
+
+  server.registerTool(
+    "list_suivi",
+    {
+      title: "Lister les entrées de suivi Systema",
+      description: "Retourne toutes les entrées du journal de suivi (médication, doses, notes).",
+      inputSchema: z.object({}),
+      outputSchema: z.object({ entries: z.array(z.unknown()) }),
+    },
+    async () => {
+      const userId = await resolveMcpUserId();
+      const rows = await db.getSuiviEntriesByUser(userId);
+      const entries = rows.map((r) => ({
+        id: r.id,
+        timestamp: r.timestamp.toISOString(),
+        date: r.date,
+        prise: r.prise,
+        dose: r.dose,
+        reasons: JSON.parse(r.reasons) as unknown,
+        note: r.note,
+      }));
+      return jsonToolResult({ entries });
+    }
+  );
+
+  server.registerTool(
+    "add_suivi_entry",
+    {
+      title: "Ajouter une entrée de suivi Systema",
+      description: "Enregistre une nouvelle prise dans le journal de suivi.",
+      inputSchema: z.object({
+        timestamp: z.string().datetime({ offset: true }),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format YYYY-MM-DD"),
+        prise: z.string().regex(/^\d{2}:\d{2}$/, "Format HH:mm"),
+        dose: z.number().int().min(1).max(1_000),
+        reasons: z.array(z.string().trim().min(1).max(200)).max(10),
+        note: z.string().max(2_000),
+      }),
+      outputSchema: z.object({ success: z.boolean(), id: z.number() }),
+    },
+    async ({ timestamp, date, prise, dose, reasons, note }) => {
+      const userId = await resolveMcpUserId();
+      const result = await db.createSuiviEntry({
+        userId,
+        timestamp: new Date(timestamp),
+        date,
+        prise,
+        dose,
+        reasons: JSON.stringify(reasons),
+        note,
+      });
+      return jsonToolResult({ success: true, id: result.id });
     }
   );
 
