@@ -295,7 +295,7 @@ function ShortcutsCard({
   }
 
   return (
-    <DashboardCard className="flex min-h-[452px] flex-col px-7 pb-8 pt-[86px] lg:h-[452px]">
+    <DashboardCard className="flex min-h-[640px] flex-col px-7 pb-8 pt-[86px] lg:h-[640px]">
       <img
         src="/homepage/1.png"
         alt=""
@@ -494,7 +494,7 @@ function NewsItem({ item }: { item: HomeNewsItem }) {
 
 function NewsCard({ news }: { news: HomeNewsItem[] }) {
   return (
-    <DashboardCard className="flex min-h-[452px] flex-col px-6 pb-8 pt-[78px] lg:h-[452px]">
+    <DashboardCard className="flex min-h-[640px] flex-col px-6 pb-8 pt-[78px] lg:h-[640px]">
       <img
         src="/homepage/2.png"
         alt=""
@@ -526,7 +526,7 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
 
 function ProjectsCard({ projects }: { projects: HomeProject[] }) {
   return (
-    <DashboardCard className="flex min-h-[452px] flex-col px-7 py-9 lg:h-[452px]">
+    <DashboardCard className="flex min-h-[640px] flex-col px-7 py-9 lg:h-[640px]">
       <img
         src="/homepage/4.png"
         alt=""
@@ -652,12 +652,12 @@ export default function HomeV2() {
 
   return (
     <main
-      className="overflow-y-auto px-4 pb-6 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
+      className="overflow-y-auto px-4 pb-6 pt-8 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
       aria-label="Systema Agency — dashboard d'accueil"
     >
       <h1 className="sr-only">Systema Agency</h1>
-      <div className="relative mx-auto flex w-full max-w-[1084px] flex-col gap-5">
-        <div className="grid grid-cols-1 gap-7 lg:grid-cols-[236px_minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch">
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-col gap-5">
+        <div className="grid grid-cols-1 gap-7 lg:grid-cols-[280px_minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch">
           <ShortcutsCard
             shortcuts={homeData.shortcuts}
             onSave={handleSaveShortcuts}

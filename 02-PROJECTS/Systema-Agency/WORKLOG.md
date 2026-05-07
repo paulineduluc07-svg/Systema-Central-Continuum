@@ -4,6 +4,22 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-07 - Barre rose unifiee livree
+
+- Probleme image 2 vs image 1 : codex avait laisse logo + coeur cuits dans le `background-05-06.png`, donc la barre se desalignait selon la taille d'ecran et le rendu donnait l'impression de 3 pastilles deconnectees.
+- Decision Pauline : separer le fond et la barre. Nouveaux assets fournis via Canva : `background_2560x1440.png` (piece sans barre) et `navbar.png` (rectangle rose plat 2520x120, fond transparent).
+- Refonte `Navbar.tsx` : pilule arrondie en CSS, logo `logo-systema-agency.png` a gauche (lien vers `/`), 3 pastilles holo au centre (Notes, Agenda, Prompt Vault), boutons login/cloud sync a droite. Ancien menu liens texte + custom tabs supprimes.
+- `MainLayout.tsx` : navbar globale (plus de condition `!isHome`), nouveau fond `background_2560x1440.png` partout, padding-top unifie.
+- `HomeV2.tsx` : en-tete duplique retire, imports/HoloBubble locale/pageNav nettoyes.
+- Logo : version dans `Mon disque` etait deja en RGBA mais le clone GitHub avait une version RGB sans alpha; copie de la version transparente vers le clone.
+- Ajustements visuels demandes par Pauline : taille logo a `h-[62px]`, decale `-2px` a gauche et `+4px` en bas.
+- Validation : `pnpm check` OK, `pnpm build` OK. Verification visuelle locale par Pauline sur `http://localhost:3000/`.
+- Commit/push sur `main` : `79680e3`.
+
+Statut : pousse; Vercel redeploie automatiquement. Prochaine etape : ajuster contenu home pour matcher image de reference Pauline.
+
+---
+
 ## 2026-05-07 - Background global + home selon modele Pauline
 
 - Assets copies depuis `Mon disque` vers le clone : `background-05-06.png` et decorations `homepage/1.png` a `5.png` + capture de reference.
