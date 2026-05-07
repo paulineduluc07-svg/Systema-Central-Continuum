@@ -31,9 +31,9 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 ## Priorite immediate (avant toute nouvelle feature)
 
-- [ ] **Reparer la dependance `@neondatabase/serverless` non resolue par Node 24 + pnpm**. Symptome : `ERR_MODULE_NOT_FOUND` lors de `node --env-file=.env scripts/apply-home-data-migration.mjs`, malgre symlink pnpm present (`node_modules/@neondatabase/serverless -> .pnpm/...`). Reproduit en PowerShell ET en Git Bash sous Node 24.14.1. Pistes a tester : `pnpm install` propre depuis le clone, downgrade Node 22 LTS, ou ajouter `node-linker=hoisted` dans `.npmrc`.
-- [ ] Exposer `pnpm` dans le PATH PowerShell de Pauline (corepack ou install global) pour qu'elle puisse executer `pnpm install` / `pnpm check` elle-meme sans dependre de WSL/Git Bash.
-- [ ] Documenter dans `NOTES.md` la marche a suivre pour les migrations DB futures (commande exacte, environnement requis, fallback si Node ne resout pas la dep).
+- [x] **Reparer la dependance `@neondatabase/serverless` non resolue par Node 24 + pnpm**. Cause confirmee : `node_modules` du clone avait ete installe depuis WSL, donc les liens pnpm etaient lisibles par WSL mais pas par PowerShell. Correction : suppression du `node_modules` WSL, reinstall depuis PowerShell via `corepack pnpm install --frozen-lockfile`. Validation PowerShell : import Neon OK et `node --env-file=.env scripts/apply-home-data-migration.mjs` OK.
+- [x] Exposer `pnpm` cote Windows : `pnpm@10.4.1` installe dans `C:\Users\pauli\AppData\Local\pnpm`, chemin ajoute au PATH utilisateur, shims `.ps1` retires pour laisser PowerShell utiliser `pnpm.cmd` sans modifier l'execution policy.
+- [x] Documenter dans `NOTES.md` la marche a suivre pour les migrations DB futures.
 
 ---
 

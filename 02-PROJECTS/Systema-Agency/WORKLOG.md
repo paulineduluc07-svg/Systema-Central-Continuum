@@ -4,6 +4,19 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-07 - Node 24 / pnpm Windows repare
+
+- Diagnostic : WSL resolvait `@neondatabase/serverless`, mais PowerShell echouait avec `ERR_MODULE_NOT_FOUND`. Cause confirmee : `node_modules` du clone installe depuis WSL, avec liens pnpm non exploitables par Windows (`@neondatabase/serverless` vu comme reparse point sans cible utile).
+- Dossier `Mon disque\SCC\02-PROJECTS\Systema-Agency\Code` : `node_modules` absent; garder la regle active de build/test depuis le clone hors Drive.
+- Fix : suppression du `node_modules` casse depuis WSL, puis `corepack pnpm install --frozen-lockfile` depuis PowerShell dans `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code`.
+- `pnpm@10.4.1` installe cote utilisateur dans `C:\Users\pauli\AppData\Local\pnpm`; PATH utilisateur mis a jour; shims `pnpm.ps1`/`pnpx.ps1` retires pour laisser PowerShell utiliser `pnpm.cmd`.
+- Correction TypeScript minimale : `server/routers.ts` retourne le type union correct pour `home.projects[].status`, aligne sur la validation Zod existante.
+- Validation PowerShell : import `@neondatabase/serverless` OK; `node --env-file=.env scripts/apply-home-data-migration.mjs` OK; `pnpm check` OK; `pnpm test` OK (36/36); `pnpm build` OK.
+
+Statut : bloqueur resolu.
+
+---
+
 ## 2026-05-04 - Home dashboard dynamique livre + incident pnpm/Node 24
 
 - PR `claude/read-agent-config-1PXEI` merge sur `main` (`e4782c5 feat(home): raccourcis editables, meteo reelle, news/projets dynamiques via MCP`, +710/-212).

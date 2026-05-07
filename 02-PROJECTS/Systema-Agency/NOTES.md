@@ -142,8 +142,10 @@ Notes :
 
 - Migrations Drizzle dans `Code/drizzle/NNNN_*.sql`; helper one-shot dans `Code/scripts/apply-*.mjs`.
 - Commande nominale (depuis le clone) : `node --env-file=.env scripts/apply-<nom>-migration.mjs`.
-- **Bloquant connu 2026-05-04** : sous Node 24.14.1, ces scripts echouent avec `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` malgre symlink pnpm valide. Reproduit en PowerShell et Git Bash. Contournement temporaire : import via chemin absolu vers `node_modules/.pnpm/@neondatabase+serverless@1.0.2/node_modules/@neondatabase/serverless/index.mjs`. A reparer en priorite (cf. TODO).
-- `pnpm` n'est pas dans le PATH PowerShell de Pauline; pour le moment, les commandes `pnpm` se lancent depuis WSL/Git Bash ou cote agent.
+- Resolution 2026-05-07 : le blocage Node 24 venait d'un `node_modules` installe depuis WSL dans le clone. PowerShell ne resolvait pas les liens pnpm WSL (`ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless`). Fix applique : supprimer `node_modules` depuis WSL, puis reinstaller depuis PowerShell avec `corepack pnpm install --frozen-lockfile`.
+- Validation 2026-05-07 depuis PowerShell : `node -e "import('@neondatabase/serverless')"` OK, `node --env-file=.env scripts/apply-home-data-migration.mjs` OK, `pnpm check` OK, `pnpm test` OK, `pnpm build` OK.
+- `pnpm@10.4.1` est installe cote utilisateur dans `C:\Users\pauli\AppData\Local\pnpm`; ce dossier est dans le PATH utilisateur. Les shims `pnpm.ps1`/`pnpx.ps1` ont ete retires pour que PowerShell utilise `pnpm.cmd` sans changer l'execution policy.
+- Si `pnpm` n'est pas reconnu dans un terminal deja ouvert, fermer puis rouvrir PowerShell. Fallback toujours valide : `corepack pnpm <commande>`.
 
 ---
 

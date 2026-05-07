@@ -681,7 +681,15 @@ export const appRouter = router({
           return parsed as {
             shortcuts: { id: string; label: string; url: string; color?: string }[];
             news: { id: string; category: string; title: string; meta?: string; hot?: boolean; color?: string; url?: string }[];
-            projects: { id: string; name: string; detail?: string; progress: number; due?: string; color?: string; status?: string }[];
+            projects: {
+              id: string;
+              name: string;
+              detail?: string;
+              progress: number;
+              due?: string;
+              color?: string;
+              status?: "active" | "planned" | "queued";
+            }[];
           };
         }
       } catch {
