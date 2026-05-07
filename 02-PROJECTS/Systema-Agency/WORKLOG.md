@@ -16,7 +16,22 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - Validation : `pnpm check` OK, `pnpm build` OK. Verification visuelle locale par Pauline sur `http://localhost:3000/`.
 - Commit/push sur `main` : `79680e3`.
 
-Statut : pousse; Vercel redeploie automatiquement. Prochaine etape : ajuster contenu home pour matcher image de reference Pauline.
+Statut : pousse; Vercel redeploie automatiquement.
+
+---
+
+## 2026-05-07 - Etape 2 home : cartes agrandies pour matcher prod
+
+- Comparaison cote-a-cote prod vs local : Pauline veut les memes proportions de cartes que la prod precedente, plus larges et plus hautes.
+- Ajustements `HomeV2.tsx` :
+  - Hauteur cartes 452px -> 640px (les trois : ShortcutsCard, NewsCard, ProjectsCard).
+  - `max-w` du conteneur : 1084px -> 1400px (aligne sur la navbar).
+  - Colonne raccourcis : 236px -> 280px.
+  - Padding top du main : ajout `pt-8` pour aerer avec la navbar.
+- Validation : `pnpm check` OK, validation visuelle Pauline OK sur localhost:3000.
+- Commit/push sur `main` : `8c1d27c`.
+
+Statut : pousse; Pauline va tester en ligne.
 
 ---
 
