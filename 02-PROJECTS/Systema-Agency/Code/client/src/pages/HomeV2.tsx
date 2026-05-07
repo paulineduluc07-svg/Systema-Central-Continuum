@@ -1,23 +1,17 @@
 import {
-  Activity,
-  BookOpen,
-  CalendarDays,
   Cloud,
   CloudLightning,
   CloudRain,
   CloudSnow,
   CloudSun,
   ExternalLink,
-  FileText,
   Loader2,
   Plus,
   Sparkles,
-  StickyNote,
   Sun,
   X,
 } from "lucide-react";
 import React, { type ComponentType, useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
 import { trpc } from "../lib/trpc";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -87,19 +81,6 @@ const DEFAULT_NEWS: HomeNewsItem[] = [
     title: "World Models, Architectures & Next Phase of AI | Le débat LeCun vs Xing — JEPA vs GLP, abstraire vs reconstruire | L’analyse la plus complète de l’état des world",
     color: "#4f6cf7",
   },
-];
-
-const pageNav = [
-  { label: "Prompts", href: "/prompt-vault", icon: Sparkles },
-  { label: "Notes", href: "/notes", icon: FileText },
-  { label: "Agenda", href: "/agenda", icon: CalendarDays },
-  { label: "Bibliothèque", href: "/prompt-vault", icon: BookOpen },
-  { label: "Suivi", href: "/notes", icon: Activity },
-  { label: "Prompts", href: "/prompt-vault", icon: Sparkles },
-  { label: "Notes", href: "/notes", icon: FileText },
-  { label: "Agenda", href: "/agenda", icon: CalendarDays },
-  { label: "Bibliothèque", href: "/prompt-vault", icon: BookOpen },
-  { label: "Suivi", href: "/notes", icon: Activity },
 ];
 
 // ─── Weather helpers ──────────────────────────────────────────────────────────
@@ -223,25 +204,6 @@ function useWeather() {
 }
 
 // ─── Base components ──────────────────────────────────────────────────────────
-
-function HoloBubble({
-  children,
-  className = "",
-  title,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-}) {
-  return (
-    <span
-      className={`animate-systema-holo flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#88eefb_0%,#77d8ff_38%,#8d7dff_70%,#ff7bd8_100%)] bg-[length:200%_200%] text-[#221133] shadow-[0_8px_18px_rgba(55,170,255,.28),inset_0_1px_0_rgba(255,255,255,.75)] ${className}`}
-      title={title}
-    >
-      {children}
-    </span>
-  );
-}
 
 function DashboardCard({
   children,
@@ -690,27 +652,11 @@ export default function HomeV2() {
 
   return (
     <main
-      className="min-h-screen overflow-y-auto px-4 pb-6 pt-4 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
+      className="overflow-y-auto px-4 pb-6 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
       aria-label="Systema Agency — dashboard d'accueil"
     >
-      <div className="relative mx-auto flex min-h-[calc(100vh-2.75rem)] w-full max-w-[1084px] flex-col gap-5">
-        <header className="relative flex h-[72px] items-start justify-center">
-          <h1 className="sr-only">Systema Agency</h1>
-
-          <nav className="mt-[35px] flex flex-wrap items-center justify-center gap-1.5" aria-label="Navigation rapide">
-            {pageNav.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <Link key={`${item.label}-${index}`} href={item.href}>
-                  <HoloBubble className="h-5 w-5 cursor-pointer transition hover:-translate-y-0.5 hover:scale-105" title={item.label}>
-                    <Icon className="h-2.5 w-2.5" />
-                  </HoloBubble>
-                </Link>
-              );
-            })}
-          </nav>
-        </header>
-
+      <h1 className="sr-only">Systema Agency</h1>
+      <div className="relative mx-auto flex w-full max-w-[1084px] flex-col gap-5">
         <div className="grid grid-cols-1 gap-7 lg:grid-cols-[236px_minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch">
           <ShortcutsCard
             shortcuts={homeData.shortcuts}
