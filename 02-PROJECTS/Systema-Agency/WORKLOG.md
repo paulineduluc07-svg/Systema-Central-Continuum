@@ -4,6 +4,18 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-07 - Background global + home selon modele Pauline
+
+- Assets copies depuis `Mon disque` vers le clone : `background-05-06.png` et decorations `homepage/1.png` a `5.png` + capture de reference.
+- `MainLayout.tsx` applique maintenant le background Systema de facon centralisee (`cover`, `center`, `no-repeat`) avec overlay leger pour garder la lisibilite sur les pages.
+- `HomeV2.tsx` rapproche `/` du modele Pauline : barre haute du background exploitee, bulles nav centrees, 3 grands panneaux glassmorphism, decorations visuelles, retrait des blocs meteo/citation sur la home.
+- Verification navigateur via Chrome Windows : captures desktop `/`, mobile `/`, et `/prompt-vault`; pages lisibles.
+- Validation : `pnpm check` OK, `pnpm build` OK.
+
+Statut : pret a revoir visuellement puis deployer.
+
+---
+
 ## 2026-05-07 - Node 24 / pnpm Windows repare
 
 - Diagnostic : WSL resolvait `@neondatabase/serverless`, mais PowerShell echouait avec `ERR_MODULE_NOT_FOUND`. Cause confirmee : `node_modules` du clone installe depuis WSL, avec liens pnpm non exploitables par Windows (`@neondatabase/serverless` vu comme reparse point sans cible utile).

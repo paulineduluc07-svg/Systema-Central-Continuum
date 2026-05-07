@@ -70,8 +70,9 @@ Limites actives :
 - Page active : `/`.
 - Base visuelle : handoff `RESSOURCES/AGENT_PLANS/design_handoff_onebrain_v4/`, adaptee selon screenshot Pauline.
 - Elements retires du handoff : bloc OneBrain, greeting/date, recherche, notification, grosse meteo, stats, agenda.
-- Structure actuelle : navbar globale cachee sur `/`, logo Systema agrandi, pastilles holo conservees et utilisees comme navigation interne, raccourcis web a gauche, mini meteo, news du jour allongees, projets allonges, citation plus petite.
-- Donnees dynamiques : raccourcis editables, meteo reelle, news/projets exposes via tools MCP. Persistance dans la table `home_data` (`userId` unique, JSON dans la colonne `data`).
+- Background global : `client/public/backgrounds/background-05-06.png`, applique centralement dans `MainLayout.tsx` avec `cover`, `center`, `no-repeat` et overlay leger.
+- Structure actuelle : navbar globale cachee sur `/`; la home utilise la barre/logo/heart presents dans le background, des bulles holo de navigation, puis 3 panneaux glassmorphism (raccourcis web, news, projets) avec decorations PNG de `client/public/homepage/`.
+- Donnees dynamiques : raccourcis editables, news/projets exposes via tools MCP. Persistance dans la table `home_data` (`userId` unique, JSON dans la colonne `data`).
 - Les raccourcis ne servent pas aux pages internes; ils sont reserves aux futurs sites web de Pauline.
 
 ---

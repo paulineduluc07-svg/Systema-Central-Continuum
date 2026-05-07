@@ -1,4 +1,5 @@
 import {
+  Activity,
   BookOpen,
   CalendarDays,
   Cloud,
@@ -7,7 +8,7 @@ import {
   CloudSnow,
   CloudSun,
   ExternalLink,
-  Globe2,
+  FileText,
   Loader2,
   Plus,
   Sparkles,
@@ -50,10 +51,55 @@ type HomeData = {
 
 const SHORTCUT_COLORS = ["#ff2d8a", "#a78bfa", "#67e8f9", "#fbbf24", "#10b981", "#f97316"];
 
+const DEFAULT_SHORTCUTS: HomeShortcut[] = [
+  { id: "default-claude", label: "Claude", url: "https://claude.ai", color: "#ff2d8a" },
+  { id: "default-chatgpt", label: "chatgpt", url: "https://chatgpt.com", color: "#a78bfa" },
+  { id: "default-google", label: "google das...", url: "https://google.com", color: "#67e8f9" },
+  { id: "default-gmail", label: "Gmail", url: "https://mail.google.com", color: "#fbbf24" },
+  { id: "default-notebook", label: "Notebooklm", url: "https://notebooklm.google.com", color: "#10b981" },
+  { id: "default-youtube", label: "Youtube", url: "https://youtube.com", color: "#f97316" },
+  { id: "default-drive", label: "Mon drive", url: "https://drive.google.com", color: "#ff2d8a" },
+  { id: "default-gemini", label: "Gemini", url: "https://gemini.google.com", color: "#a78bfa" },
+  { id: "default-canva", label: "canva", url: "https://canva.com", color: "#67e8f9" },
+  { id: "default-keep", label: "Google keep", url: "https://keep.google.com", color: "#fbbf24" },
+  { id: "default-tarot", label: "Tarot", url: "https://google.com/search?q=tarot", color: "#10b981" },
+  { id: "default-drawn", label: "Drawn by P...", url: "https://google.com", color: "#f97316" },
+];
+
+const DEFAULT_NEWS: HomeNewsItem[] = [
+  {
+    id: "default-news-1",
+    category: "IA",
+    title: "orchestration qui permettent aux agents IA d’agir vraiment dans le monde",
+    meta: "Pour toi : direct pour Anima Ingenium — exactement les patterns que tu construis avec Kim",
+    color: "#a78bfa",
+  },
+  {
+    id: "default-news-2",
+    category: "Productivité IA",
+    title: "Your AI Keeps Keeping You | Pourquoi les LLMs perdent le contexte et comment leur donner une mémoire persistante | Techniques concrètes de prompt engineering pour une IA qui se souvient de toi",
+    meta: "Pour toi : CENTRAL pour Anima Ingenium — la mémoire persistante c’est exactement le problème Kim/Hermes",
+    color: "#8b5cf6",
+  },
+  {
+    id: "default-news-3",
+    category: "Deep Tech/IA",
+    title: "World Models, Architectures & Next Phase of AI | Le débat LeCun vs Xing — JEPA vs GLP, abstraire vs reconstruire | L’analyse la plus complète de l’état des world",
+    color: "#4f6cf7",
+  },
+];
+
 const pageNav = [
-  { label: "Notes", href: "/notes", icon: StickyNote, color: "#a78bfa" },
-  { label: "Agenda", href: "/agenda", icon: CalendarDays, color: "#67e8f9" },
-  { label: "Prompts", href: "/prompt-vault", icon: BookOpen, color: "#fbbf24" },
+  { label: "Prompts", href: "/prompt-vault", icon: Sparkles },
+  { label: "Notes", href: "/notes", icon: FileText },
+  { label: "Agenda", href: "/agenda", icon: CalendarDays },
+  { label: "Bibliothèque", href: "/prompt-vault", icon: BookOpen },
+  { label: "Suivi", href: "/notes", icon: Activity },
+  { label: "Prompts", href: "/prompt-vault", icon: Sparkles },
+  { label: "Notes", href: "/notes", icon: FileText },
+  { label: "Agenda", href: "/agenda", icon: CalendarDays },
+  { label: "Bibliothèque", href: "/prompt-vault", icon: BookOpen },
+  { label: "Suivi", href: "/notes", icon: Activity },
 ];
 
 // ─── Weather helpers ──────────────────────────────────────────────────────────
@@ -189,7 +235,7 @@ function HoloBubble({
 }) {
   return (
     <span
-      className={`animate-systema-holo flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff4fcb_0%,#a78bfa_35%,#67e8f9_65%,#fde047_100%)] bg-[length:200%_200%] text-[#241026] shadow-[0_7px_22px_rgba(167,139,250,.38),inset_0_1px_0_rgba(255,255,255,.7)] ${className}`}
+      className={`animate-systema-holo flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#88eefb_0%,#77d8ff_38%,#8d7dff_70%,#ff7bd8_100%)] bg-[length:200%_200%] text-[#221133] shadow-[0_8px_18px_rgba(55,170,255,.28),inset_0_1px_0_rgba(255,255,255,.75)] ${className}`}
       title={title}
     >
       {children}
@@ -206,7 +252,7 @@ function DashboardCard({
 }) {
   return (
     <section
-      className={`relative min-h-0 overflow-hidden rounded-[18px] border border-white/90 bg-white/70 p-5 text-[#1f0a18] shadow-[inset_0_1px_0_rgba(255,255,255,.95),0_8px_28px_rgba(255,45,138,.07),0_2px_6px_rgba(255,45,138,.04)] backdrop-blur-[18px] backdrop-saturate-150 ${className}`}
+      className={`relative min-h-0 overflow-hidden rounded-[22px] border border-white/65 bg-pink-100/58 p-7 text-[#170711] shadow-[inset_0_1px_0_rgba(255,255,255,.82),0_24px_55px_rgba(98,18,78,.12)] backdrop-blur-[12px] backdrop-saturate-150 ${className}`}
     >
       {children}
     </section>
@@ -215,7 +261,7 @@ function DashboardCard({
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-[10px] font-bold uppercase tracking-[.1em] text-[#1f0a18]/60">
+    <div className="text-[10px] font-bold uppercase tracking-[.1em] text-[#170711]/48">
       {children}
     </div>
   );
@@ -287,40 +333,36 @@ function ShortcutsCard({
   }
 
   return (
-    <DashboardCard className="flex flex-col">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <Eyebrow>Accès web</Eyebrow>
-          <h2 className="mt-1 font-['Fraunces'] text-[25px] font-medium italic leading-none text-[#1f0a18]">
-            Accès rapides
-          </h2>
-        </div>
-        <Globe2 className="h-5 w-5 text-[#ff2d8a]" />
-      </div>
+    <DashboardCard className="flex min-h-[452px] flex-col px-7 pb-8 pt-[86px] lg:h-[452px]">
+      <img
+        src="/homepage/1.png"
+        alt=""
+        className="pointer-events-none absolute left-4 top-0 h-20 w-20 object-contain"
+      />
 
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-x-5 gap-y-5 sm:grid-cols-3">
         {shortcuts.map((shortcut) => (
           <a
             key={shortcut.id}
             href={shortcut.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex w-full flex-col items-center gap-1.5 rounded-xl border border-white/70 bg-white/35 px-2 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,.7)] transition hover:bg-white/55"
+            className="group relative flex w-full flex-col items-center gap-2 text-center transition hover:-translate-y-0.5"
           >
             <span
-              className="flex h-11 w-11 items-center justify-center rounded-[12px] text-white shadow-[0_3px_0_rgba(0,0,0,.12),0_8px_18px_rgba(255,45,138,.12),inset_0_1px_0_rgba(255,255,255,.45)]"
+              className="flex h-9 w-9 items-center justify-center rounded-[9px] text-white shadow-[0_4px_0_rgba(0,0,0,.09),0_10px_20px_rgba(255,45,138,.16),inset_0_1px_0_rgba(255,255,255,.42)]"
               style={{
                 background: `linear-gradient(135deg, ${shortcut.color ?? "#ff2d8a"}, ${shortcut.color ?? "#ff2d8a"}cc)`,
               }}
             >
               <ExternalLink className="h-4 w-4" />
             </span>
-            <span className="max-w-full truncate text-[11px] font-semibold text-[#1f0a18]/65">
+            <span className="max-w-[58px] break-words text-[9px] font-semibold leading-tight text-[#1f0a18]/78">
               {shortcut.label}
             </span>
             <button
               onClick={(e) => { e.preventDefault(); removeShortcut(shortcut.id); }}
-              className="absolute right-1 top-1 hidden h-5 w-5 items-center justify-center rounded-full bg-[#ff2d8a]/10 text-[#ff2d8a] transition hover:bg-[#ff2d8a]/25 group-hover:flex"
+              className="absolute -right-1 -top-1 hidden h-5 w-5 items-center justify-center rounded-full bg-white/80 text-[#ff2d8a] transition hover:bg-white group-hover:flex"
               title="Supprimer"
               type="button"
             >
@@ -332,11 +374,11 @@ function ShortcutsCard({
         {shortcuts.length < 12 && !adding && (
           <button
             onClick={openForm}
-            className="flex w-full flex-col items-center gap-1.5 rounded-xl border border-dashed border-[#ff2d8a]/30 bg-[#ff2d8a]/04 px-2 py-3 text-center transition hover:border-[#ff2d8a]/50 hover:bg-[#ff2d8a]/08"
+            className="flex w-full flex-col items-center gap-2 text-center transition hover:-translate-y-0.5"
             type="button"
             disabled={saving}
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-[#ff2d8a]/25 text-[#ff2d8a]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[9px] border border-[#ff2d8a]/25 bg-white/40 text-[#ff2d8a] shadow-[inset_0_1px_0_rgba(255,255,255,.7)]">
               <Plus className="h-5 w-5" />
             </span>
             <span className="text-[11px] font-semibold text-[#ff2d8a]/60">Ajouter</span>
@@ -443,15 +485,14 @@ function WeatherMiniCard() {
 
 function NewsItem({ item }: { item: HomeNewsItem }) {
   const baseClass =
-    "grid grid-cols-[88px_minmax(0,1fr)] items-start gap-3 border-t border-[#ff2d8a]/10 py-4 first:border-t-0 first:pt-1";
+    "grid grid-cols-[82px_minmax(0,1fr)] items-start gap-3 border-t border-[#ff2d8a]/10 py-3 first:border-t-0 first:pt-0";
 
   const badge = (
     <span
-      className="h-fit rounded-md px-2 py-1 text-center text-[10px] font-bold uppercase tracking-[.08em]"
+      className="h-fit rounded-xl px-3 py-2 text-center text-[9px] font-bold uppercase tracking-[.05em] text-white"
       style={{
-        background: item.hot ? (item.color ?? "#ff2d8a") : `${item.color ?? "#ff2d8a"}22`,
-        color: item.hot ? "#fff" : (item.color ?? "#ff2d8a"),
-        boxShadow: item.hot ? `0 2px 0 ${item.color ?? "#ff2d8a"}a6` : undefined,
+        background: item.color ?? "#8b5cf6",
+        boxShadow: `0 3px 0 ${item.color ?? "#8b5cf6"}80`,
       }}
     >
       {item.category}
@@ -460,9 +501,9 @@ function NewsItem({ item }: { item: HomeNewsItem }) {
 
   const body = (
     <div className="min-w-0">
-      <h3 className="text-[15px] font-semibold leading-snug text-[#1f0a18]">{item.title}</h3>
+      <h3 className="text-[12px] font-extrabold leading-[1.32] text-[#150710]">{item.title}</h3>
       {item.meta && (
-        <p className="mt-1 text-[11px] font-medium text-[#1f0a18]/38">{item.meta}</p>
+        <p className="mt-2 text-[9px] font-medium leading-snug text-[#1f0a18]/36">{item.meta}</p>
       )}
     </div>
   );
@@ -491,15 +532,12 @@ function NewsItem({ item }: { item: HomeNewsItem }) {
 
 function NewsCard({ news }: { news: HomeNewsItem[] }) {
   return (
-    <DashboardCard className="flex flex-col lg:h-[85vh]">
-      <div className="mb-4 flex shrink-0 items-baseline justify-between gap-4">
-        <div>
-          <Eyebrow>News du jour</Eyebrow>
-          <h2 className="mt-1 font-['Fraunces'] text-[28px] font-medium italic leading-none text-[#1f0a18]">
-            Ce qui bouge
-          </h2>
-        </div>
-      </div>
+    <DashboardCard className="flex min-h-[452px] flex-col px-6 pb-8 pt-[78px] lg:h-[452px]">
+      <img
+        src="/homepage/2.png"
+        alt=""
+        className="pointer-events-none absolute left-5 top-2 h-16 w-16 object-contain"
+      />
 
       {news.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
@@ -526,8 +564,19 @@ function NewsCard({ news }: { news: HomeNewsItem[] }) {
 
 function ProjectsCard({ projects }: { projects: HomeProject[] }) {
   return (
-    <DashboardCard className="flex flex-col lg:h-[85vh]">
-      <div className="mb-4 flex items-center justify-between gap-4">
+    <DashboardCard className="flex min-h-[452px] flex-col px-7 py-9 lg:h-[452px]">
+      <img
+        src="/homepage/4.png"
+        alt=""
+        className="pointer-events-none absolute -right-5 top-1 h-24 w-24 object-contain"
+      />
+      <img
+        src="/homepage/3.png"
+        alt=""
+        className="pointer-events-none absolute -bottom-3 -right-2 h-24 w-24 object-contain"
+      />
+
+      <div className="mb-14 flex items-center justify-between gap-4">
         <div>
           <Eyebrow>Projets en cours</Eyebrow>
           <h2 className="mt-1 font-['Fraunces'] text-[28px] font-medium italic leading-none text-[#1f0a18]">
@@ -547,11 +596,11 @@ function ProjectsCard({ projects }: { projects: HomeProject[] }) {
           </p>
         </div>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
           {projects.map((project) => (
             <article
               key={project.id}
-              className="rounded-2xl border border-white/85 bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,.75)]"
+              className="rounded-2xl border border-white/75 bg-white/42 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,.7)]"
             >
               <div className="mb-3 flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -624,7 +673,12 @@ export default function HomeV2() {
     onSuccess: () => utils.home.get.invalidate(),
   });
 
-  const homeData: HomeData = homeQuery.data ?? { shortcuts: [], news: [], projects: [] };
+  const storedHomeData = homeQuery.data ?? { shortcuts: [], news: [], projects: [] };
+  const homeData: HomeData = {
+    shortcuts: storedHomeData.shortcuts.length > 0 ? storedHomeData.shortcuts : DEFAULT_SHORTCUTS,
+    news: storedHomeData.news.length > 0 ? storedHomeData.news : DEFAULT_NEWS,
+    projects: storedHomeData.projects,
+  };
 
   const handleSaveShortcuts = useCallback(
     (shortcuts: HomeShortcut[]) => {
@@ -636,29 +690,20 @@ export default function HomeV2() {
 
   return (
     <main
-      className="min-h-screen overflow-y-auto bg-[linear-gradient(135deg,#fff5fa_0%,#ffeaf3_48%,#f5e8ff_100%)] px-4 pb-8 pt-8 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
+      className="min-h-screen overflow-y-auto px-4 pb-6 pt-4 font-['Inter_Tight'] text-[#1f0a18] sm:px-6 lg:px-8"
       aria-label="Systema Agency — dashboard d'accueil"
     >
-      <div className="pointer-events-none absolute right-[-120px] top-[-90px] h-96 w-96 rounded-full bg-[#ff2d8a]/15 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-[-130px] left-[-110px] h-[420px] w-[420px] rounded-full bg-[#a78bfa]/20 blur-3xl" />
+      <div className="relative mx-auto flex min-h-[calc(100vh-2.75rem)] w-full max-w-[1084px] flex-col gap-5">
+        <header className="relative flex h-[72px] items-start justify-center">
+          <h1 className="sr-only">Systema Agency</h1>
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl flex-col gap-5">
-        <header className="flex items-start gap-10">
-          <div className="flex items-center gap-4">
-            <img
-              src="/logo-systema-agency.png"
-              alt="Systema Agency"
-              className="w-[170px] sm:w-[210px] mix-blend-multiply"
-            />
-          </div>
-
-          <nav className="flex flex-wrap items-center justify-end gap-3 pt-2" aria-label="Navigation rapide">
-            {pageNav.map((item) => {
+          <nav className="mt-[35px] flex flex-wrap items-center justify-center gap-1.5" aria-label="Navigation rapide">
+            {pageNav.map((item, index) => {
               const Icon = item.icon;
               return (
-                <Link key={item.label} href={item.href}>
-                  <HoloBubble className="h-10 w-10 cursor-pointer transition hover:-translate-y-0.5 hover:scale-105 sm:h-12 sm:w-12" title={item.label}>
-                    <Icon className="h-5 w-5" />
+                <Link key={`${item.label}-${index}`} href={item.href}>
+                  <HoloBubble className="h-5 w-5 cursor-pointer transition hover:-translate-y-0.5 hover:scale-105" title={item.label}>
+                    <Icon className="h-2.5 w-2.5" />
                   </HoloBubble>
                 </Link>
               );
@@ -666,16 +711,12 @@ export default function HomeV2() {
           </nav>
         </header>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[0.9fr_1.15fr_1.25fr] lg:items-start">
-          <div className="flex flex-col gap-4">
-            <ShortcutsCard
-              shortcuts={homeData.shortcuts}
-              onSave={handleSaveShortcuts}
-              saving={saveMutation.isPending}
-            />
-            <WeatherMiniCard />
-            <QuoteCard />
-          </div>
+        <div className="grid grid-cols-1 gap-7 lg:grid-cols-[236px_minmax(0,1fr)_minmax(0,1fr)] lg:items-stretch">
+          <ShortcutsCard
+            shortcuts={homeData.shortcuts}
+            onSave={handleSaveShortcuts}
+            saving={saveMutation.isPending}
+          />
           <NewsCard news={homeData.news} />
           <ProjectsCard projects={homeData.projects} />
         </div>

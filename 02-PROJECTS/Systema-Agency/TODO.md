@@ -26,6 +26,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
 - Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
 - Home dashboard dynamique livre (PR `e4782c5`) : raccourcis editables, meteo reelle, news/projets via MCP, persistes dans la table `home_data`.
+- Home background 05-06 applique globalement : image immersive commune, home alignee sur le modele Pauline avec 3 panneaux glassmorphism et decorations PNG.
 
 ---
 
@@ -44,6 +45,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - [x] Implementer la V4 modifiee selon les annotations de Pauline.
 - [x] Passer les pastilles holo en boutons vers les pages Systema et reserver les raccourcis aux sites web.
 - [x] Raccourcis editables, meteo reelle, news/projets dynamiques via MCP livres (table `home_data` migree).
+- [x] Appliquer le background global `background-05-06.png` et reproduire la structure du modele `homepage` : barre haute, bulles nav, 3 panneaux, decorations.
 - [ ] Configurer les vrais liens web dans les raccourcis cote UI (saisie utilisateur).
 - [ ] Verifier que le flux MCP news/projets repond bien en prod une fois Cowork branche.
 
