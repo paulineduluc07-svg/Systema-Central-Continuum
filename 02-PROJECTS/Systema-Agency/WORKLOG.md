@@ -4,6 +4,18 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-05-09 - Cleanup code mort post-refactor navbar
+
+- Balayage exhaustif de `client/src` par grep pour confirmer les orphelins suite au refactor navbar (commit `79680e3`).
+- 7 fichiers supprimes, aucun importateur actif confirme : `AdminPanel.tsx`, `ExportDialog.tsx`, `PasswordGate.tsx`, `DashboardLayout.tsx`, `DashboardLayoutSkeleton.tsx`, `AIChatBox.tsx`, `pages/ComponentShowcase.tsx`.
+- `useSyncedPreferences` conserve (consomme par `MainLayout.tsx`). Icones lucide dans `Navbar.tsx` et `MainLayout.tsx` toutes actives.
+- `pnpm check` : zero nouvelle erreur.
+- PR #22 ouverte en draft : `cleanup/dead-code-post-navbar-refactor`.
+
+Statut : PR en attente de review Pauline.
+
+---
+
 ## 2026-05-07 - Barre rose unifiee livree
 
 - Probleme image 2 vs image 1 : codex avait laisse logo + coeur cuits dans le `background-05-06.png`, donc la barre se desalignait selon la taille d'ecran et le rendu donnait l'impression de 3 pastilles deconnectees.
