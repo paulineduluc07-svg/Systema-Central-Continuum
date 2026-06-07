@@ -5,6 +5,7 @@ import {
   CalendarDays,
   Cloud,
   CloudOff,
+  Home,
   LogIn,
   LogOut,
   StickyNote,
@@ -38,6 +39,7 @@ const PASTILLES: Array<{
   label: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
+  { href: "/v2", label: "Accueil (lanceur)", icon: Home },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },

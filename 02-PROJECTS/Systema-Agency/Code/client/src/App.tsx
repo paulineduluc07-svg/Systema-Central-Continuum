@@ -12,7 +12,13 @@ import MainLayout from "./components/MainLayout";
 
 const HomeV2 = lazy(() => import("./pages/HomeV2"));
 const Home = lazy(() => import("./pages/Home"));
+const Cosmos = lazy(() => import("./pages/Cosmos"));
+const SuiviPage = lazy(async () => {
+  const module = await import("./pages/Suivi");
+  return { default: module.SuiviPage };
+});
 const PromptVault = lazy(() => import("./pages/PromptVault"));
+const Kim = lazy(() => import("./pages/Kim"));
 const FloatingNotes = lazy(() => import("./pages/FloatingNotes"));
 const Agenda = lazy(() => import("./pages/Agenda"));
 const CustomTabPage = lazy(() => import("./pages/CustomTabPage"));
@@ -36,9 +42,13 @@ function Router() {
     <MainLayout>
       <Suspense fallback={<RouteLoadingFallback />}>
         <Switch>
-          <Route path={"/"} component={HomeV2} />
+          <Route path={"/"} component={Cosmos} />
+          <Route path={"/cosmos"} component={Cosmos} />
+          <Route path={"/v2"} component={HomeV2} />
           <Route path={"/v1"} component={Home} />
+          <Route path={"/suivi"} component={SuiviPage} />
           <Route path={"/prompt-vault"} component={PromptVault} />
+          <Route path={"/kim"} component={Kim} />
           <Route path={"/notes"} component={FloatingNotes} />
           <Route path={"/agenda"} component={Agenda} />
           <Route path={"/tab/:tabId"} component={CustomTabPage} />
