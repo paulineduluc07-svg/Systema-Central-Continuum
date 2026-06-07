@@ -1,6 +1,23 @@
-# WORKLOG - Systema-Agency
+# WORKLOG — Systema-Agency
+> Journal de bord session par session. Format : Date → Action → Impact → Prochaine étape.
+
+---
 
 Journal court. Garder seulement les faits utiles a la reprise.
+
+---
+
+## 2026-06-06 - Dashboard cosmos en page d'accueil + deploiement
+
+- Integration COMPLETE du dashboard « meteo cosmique & biologique » (venu de L'Ecosysteme holistique, ex-Flask) porte en React/TS comme nouvelle page d'accueil `/`. Ancienne home HomeV2 deplacee sur `/v2` (pastille 🏠 Accueil dans la navbar).
+- Archi retenue (option A+) : tout en JS ; skyfield (NASA) remplace par `astronomy-engine` (`Rotation_EQJ_ECT`) → precision au degre sans le fichier `de421.bsp` de 17 Mo.
+- 10 cartes reelles validees chiffre/chiffre vs le Python : 🔮 Briefing (synthese), ⭐ Astro, 🧬 Human Design, 🌙 Lune, 🔢 Numero, 🌊 Biorythmes, 🩸 Cycle, 📅 Energie des prochains jours, 🔮 Matrice de la Destinee (octogramme SVG).
+- Look « Sanctuary » neo-brutaliste reproduit fidelement (`cosmos.css` scope : VT323+Quicksand, fond creme a pois, bordures #2C2523, footers monospace roses). Cartes plafonnees a 360px + scroll interne → grille uniforme.
+- Cycle persiste via une colonne `cycle_jour1` ajoutee A LA MAIN sur `user_preferences` (Neon, deja en prod) — surtout PAS de `drizzle migrate` sur la DB partagee dev/prod.
+- Code : cerveaux `client/src/lib/cosmos/*.ts`, composants `client/src/components/cosmos/*Card.tsx` + `CosmosCard.tsx` + `cosmos.css`. Carnet d'apprentissage `CARNET-REACT.md` (9 blocs).
+- **Deploiement fait** : commits `86427a9` (integration cosmos) et `b2d9382` (retrait refs Kim/Suivi des pages supprimees, PR #20) pousses sur `main` → Vercel auto-deploy. **Page cosmos confirmee LIVE en prod par Pauline le 2026-06-07.**
+
+Statut : livre et en prod. Reste optionnel a terme : cartes encore toc 🐣 tamagotchi, 🌟 oracle, 🔮 tarot.
 
 ---
 

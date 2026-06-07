@@ -1,4 +1,7 @@
-# NOTES - Systema-Agency
+# NOTES — Systema-Agency
+> Décisions ouvertes et repères actifs. Source de vérité pour les agents.
+
+---
 
 Repères stables et décisions actives. Garder ce fichier court.
 
@@ -7,6 +10,7 @@ Repères stables et décisions actives. Garder ce fichier court.
 ## Etat actuel
 
 - Production : `https://systema-agency.vercel.app`.
+- **Page d'accueil `/` = dashboard cosmos depuis 2026-06-06** (porte de L'Ecosysteme holistique en React/TS, deploye, confirme live). Cerveaux dans `client/src/lib/cosmos/*.ts`, composants `client/src/components/cosmos/`. Cycle persiste via colonne `cycle_jour1` sur `user_preferences`. Carnet : `CARNET-REACT.md`.
 - Alias existant : `https://systema.enterprises`; URL d'usage recommandee : `systema-agency.vercel.app`.
 - Source SCC : `C:\Users\pauli\Mon disque\SCC\02-PROJECTS\Systema-Agency`.
 - Clone Git/build/test : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency`.
@@ -20,7 +24,8 @@ Repères stables et décisions actives. Garder ce fichier court.
 
 | Route | Role | Navbar |
 |---|---|---|
-| `/` | Dashboard accueil V4 modifie | Brand |
+| `/` | Dashboard cosmos « meteo cosmique & biologique » (10 cartes reelles) | Brand |
+| `/v2` | Ancienne home HomeV2 (dashboard V4) | Pastille 🏠 Accueil |
 | `/kim` | Kim | Oui |
 | `/notes` | Notes volantes | Oui |
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
@@ -147,6 +152,12 @@ Notes :
 - Validation 2026-05-07 depuis PowerShell : `node -e "import('@neondatabase/serverless')"` OK, `node --env-file=.env scripts/apply-home-data-migration.mjs` OK, `pnpm check` OK, `pnpm test` OK, `pnpm build` OK.
 - `pnpm@10.4.1` est installe cote utilisateur dans `C:\Users\pauli\AppData\Local\pnpm`; ce dossier est dans le PATH utilisateur. Les shims `pnpm.ps1`/`pnpx.ps1` ont ete retires pour que PowerShell utilise `pnpm.cmd` sans changer l'execution policy.
 - Si `pnpm` n'est pas reconnu dans un terminal deja ouvert, fermer puis rouvrir PowerShell. Fallback toujours valide : `corepack pnpm <commande>`.
+
+---
+
+## À clarifier
+
+- `systema-agency-clean/` à la racine du dossier SCC : origine inconnue, contient un sous-dossier `systema/`. À identifier et déplacer dans `Code/` ou supprimer.
 
 ---
 

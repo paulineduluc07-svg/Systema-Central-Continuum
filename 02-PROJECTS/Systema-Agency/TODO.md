@@ -1,4 +1,7 @@
-# TODO - Systema-Agency
+# TODO — Systema-Agency
+> Prochaines actions et backlog actif. Mettre à jour à chaque session.
+
+---
 
 Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
@@ -27,6 +30,7 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
 - Home dashboard dynamique livre (PR `e4782c5`) : raccourcis editables, meteo reelle, news/projets via MCP, persistes dans la table `home_data`.
 - Home background 05-06 applique globalement : image immersive commune, home alignee sur le modele Pauline avec 3 panneaux glassmorphism et decorations PNG.
+- **Page d'accueil `/` = dashboard cosmos « meteo cosmique & biologique »** (10 cartes reelles React/TS, validees vs Python). Ancienne home HomeV2 sur `/v2`. Deploye et live le 2026-06-06 (commits `86427a9`, `b2d9382`).
 
 ---
 
@@ -39,6 +43,13 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 ---
 
 ## Prochaines passes
+
+### Dashboard cosmos (page d'accueil `/`)
+
+- [x] Porter les 10 cartes Flask en React/TS, validees chiffre/chiffre vs Python. — 2026-06-06
+- [x] Remplacer skyfield par `astronomy-engine`, look Sanctuary, deploiement Vercel. — 2026-06-06
+- [ ] Cartes encore toc a rendre reelles (optionnel) : 🐣 tamagotchi, 🌟 oracle, 🔮 tarot.
+- [ ] Quand les regles de Paw arrivent : cliquer « mes regles ont commence aujourd'hui » sur la carte Cycle (ancre `cycle_jour1`).
 
 ### Home dashboard
 
