@@ -1,28 +1,18 @@
 # Systema-Agency
+> Vision et cadrage du projet. ⚠️ LECTURE SEULE — ne pas modifier sans validation.
 
-## Rôle du dossier
-Ce dossier regroupe les éléments de travail liés à `Systema-Agency`.
-
-⚠️ FICHIER EN LECTURE SEULE
-
-INTERDICTION ABSOLUE de modifier, supprimer, ajouter, reformater, renommer ou remplacer ce fichier.
-
-
-Il sert à :
-- cadrer le projet
-- centraliser sa documentation
-- conserver ses assets, son code et ses livrables
-- éviter que les informations du projet soient dispersées
-
+---
 ## Vision
-Dashboard personnel
-Onglet actif a ce jour:
-- **Prompt Vault** — bibliothèque de prompts IA 
-- **Suivi médicament** — suivi de prises avec sync DB
-- **IA kim**
+Dashboard personnel « OS de vie » pensé pour un cerveau ADHD.
 
+Fonctionnalités actives :
+- **Cosmos** — page d'accueil `/` : météo cosmique & biologique (cartes réelles)
+- **Prompt Vault** — bibliothèque de prompts IA (`/prompt-vault`)
+- **Agenda** — hebdomadaire (`/agenda`)
+- **Notes volantes** — (`/notes`)
+- **Onglets custom + Tableau blanc** — (`/tab/:tabId`)
 
-Interface glassmorphism, minimaliste, orientée utilité réelle. Pas de RPG, pas de tarot, pas d'avatar.
+Interface glassmorphism, minimaliste, orientée utilité réelle. Pas de RPG, pas d'avatar.
 
 ## Statut
 Production déployée et stable — `systema-agency.vercel.app`
@@ -36,14 +26,16 @@ Production déployée et stable — `systema-agency.vercel.app`
 
 ## Structure
 ```text
-Systema-Agency/
-├── README.md           # Cadrage et vision
-├── TODO.md             # Suivi des tâches
-├── NOTES.md            # Notes et décisions
-├── NOTES_DE_PAULINE.md # Instructions de Pauline
-├── WORKLOG.md          # Historique des sessions
-├── Assets/             # Assets, secrets et médias
-├── Code/               # Code source de l'application
-├── RESSOURCES/         # Documentation technique et ressources
-└── Livrables/          # Documents finaux et exports
+Systema-Agency/            (Drive = docs ; le CODE vit dans le clone Git)
+├── README.md              # Vision et cadrage (LECTURE SEULE)
+├── TODO.md                # Prochaines actions
+├── NOTES.md               # Décisions ouvertes, repères actifs
+├── WORKLOG.md             # Journal de bord session par session
+├── NOTES_DE_PAULINE.md    # Demandes de Pauline (prioritaire)
+├── BRIEF_IA.md            # Brief collé en début de session LLM
+├── STACK.md               # Carte du stack technique
+├── Assets/                # Secrets, assets, médias
+├── RESSOURCES/            # Documentation technique et plans agents
+└── Livrables/             # Documents finaux et exports
 ```
+> Code source : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code` (clone Git, déploie sur Vercel). Plus de copie `Code/` dans le Drive depuis 2026-06-09.

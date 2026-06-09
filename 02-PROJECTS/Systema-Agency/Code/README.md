@@ -112,5 +112,5 @@ Variables runtime requises sur Vercel:
 ## Notes operationnelles
 
 - Ce projet n'utilise plus OAuth.
-- Ce projet n'utilise plus les modules RPG/Tarot/LifeCommand.
+- Ce projet n'utilise plus les modules RPG/LifeCommand.
 - Le projet Kim est separe (`Projects/Kim-Agentic-Companion/`).

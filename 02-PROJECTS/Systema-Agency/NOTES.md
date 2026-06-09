@@ -14,6 +14,7 @@ Repères stables et décisions actives. Garder ce fichier court.
 - Alias existant : `https://systema.enterprises`; URL d'usage recommandee : `systema-agency.vercel.app`.
 - Source SCC : `C:\Users\pauli\Mon disque\SCC\02-PROJECTS\Systema-Agency`.
 - Clone Git/build/test : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency`.
+- **Code source = clone UNIQUEMENT** (plus de copie `Code/` dans le Drive depuis 2026-06-09). Règle : **docs = Drive, code = clone**. Dev/build/test → toujours depuis le clone.
 - Base de donnees : Neon PostgreSQL partagee entre prod et dev local.
 - Plans/patchs agents : `RESSOURCES/AGENT_PLANS/`.
 - `NOTES_DE_PAULINE.md` reste personnel a Pauline et n'est pas expose via MCP.
@@ -24,13 +25,11 @@ Repères stables et décisions actives. Garder ce fichier court.
 
 | Route | Role | Navbar |
 |---|---|---|
-| `/` | Dashboard cosmos « meteo cosmique & biologique » (10 cartes reelles) | Brand |
+| `/` | Dashboard cosmos « meteo cosmique & biologique » (9 cartes reelles) | Brand |
 | `/v2` | Ancienne home HomeV2 (dashboard V4) | Pastille 🏠 Accueil |
-| `/kim` | Kim | Oui |
 | `/notes` | Notes volantes | Oui |
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
-| `/suivi` | Suivi medicament | Oui |
 | `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
 | `/v1` | Ancienne home | Non |
 | `/mcp` | Serveur MCP docs + writes proteges | Non |
@@ -46,27 +45,9 @@ Variables Vercel indispensables :
 - `OWNER_PASSWORD`
 - `VITE_APP_ID=systema-agency`
 
-Variables IA :
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL` optionnel
-
 Repères de panne :
 - Si login OK mais session invalide : verifier `VITE_APP_ID`.
 - Si le modal s'ouvre mais les champs ne prennent pas le focus : verifier que l'overlay de `LoginModal.tsx` garde `pointer-events-auto`.
-
----
-
-## Kim
-
-Etat actuel :
-- Kim repond dans `/kim`.
-- L'appel OpenAI reste cote serveur.
-- Kim peut ajouter des prompts dans Prompt Vault.
-- Les customTabs crees par MCP apparaissent dans la nav et ouvrent `/tab/:tabId`.
-
-Limites actives :
-- Kim ne peut pas encore modifier ni archiver.
-- Suppression directe interdite au depart.
 
 ---
 
@@ -155,14 +136,8 @@ Notes :
 
 ---
 
-## À clarifier
-
-- `systema-agency-clean/` à la racine du dossier SCC : origine inconnue, contient un sous-dossier `systema/`. À identifier et déplacer dans `Code/` ou supprimer.
-
----
-
 ## Interdits produit
 
-- Ne pas reintroduire RPG, tarot, Drawn by Fate ou LifeCommand dans Systema Agency.
+- Ne pas reintroduire RPG, Drawn by Fate ou LifeCommand dans Systema Agency.
 - Ne pas exposer les secrets.
 - Ne pas transformer les docs en journal verbeux : Git garde l'historique detaille.
