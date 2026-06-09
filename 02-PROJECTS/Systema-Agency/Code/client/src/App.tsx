@@ -7,7 +7,6 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { GlobalSyncIndicator } from "./components/GlobalSyncIndicator";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { ConfigProvider } from "./contexts/ConfigContext";
 import MainLayout from "./components/MainLayout";
 
 const HomeV2 = lazy(() => import("./pages/HomeV2"));
@@ -56,15 +55,13 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ConfigProvider>
-        <ThemeProvider defaultTheme="light">
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-            <GlobalSyncIndicator />
-          </TooltipProvider>
-        </ThemeProvider>
-      </ConfigProvider>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+          <GlobalSyncIndicator />
+        </TooltipProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
