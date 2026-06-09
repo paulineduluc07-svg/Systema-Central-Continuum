@@ -1,0 +1,3 @@
+# Normaliser les fins de ligne : LF dans le repo, peu importe l'OS
+# Stoppe le churn CRLF/LF (Drive=CRLF vs clone=LF) signale dans l'audit (AUDIT_CLONE §7a)
+* text=auto eol=lf
