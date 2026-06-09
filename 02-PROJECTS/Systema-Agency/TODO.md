@@ -16,18 +16,30 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 
 ---
 
+## Chantier réparations (audit complet — 4 carnets)
+
+Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUDIT_CODE.md`, `AUDIT_CLONE.md`, `AUDIT_AGENT_PLANS.md`).
+
+- [x] **P1** — Purger la copie `Code/` périmée + `node_modules` du Drive. Règle : docs = Drive, code = clone. (2026-06-09)
+- [x] **P2** — Nettoyer la doc (Kim/Suivi sortis, vraies features) dans README/NOTES/TODO/BRIEF_IA **côté Drive**. (2026-06-09)
+- [x] **P3** — Supprimer le code mort (RPG/vision-board + restes Kim + backend orphelin), −3219 lignes, tests verts. Commit local `fb26a6e`. (2026-06-09)
+- [ ] **P4 — GitHub** : (a) propager les docs P2 Drive→clone ; (b) commiter le drift « tarot débloqué » (README/NOTES/Code/README) ; (c) push `main` ; (d) repo privé (option A1 : bundler les docs AVANT de basculer) ; (e) ménage des 8 branches mortes (récupérer d'abord `cleanup/dead-code`) ; (f) `.gitignore` global `**/NOTES_DE_PAULINE.md` + sortir notes Anima du tracking.
+- [ ] **P5 — Migrations + workflow DB** : neutraliser `db-push.yml` (cassé + dangereux sur prod) ; choisir stratégie migrations drizzle (journal abandonné, table `suivi_entries` orpheline).
+- [ ] (Déprioritisé) Fuite lecture MCP : Systema = prototypes sans donnée perso → pas urgent.
+
+---
+
 ## Etat valide
 
 - Prod active : `https://systema-agency.vercel.app`.
 - Auth email/mot de passe fonctionnelle.
 - Sync cloud fonctionnelle apres login.
-- Kim repond dans `/kim` et peut ajouter des prompts dans Prompt Vault.
 - Notes volantes desktop `/notes` livrees, corrigees et validees visuellement.
 - Agenda hebdomadaire `/agenda` livre : evenements, objectifs et habitudes persistants par semaine.
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 - Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
-- Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
+- _(Historique — cette home V4 est désormais sur `/v2`, supplantée par le Cosmos)_ Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
 - Home dashboard dynamique livre (PR `e4782c5`) : raccourcis editables, meteo reelle, news/projets via MCP, persistes dans la table `home_data`.
 - Home background 05-06 applique globalement : image immersive commune, home alignee sur le modele Pauline avec 3 panneaux glassmorphism et decorations PNG.
 - **Page d'accueil `/` = dashboard cosmos « meteo cosmique & biologique »** (10 cartes reelles React/TS, validees vs Python). Ancienne home HomeV2 sur `/v2`. Deploye et live le 2026-06-06 (commits `86427a9`, `b2d9382`).
@@ -74,19 +86,12 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - [ ] Revalider le flux mobile : creer, editer, archiver, restaurer, supprimer.
 - [ ] Garder le bouton/flux de recuperation des notes coincées tant que le drag mobile n'est pas parfaitement valide.
 
-### Kim dans Systema
-
-- [x] Passe 2 : connecter Cowork/Kim aux tools MCP write de Systema.
-- [x] Afficher les customTabs crees via MCP dans la nav principale.
-- [ ] Passe 3 : permettre a Kim de modifier/archiver avec confirmation.
-- [ ] Garder la suppression directe interdite au depart.
-
 ### MCP Systema
 
 - [x] Ajouter `SYSTEMA_MCP_USER_OPEN_ID` dans Vercel.
 - [x] Generer et ajouter `SYSTEMA_MCP_SECRET` dans Vercel.
 - [x] Tester `tools/list` et un write HTTP avec header secret apres deploy.
-- [x] Configurer Cowork/Kim avec l'URL `https://systema-agency.vercel.app/mcp?secret=<secret>`.
+- [x] Configurer l'agent MCP externe avec l'URL `https://systema-agency.vercel.app/mcp?secret=<secret>`.
 
 ### Prompt Vault
 
@@ -105,4 +110,4 @@ Suivi court des prochaines actions. Les details historiques vivent dans Git.
 - Auth 2026-04-25 : verifier d'abord `VITE_APP_ID=systema-agency` si la session recasse.
 - Modal login 2026-05-01 : `LoginModal` doit rester en `pointer-events-auto`, car il est rendu dans la navbar.
 - Incident Gemini 2026-05-01 : un marqueur texte `=====` laisse dans `FloatingNotes.tsx` a casse le build Vercel; corrige par `b8214fc`.
-- pnpm/Node 24 2026-05-04 : `node --env-file=.env scripts/apply-home-data-migration.mjs` echoue avec `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` malgre symlink pnpm valide; contourne ce coup-ci par import via chemin absolu `file:///.../node_modules/.pnpm/.../index.mjs`. Bloquant pour les futures migrations executees depuis Windows. A reparer en priorite.
+- pnpm/Node 24 2026-05-04 : `ERR_MODULE_NOT_FOUND` sur `@neondatabase/serverless` quand `node_modules` était installé depuis WSL. **✅ RÉSOLU 2026-05-07** : réinstall depuis PowerShell via `corepack pnpm install --frozen-lockfile` (détails dans « Priorite immediate »).
