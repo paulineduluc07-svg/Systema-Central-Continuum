@@ -5,5 +5,5 @@
 **/.env.*
 *.env
 
-# Notes personnelles Pauline - source locale Google Drive seulement
-02-PROJECTS/Systema-Agency/NOTES_DE_PAULINE.md
+# Notes personnelles Pauline - source locale Google Drive seulement (tous projets)
+**/NOTES_DE_PAULINE.md
