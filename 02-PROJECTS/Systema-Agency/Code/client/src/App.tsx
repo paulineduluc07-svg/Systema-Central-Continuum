@@ -9,7 +9,6 @@ import { GlobalSyncIndicator } from "./components/GlobalSyncIndicator";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import MainLayout from "./components/MainLayout";
 
-const HomeV2 = lazy(() => import("./pages/HomeV2"));
 const Home = lazy(() => import("./pages/Home"));
 const Cosmos = lazy(() => import("./pages/Cosmos"));
 const PromptVault = lazy(() => import("./pages/PromptVault"));
@@ -38,7 +37,6 @@ function Router() {
         <Switch>
           <Route path={"/"} component={Cosmos} />
           <Route path={"/cosmos"} component={Cosmos} />
-          <Route path={"/v2"} component={HomeV2} />
           <Route path={"/v1"} component={Home} />
           <Route path={"/prompt-vault"} component={PromptVault} />
           <Route path={"/notes"} component={FloatingNotes} />
