@@ -1,9 +1,11 @@
 # Systema Agency
 
-Dashboard personnel minimaliste organise autour de 3 entrees:
+Dashboard personnel minimaliste. Entrees principales:
+- Cosmos « meteo cosmique & biologique » (`/`, 9 cartes)
 - Prompt Vault (`/prompt-vault`)
-- Suivi medicament (`/suivi`)
-- Tableau blanc (notes synchronisees)
+- Notes volantes (`/notes`)
+- Agenda hebdomadaire (`/agenda`)
+- Onglets custom + tableau blanc (`/tab/:tabId`)
 
 ## Stack actuelle
 
@@ -89,7 +91,7 @@ Les `customTabs` crees via MCP sont rendus dans la navigation principale et ouvr
 ## Base de donnees et migration
 
 - Schema Drizzle: `drizzle/schema.ts`
-- Migration suivi: `drizzle/0001_suivi_entries.sql`
+- Migrations SQL: `drizzle/*.sql`
 
 Appliquer les migrations:
 ```bash
@@ -113,4 +115,4 @@ Variables runtime requises sur Vercel:
 
 - Ce projet n'utilise plus OAuth.
 - Ce projet n'utilise plus les modules RPG/LifeCommand.
-- Le projet Kim est separe (`Projects/Kim-Agentic-Companion/`).
+- Kim et le suivi medicament ont ete retires : Kim vit dans le projet separe Anima Ingenium (`02-PROJECTS/Anima-Ingenium/`).

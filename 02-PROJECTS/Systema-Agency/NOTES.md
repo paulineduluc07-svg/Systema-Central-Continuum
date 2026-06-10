@@ -26,7 +26,6 @@ Repères stables et décisions actives. Garder ce fichier court.
 | Route | Role | Navbar |
 |---|---|---|
 | `/` | Dashboard cosmos « meteo cosmique & biologique » (9 cartes reelles) | Brand |
-| `/v2` | Ancienne home HomeV2 (dashboard V4) | Pastille 🏠 Accueil |
 | `/notes` | Notes volantes | Oui |
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
