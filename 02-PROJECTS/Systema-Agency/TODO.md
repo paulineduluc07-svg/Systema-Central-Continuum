@@ -23,9 +23,10 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - [x] **P1** — Purger la copie `Code/` périmée + `node_modules` du Drive. Règle : docs = Drive, code = clone. (2026-06-09)
 - [x] **P2** — Nettoyer la doc (Kim/Suivi sortis, vraies features) dans README/NOTES/TODO/BRIEF_IA **côté Drive**. (2026-06-09)
 - [x] **P3** — Supprimer le code mort (RPG/vision-board + restes Kim + backend orphelin), −3219 lignes, tests verts. Commit local `fb26a6e`. (2026-06-09)
-- [ ] **P4 — GitHub** : (a) propager les docs P2 Drive→clone ; (b) commiter le drift « tarot débloqué » (README/NOTES/Code/README) ; (c) push `main` ; (d) repo privé (option A1 : bundler les docs AVANT de basculer) ; (e) ménage des 8 branches mortes (récupérer d'abord `cleanup/dead-code`) ; (f) `.gitignore` global `**/NOTES_DE_PAULINE.md` + sortir notes Anima du tracking.
-- [ ] **P5 — Migrations + workflow DB** : neutraliser `db-push.yml` (cassé + dangereux sur prod) ; choisir stratégie migrations drizzle (journal abandonné, table `suivi_entries` orpheline).
-- [ ] (Déprioritisé) Fuite lecture MCP : Systema = prototypes sans donnée perso → pas urgent.
+- [x] **P4 — GitHub** : docs propagées Drive→clone, push `main`, repo resté PUBLIC (décision), HomeV2 `/v2` supprimée, 9 branches mortes supprimées (il ne reste que `main`), `.gitignore` global notes perso. (2026-06-09 → 2026-06-10)
+- [x] **P5 — Migrations + workflow DB** : option A actée — pas de migrations automatiques (`schema.ts` = source de vérité + SQL manuel). `db-push.yml` + script `db:push` supprimés, `relations.ts` supprimé, migration orpheline archivée. Commit `b88db68`. (2026-06-10)
+- [ ] (Reporté — décision 2026-06-10 : URL MCP publique gardée telle quelle) Fuite lecture MCP.
+- [ ] **Reste du ménage** (détail : `CORRECTIONS_A_FAIRE.md` G4-G7) : page `/v1` à clarifier, `.env.example` OpenAI, CI `ci-pr.yml` jamais exécutée (mauvais emplacement), docs racine, rangement AGENT_PLANS.
 
 ---
 
