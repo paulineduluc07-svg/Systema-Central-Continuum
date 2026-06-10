@@ -5,7 +5,6 @@ import {
   InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences,
   customTabs, canvasData, InsertCustomTab, InsertCanvasData,
   agendaWeekData, promptVaultData,
-  homeData,
   floatingNotes, InsertFloatingNote,
 } from "../drizzle/schema.js";
 
@@ -105,18 +104,6 @@ export async function getAllTasksByUser(userId: number) {
   return db.select().from(tasks).where(eq(tasks.userId, userId)).orderBy(tasks.sortOrder);
 }
 
-export async function replaceTasksByUser(userId: number, taskEntries: Omit<InsertTask, "userId">[]) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-
-  await db.transaction(async (tx) => {
-    await tx.delete(tasks).where(eq(tasks.userId, userId));
-    if (taskEntries.length > 0) {
-      await tx.insert(tasks).values(taskEntries.map((task) => ({ ...task, userId })));
-    }
-  });
-}
-
 export async function createTask(task: InsertTask) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -150,18 +137,6 @@ export async function getAllNotesByUser(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(notes).where(eq(notes.userId, userId)).orderBy(notes.sortOrder);
-}
-
-export async function replaceNotesByUser(userId: number, noteEntries: Omit<InsertNote, "userId">[]) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-
-  await db.transaction(async (tx) => {
-    await tx.delete(notes).where(eq(notes.userId, userId));
-    if (noteEntries.length > 0) {
-      await tx.insert(notes).values(noteEntries.map((note) => ({ ...note, userId })));
-    }
-  });
 }
 
 export async function createNote(note: InsertNote) {
@@ -319,29 +294,6 @@ export async function upsertAgendaWeekData(userId: number, weekStart: string, da
     .values({ userId, weekStart, data })
     .onConflictDoUpdate({
       target: [agendaWeekData.userId, agendaWeekData.weekStart],
-      set: { data, updatedAt: new Date() },
-    });
-}
-
-// ============== HOME DATA ==============
-
-
-export async function getHomeData(userId: number) {
-  const db = await getDb();
-  if (!db) return null;
-  const result = await db.select().from(homeData)
-    .where(eq(homeData.userId, userId))
-    .limit(1);
-  return result.length > 0 ? result[0] : null;
-}
-
-export async function upsertHomeData(userId: number, data: string) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(homeData)
-    .values({ userId, data })
-    .onConflictDoUpdate({
-      target: homeData.userId,
       set: { data, updatedAt: new Date() },
     });
 }

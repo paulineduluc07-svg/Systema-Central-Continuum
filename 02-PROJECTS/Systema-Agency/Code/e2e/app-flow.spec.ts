@@ -144,28 +144,6 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
           return ok({ success: true });
         }
 
-        case "migration.hasCloudData": {
-          return ok({ hasTasks: false, hasNotes: false, hasData: false });
-        }
-
-        case "migration.importTasks": {
-          const tasks = Array.isArray((input as { tasks?: unknown[] })?.tasks)
-            ? ((input as { tasks: unknown[] }).tasks.length)
-            : 0;
-          return ok({ success: true, imported: tasks });
-        }
-
-        case "migration.importNotes": {
-          const notes = Array.isArray((input as { notes?: unknown[] })?.notes)
-            ? ((input as { notes: unknown[] }).notes.length)
-            : 0;
-          return ok({ success: true, imported: notes });
-        }
-
-        case "migration.importPreferences": {
-          return ok({ success: true });
-        }
-
         case "promptVault.get": {
           if (!state.promptVaultData) return ok(null);
           return ok({ data: state.promptVaultData });
