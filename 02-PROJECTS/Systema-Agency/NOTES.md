@@ -17,7 +17,9 @@ Repères stables et décisions actives. Garder ce fichier court.
 - **Code source = clone UNIQUEMENT** (plus de copie `Code/` dans le Drive depuis 2026-06-09). Règle : **docs = Drive, code = clone**. Dev/build/test → toujours depuis le clone.
 - Base de donnees : Neon PostgreSQL partagee entre prod et dev local.
 - Plans/patchs agents : `RESSOURCES/AGENT_PLANS/`.
-- `NOTES_DE_PAULINE.md` reste personnel a Pauline et n'est pas expose via MCP.
+- **Canal Pauline ↔ agent = conversationnel** (décision 2026-06-10) : `NOTES_DE_PAULINE.md` et
+  `BRIEF_IA.md` supprimés — paw ne les utilisait pas, elle parle directement à l'agent
+  (Claude + mémoire Airtable). Codex/Gemini abandonnés pour le dev.
 
 ---
 
