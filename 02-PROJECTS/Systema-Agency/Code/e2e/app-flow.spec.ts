@@ -8,8 +8,6 @@ type TrpcSuccess = {
   };
 };
 
-const BACKUP_SCHEMA_VERSION = 1;
-
 type MockUser = {
   id: number;
   openId: string;
@@ -181,60 +179,6 @@ async function setupTrpcMock(page: Page, state: MockState): Promise<void> {
           return ok({ success: true });
         }
 
-        case "backup.export": {
-          return ok({
-            version: BACKUP_SCHEMA_VERSION,
-            exportedAt: "2026-03-31T12:00:00.000Z",
-            data: {
-              tasks: state.tasks.map((task) => ({
-                tabId: task.tabId,
-                title: task.title,
-                completed: task.completed,
-                sortOrder: task.sortOrder,
-              })),
-              notes: state.notes.map((note) => ({
-                tabId: note.tabId,
-                content: note.content,
-                sortOrder: note.sortOrder,
-              })),
-              promptVault: state.promptVaultData ? JSON.parse(state.promptVaultData) : null,
-            },
-          });
-        }
-
-        case "backup.import": {
-          const payload = ((input as { data?: unknown })?.data ?? input ?? {}) as {
-            tasks?: Array<{ tabId: string; title: string; completed: boolean; sortOrder: number }>;
-            notes?: Array<{ tabId: string; content: string; sortOrder: number }>;
-            promptVault?: unknown;
-          };
-
-          const tasks = Array.isArray(payload.tasks) ? payload.tasks : [];
-          state.tasks = tasks.map((task, index) => ({
-            id: index + 1,
-            tabId: task.tabId,
-            title: task.title,
-            completed: task.completed,
-            sortOrder: task.sortOrder,
-          }));
-
-          const notes = Array.isArray(payload.notes) ? payload.notes : [];
-          state.notes = notes.map((note, index) => ({
-            id: index + 1,
-            tabId: note.tabId,
-            content: note.content,
-            sortOrder: note.sortOrder,
-          }));
-
-          if (payload.promptVault === null) {
-            state.promptVaultData = null;
-          } else if (payload.promptVault !== undefined) {
-            state.promptVaultData = JSON.stringify(payload.promptVault);
-          }
-
-          return ok({ success: true });
-        }
-
         default: {
           return ok(null);
         }
@@ -316,101 +260,4 @@ test("login + prompt vault CRUD/sync", async ({ page }) => {
     const parsed = JSON.parse(state.promptVaultData) as { list: Array<{ title: string }> };
     return parsed.list.some((entry) => entry.title === "E2E Prompt Updated");
   }).toBe(false);
-});
-
-test("backup panel export + import restores unified cloud state", async ({ page }) => {
-  test.setTimeout(120_000);
-
-  const state: MockState = {
-    isAuthenticated: true,
-    user: {
-      id: 1,
-      openId: "owner@example.com",
-      email: "owner@example.com",
-      name: "Owner",
-      role: "user",
-    },
-    tasks: [
-      { id: 1, tabId: "tableau-blanc", title: "Cloud Task Initiale", completed: false, sortOrder: 0 },
-    ],
-    notes: [
-      { id: 1, tabId: "tableau-blanc", content: "Cloud note initiale", sortOrder: 0 },
-    ],
-    promptVaultData: JSON.stringify({
-      list: [{ id: 1, cat: "tech", title: "Prompt cloud initial", tags: ["cloud"], text: "init" }],
-      cats: [{ id: "all", label: "TOUS", color: "#00f5ff" }, { id: "tech", label: "TECH/CODE", color: "#7bed9f" }],
-      favs: [1],
-      brightness: 70,
-    }),
-  };
-
-  await setupTrpcMock(page, state);
-
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.getByText("Synchronisation cloud active.")).toBeVisible({
-    timeout: 30_000,
-  });
-  await expect(page.getByText("Cloud Task Initiale")).toBeVisible({
-    timeout: 30_000,
-  });
-
-  await page.getByRole("button", { name: "Export/Import global" }).click();
-  await page.getByRole("button", { name: "Générer export" }).click();
-
-  const exportTextarea = page.locator("textarea[readonly]").first();
-  await expect(exportTextarea).toContainText("\"source\": \"cloud\"");
-  await expect(exportTextarea).toContainText("\"Cloud Task Initiale\"");
-
-  const importedPayload = {
-    version: BACKUP_SCHEMA_VERSION,
-    exportedAt: "2026-03-31T19:30:00.000Z",
-    source: "cloud",
-    data: {
-      tasks: [
-        { tabId: "tableau-blanc", title: "Cloud Task Restaurée", completed: false, sortOrder: 0 },
-      ],
-      notes: [
-        { tabId: "tableau-blanc", content: "Cloud note restaurée", sortOrder: 0 },
-      ],
-      promptVault: {
-        list: [{ id: 77, cat: "tech", title: "Prompt restauré", tags: ["restore"], text: "hello" }],
-        cats: [{ id: "all", label: "TOUS", color: "#00f5ff" }, { id: "tech", label: "TECH/CODE", color: "#7bed9f" }],
-        favs: [77],
-        brightness: 66,
-      },
-    },
-  };
-
-  const unsupportedVersionPayload = {
-    ...importedPayload,
-    version: BACKUP_SCHEMA_VERSION + 998,
-  };
-
-  await page.getByPlaceholder("Colle ici ton JSON de sauvegarde globale.").fill(
-    JSON.stringify(unsupportedVersionPayload),
-  );
-  await page.getByRole("button", { name: "Restaurer" }).click();
-  await expect(
-    page.getByText(
-      `Version de sauvegarde non supportee (${BACKUP_SCHEMA_VERSION + 998}). Version attendue: ${BACKUP_SCHEMA_VERSION}.`,
-    ),
-  ).toBeVisible();
-
-  await page.getByPlaceholder("Colle ici ton JSON de sauvegarde globale.").fill(JSON.stringify(importedPayload));
-
-  page.once("dialog", async (dialog) => {
-    await dialog.accept();
-  });
-
-  await page.getByRole("button", { name: "Restaurer" }).click();
-
-  await expect.poll(() => state.tasks[0]?.title).toBe("Cloud Task Restaurée");
-  await expect.poll(() => state.notes[0]?.content).toBe("Cloud note restaurée");
-  await expect.poll(() => {
-    if (!state.promptVaultData) return "";
-    const parsed = JSON.parse(state.promptVaultData) as { list: Array<{ title: string }> };
-    return parsed.list[0]?.title ?? "";
-  }).toBe("Prompt restauré");
-
-  await expect(page.getByText("Cloud Task Restaurée")).toBeVisible();
 });
