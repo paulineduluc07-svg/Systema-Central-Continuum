@@ -91,12 +91,14 @@ Dans `02-PROJECTS/Systema-Agency/Assets/SECRETS*.md` (gitignored, ne jamais comm
 Une fois `node_modules` propre et `.env` rempli :
 
 ```powershell
-cd "C:\Users\pauli\Mon disque\SCC\02-PROJECTS\Systema-Agency\Code"
+cd "C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code"
 pnpm dev
 ```
 
-Sortie attendue : Vite démarre, le serveur Express écoute (port 5000 par défaut, ou
-celui défini dans `PORT`). Ouvrir `http://localhost:5000/` dans le navigateur.
+> Règle : le code vit dans le **clone** (`SCC-github-clone`), jamais dans le Drive.
+
+Sortie attendue : Vite démarre, le serveur Express écoute (port 3000 par défaut, ou
+celui défini dans `PORT`). Ouvrir `http://localhost:3000/` dans le navigateur.
 
 ### Scripts disponibles (rappel)
 
@@ -138,15 +140,15 @@ Si on veut juste **voir le rendu visuel** d'une page sans démarrer Vite/Express
 dans `client/public/preview-*.html` qui mime la page React en HTML+CSS pur, et
 l'ouvrir directement dans le navigateur via `file://`.
 
-C'est ce qui a été fait pour valider visuellement HomeV2 le 2026-04-24 — voir
-`client/public/preview-v2.html` (ne pas push vers prod, fichier de debug local).
+(Exemple historique : validation visuelle de l'ancienne page HomeV2 le 2026-04-24,
+page supprimée depuis — 2026-06-10.)
 
 ---
 
 ## 6. Déploiement (rappel)
 
-Le déploiement Vercel est **automatique sur push vers `main`** (GitHub Actions →
-Vercel). Pas besoin de commande locale, pas besoin de dev server local pour pusher.
+Le déploiement Vercel est **automatique sur push vers `main`** (intégration Git
+Vercel↔GitHub, pas GitHub Actions). Pas besoin de commande locale pour déployer.
 
 URL prod : `https://systema-agency.vercel.app` (et alias `systema.enterprises`).
 

@@ -1,5 +1,7 @@
 # Patch — Afficher les customTabs dans la navigation principale
 
+**Statut** : done (implémenté et déployé — customTabs visibles dans la nav, pages /tab/:tabId)
+
 **Projet** : `02-PROJECTS/Systema-Agency`
 **Suite de** : `PLAN_CLAUDE_CODE_MCP_WRITE.md` + `PATCH_CLAUDE_CODE_MCP_QUERY_SECRET.md` (déjà implémentés et déployés)
 

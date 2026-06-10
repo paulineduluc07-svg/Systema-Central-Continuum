@@ -36,6 +36,8 @@ Systema-Agency/            (Drive = docs ; le CODE vit dans le clone Git)
 ├── STACK.md               # Carte du stack technique
 ├── Assets/                # Secrets, assets, médias
 ├── RESSOURCES/            # Documentation technique et plans agents
-└── Livrables/             # Documents finaux et exports
+├── Livrables/             # Documents finaux et exports
+├── AUDIT/                 # Carnets d'audit (juin 2026) + liste maître des corrections
+└── Archives/              # (clone/GitHub) Pages supprimées et code archivé
 ```
 > Code source : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency\Code` (clone Git, déploie sur Vercel). Plus de copie `Code/` dans le Drive depuis 2026-06-09.

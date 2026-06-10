@@ -1,7 +1,13 @@
 import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
-import { InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences } from "../drizzle/schema.js";
+import {
+  InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences,
+  customTabs, canvasData, InsertCustomTab, InsertCanvasData,
+  agendaWeekData, promptVaultData,
+  homeData,
+  floatingNotes, InsertFloatingNote,
+} from "../drizzle/schema.js";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -199,7 +205,6 @@ export async function upsertUserPreferences(userId: number, prefs: Partial<Inser
 
 // ============== CUSTOM TABS ==============
 
-import { customTabs, canvasData, InsertCustomTab, InsertCanvasData } from "../drizzle/schema.js";
 
 export async function getCustomTabsByUser(userId: number) {
   const db = await getDb();
@@ -269,7 +274,6 @@ export async function deleteCanvasData(userId: number, tabId: string) {
 
 // ============== PROMPT VAULT ==============
 
-import { agendaWeekData, promptVaultData } from "../drizzle/schema.js";
 
 export async function getPromptVaultData(userId: number) {
   const db = await getDb();
@@ -321,7 +325,6 @@ export async function upsertAgendaWeekData(userId: number, weekStart: string, da
 
 // ============== HOME DATA ==============
 
-import { homeData } from "../drizzle/schema.js";
 
 export async function getHomeData(userId: number) {
   const db = await getDb();
@@ -345,7 +348,6 @@ export async function upsertHomeData(userId: number, data: string) {
 
 // ============== FLOATING NOTES ==============
 
-import { floatingNotes, InsertFloatingNote } from "../drizzle/schema.js";
 
 export async function listActiveFloatingNotes(userId: number) {
   const db = await getDb();
