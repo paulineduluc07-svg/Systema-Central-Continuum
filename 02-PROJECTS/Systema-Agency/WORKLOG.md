@@ -8,6 +8,19 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-06-10 (3ᵉ session) - Home Dollhouse Y2K livrée + fix date Cosmos
+
+- **Fix bug rapporté par paw** : `new Date()` figé au montage de `Cosmos.tsx` — page ouverte passé minuit = cartes sur la veille. Hook `useAujourdhui` (vérif chaque minute + retour d'onglet), extrait ensuite dans `hooks/useAujourdhui.ts` (partagé Cosmos + Home).
+- **Carte Tarot du jour** : construite (tirage déterministe seedé par la date) puis **retirée à la demande de paw** (Cosmos jugé surchargé) — commits `ef5727b` + revert `15ee20b`, code récupérable dans l'historique.
+- **Nouvelle page d'accueil `/` = Dollhouse Y2K** (commit `bcbb22f`) : portée du handoff `RESSOURCES/AGENT_PLANS/design_handoff_home_dollhouse` (export AI Studio). Agenda panorama + objectifs branchés aux VRAIES données (`lib/agendaWeek.ts` extrait de `Agenda.tsx`, partagé entre les 2 pages), post-it « priorités célestes » = tâches tab `home-priorites`. Jouets déco : flip phone, tamagotchi, music player, papillons. Restes de boutique du template jetés.
+- **Home v2** (commit `61a2fb5`) : bandeau métrique du bas supprimé ; **Briefing du jour déménagé du Cosmos au centre de la Home** (`OracleBriefing`, `BriefingCard` supprimé) ; écriture depuis le panorama (＋ événement par jour, × retrait, titres objectifs éditables, ajout d'items) ; fenêtre « new message » = **courrier** : affiche la note la plus récente du tab `home-courrier` (l'agent quotidien écrira via `create_note` MCP existant).
+- **Navbar 5 pastilles** : Accueil → `/` (le href `/v2` fossile causait un 404 à chaque clic — réparé), ✨ Cosmos → `/cosmos`, Notes, Agenda, Vault. `/v1` et `/v2` redirigent vers `/`.
+- 4 commits poussés (`ef5727b`, `15ee20b`, `bcbb22f`, `61a2fb5`), CI verte, vérifié tsc + 26 tests + build à chaque étape.
+
+Prochaine étape : **agent courrier quotidien** (lit Gmail → dépose le résumé dans `home-courrier`) + **images dans le Prompt Vault**.
+
+---
+
 ## 2026-06-10 (2ᵉ session) - Les 3 dernières décisions tranchées → AUDIT JUIN CLOS
 
 - **CI activée pour vrai** (commit `779e64b`) : `ci-pr.yml` déplacé de `Code/.github/` vers `.github/workflows/` racine, déclencheur `push` sur main ajouté (paw pushe sans PR — l'ancien trigger PR-only n'aurait jamais tourné), Node 20→24. **Premier run de l'histoire du repo : vert en 42 s** ; verte sur les 3 pushes de la session.

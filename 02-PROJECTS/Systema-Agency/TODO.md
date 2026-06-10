@@ -46,7 +46,7 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - _(Historique — cette home V4 vivait sur `/v2`, supplantée par le Cosmos ; page supprimée le 2026-06-10)_ Home `/` remplacee par le dashboard V4 modifie : navbar home retiree, logo agrandi, pastilles holo utilisees comme navigation interne, raccourcis reserves aux sites web, news allongees, projets allonges, agenda/stat/greeting/search retires.
 - Home dashboard dynamique livre (PR `e4782c5`) : raccourcis editables, meteo reelle, news/projets via MCP, persistes dans la table `home_data`.
 - Home background 05-06 applique globalement : image immersive commune, home alignee sur le modele Pauline avec 3 panneaux glassmorphism et decorations PNG.
-- **Page d'accueil `/` = dashboard cosmos « meteo cosmique & biologique »** (9 cartes reelles React/TS, validees vs Python). Deploye et live le 2026-06-06 (commits `86427a9`, `b2d9382`).
+- **Page d'accueil `/` = Home Dollhouse Y2K** depuis 2026-06-10 (commits `bcbb22f`, `61a2fb5`) : panorama agenda + objectifs (données réelles partagées avec `/agenda`), post-it tâches, briefing du jour, courrier agent, jouets déco. Le cosmos vit sur `/cosmos` (pastille ✨).
 
 ---
 
@@ -60,11 +60,17 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 
 ## Prochaines passes
 
-### Dashboard cosmos (page d'accueil `/`)
+### Home Dollhouse Y2K (page d'accueil `/`)
 
-- [x] Porter les 10 cartes Flask en React/TS, validees chiffre/chiffre vs Python. — 2026-06-06
-- [x] Remplacer skyfield par `astronomy-engine`, look Sanctuary, deploiement Vercel. — 2026-06-06
-- [ ] Cartes encore toc a rendre reelles (optionnel) : 🐣 tamagotchi, 🌟 oracle, 🔮 tarot.
+- [x] Porter le handoff `design_handoff_home_dollhouse` : page + données réelles (agenda partagé, post-it tâches, briefing). — 2026-06-10
+- [x] Écriture depuis la Home (événements ＋/×, objectifs éditables) + vérif tools MCP. — 2026-06-10
+- [ ] **Agent courrier quotidien** : lit les Gmail importants → dépose le résumé dans le tab `home-courrier` (via MCP `create_note`). _Le widget est prêt à recevoir._
+
+### Dashboard cosmos (`/cosmos`)
+
+- [x] Porter les cartes Flask en React/TS, validees chiffre/chiffre vs Python. — 2026-06-06
+- [x] Fix date figée : hook `useAujourdhui` (minuit + retour d'onglet). — 2026-06-10
+- [x] ~~Carte tarot~~ — construite puis retirée (page jugée surchargée, décision paw 2026-06-10). Code dans l'historique (`ef5727b`).
 - [ ] Quand les regles de Paw arrivent : cliquer « mes regles ont commence aujourd'hui » sur la carte Cycle (ancre `cycle_jour1`).
 
 ### Home dashboard
@@ -98,7 +104,7 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 
 ### Prompt Vault
 
-- [ ] Ajouter les images associees aux prompts.
+- [ ] **Ajouter les images associees aux prompts.** _(prochaine session, avec l'agent courrier)_
 
 ### Plus tard
 

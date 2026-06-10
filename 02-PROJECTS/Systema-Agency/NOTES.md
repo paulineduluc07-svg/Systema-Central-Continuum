@@ -10,7 +10,8 @@ Repères stables et décisions actives. Garder ce fichier court.
 ## Etat actuel
 
 - Production : `https://systema-agency.vercel.app`.
-- **Page d'accueil `/` = dashboard cosmos depuis 2026-06-06** (porte de L'Ecosysteme holistique en React/TS, deploye, confirme live). Cerveaux dans `client/src/lib/cosmos/*.ts`, composants `client/src/components/cosmos/`. Cycle persiste via colonne `cycle_jour1` sur `user_preferences`. Carnet : `CARNET-REACT.md`.
+- **Page d'accueil `/` = Home Dollhouse Y2K depuis 2026-06-10** (portée du handoff `design_handoff_home_dollhouse`, composants `client/src/components/home/`). Agenda panorama + objectifs = vraies données (`lib/agendaWeek.ts`, partagé avec `/agenda`), post-it = tâches tab `home-priorites`, courrier 💌 = note la plus récente du tab `home-courrier`, briefing du jour au centre (`OracleBriefing`).
+- **Dashboard cosmos sur `/cosmos` depuis 2026-06-10** (porte de L'Ecosysteme holistique en React/TS ; son briefing vit maintenant sur la Home). Cerveaux dans `client/src/lib/cosmos/*.ts`, composants `client/src/components/cosmos/`. Cycle persiste via colonne `cycle_jour1` sur `user_preferences`. Date vivante via `hooks/useAujourdhui.ts`. Carnet : `CARNET-REACT.md`.
 - Alias existant : `https://systema.enterprises`; URL d'usage recommandee : `systema-agency.vercel.app`.
 - Source SCC : `C:\Users\pauli\Mon disque\SCC\02-PROJECTS\Systema-Agency`.
 - Clone Git/build/test : `C:\Users\pauli\SCC-github-clone\02-PROJECTS\Systema-Agency`.
@@ -27,14 +28,15 @@ Repères stables et décisions actives. Garder ce fichier court.
 
 | Route | Role | Navbar |
 |---|---|---|
-| `/` | Dashboard cosmos « meteo cosmique & biologique » (9 cartes reelles) | Brand |
+| `/` | Home Dollhouse Y2K (panorama agenda, objectifs, post-it, briefing, courrier, jouets) | Oui (Accueil) |
+| `/cosmos` | Dashboard cosmos « meteo cosmique & biologique » (8 cartes reelles) | Oui (✨) |
 | `/notes` | Notes volantes | Oui |
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
 | `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
 | `/mcp` | Serveur MCP docs + writes proteges | Non |
 
-_(Pages legacy `/v1` et `/v2` supprimées le 2026-06-10 — historique dans git.)_
+_(Pages legacy `/v1` et `/v2` supprimées le 2026-06-10 ; leurs URLs redirigent vers `/`.)_
 
 ---
 
@@ -53,13 +55,21 @@ Repères de panne :
 
 ---
 
-## Home dashboard — section close (2026-06-10)
+## Home Dollhouse Y2K (`/`, depuis 2026-06-10)
 
-- La home actuelle est le **Cosmos** (`/`, voir « Etat actuel »).
-- L'ancienne home V4 (`/v2`), la page d'origine (`/v1`) et tout le backend `home_data`
-  (table, router tRPC `home`, tools MCP `get/set_home_*`) ont été supprimés le 2026-06-10.
+- Composants : `client/src/components/home/` ; styles scopés `.home-root` (`home.css`).
+- **Données réelles** : panorama + objectifs lisent/écrivent la MÊME semaine que `/agenda`
+  (`lib/agendaWeek.ts` — même clé localStorage, même tRPC `agenda.get/save`).
+  Post-it = `useSyncedTasks("home-priorites")`. Courrier 💌 = note la plus récente de
+  `useSyncedNotes("home-courrier")` — **l'agent quotidien Gmail écrira là via MCP `create_note`**.
+- **Déco assumée** (pas de backend) : flip phone, papillons, tamagotchi, music player (playlist SoundHelix).
+- Écriture agents MCP : `add_agenda_event`, `remove_agenda_event`, `set_agenda_goals`,
+  `create_task` (tab `home-priorites`), `create_note` (tab `home-courrier`).
+
+### Historique home (sections closes)
+
+- Anciennes home V4 (`/v2`), page d'origine (`/v1`) et backend `home_data` supprimés le 2026-06-10 (matin) ; `/v1`/`/v2` redirigent vers `/` depuis le soir même.
 - La table `home_data` existe encore dans Neon (code n'y touche plus) — `DROP TABLE` manuel optionnel.
-- Si un widget raccourcis/news revient un jour : rebâtir pour le besoin du moment, historique dans git.
 
 ---
 
