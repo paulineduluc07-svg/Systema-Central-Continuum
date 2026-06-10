@@ -1,12 +1,18 @@
-name: CI PR
+name: CI Systema
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "02-PROJECTS/Systema-Agency/**"
+      - ".github/workflows/ci-pr.yml"
   pull_request:
     branches:
       - main
     paths:
       - "02-PROJECTS/Systema-Agency/**"
-      - "02-PROJECTS/Systema-Agency/Code/.github/workflows/ci-pr.yml"
+      - ".github/workflows/ci-pr.yml"
   workflow_dispatch:
 
 permissions:
@@ -33,7 +39,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
           cache-dependency-path: 02-PROJECTS/Systema-Agency/Code/pnpm-lock.yaml
 
