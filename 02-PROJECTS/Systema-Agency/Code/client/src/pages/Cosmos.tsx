@@ -5,8 +5,7 @@
 // navbar avec pt-28.
 
 import "../components/cosmos/cosmos.css";
-import { useEffect, useState } from "react";
-import { BriefingCard } from "@/components/cosmos/BriefingCard";
+import { useAujourdhui } from "@/hooks/useAujourdhui";
 import { AstroCard } from "@/components/cosmos/AstroCard";
 import { HumanDesignCard } from "@/components/cosmos/HumanDesignCard";
 import { LuneCard } from "@/components/cosmos/LuneCard";
@@ -15,28 +14,6 @@ import { BiorythmesCard } from "@/components/cosmos/BiorythmesCard";
 import { CycleCard } from "@/components/cosmos/CycleCard";
 import { EnergieCard } from "@/components/cosmos/EnergieCard";
 import { MatriceCard } from "@/components/cosmos/MatriceCard";
-
-/** Aujourd'hui, mais VIVANT : si la page reste ouverte passé minuit (onglet
- *  qui dort, PWA en arrière-plan), la date se rafraîchit toute seule —
- *  vérification chaque minute + au retour sur l'onglet. Sans ça, toutes les
- *  cartes restaient figées sur le jour du premier affichage. */
-function useAujourdhui(): Date {
-  const [jour, setJour] = useState(() => new Date());
-  useEffect(() => {
-    const verifie = () =>
-      setJour((avant) => {
-        const maintenant = new Date();
-        return maintenant.toDateString() === avant.toDateString() ? avant : maintenant;
-      });
-    const minuterie = setInterval(verifie, 60_000);
-    document.addEventListener("visibilitychange", verifie);
-    return () => {
-      clearInterval(minuterie);
-      document.removeEventListener("visibilitychange", verifie);
-    };
-  }, []);
-  return jour;
-}
 
 export default function Cosmos() {
   const aujourdhui = useAujourdhui();
@@ -54,11 +31,6 @@ export default function Cosmos() {
         <section>
           {/* Juste la date, discrète, en haut à droite */}
           <p className="cosmos-pixel mb-3 text-right text-sm capitalize text-pink-600">{dateLisible}</p>
-
-          {/* Le briefing du jour, en tête */}
-          <div className="mb-6">
-            <BriefingCard date={aujourdhui} />
-          </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <AstroCard date={aujourdhui} />

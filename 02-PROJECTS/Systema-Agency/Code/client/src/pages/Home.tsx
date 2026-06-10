@@ -12,11 +12,11 @@ import "../components/home/home.css";
 import { AgendaPanorama } from "@/components/home/AgendaPanorama";
 import { playClickSound } from "@/components/home/clickSound";
 import { MusicPlayer } from "@/components/home/MusicPlayer";
+import { OracleBriefing } from "@/components/home/OracleBriefing";
 import { QuickLinks } from "@/components/home/QuickLinks";
 import { Tamagotchi } from "@/components/home/Tamagotchi";
-import { useSyncedTasks } from "@/hooks/useSyncedData";
+import { useSyncedNotes, useSyncedTasks } from "@/hooks/useSyncedData";
 import { AnimatePresence, motion } from "framer-motion";
-import { Globe, Heart, Monitor } from "lucide-react";
 import { useState } from "react";
 
 // Le post-it jaune « priorités célestes » — branché aux tâches synchronisées
@@ -87,9 +87,16 @@ function PostItPriorites() {
   );
 }
 
-// La fenêtre Windows 95 « new message! » (déco interactive).
+// La fenêtre « new message! » — le COURRIER de la Home.
+// Affiche la note la plus récente du tab « home-courrier » : c'est là qu'un
+// agent MCP dépose chaque jour le résumé des courriels importants
+// (tool existant create_note avec tabId "home-courrier").
 function NewMessageWindow() {
+  const { notes } = useSyncedNotes("home-courrier");
   const [showMessage, setShowMessage] = useState(true);
+
+  // La plus récente = l'id le plus grand (les notes s'ajoutent en fin).
+  const dernierMessage = notes.length > 0 ? notes.reduce((a, b) => (b.id > a.id ? b : a)) : null;
 
   const handleOk = () => {
     playClickSound();
@@ -118,12 +125,24 @@ function NewMessageWindow() {
           <div className="flex flex-grow flex-col justify-between gap-4 bg-white p-4 text-left">
             <div className="flex items-start gap-3">
               <span className="mt-0.5 shrink-0 animate-bounce text-3xl drop-shadow-sm select-none">💖</span>
-              <div className="space-y-1">
-                <p className="font-mono text-xs font-bold tracking-wide text-gray-800 uppercase">system notification :</p>
-                <p className="font-mono text-xs font-extrabold text-[#e85d97]">(1) new message received</p>
-                <p className="home-serif mt-2 text-xs leading-relaxed text-gray-500 italic">
-                  Le sanctuaire de l'esprit est ouvert. Préparez-vous à recevoir la guidance du jour...
-                </p>
+              <div className="min-w-0 space-y-1">
+                <p className="font-mono text-xs font-bold tracking-wide text-gray-800 uppercase">courrier du jour :</p>
+                {dernierMessage ? (
+                  <>
+                    <p className="font-mono text-xs font-extrabold text-[#e85d97]">(1) new message received</p>
+                    <p className="mt-2 max-h-44 overflow-y-auto text-xs leading-relaxed whitespace-pre-wrap text-gray-700">
+                      {dernierMessage.content}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-mono text-xs font-extrabold text-[#e85d97]">(0) new message</p>
+                    <p className="home-serif mt-2 text-xs leading-relaxed text-gray-500 italic">
+                      La boîte est vide pour l'instant — ton agent courrier déposera ici le résumé quotidien de tes
+                      emails importants...
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex justify-end pt-2">
@@ -190,42 +209,9 @@ export default function Home() {
             <QuickLinks />
           </aside>
 
-          {/* COLONNE CENTRE : l'oracle « clarté & esthétique » */}
+          {/* COLONNE CENTRE : le briefing du jour (déménagé du Cosmos) */}
           <main className="flex w-full flex-col lg:col-span-6">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-              <div className="relative overflow-hidden rounded-none border-[6px] border-black bg-white p-10 shadow-[6px_6px_0px_#FFB7C5] transition-all duration-300">
-                <div className="absolute top-2 right-4 animate-pulse text-lg text-pink-400 select-none">✨</div>
-                <div className="absolute bottom-6 left-2 rotate-12 text-sm text-rose-300 select-none">🦋</div>
-
-                <div className="mb-8 text-center">
-                  <h2 className="home-bubble text-3xl leading-none font-bold tracking-tight text-black lowercase md:text-4xl">
-                    clarté & esthétique
-                  </h2>
-                </div>
-
-                <div className="mx-auto max-w-2xl space-y-6">
-                  <p className="home-serif text-justify text-sm leading-relaxed text-gray-800 italic md:text-base">
-                    Dans la quête infinie de l'harmonie, chaque détail trouve sa raison d'être. Même dans un récit
-                    poétique ou un texte long, on utilise des{" "}
-                    <span className="border-b-2 border-[#FFB7C5] pb-0.5 font-extrabold text-black not-italic">lettrines</span>{" "}
-                    ornementées pour guider le regard, offrant une respiration visuelle au milieu du tumulte numérique.
-                  </p>
-                  <p className="home-serif text-justify text-sm leading-relaxed text-gray-800 italic md:text-base">
-                    C'est un havre pour l'esprit fatigué des écrans, qui se retrouve parfois réduit à l'état de veille
-                    critique avec seulement un faible{" "}
-                    <span className="rounded-sm bg-[#FFB7C5]/30 px-1.5 py-0.5 font-black text-[#FF69B4] not-italic">(1% physique)</span>{" "}
-                    d'énergie disponible. Face à cette limite, la pureté du design et la sobriété des espaces vides
-                    redonnent vie à l'imagination, créant un sanctuaire intemporel habillé de pastel et de poésie.
-                  </p>
-                </div>
-
-                <div className="mt-12 border-t border-gray-100 pt-6 text-center select-none">
-                  <span className="home-pixel animate-pulse text-xs tracking-widest text-[#FF69B4] uppercase md:text-sm">
-                    ⋆ COSMIC FREQUENCY ⋆
-                  </span>
-                </div>
-              </div>
-            </motion.div>
+            <OracleBriefing />
           </main>
 
           {/* COLONNE DROITE : new message + music player + tamagotchi */}
@@ -238,44 +224,9 @@ export default function Home() {
           </aside>
         </div>
 
-        {/* BANDEAU MÉTRIQUE DU BAS */}
-        <div className="mt-12 space-y-6">
-          <div className="flex flex-col items-center justify-around gap-6 border-[3px] border-black bg-gradient-to-r from-[#ffe5ec] via-[#f0f4ff] to-[#e8fff5] p-4 shadow-[4px_4px_0px_#000000] md:flex-row md:p-6">
-            <div className="flex items-center gap-3.5 text-left">
-              <div className="flex items-center justify-center rounded-sm border-2 border-black bg-white p-2 shadow-[2px_2px_0px_#000]">
-                <Monitor className="h-5 w-5 text-indigo-500" />
-              </div>
-              <div>
-                <h4 className="home-bubble text-xs font-extrabold tracking-wider text-black uppercase">fast processing</h4>
-                <p className="font-mono text-[9px] tracking-widest text-gray-500 uppercase">cognitive core</p>
-              </div>
-            </div>
-            <div className="hidden h-1.5 w-1.5 rounded-full bg-black md:block" />
-            <div className="flex items-center gap-3.5 text-left">
-              <div className="flex animate-pulse items-center justify-center rounded-sm border-2 border-black bg-white p-2 shadow-[2px_2px_0px_#000]">
-                <Heart className="h-5 w-5 fill-pink-500/20 text-pink-500" />
-              </div>
-              <div>
-                <h4 className="home-bubble text-xs font-extrabold tracking-wider text-black uppercase">cognitive balance</h4>
-                <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">mindful state</p>
-              </div>
-            </div>
-            <div className="hidden h-1.5 w-1.5 rounded-full bg-black md:block" />
-            <div className="flex items-center gap-3.5 text-left">
-              <div className="flex items-center justify-center rounded-sm border-2 border-black bg-white p-2 shadow-[2px_2px_0px_#000]">
-                <Globe className="h-5 w-5 text-emerald-500" />
-              </div>
-              <div>
-                <h4 className="home-bubble text-xs font-extrabold tracking-wider text-black uppercase">secure data</h4>
-                <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">encyclical storage</p>
-              </div>
-            </div>
-          </div>
-
-          <footer className="pt-4 pb-4 text-center font-mono text-[10px] text-gray-400 select-none">
-            <p>© 2006-2026 systema agency • celestial oracle • good vibes only</p>
-          </footer>
-        </div>
+        <footer className="mt-12 pt-4 pb-4 text-center font-mono text-[10px] text-gray-400 select-none">
+          <p>© 2006-2026 systema agency • celestial oracle • good vibes only</p>
+        </footer>
       </div>
     </div>
   );
