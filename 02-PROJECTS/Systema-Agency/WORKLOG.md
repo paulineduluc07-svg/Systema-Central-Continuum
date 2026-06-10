@@ -8,6 +8,17 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-06-10 (2ᵉ session) - Les 3 dernières décisions tranchées → AUDIT JUIN CLOS
+
+- **CI activée pour vrai** (commit `779e64b`) : `ci-pr.yml` déplacé de `Code/.github/` vers `.github/workflows/` racine, déclencheur `push` sur main ajouté (paw pushe sans PR — l'ancien trigger PR-only n'aurait jamais tourné), Node 20→24. **Premier run de l'histoire du repo : vert en 42 s** ; verte sur les 3 pushes de la session.
+- **Page legacy `/v1` `Home.tsx` supprimée** (commit `c6b5b23`, **−1203 lignes**) : la toute première page du projet. Avec elle : `GlobalBackupPanel` (UI export/import, que sur /v1), `useDataMigration` (migration localStorage→DB finie), test e2e du panneau. Tes données et pages vivantes intactes.
+- **3 backends orphelins retirés** (commit `4f37b79`, **−737 lignes**) : `home_data` (4 tools MCP `get/set_home_*`, router tRPC `home`, helpers db, table drizzle, migration 0007 + script), `backup` (router export/import + schemas + const + helpers + test), `migration` (router + test + mocks e2e). Tests 33→26 (les 7 retirés testaient les routers morts). tsc/tests/build verts à chaque étape, CI verte derrière.
+- ⚠️ Reste : table `home_data` encore dans Neon (le code n'y touche plus) — `DROP TABLE home_data;` manuel optionnel (option A).
+
+Statut : **audit juin 2026 terminé à 100%** (hors décisions mineures volontairement laissées : BRIEF_IA versionné ou non, items 🔵). Prochaine étape : mise à jour finale de STACK.md (faite dans la foulée) ; ensuite, place aux features.
+
+---
+
 ## 2026-06-10 - Réparations P4 fin + P5 + ménage final (audit terminé)
 
 - **P4 fin** : page legacy `HomeV2.tsx` (`/v2`) supprimée (commit `c77cd30`) ; 9 branches mortes supprimées après vérification (`cleanup/dead-code` était 100% redondante avec P3) — il ne reste que `main`.

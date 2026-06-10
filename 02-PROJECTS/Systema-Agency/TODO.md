@@ -26,7 +26,10 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - [x] **P4 — GitHub** : docs propagées Drive→clone, push `main`, repo resté PUBLIC (décision), HomeV2 `/v2` supprimée, 9 branches mortes supprimées (il ne reste que `main`), `.gitignore` global notes perso. (2026-06-09 → 2026-06-10)
 - [x] **P5 — Migrations + workflow DB** : option A actée — pas de migrations automatiques (`schema.ts` = source de vérité + SQL manuel). `db-push.yml` + script `db:push` supprimés, `relations.ts` supprimé, migration orpheline archivée. Commit `b88db68`. (2026-06-10)
 - [ ] (Reporté — décision 2026-06-10 : URL MCP publique gardée telle quelle) Fuite lecture MCP.
-- [ ] **Reste du ménage** (détail : `CORRECTIONS_A_FAIRE.md` G4-G7) : page `/v1` à clarifier, `.env.example` OpenAI, CI `ci-pr.yml` jamais exécutée (mauvais emplacement), docs racine, rangement AGENT_PLANS.
+- [x] **Reste du ménage terminé** (2026-06-10, 2ᵉ session — détail : `CORRECTIONS_A_FAIRE.md`) :
+  CI activée pour vrai (racine + trigger push, verte), page `/v1` supprimée (−1203 lignes),
+  3 backends orphelins retirés (`home_data`/MCP home, `backup`, `migration`, −737 lignes).
+  **→ AUDIT JUIN 2026 CLOS.** Reste optionnel : `DROP TABLE home_data;` manuel dans Neon.
 
 ---
 
@@ -70,14 +73,13 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - [x] Passer les pastilles holo en boutons vers les pages Systema et reserver les raccourcis aux sites web.
 - [x] Raccourcis editables, meteo reelle, news/projets dynamiques via MCP livres (table `home_data` migree).
 - [x] Appliquer le background global `background-05-06.png` et reproduire la structure du modele `homepage` : barre haute, bulles nav, 3 panneaux, decorations.
-- [ ] Configurer les vrais liens web dans les raccourcis cote UI (saisie utilisateur).
-- [ ] Verifier que le flux MCP news/projets repond bien en prod une fois Cowork branche.
+- _(Section close 2026-06-10 : home V4 et backend `home_data`/tools MCP home supprimés — le Cosmos est la home. Si un widget news/raccourcis revient un jour, on le rebâtira pour le vrai besoin.)_
 
 ### Agenda
 
 - [ ] Ajouter un editeur detail evenement : heure, titre, couleur, suppression.
 - [ ] Ajouter une adaptation mobile complete pour `/agenda`.
-- [ ] Inclure les donnees Agenda dans le backup/export global si necessaire.
+- ~~Inclure les donnees Agenda dans le backup/export global~~ _(obsolète : backup export/import supprimé le 2026-06-10)_
 
 ### Notes volantes
 

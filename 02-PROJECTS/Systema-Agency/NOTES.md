@@ -30,8 +30,9 @@ Repères stables et décisions actives. Garder ce fichier court.
 | `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
 | `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
-| `/v1` | Ancienne home | Non |
 | `/mcp` | Serveur MCP docs + writes proteges | Non |
+
+_(Pages legacy `/v1` et `/v2` supprimées le 2026-06-10 — historique dans git.)_
 
 ---
 
@@ -50,15 +51,13 @@ Repères de panne :
 
 ---
 
-## Home dashboard
+## Home dashboard — section close (2026-06-10)
 
-- Page active : `/`.
-- Base visuelle : handoff `RESSOURCES/AGENT_PLANS/design_handoff_onebrain_v4/`, adaptee selon screenshot Pauline.
-- Elements retires du handoff : bloc OneBrain, greeting/date, recherche, notification, grosse meteo, stats, agenda.
-- Background global : `client/public/backgrounds/background-05-06.png`, applique centralement dans `MainLayout.tsx` avec `cover`, `center`, `no-repeat` et overlay leger.
-- Structure actuelle : navbar globale cachee sur `/`; la home utilise la barre/logo/heart presents dans le background, des bulles holo de navigation, puis 3 panneaux glassmorphism (raccourcis web, news, projets) avec decorations PNG de `client/public/homepage/`.
-- Donnees dynamiques : raccourcis editables, news/projets exposes via tools MCP. Persistance dans la table `home_data` (`userId` unique, JSON dans la colonne `data`).
-- Les raccourcis ne servent pas aux pages internes; ils sont reserves aux futurs sites web de Pauline.
+- La home actuelle est le **Cosmos** (`/`, voir « Etat actuel »).
+- L'ancienne home V4 (`/v2`), la page d'origine (`/v1`) et tout le backend `home_data`
+  (table, router tRPC `home`, tools MCP `get/set_home_*`) ont été supprimés le 2026-06-10.
+- La table `home_data` existe encore dans Neon (code n'y touche plus) — `DROP TABLE` manuel optionnel.
+- Si un widget raccourcis/news revient un jour : rebâtir pour le besoin du moment, historique dans git.
 
 ---
 
