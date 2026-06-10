@@ -88,15 +88,15 @@ Les `customTabs` crees via MCP sont rendus dans la navigation principale et ouvr
   - par defaut `SameSite=Lax`
   - cross-site explicite via `COOKIE_CROSS_SITE=true` (HTTPS uniquement)
 
-## Base de donnees et migration
+## Base de donnees (strategie assumee : pas de migrations automatiques)
 
-- Schema Drizzle: `drizzle/schema.ts`
-- Migrations SQL: `drizzle/*.sql`
-
-Appliquer les migrations:
-```bash
-pnpm drizzle-kit migrate
-```
+- **`drizzle/schema.ts` = source de verite** du schema.
+- Changement de schema = ecrire un fichier SQL manuel dans `drizzle/`, le relire,
+  puis l'appliquer volontairement sur la DB (Neon) — jamais via CI ni commande automatique.
+- Les fichiers `drizzle/000X_*.sql` existants = historique de ce qui a ete applique en prod.
+- `drizzle-kit generate`/`migrate` ne sont PAS utilises : le journal (`meta/_journal.json`)
+  ne connait que `0000` et ne reflete pas la prod. Si un jour le projet a besoin de vraies
+  migrations, reconstruire un baseline avec `drizzle-kit introspect` depuis la prod.
 
 ## Deploiement Vercel
 

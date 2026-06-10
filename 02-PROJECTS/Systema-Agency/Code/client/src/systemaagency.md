@@ -129,8 +129,8 @@ pnpm dev
 git add -A && git commit -m "message" && git push
 # → Vercel redéploie automatiquement
 
-# Base de données
-pnpm db:push
+# Base de données : pas de commande automatique
+# schema.ts = source de vérité ; changements = SQL manuel dans drizzle/, appliqué volontairement (voir Code/README.md)
 ```
 
 ---

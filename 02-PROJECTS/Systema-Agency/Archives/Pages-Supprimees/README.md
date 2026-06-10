@@ -10,6 +10,7 @@ Archivées le 2026-05-05 à la demande de Pauline.
 | `client/Suivi.tsx` | `client/src/pages/Suivi.tsx` | Page suivi de médication |
 | `server/kim-ai.ts` | `server/ai/kim.ts` | Logique backend de l'IA Kim |
 | `server/suivi.test.ts` | `server/suivi.test.ts` | Tests unitaires Suivi |
+| `drizzle/0001_suivi_entries.sql` | `Code/drizzle/0001_suivi_entries.sql` | Migration SQL de la table `suivi_entries` (archivée 2026-06-10 — table absente de `schema.ts`) |
 
 ## Ce qui a été retiré du code actif
 
@@ -19,7 +20,7 @@ Archivées le 2026-05-05 à la demande de Pauline.
 - Outils MCP `list_suivi` et `add_suivi_entry`
 - Toutes les références dans les fichiers de tests
 
-## Ce qui est conservé (infrastructure DB)
+## Infrastructure DB
 
-- Table `suiviEntries` dans drizzle/schema.ts (données préservées)
-- Fonctions DB dans server/db.ts (dormantes)
+- ~~Table `suiviEntries` dans drizzle/schema.ts~~ — retirée de `schema.ts`/`db.ts` depuis.
+  La table `suivi_entries` peut encore exister côté Neon (données préservées en DB), mais le code n'y touche plus.
