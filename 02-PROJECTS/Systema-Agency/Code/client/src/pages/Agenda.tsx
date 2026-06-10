@@ -1,46 +1,28 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import {
+  addDays,
+  clone,
+  DAYS,
+  dateFromIso,
+  dateToIso,
+  loadLocalWeek,
+  mondayOf,
+  normalizeWeekData,
+  storageKey,
+  type AccentKey,
+  type AgendaEvent,
+  type DayKey,
+  type Goal,
+  type Habit,
+  type WeekData,
+} from "@/lib/agendaWeek";
 import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-type AccentKey = "pink" | "violet" | "lavender" | "cyan" | "mint";
-type DayKey = "LUN" | "MAR" | "MER" | "JEU" | "VEN" | "SAM" | "DIM";
-
-type AgendaEvent = {
-  time: string;
-  title: string;
-  color: AccentKey;
-};
-
-type Goal = {
-  title: string;
-  accent: AccentKey;
-  items: { text: string; done: boolean }[];
-};
-
-type Habit = {
-  name: string;
-  grid: (0 | 1 | 2)[];
-  accent: AccentKey;
-};
-
-type WeekData = {
-  weekLabel: string;
-  events: Record<DayKey, AgendaEvent[]>;
-  goals: Goal[];
-  habitsA: Habit[];
-  habitsB: Habit[];
-  habitLabels: {
-    habitsA: string;
-    habitsB: string;
-  };
-};
-
-const DAYS: DayKey[] = ["LUN", "MAR", "MER", "JEU", "VEN", "SAM", "DIM"];
 const DAYS_FULL = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 const DAY_LETTERS = ["L", "M", "M", "J", "V", "S", "D"];
-const MONTHS = ["janv.", "fevr.", "mars", "avr.", "mai", "juin", "juil.", "aout", "sept.", "oct.", "nov.", "dec."];
 const ACCENT_HUES: Record<AccentKey, number> = {
   pink: 345,
   violet: 305,
@@ -49,162 +31,6 @@ const ACCENT_HUES: Record<AccentKey, number> = {
   mint: 155,
 };
 const ACCENT_ORDER: AccentKey[] = ["pink", "violet", "lavender", "cyan", "mint"];
-
-const emptyEvents = (): Record<DayKey, AgendaEvent[]> => ({
-  LUN: [],
-  MAR: [],
-  MER: [],
-  JEU: [],
-  VEN: [],
-  SAM: [],
-  DIM: [],
-});
-
-const defaultGoals = (): Goal[] => [
-  {
-    title: "",
-    accent: "pink",
-    items: [
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-    ],
-  },
-  {
-    title: "",
-    accent: "mint",
-    items: [
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-    ],
-  },
-  {
-    title: "",
-    accent: "violet",
-    items: [
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-      { text: "", done: false },
-    ],
-  },
-];
-
-const defaultHabitsA = (): Habit[] => [
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "pink" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "lavender" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "violet" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "cyan" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "mint" },
-];
-
-const defaultHabitsB = (): Habit[] => [
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "cyan" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "pink" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "violet" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "lavender" },
-  { name: "", grid: [0, 0, 0, 0, 0, 0, 0], accent: "mint" },
-];
-
-function clone<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
-function dateToIso(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function dateFromIso(value: string) {
-  const [year, month, day] = value.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
-function addDays(date: Date, days: number) {
-  const next = new Date(date);
-  next.setDate(next.getDate() + days);
-  return next;
-}
-
-function mondayOf(date: Date) {
-  const next = new Date(date);
-  next.setHours(0, 0, 0, 0);
-  const day = next.getDay();
-  const delta = day === 0 ? -6 : 1 - day;
-  next.setDate(next.getDate() + delta);
-  return next;
-}
-
-function formatDayLabel(date: Date) {
-  const day = date.getDate();
-  return day === 1 ? "1er" : String(day);
-}
-
-function formatWeekLabel(weekStart: string) {
-  const start = dateFromIso(weekStart);
-  const end = addDays(start, 6);
-  const startMonth = MONTHS[start.getMonth()];
-  const endMonth = MONTHS[end.getMonth()];
-  const startLabel = startMonth === endMonth ? formatDayLabel(start) : `${formatDayLabel(start)} ${startMonth}`;
-  return `${startLabel} - ${formatDayLabel(end)} ${endMonth}`;
-}
-
-function storageKey(weekStart: string) {
-  return `systema_agenda_week_${weekStart}`;
-}
-
-function createDefaultWeek(weekStart: string): WeekData {
-  return {
-    weekLabel: formatWeekLabel(weekStart),
-    events: emptyEvents(),
-    goals: defaultGoals(),
-    habitsA: defaultHabitsA(),
-    habitsB: defaultHabitsB(),
-    habitLabels: {
-      habitsA: "",
-      habitsB: "",
-    },
-  };
-}
-
-function normalizeWeekData(input: unknown, weekStart: string): WeekData {
-  const fallback = createDefaultWeek(weekStart);
-  if (!input || typeof input !== "object") return fallback;
-  const value = input as Partial<WeekData>;
-  return {
-    weekLabel: typeof value.weekLabel === "string" ? value.weekLabel : fallback.weekLabel,
-    events: { ...fallback.events, ...(value.events ?? {}) },
-    goals: Array.isArray(value.goals) ? value.goals.slice(0, 3) : fallback.goals,
-    habitsA: Array.isArray(value.habitsA) ? value.habitsA : fallback.habitsA,
-    habitsB: Array.isArray(value.habitsB) ? value.habitsB : fallback.habitsB,
-    habitLabels:
-      value.habitLabels && typeof value.habitLabels === "object"
-        ? {
-            habitsA: typeof value.habitLabels.habitsA === "string" ? value.habitLabels.habitsA : fallback.habitLabels.habitsA,
-            habitsB: typeof value.habitLabels.habitsB === "string" ? value.habitLabels.habitsB : fallback.habitLabels.habitsB,
-          }
-        : fallback.habitLabels,
-  };
-}
-
-function loadLocalWeek(weekStart: string) {
-  if (typeof window === "undefined") return createDefaultWeek(weekStart);
-  const raw = window.localStorage.getItem(storageKey(weekStart));
-  if (!raw) return createDefaultWeek(weekStart);
-  try {
-    return normalizeWeekData(JSON.parse(raw), weekStart);
-  } catch {
-    return createDefaultWeek(weekStart);
-  }
-}
 
 function nextAccent(accent: AccentKey) {
   const index = ACCENT_ORDER.indexOf(accent);

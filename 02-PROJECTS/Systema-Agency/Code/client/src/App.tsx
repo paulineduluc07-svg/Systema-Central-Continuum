@@ -3,12 +3,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Loader2 } from "lucide-react";
 import { lazy, Suspense } from "react";
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { GlobalSyncIndicator } from "./components/GlobalSyncIndicator";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import MainLayout from "./components/MainLayout";
 
+const Home = lazy(() => import("./pages/Home"));
 const Cosmos = lazy(() => import("./pages/Cosmos"));
 const PromptVault = lazy(() => import("./pages/PromptVault"));
 const FloatingNotes = lazy(() => import("./pages/FloatingNotes"));
@@ -34,8 +35,15 @@ function Router() {
     <MainLayout>
       <Suspense fallback={<RouteLoadingFallback />}>
         <Switch>
-          <Route path={"/"} component={Cosmos} />
+          <Route path={"/"} component={Home} />
           <Route path={"/cosmos"} component={Cosmos} />
+          {/* Anciennes adresses des pages d'accueil supprimées → retour maison */}
+          <Route path={"/v1"}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={"/v2"}>
+            <Redirect to="/" />
+          </Route>
           <Route path={"/prompt-vault"} component={PromptVault} />
           <Route path={"/notes"} component={FloatingNotes} />
           <Route path={"/agenda"} component={Agenda} />

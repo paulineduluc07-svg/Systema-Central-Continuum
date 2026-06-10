@@ -1,0 +1,102 @@
+/* home.css — le look « Dollhouse Y2K » de la page d'accueil.
+   Tout est scopé sous .home-root pour ne PAS déteindre sur le reste de Systema. */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=VT323&family=Architects+Daughter&family=Share+Tech+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+.home-root {
+  background-color: #fcecf3;
+  color: #111827;
+}
+
+/* Les polices signature du design */
+.home-pixel {
+  font-family: 'VT323', monospace;
+}
+.home-bubble {
+  font-family: 'Fredoka', sans-serif;
+}
+.home-cursive {
+  font-family: 'Architects Daughter', cursive;
+}
+.home-serif {
+  font-family: 'Playfair Display', serif;
+}
+.home-mono {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Fenêtres rétro Windows 95 (en couleurs cute) */
+.home-root .retro-window {
+  background-color: white;
+  border-top: 3px solid #ffffff;
+  border-left: 3px solid #ffffff;
+  border-right: 3px solid #cdcdcd;
+  border-bottom: 3px solid #cdcdcd;
+  box-shadow: 2px 2px 0px 0px #4d4d4d;
+}
+
+.home-root .retro-button {
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #4a4a4a;
+  border-bottom: 2px solid #4a4a4a;
+  background-color: #f7a1c4;
+  transition: all 0.1s ease;
+}
+
+.home-root .retro-button:active {
+  border-top: 2px solid #4a4a4a;
+  border-left: 2px solid #4a4a4a;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  transform: translate(1px, 1px);
+}
+
+/* Scanlines de l'écran LCD du tamagotchi */
+.home-root .scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.1) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+/* Décorations flottantes */
+@keyframes home-float-phone {
+  0%, 100% { transform: translateY(0px) rotate(6deg) scale(1); }
+  50% { transform: translateY(-15px) rotate(10deg) scale(1.03); }
+}
+@keyframes home-butterfly {
+  0%, 100% { transform: translate(0, 0) scaleX(1); }
+  50% { transform: translate(8px, -8px) scaleX(-1); }
+}
+@keyframes home-butterfly-alt {
+  0%, 100% { transform: translate(0, 0) scaleX(-1) rotate(-5deg); }
+  50% { transform: translate(-10px, -6px) scaleX(1) rotate(5deg); }
+}
+@keyframes home-sparkle {
+  0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.4; }
+  50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+}
+@keyframes home-eq-bounce {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+
+.home-root .animate-float-phone {
+  animation: home-float-phone 5.5s ease-in-out infinite;
+}
+.home-root .animate-butterfly {
+  animation: home-butterfly 4.5s ease-in-out infinite;
+}
+.home-root .animate-butterfly-alt {
+  animation: home-butterfly-alt 5s ease-in-out infinite;
+}
+.home-root .animate-sparkle {
+  animation: home-sparkle 3.5s ease-in-out infinite;
+}

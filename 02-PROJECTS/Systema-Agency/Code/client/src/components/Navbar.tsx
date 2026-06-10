@@ -8,6 +8,7 @@ import {
   Home,
   LogIn,
   LogOut,
+  Sparkles,
   StickyNote,
 } from "lucide-react";
 import type { ComponentType } from "react";
@@ -39,7 +40,8 @@ const PASTILLES: Array<{
   label: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
-  { href: "/v2", label: "Accueil (lanceur)", icon: Home },
+  { href: "/", label: "Accueil", icon: Home },
+  { href: "/cosmos", label: "Cosmos", icon: Sparkles },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
