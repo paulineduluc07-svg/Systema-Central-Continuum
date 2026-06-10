@@ -15,7 +15,6 @@ import { BiorythmesCard } from "@/components/cosmos/BiorythmesCard";
 import { CycleCard } from "@/components/cosmos/CycleCard";
 import { EnergieCard } from "@/components/cosmos/EnergieCard";
 import { MatriceCard } from "@/components/cosmos/MatriceCard";
-import { TarotCard } from "@/components/cosmos/TarotCard";
 
 /** Aujourd'hui, mais VIVANT : si la page reste ouverte passé minuit (onglet
  *  qui dort, PWA en arrière-plan), la date se rafraîchit toute seule —
@@ -62,7 +61,6 @@ export default function Cosmos() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <TarotCard date={aujourdhui} />
             <AstroCard date={aujourdhui} />
             <HumanDesignCard date={aujourdhui} />
             <LuneCard date={aujourdhui} />
