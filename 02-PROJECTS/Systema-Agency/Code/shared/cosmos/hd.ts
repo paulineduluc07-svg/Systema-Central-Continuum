@@ -7,14 +7,15 @@
 //   3) Les centres définis donnent le Type, l'Autorité, la Définition, le Profil.
 // -----------------------------------------------------------
 
-import {
-  Body,
-  GeoVector,
-  Rotation_EQJ_ECT,
-  RotateVector,
-  MakeTime,
-  type AstroTime,
-} from "astronomy-engine";
+import * as astronomyEngine from "astronomy-engine";
+import type { AstroTime } from "astronomy-engine";
+
+// Interop CJS/ESM : Vite, vitest et Node moderne chargent la build ESM du paquet
+// (exports nommés) ; le runtime Vercel charge la build CJS (tout sur `default`).
+// On déstructure depuis celui des deux qui existe — sinon ça crashe en prod (vu le 2026-06-11).
+const { Body, GeoVector, Rotation_EQJ_ECT, RotateVector, MakeTime } =
+  (astronomyEngine as { default?: typeof astronomyEngine }).default ?? astronomyEngine;
+type Body = import("astronomy-engine").Body;
 
 // Naissance : 9 février 1990, 14h45 à Montpellier → 13h45 UTC.
 const ANNEE = 1990;
