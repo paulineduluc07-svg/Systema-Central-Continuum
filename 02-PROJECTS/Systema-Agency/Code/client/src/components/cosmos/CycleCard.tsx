@@ -2,7 +2,7 @@
 // Mémorise le « Jour 1 » dans les préférences synchronisées (Neon) si connectée,
 // sinon en local. Tant qu'aucun Jour 1 → état « en attente ». Vrai pas toc.
 
-import { calculCycle } from "@/lib/cosmos/cycle";
+import { calculCycle } from "@shared/cosmos/cycle";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { useCallback, useState } from "react";
@@ -73,6 +73,8 @@ export function CycleCard({ date }: { date: Date }) {
   // ── État actif ──
   return (
     <CosmosCard
+      lectureSection="cycle"
+      lectureDate={date}
       emoji={cycle.phase.emoji}
       titre={cycle.phase.titre}
       tag="FLUX"
@@ -111,7 +113,6 @@ export function CycleCard({ date }: { date: Date }) {
       <p className="cosmos-pixel text-[10px] uppercase text-purple-700">
         énergie : {cycle.phase.energie}
       </p>
-      <p className="text-[11px] leading-snug">{cycle.phase.conseil}</p>
     </CosmosCard>
   );
 }

@@ -5,8 +5,16 @@ import { fileURLToPath } from "url";
 import { z } from "zod";
 import * as db from "../db.js";
 import { resolveMcpUserId } from "./auth.js";
+import { astro } from "../../shared/cosmos/astro.js";
+import { biorythmes } from "../../shared/cosmos/biorythmes.js";
+import { calculCycle, type Cycle } from "../../shared/cosmos/cycle.js";
+import { donneesHd } from "../../shared/cosmos/hd.js";
+import { phaseLunaire } from "../../shared/cosmos/lune.js";
+import { matrice } from "../../shared/cosmos/matrice.js";
+import { cheminDeVie, prochainsJours } from "../../shared/cosmos/numerologie.js";
+import { briefing } from "../../shared/cosmos/synthese.js";
 
-export const MCP_VERSION = "0.3.1";
+export const MCP_VERSION = "0.4.0";
 export const DOC_FILES = ["README.md", "TODO.md", "NOTES.md", "WORKLOG.md"] as const;
 export const WRITE_TOOL_NAMES = [
   "create_task",
@@ -28,6 +36,19 @@ export const WRITE_TOOL_NAMES = [
   "add_prompt",
   "update_prompt",
   "delete_prompt",
+  "set_cosmos_reading",
+] as const;
+
+export const COSMOS_SECTIONS = [
+  "astro",
+  "humanDesign",
+  "lune",
+  "numero",
+  "biorythmes",
+  "cycle",
+  "energie",
+  "matrice",
+  "synthese",
 ] as const;
 
 type DocFile = (typeof DOC_FILES)[number];
@@ -1026,6 +1047,178 @@ export function createSystemaMcpServer() {
       await db.upsertPromptVaultData(userId, JSON.stringify({ ...snap, list }));
       return jsonToolResult({ success: true });
     }
+  );
+
+  // ─── Cosmos ───────────────────────────────────────────────────────────────────
+
+  const cosmosSectionSchema = z.enum(COSMOS_SECTIONS);
+  const cosmosDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format YYYY-MM-DD");
+  const cosmosReadingEntrySchema = z.object({
+    titre: z.string().max(200).optional(),
+    texte: z.string().max(8000),
+    updatedAt: z.string(),
+  });
+
+  function todayMontreal() {
+    return new Date().toLocaleDateString("fr-CA", { timeZone: "America/Toronto" });
+  }
+
+  async function readCosmosReadingSnapshot(userId: number, date: string): Promise<{ sections: Record<string, unknown> }> {
+    const row = await db.getCosmosReading(userId, date);
+    const empty = { sections: {} as Record<string, unknown> };
+    if (!row?.data) return empty;
+    try {
+      const parsed = JSON.parse(row.data) as unknown;
+      if (parsed !== null && typeof parsed === "object" && "sections" in parsed) {
+        return parsed as { sections: Record<string, unknown> };
+      }
+    } catch { /* fall through */ }
+    return empty;
+  }
+
+  server.registerTool(
+    "get_cosmos_day",
+    {
+      title: "Lire la journée cosmique Systema",
+      description:
+        "Calcule TOUTES les données du dashboard Cosmos pour une date : transits astro + aspects au thème natal, " +
+        "météo Human Design (portes, canaux, centres), phase lunaire, numérologie (chemin de vie + jour personnel), " +
+        "biorythmes, cycle menstruel, énergie des prochains jours, matrice du destin, plus le briefing de synthèse. " +
+        "Données brutes complètes — c'est la matière première pour composer une lecture du jour profonde et personnalisée. " +
+        "Inclut aussi la lecture agent déjà enregistrée pour cette date, le cas échéant.",
+      inputSchema: z.object({ date: cosmosDateSchema.optional() }),
+      outputSchema: z.object({
+        date: z.string(),
+        sections: z.unknown(),
+        briefing: z.unknown(),
+        lecture: z.unknown(),
+      }),
+    },
+    async ({ date }) => {
+      const userId = await resolveMcpUserId();
+      const dateIso = date ?? todayMontreal();
+      // Midi à Montréal (16h UTC) : déterministe, et l'imprécision EST/EDT est négligeable pour les positions.
+      const quand = date ? new Date(`${date}T16:00:00Z`) : new Date();
+
+      const prefs = await db.getUserPreferences(userId);
+      const cycle: Cycle = prefs?.cycleJour1
+        ? calculCycle(new Date(prefs.cycleJour1), quand)
+        : { actif: false };
+
+      const lune = phaseLunaire(quand);
+      const bio = biorythmes(quand);
+      const numero = cheminDeVie(quand);
+      const astroJour = astro(quand);
+
+      const sections = {
+        astro: astroJour,
+        humanDesign: donneesHd(quand),
+        lune,
+        numero,
+        biorythmes: bio,
+        cycle,
+        energie: prochainsJours(5, quand),
+        matrice: matrice(quand),
+      };
+
+      const lecture = await readCosmosReadingSnapshot(userId, dateIso);
+
+      return jsonToolResult({
+        date: dateIso,
+        sections,
+        briefing: briefing(lune, bio, numero, astroJour, cycle),
+        lecture: Object.keys(lecture.sections).length > 0 ? lecture.sections : null,
+      });
+    }
+  );
+
+  server.registerTool(
+    "get_cosmos_reading",
+    {
+      title: "Lire la lecture du jour Cosmos",
+      description: "Retourne les lectures agent enregistrées pour une date (par section du dashboard Cosmos).",
+      inputSchema: z.object({ date: cosmosDateSchema.optional() }),
+      outputSchema: z.object({ date: z.string(), sections: z.unknown() }),
+    },
+    async ({ date }) => {
+      const userId = await resolveMcpUserId();
+      const dateIso = date ?? todayMontreal();
+      const snapshot = await readCosmosReadingSnapshot(userId, dateIso);
+      return jsonToolResult({ date: dateIso, sections: snapshot.sections });
+    }
+  );
+
+  server.registerTool(
+    "set_cosmos_reading",
+    {
+      title: "Écrire une lecture du jour Cosmos",
+      description:
+        "Enregistre la lecture agent d'une section du dashboard Cosmos pour une date. " +
+        "La lecture s'affiche dans l'encart « ✨ Lecture du jour » de la carte correspondante. " +
+        "Exigence de qualité : une lecture PROFONDE et personnalisée qui CROISE les données du jour " +
+        "(obtenues via get_cosmos_day) — jamais une reformulation générique des textes de base. " +
+        "Un texte vide supprime la lecture de la section.",
+      inputSchema: z.object({
+        date: cosmosDateSchema.optional(),
+        section: cosmosSectionSchema,
+        titre: z.string().max(200).optional(),
+        texte: z.string().max(8000),
+      }),
+      outputSchema: z.object({ success: z.boolean(), date: z.string() }),
+    },
+    async ({ date, section, titre, texte }) => {
+      const userId = await resolveMcpUserId();
+      const dateIso = date ?? todayMontreal();
+      const snapshot = await readCosmosReadingSnapshot(userId, dateIso);
+
+      if (texte.trim().length === 0) {
+        delete snapshot.sections[section];
+      } else {
+        const entry: z.infer<typeof cosmosReadingEntrySchema> = {
+          texte,
+          updatedAt: new Date().toISOString(),
+        };
+        if (titre !== undefined) entry.titre = titre;
+        snapshot.sections[section] = entry;
+      }
+
+      await db.upsertCosmosReading(userId, dateIso, JSON.stringify(snapshot));
+      return jsonToolResult({ success: true, date: dateIso });
+    }
+  );
+
+  server.registerPrompt(
+    "cosmos-lecture-du-jour",
+    {
+      title: "Composer la lecture du jour Cosmos",
+      description: "Guide un agent pour écrire des lectures profondes et personnalisées sur les cartes Cosmos.",
+    },
+    () => ({
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: [
+              "Tu es l'oracle du dashboard Cosmos. Appelle get_cosmos_day pour obtenir toutes les données du jour,",
+              "puis compose des lectures via set_cosmos_reading (sections : astro, humanDesign, lune, numero,",
+              "biorythmes, cycle, energie, matrice, synthese).",
+              "",
+              "Exigences de profondeur — non négociables :",
+              "1. CROISE les données : la Lune dans son signe N'EXISTE PAS isolément — relie-la au jour personnel,",
+              "   à la phase du cycle, au biorythme dominant. La valeur vient des résonances entre systèmes.",
+              "2. ANCRE dans le concret : chaque lecture doit dire quoi faire ou sentir AUJOURD'HUI, pas des",
+              "   généralités valables n'importe quel jour. Utilise les degrés, les aspects exacts, les pourcentages.",
+              "3. INTERDIT : reformuler les textes de base des cartes, les platitudes d'horoscope de journal,",
+              "   les phrases qui pourraient s'appliquer à n'importe qui n'importe quand.",
+              "4. Ton : chaleureux, direct, légèrement complice — on parle à une seule personne dont tu connais",
+              "   le thème natal exact (Soleil Verseau, naissance 9 février 1990, Montpellier).",
+              "5. Longueur : 2 à 5 phrases denses par section. La synthese peut aller jusqu'à 8 phrases.",
+            ].join("\n"),
+          },
+        },
+      ],
+    })
   );
 
   server.registerPrompt(

@@ -400,6 +400,25 @@ export const appRouter = router({
       }),
   }),
 
+  // Cosmos Readings API (lectures agent affichées sur les cartes Cosmos)
+  cosmosReadings: router({
+    get: protectedProcedure
+      .input(z.object({
+        date: z.string().regex(DATE_ISO_REGEX, "La date doit etre au format YYYY-MM-DD."),
+      }))
+      .query(async ({ ctx, input }) => {
+        const row = await db.getCosmosReading(ctx.user.id, input.date);
+        if (!row?.data) return null;
+        try {
+          const parsed = JSON.parse(row.data) as unknown;
+          if (parsed !== null && typeof parsed === "object" && "sections" in parsed) {
+            return parsed as { sections: Record<string, { titre?: string; texte: string; updatedAt: string }> };
+          }
+        } catch { /* données corrompues → on ignore */ }
+        return null;
+      }),
+  }),
+
   // Agenda API
   agenda: router({
     get: protectedProcedure

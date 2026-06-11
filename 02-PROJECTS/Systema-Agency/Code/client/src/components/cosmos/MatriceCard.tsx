@@ -3,7 +3,7 @@
 // marqueur doré déplaçable via les 10 prochaines années.
 // La boîte de détail suit le DERNIER élément cliqué (un nœud OU une année).
 
-import { matrice } from "@/lib/cosmos/matrice";
+import { matrice } from "@shared/cosmos/matrice";
 import { useState } from "react";
 import { CosmosCard } from "./CosmosCard";
 
@@ -66,6 +66,8 @@ export function MatriceCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="matrice"
+      lectureDate={date}
       emoji="🔮"
       titre="Matrice de la Destinée"
       tag="DESTIN"

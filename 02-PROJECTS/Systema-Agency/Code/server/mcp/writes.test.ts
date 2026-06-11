@@ -60,6 +60,9 @@ vi.mock("../db.js", () => ({
   updateCustomTabByTabId: vi.fn(async () => undefined),
   deleteCustomTabByTabId: vi.fn(async () => undefined),
   getCustomTabsByUser: vi.fn(async () => []),
+  getUserPreferences: vi.fn(async () => ({ cycleJour1: "2026-04-20" })),
+  getCosmosReading: vi.fn(async () => null),
+  upsertCosmosReading: vi.fn(async () => undefined),
 }));
 
 import * as db from "../db.js";
@@ -151,6 +154,7 @@ describe("Systema MCP write tools", () => {
 
       expect(toolNames).toEqual(expect.arrayContaining(["list_project_docs", "read_project_doc", "search_project_docs"]));
       expect(toolNames).toEqual(expect.arrayContaining([...WRITE_TOOL_NAMES, "list_tasks", "list_notes", "list_floating_notes", "list_tabs"]));
+      expect(toolNames).toEqual(expect.arrayContaining(["get_cosmos_day", "get_cosmos_reading", "set_cosmos_reading"]));
     } finally {
       await close();
     }
@@ -201,6 +205,71 @@ describe("Systema MCP write tools", () => {
       expect(db.createCustomTab).toHaveBeenCalledWith(expect.objectContaining({ userId: 7, tabId: "mcp-tab" }));
       expect(db.updateCustomTabByTabId).toHaveBeenCalledWith("mcp-tab", 7, expect.objectContaining({ label: "MCP updated" }));
       expect(db.deleteCustomTabByTabId).toHaveBeenCalledWith("mcp-tab", 7);
+    } finally {
+      await close();
+    }
+  });
+
+  it("computes the cosmos day and stores agent readings as the configured MCP user", async () => {
+    const { client, close } = await createMcpClient();
+
+    try {
+      // get_cosmos_day : toutes les sections calculées + cycle actif (jour1 mocké).
+      const day = await client.callTool({ name: "get_cosmos_day", arguments: { date: "2026-06-10" } });
+      const dayPayload = day.structuredContent as {
+        date: string;
+        sections: Record<string, unknown>;
+        briefing: { phrases: string[] };
+        lecture: unknown;
+      };
+      expect(dayPayload.date).toBe("2026-06-10");
+      expect(Object.keys(dayPayload.sections)).toEqual(
+        expect.arrayContaining(["astro", "humanDesign", "lune", "numero", "biorythmes", "cycle", "energie", "matrice"]),
+      );
+      expect(dayPayload.sections.cycle).toMatchObject({ actif: true });
+      expect(dayPayload.briefing.phrases.length).toBeGreaterThan(0);
+      expect(dayPayload.lecture).toBeNull();
+
+      // set_cosmos_reading : upsert JSON par section pour l'utilisateur MCP.
+      await client.callTool({
+        name: "set_cosmos_reading",
+        arguments: { date: "2026-06-10", section: "astro", titre: "Ciel du jour", texte: "Lecture profonde." },
+      });
+      expect(db.upsertCosmosReading).toHaveBeenCalledWith(
+        7,
+        "2026-06-10",
+        expect.stringContaining("Lecture profonde."),
+      );
+
+      // get_cosmos_reading : relit ce qui est stocké.
+      vi.mocked(db.getCosmosReading).mockResolvedValueOnce({
+        id: 1,
+        userId: 7,
+        date: "2026-06-10",
+        data: JSON.stringify({ sections: { astro: { titre: "Ciel du jour", texte: "Lecture profonde.", updatedAt: now.toISOString() } } }),
+        createdAt: now,
+        updatedAt: now,
+      });
+      const reading = await client.callTool({ name: "get_cosmos_reading", arguments: { date: "2026-06-10" } });
+      expect(reading.structuredContent).toMatchObject({
+        date: "2026-06-10",
+        sections: { astro: { texte: "Lecture profonde." } },
+      });
+
+      // Un texte vide supprime la section.
+      vi.mocked(db.getCosmosReading).mockResolvedValueOnce({
+        id: 1,
+        userId: 7,
+        date: "2026-06-10",
+        data: JSON.stringify({ sections: { astro: { texte: "Lecture profonde.", updatedAt: now.toISOString() } } }),
+        createdAt: now,
+        updatedAt: now,
+      });
+      await client.callTool({
+        name: "set_cosmos_reading",
+        arguments: { date: "2026-06-10", section: "astro", texte: "" },
+      });
+      expect(db.upsertCosmosReading).toHaveBeenLastCalledWith(7, "2026-06-10", JSON.stringify({ sections: {} }));
     } finally {
       await close();
     }

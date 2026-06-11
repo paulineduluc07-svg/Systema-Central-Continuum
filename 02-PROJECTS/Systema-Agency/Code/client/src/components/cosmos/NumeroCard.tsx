@@ -1,6 +1,6 @@
 // NumeroCard.tsx — la carte 🔢 Numérologie (look Sanctuary).
 
-import { cheminDeVie } from "@/lib/cosmos/numerologie";
+import { cheminDeVie } from "@shared/cosmos/numerologie";
 import { CosmosCard } from "./CosmosCard";
 
 export function NumeroCard({ date }: { date: Date }) {
@@ -8,6 +8,8 @@ export function NumeroCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="numero"
+      lectureDate={date}
       emoji="🔢"
       titre="Numérologie"
       tag="CHIFFRE"
@@ -36,7 +38,6 @@ export function NumeroCard({ date }: { date: Date }) {
           <p className="cosmos-pixel text-[10px] uppercase tracking-wide text-pink-700">
             Jour perso · {num.jour.titre}
           </p>
-          <p className="text-[11px] leading-snug">{num.jour.texte}</p>
         </div>
       </div>
 

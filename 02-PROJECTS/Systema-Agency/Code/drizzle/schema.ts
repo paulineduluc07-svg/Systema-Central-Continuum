@@ -114,6 +114,18 @@ export const agendaWeekData = pgTable("agenda_week_data", {
 export type AgendaWeekDataRow = typeof agendaWeekData.$inferSelect;
 export type InsertAgendaWeekData = typeof agendaWeekData.$inferInsert;
 
+export const cosmosReadings = pgTable("cosmos_readings", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  date: varchar("date", { length: 10 }).notNull(),
+  data: text("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+});
+
+export type CosmosReadingRow = typeof cosmosReadings.$inferSelect;
+export type InsertCosmosReading = typeof cosmosReadings.$inferInsert;
+
 export const floatingNotes = pgTable("floating_notes", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),

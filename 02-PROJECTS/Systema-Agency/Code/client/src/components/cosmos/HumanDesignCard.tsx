@@ -2,7 +2,7 @@
 // Portrait (Type/Profil/Autorité/Définition) + météo du jour (centres éveillés)
 // + portes du jour cliquables + tiroirs (9 centres, détail météo).
 
-import { donneesHd } from "@/lib/cosmos/hd";
+import { donneesHd } from "@shared/cosmos/hd";
 import { useState } from "react";
 import { CosmosCard } from "./CosmosCard";
 
@@ -15,6 +15,8 @@ export function HumanDesignCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="humanDesign"
+      lectureDate={date}
       emoji={p.emoji}
       titre="Design Humain"
       tag="VIBE"
@@ -53,9 +55,8 @@ export function HumanDesignCard({ date }: { date: Date }) {
           🌬️ Météo du jour : le ciel éveille {meteo.centresEveilles.length} de tes centres ouverts
         </p>
         {meteo.centresEveilles.map((c) => (
-          <p key={c.titre} className="mt-1 text-[11px]">
-            <span className="font-bold text-[#2c2523]">{c.emoji} {c.titre} — </span>
-            {c.sens}
+          <p key={c.titre} className="mt-1 text-[11px] font-bold text-[#2c2523]">
+            {c.emoji} {c.titre}
           </p>
         ))}
         {meteo.centresEveilles.length === 0 && (

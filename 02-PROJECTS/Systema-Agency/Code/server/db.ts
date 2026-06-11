@@ -4,7 +4,7 @@ import { neon } from "@neondatabase/serverless";
 import {
   InsertUser, users, tasks, notes, userPreferences, InsertTask, InsertNote, InsertUserPreferences,
   customTabs, canvasData, InsertCustomTab, InsertCanvasData,
-  agendaWeekData, promptVaultData,
+  agendaWeekData, promptVaultData, cosmosReadings,
   floatingNotes, InsertFloatingNote,
 } from "../drizzle/schema.js";
 
@@ -294,6 +294,28 @@ export async function upsertAgendaWeekData(userId: number, weekStart: string, da
     .values({ userId, weekStart, data })
     .onConflictDoUpdate({
       target: [agendaWeekData.userId, agendaWeekData.weekStart],
+      set: { data, updatedAt: new Date() },
+    });
+}
+
+// ============== COSMOS READINGS ==============
+
+export async function getCosmosReading(userId: number, date: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(cosmosReadings)
+    .where(and(eq(cosmosReadings.userId, userId), eq(cosmosReadings.date, date)))
+    .limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function upsertCosmosReading(userId: number, date: string, data: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cosmosReadings)
+    .values({ userId, date, data })
+    .onConflictDoUpdate({
+      target: [cosmosReadings.userId, cosmosReadings.date],
       set: { data, updatedAt: new Date() },
     });
 }

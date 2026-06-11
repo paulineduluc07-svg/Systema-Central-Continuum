@@ -1,6 +1,6 @@
 // BiorythmesCard.tsx — la carte 🌊 Biorythmes (look Sanctuary).
 
-import { biorythmes, type Biorythme } from "@/lib/cosmos/biorythmes";
+import { biorythmes, type Biorythme } from "@shared/cosmos/biorythmes";
 import { CosmosCard } from "./CosmosCard";
 
 const META = [
@@ -38,6 +38,8 @@ export function BiorythmesCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="biorythmes"
+      lectureDate={date}
       emoji="🌊"
       titre="Biorythmes Actuels"
       tag="WAVE"

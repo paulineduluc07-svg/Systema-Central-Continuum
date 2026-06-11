@@ -1,7 +1,7 @@
 // AstroCard.tsx — la carte ⭐ Transits du jour (look Sanctuary).
 // Transits + « comment le ciel te parle » coloré par le ton du jour + aspects.
 
-import { astro } from "@/lib/cosmos/astro";
+import { astro } from "@shared/cosmos/astro";
 import { CosmosCard } from "./CosmosCard";
 
 // Couleur du ton du jour → classes de la boîte + du badge.
@@ -27,6 +27,8 @@ export function AstroCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="astro"
+      lectureDate={date}
       emoji="☀️"
       titre="Transits du Jour"
       tag="ASTRO"
@@ -84,7 +86,6 @@ export function AstroCard({ date }: { date: Date }) {
                     {x.tonEmoji} {x.symbole} {x.astre} en {x.signe} {x.emoji}{" "}
                     <span className="font-normal text-pink-500">— {x.aspect} ({x.angle}°)</span>
                   </p>
-                  <p className="text-[#5b5552]">{x.texte}</p>
                 </div>
               ))
             )}

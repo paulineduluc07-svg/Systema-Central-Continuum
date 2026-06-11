@@ -1,7 +1,7 @@
 // EnergieCard.tsx — la carte 📅 Énergie des prochains jours (look Sanctuary).
 // Réutilise prochainsJours() : aujourd'hui + 5 jours, chacun dans une boîte chunky.
 
-import { prochainsJours } from "@/lib/cosmos/numerologie";
+import { prochainsJours } from "@shared/cosmos/numerologie";
 import { CosmosCard } from "./CosmosCard";
 
 export function EnergieCard({ date }: { date: Date }) {
@@ -9,6 +9,8 @@ export function EnergieCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="energie"
+      lectureDate={date}
       emoji="📅"
       titre="Énergie des prochains jours"
       tag="À VENIR"
@@ -48,7 +50,6 @@ export function EnergieCard({ date }: { date: Date }) {
               <p className="cosmos-pixel text-[10px] uppercase tracking-wide text-pink-700">
                 {j.aujourdhui ? "Auj." : `${j.label} ${j.jourMois}`} · {j.titre}
               </p>
-              <p className="text-[11px] leading-snug">{j.texte}</p>
             </div>
           </div>
         ))}

@@ -7,6 +7,7 @@
 
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import { LectureDuJour, type CosmosSection } from "./LectureDuJour";
 
 type CosmosCardProps = {
   emoji: string;
@@ -25,6 +26,10 @@ type CosmosCardProps = {
    *  Mettre false pour les cartes larges (ex: la Matrice). */
   capped?: boolean;
   className?: string;
+  /** Section Cosmos pour l'encart « ✨ Lecture du jour » écrit par l'agent (optionnel). */
+  lectureSection?: CosmosSection;
+  /** Date du jour affiché — requise avec lectureSection. */
+  lectureDate?: Date;
 };
 
 export function CosmosCard({
@@ -39,6 +44,8 @@ export function CosmosCard({
   footerRight,
   capped = true,
   className,
+  lectureSection,
+  lectureDate,
 }: CosmosCardProps) {
   return (
     <article
@@ -70,6 +77,9 @@ export function CosmosCard({
 
         {/* Contenu principal */}
         <div className="space-y-2 text-xs font-medium text-[#5b5552]">{children}</div>
+
+        {/* Lecture du jour écrite par l'agent (optionnel, s'efface si rien) */}
+        {lectureSection && lectureDate && <LectureDuJour section={lectureSection} date={lectureDate} />}
 
         {/* Tiroir dépliable (optionnel) */}
         {detail && (

@@ -4,18 +4,22 @@
 
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useAujourdhui } from "@/hooks/useAujourdhui";
-import { astro } from "@/lib/cosmos/astro";
-import { biorythmes } from "@/lib/cosmos/biorythmes";
-import { calculCycle } from "@/lib/cosmos/cycle";
-import { phaseLunaire } from "@/lib/cosmos/lune";
-import { cheminDeVie } from "@/lib/cosmos/numerologie";
-import { briefing } from "@/lib/cosmos/synthese";
+import { astro } from "@shared/cosmos/astro";
+import { biorythmes } from "@shared/cosmos/biorythmes";
+import { calculCycle } from "@shared/cosmos/cycle";
+import { phaseLunaire } from "@shared/cosmos/lune";
+import { cheminDeVie } from "@shared/cosmos/numerologie";
+import { briefing } from "@shared/cosmos/synthese";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 
 function parseIso(iso: string): Date {
   const [y, m, d] = iso.split("-").map(Number);
   return new Date(y, m - 1, d);
+}
+
+function isoLocal(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 export function OracleBriefing() {
@@ -31,6 +35,13 @@ export function OracleBriefing() {
   const cycle = jour1Iso ? calculCycle(parseIso(jour1Iso), date) : null;
 
   const b = briefing(phaseLunaire(date), biorythmes(date), cheminDeVie(date), astro(date), cycle);
+
+  // Lecture « synthese » écrite par l'agent via MCP — affichée sous le briefing calculé.
+  const { data: lectures } = trpc.cosmosReadings.get.useQuery(
+    { date: isoLocal(date) },
+    { enabled: isAuthenticated, staleTime: 5 * 60 * 1000 },
+  );
+  const lectureSynthese = lectures?.sections?.synthese;
 
   const dateLisible = date.toLocaleDateString("fr-CA", {
     weekday: "long",
@@ -58,6 +69,17 @@ export function OracleBriefing() {
             </p>
           ))}
         </div>
+
+        {lectureSynthese?.texte && (
+          <div className="mx-auto mt-6 max-w-2xl border-4 border-black bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-[4px_4px_0px_#E6B3FF]">
+            <p className="home-pixel mb-2 text-xs tracking-widest text-purple-600 uppercase">
+              ✨ lecture du jour{lectureSynthese.titre ? ` — ${lectureSynthese.titre}` : ""}
+            </p>
+            <p className="home-serif text-sm leading-relaxed whitespace-pre-line text-gray-800 md:text-base">
+              {lectureSynthese.texte}
+            </p>
+          </div>
+        )}
 
         <div className="mt-8 border-t border-gray-100 pt-5 text-center select-none">
           <span className="home-pixel animate-pulse text-xs tracking-widest text-[#FF69B4] uppercase md:text-sm">

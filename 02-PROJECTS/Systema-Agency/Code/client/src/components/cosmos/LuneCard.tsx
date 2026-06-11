@@ -1,6 +1,6 @@
 // LuneCard.tsx — la carte 🌙 (look Sanctuary).
 
-import { phaseLunaire } from "@/lib/cosmos/lune";
+import { phaseLunaire } from "@shared/cosmos/lune";
 import { CosmosCard } from "./CosmosCard";
 
 export function LuneCard({ date }: { date: Date }) {
@@ -8,6 +8,8 @@ export function LuneCard({ date }: { date: Date }) {
 
   return (
     <CosmosCard
+      lectureSection="lune"
+      lectureDate={date}
       emoji={lune.emoji}
       titre={lune.nom}
       tag="LUNE"
@@ -35,13 +37,6 @@ export function LuneCard({ date }: { date: Date }) {
         />
       </div>
 
-      {/* Le climat énergétique de la phase */}
-      <div className="mt-1 rounded-lg border-2 border-pink-200 bg-[#fff6fb] p-2">
-        <p className="cosmos-pixel mb-1 text-[10px] text-pink-700">
-          ⚡ l'énergie quand la lune est ainsi
-        </p>
-        <p className="text-xs leading-snug text-[#5b5552]">{lune.energie}</p>
-      </div>
     </CosmosCard>
   );
 }
