@@ -9,7 +9,7 @@ overrides:
 
 patchedDependencies:
   astronomy-engine@2.1.19:
-    hash: voazssthybdjb3g75ygu6yb6di
+    hash: 12f2d138f71784a335a5658317c0d7500a370915ac3072956f55c868beba487c
     path: patches/astronomy-engine@2.1.19.patch
 
 importers:
@@ -132,7 +132,7 @@ importers:
         version: 11.8.1(typescript@5.9.3)
       astronomy-engine:
         specifier: ^2.1.19
-        version: 2.1.19(patch_hash=voazssthybdjb3g75ygu6yb6di)
+        version: 2.1.19(patch_hash=12f2d138f71784a335a5658317c0d7500a370915ac3072956f55c868beba487c)
       axios:
         specifier: ^1.12.0
         version: 1.13.2
@@ -8479,7 +8479,7 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
-  astronomy-engine@2.1.19(patch_hash=voazssthybdjb3g75ygu6yb6di): {}
+  astronomy-engine@2.1.19(patch_hash=12f2d138f71784a335a5658317c0d7500a370915ac3072956f55c868beba487c): {}
 
   asynckit@0.4.0: {}
 
