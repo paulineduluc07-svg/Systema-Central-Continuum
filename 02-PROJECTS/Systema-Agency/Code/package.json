@@ -121,6 +121,9 @@
   "pnpm": {
     "overrides": {
       "tailwindcss>nanoid": "3.3.7"
+    },
+    "patchedDependencies": {
+      "astronomy-engine@2.1.19": "patches/astronomy-engine@2.1.19.patch"
     }
   }
 }
