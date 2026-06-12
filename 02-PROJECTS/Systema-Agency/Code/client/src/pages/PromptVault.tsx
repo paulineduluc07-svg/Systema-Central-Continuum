@@ -559,6 +559,7 @@ export default function PromptVault() {
   const uploadImageMutation = trpc.vaultImages.upload.useMutation();
   const removeImageMutation = trpc.vaultImages.remove.useMutation();
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ promptId: number; index: number } | null>(null);
   const editUploadsRef = useRef<string[]>([]);
   const editRemovalsRef = useRef<string[]>([]);
@@ -700,11 +701,15 @@ export default function PromptVault() {
   const handleImageFiles = async (files: FileList | File[], target: "new" | "edit") => {
     if (!isAuthenticated || uploading) return;
     setUploading(true);
+    setUploadError(null);
     try {
       for (const file of Array.from(files)) {
         try {
           const payload = await prepareImageUpload(file);
-          if (!payload) continue;
+          if (!payload) {
+            setUploadError(`« ${file.name} » : format non supporté (ou GIF > 3 Mo).`);
+            continue;
+          }
           const { url } = await uploadImageMutation.mutateAsync(payload);
           if (target === "new") {
             setNp(p => ({ ...p, images: [...p.images, url] }));
@@ -712,8 +717,9 @@ export default function PromptVault() {
             editUploadsRef.current.push(url);
             setEditData(d => ({ ...d, images: [...d.images, url] }));
           }
-        } catch {
-          // upload raté pour ce fichier : on passe au suivant
+        } catch (err) {
+          const message = err instanceof Error && err.message ? err.message : "erreur inconnue";
+          setUploadError(`« ${file.name} » : ${message}`);
         }
       }
     } finally {
@@ -925,6 +931,11 @@ export default function PromptVault() {
                   <input type="file" accept="image/*" multiple style={{ display: "none" }} disabled={uploading}
                     onChange={e => { if (e.target.files?.length) handleImageFiles(e.target.files, "new"); e.target.value = ""; }} />
                 </label>
+                {uploadError && (
+                  <div style={{ fontSize: "10px", color: "#ff7675", letterSpacing: "0.5px", marginBottom: "9px", border: "1px solid rgba(255,118,117,0.3)", background: "rgba(255,118,117,0.08)", borderRadius: "4px", padding: "7px 10px" }}>
+                    ⚠ {uploadError}
+                  </div>
+                )}
                 {np.images.length > 0 && (
                   <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
                     {np.images.map(url => (
@@ -1092,6 +1103,11 @@ export default function PromptVault() {
                           <input type="file" accept="image/*" multiple style={{ display: "none" }} disabled={uploading}
                             onChange={e => { if (e.target.files?.length) handleImageFiles(e.target.files, "edit"); e.target.value = ""; }} />
                         </label>
+                        {uploadError && (
+                          <div style={{ fontSize: "10px", color: "#ff7675", letterSpacing: "0.5px", marginBottom: "9px", border: "1px solid rgba(255,118,117,0.3)", background: "rgba(255,118,117,0.08)", borderRadius: "4px", padding: "7px 10px" }}>
+                            ⚠ {uploadError}
+                          </div>
+                        )}
                         {editData.images.length > 0 && (
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
                             {editData.images.map(url => (
