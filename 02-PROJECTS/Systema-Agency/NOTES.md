@@ -58,6 +58,8 @@ Repères de panne :
 ## Home Dollhouse Y2K (`/`, depuis 2026-06-10)
 
 - Composants : `client/src/components/home/` ; styles scopés `.home-root` (`home.css`).
+- **Navigation de semaine** (2026-06-12) : flèches ‹ › + label dans la barre de titre du panorama,
+  bouton « aujourd'hui » hors semaine courante — même pattern d'état `weekStart` que `Agenda.tsx`.
 - **Données réelles** : panorama + objectifs lisent/écrivent la MÊME semaine que `/agenda`
   (`lib/agendaWeek.ts` — même clé localStorage, même tRPC `agenda.get/save`).
   Post-it = `useSyncedTasks("home-priorites")`. Courrier 💌 = note la plus récente de
