@@ -65,6 +65,7 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - [x] Porter le handoff `design_handoff_home_dollhouse` : page + données réelles (agenda partagé, post-it tâches, briefing). — 2026-06-10
 - [x] Écriture depuis la Home (événements ＋/×, objectifs éditables) + vérif tools MCP. — 2026-06-10
 - [ ] **Agent courrier quotidien** : lit les Gmail importants → dépose le résumé dans le tab `home-courrier` (via MCP `create_note`). _Le widget est prêt à recevoir._
+- [x] **Flèches de navigation de semaine** sur le panorama agenda (‹ › + label + retour « aujourd'hui »). — 2026-06-12
 
 ### Dashboard cosmos (`/cosmos`)
 

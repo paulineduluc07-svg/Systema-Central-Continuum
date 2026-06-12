@@ -8,6 +8,16 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-06-12 (2ᵉ session) - Flèches de navigation de semaine sur le panorama Home
+
+- **Origine** : paw avait rempli la semaine du 15-21 juin via MCP, invisible dans le widget Home (figé sur la semaine courante). Tâche P1 notée dans Todoist côté session perso — retrouvée et exécutée ici.
+- `AgendaPanorama.tsx` : `weekStart` passe en état navigable (même pattern que `Agenda.tsx`) — flèches ‹ › dans la barre de titre, label de semaine (`formatWeekLabel`, caché sur mobile), bouton rose « aujourd'hui » visible hors semaine courante. Changement de semaine = reset sur la version locale puis le tRPC `agenda.get` suit via sa clé.
+- Au passage : `corepack pnpm install --frozen-lockfile` requis en local (`@vercel/blob` ajouté par la session cloud du matin n'était pas installé). `pnpm verify:full` vert (tsc + 32 tests + build).
+
+Prochaine étape : toujours l'agent courrier (schedule Cowork côté paw) + vérif widget 💌.
+
+---
+
 ## 2026-06-12 - Images dans le Prompt Vault LIVRÉES 🖼 (session cloud) + agent courrier décidé
 
 - **Décision agent courrier** : paw crée un schedule Cowork (Gmail déjà connecté, MCP `?secret=` déjà patché pour Cowork) — prompt fourni, rien à coder côté repo.

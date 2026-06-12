@@ -13,6 +13,7 @@ import {
   DAYS,
   dateFromIso,
   dateToIso,
+  formatWeekLabel,
   loadLocalWeek,
   mondayOf,
   normalizeWeekData,
@@ -50,8 +51,9 @@ const GOAL_THEME: Record<AccentKey, { bg: string; title: string; item: string; c
 const GOAL_TAGLINES = ["vibe check • optimal", "cpu load • active", "oracle level • high"];
 
 export function AgendaPanorama() {
-  const weekStart = dateToIso(mondayOf(new Date()));
-  const [weekData, setWeekData] = useState<WeekData>(() => loadLocalWeek(weekStart));
+  const currentWeekStart = dateToIso(mondayOf(new Date()));
+  const [weekStart, setWeekStart] = useState(currentWeekStart);
+  const [weekData, setWeekData] = useState<WeekData>(() => loadLocalWeek(currentWeekStart));
   const [addingDay, setAddingDay] = useState<DayKey | null>(null);
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newItemTexts, setNewItemTexts] = useState<Record<number, string>>({});
@@ -61,6 +63,12 @@ export function AgendaPanorama() {
     { weekStart },
     { enabled: isAuthenticated, refetchOnWindowFocus: false },
   );
+
+  // Changement de semaine : repartir de la version locale (le tRPC suit via sa clé weekStart).
+  useEffect(() => {
+    setWeekData(loadLocalWeek(weekStart));
+    setAddingDay(null);
+  }, [weekStart]);
 
   useEffect(() => {
     if (!isAuthenticated || !agendaQuery.isSuccess) return;
@@ -144,8 +152,14 @@ export function AgendaPanorama() {
     });
   };
 
+  const shiftWeek = (days: number) => {
+    playClickSound();
+    setWeekStart((current) => dateToIso(addDays(dateFromIso(current), days)));
+  };
+
   const monday = dateFromIso(weekStart);
   const todayIso = dateToIso(new Date());
+  const isCurrentWeek = weekStart === currentWeekStart;
 
   return (
     <div className="mb-6 overflow-hidden rounded-none border-[3px] border-black bg-white shadow-[4px_4px_0px_#000000] select-none">
@@ -154,6 +168,38 @@ export function AgendaPanorama() {
         <span className="home-pixel text-sm font-bold tracking-wider uppercase md:text-base">
           🗓️ agenda · vue panorama
         </span>
+        {/* Navigation de semaine */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => shiftWeek(-7)}
+            title="Semaine précédente"
+            className="flex h-5 w-5 cursor-pointer items-center justify-center border-2 border-black bg-white font-mono text-[11px] font-black text-black hover:bg-zinc-100"
+          >
+            ‹
+          </button>
+          <span className="home-pixel hidden min-w-[110px] border-2 border-black bg-white px-1.5 text-center text-[10px] font-bold text-black uppercase sm:block">
+            {formatWeekLabel(weekStart)}
+          </span>
+          <button
+            onClick={() => shiftWeek(7)}
+            title="Semaine suivante"
+            className="flex h-5 w-5 cursor-pointer items-center justify-center border-2 border-black bg-white font-mono text-[11px] font-black text-black hover:bg-zinc-100"
+          >
+            ›
+          </button>
+          {!isCurrentWeek && (
+            <button
+              onClick={() => {
+                playClickSound();
+                setWeekStart(currentWeekStart);
+              }}
+              title="Revenir à la semaine courante"
+              className="home-pixel cursor-pointer border-2 border-black bg-[#ffccd5] px-1.5 text-[10px] font-bold text-black uppercase hover:bg-[#ffb3c1]"
+            >
+              aujourd'hui
+            </button>
+          )}
+        </div>
         <div className="flex items-center gap-1.5">
           <Link href="/agenda">
             <span className="home-pixel cursor-pointer border-2 border-black bg-white px-1.5 text-[10px] font-bold text-black uppercase hover:bg-zinc-100">
