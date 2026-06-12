@@ -6,8 +6,29 @@ import { sdk } from "./_core/sdk.js";
 import { ENV } from "./_core/env.js";
 import { z } from "zod";
 import * as db from "./db.js";
+import { del, put } from "@vercel/blob";
+import { nanoid } from "nanoid";
 
 const PROMPT_VAULT_MAX_PAYLOAD_CHARS = 1_000_000;
+const VAULT_IMAGE_MAX_BYTES = 3 * 1024 * 1024;
+// base64 ≈ 4/3 du binaire — marge pour rejeter tôt côté schéma
+const VAULT_IMAGE_MAX_BASE64_CHARS = Math.ceil(VAULT_IMAGE_MAX_BYTES * 1.4);
+const VAULT_IMAGE_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
+const VAULT_IMAGE_EXTENSIONS: Record<(typeof VAULT_IMAGE_CONTENT_TYPES)[number], string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/gif": "gif",
+};
+
+function requireBlobToken(): void {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new TRPCError({
+      code: "PRECONDITION_FAILED",
+      message: "Stockage d'images non configure (BLOB_READ_WRITE_TOKEN manquant dans Vercel).",
+    });
+  }
+}
 const DATE_ISO_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 const AGENDA_WEEK_MAX_PAYLOAD_CHARS = 500_000;
 const promptVaultDataSchema = z
@@ -397,6 +418,42 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         await db.upsertPromptVaultData(ctx.user.id, input.data);
         return { success: true };
+      }),
+  }),
+
+  // Images du Prompt Vault (stockées sur Vercel Blob, URLs référencées dans le snapshot)
+  vaultImages: router({
+    upload: protectedProcedure
+      .input(z.object({
+        fileName: z.string().min(1).max(200),
+        contentType: z.enum(VAULT_IMAGE_CONTENT_TYPES),
+        data: z.string().min(1).max(VAULT_IMAGE_MAX_BASE64_CHARS, "L'image depasse la taille maximale (3 Mo)."),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        requireBlobToken();
+        const buffer = Buffer.from(input.data, "base64");
+        if (buffer.byteLength === 0 || buffer.byteLength > VAULT_IMAGE_MAX_BYTES) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "L'image depasse la taille maximale (3 Mo)." });
+        }
+        const extension = VAULT_IMAGE_EXTENSIONS[input.contentType];
+        const blob = await put(
+          `prompt-vault/${ctx.user.id}/${nanoid(12)}.${extension}`,
+          buffer,
+          { access: "public", contentType: input.contentType },
+        );
+        return { url: blob.url };
+      }),
+
+    remove: protectedProcedure
+      .input(z.object({ url: z.string().url() }))
+      .mutation(async ({ ctx, input }) => {
+        requireBlobToken();
+        const pathname = new URL(input.url).pathname;
+        if (!pathname.startsWith(`/prompt-vault/${ctx.user.id}/`)) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Cette image n'appartient pas a ton vault." });
+        }
+        await del(input.url);
+        return { success: true } as const;
       }),
   }),
 

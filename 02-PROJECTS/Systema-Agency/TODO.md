@@ -104,7 +104,9 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 
 ### Prompt Vault
 
-- [ ] **Ajouter les images associees aux prompts.** _(prochaine session, avec l'agent courrier)_
+- [x] **Ajouter les images associees aux prompts** — codé et vérifié (tsc + 32 tests + build verts), maquette validée par paw. En attente sur la branche `claude/dev-session-startup-ykz37y` (PR draft). (2026-06-12)
+  - [ ] Activer le Blob store dans Vercel (Storage → Create Blob store) + vérifier que `BLOB_READ_WRITE_TOKEN` est bien injecté.
+  - [ ] Feu vert de paw → merge sur `main` → vérifier la CI puis tester l'upload en prod.
 
 ### Plus tard
 
