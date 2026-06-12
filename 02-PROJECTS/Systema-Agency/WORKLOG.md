@@ -15,7 +15,8 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - Serveur : routeur tRPC `vaultImages` (`upload` + `remove`, protectedProcedure, fail-closed si `BLOB_READ_WRITE_TOKEN` absent, max 3 Mo, chemin `prompt-vault/<userId>/`, remove refuse les URLs hors préfixe). 5 tests ajoutés (`server/vaultImages.test.ts`).
 - Client (`PromptVault.tsx`) : dropzone drag & drop dans les formulaires nouveau/édition (redimensionnement canvas 1280px → WebP avant upload, GIF passés tels quels), vignettes 64px sur les cartes (max 4 + tuile « +N »), lightbox plein écran avec navigation ‹ › et clavier, nettoyage des blobs orphelins (annulation de formulaire, retrait d'image, suppression de prompt).
 - `pnpm verify:full` vert (tsc + 32 tests + build). Session cloud Claude : travail sur branche `claude/dev-session-startup-ykz37y`, **PR #23 mergée en squash sur main (`5fbf1f6`) sur feu vert de paw**, CI verte sur main.
-- **Blob store créé par paw dans Vercel** (accès public assumé — même modèle que l'URL MCP : URLs imprévisibles, write/delete derrière l'auth). **Testé et validé en prod par paw.**
+- **Blob store créé par paw dans Vercel** (accès public assumé — même modèle que l'URL MCP : URLs imprévisibles, write/delete derrière l'auth).
+- **Incident post-merge** : premier test d'upload silencieusement raté → cause : store créé mais **pas connecté au projet** (`BLOB_READ_WRITE_TOKEN` absent des env vars, confirmé par capture). Deux correctifs : (1) les erreurs d'upload s'affichent maintenant sous la dropzone (PR #24, avant elles étaient avalées en silence) ; (2) store connecté au projet par paw, redeploy déclenché par push sur main. Leçon : « Connect Project » est une étape distincte de la création du store.
 
 Prochaine étape : paw crée le schedule Cowork de l'agent courrier (prompt déjà fourni) — le widget 💌 de la Home attend.
 
