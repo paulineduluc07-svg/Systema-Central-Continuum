@@ -14,6 +14,7 @@ interface Prompt {
   title: string;
   tags: string[];
   text: string;
+  images?: string[];
 }
 
 const INITIAL_CATS: Category[] = [
@@ -435,6 +436,9 @@ function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
       title: prompt.title,
       tags: prompt.tags.map((tag) => tag.trim()).filter(Boolean),
       text: prompt.text,
+      images: Array.isArray(prompt.images)
+        ? prompt.images.filter((url): url is string => typeof url === "string" && url.startsWith("https://"))
+        : [],
     }));
 
   const promptIdSet = new Set(list.map((prompt) => prompt.id));
@@ -456,6 +460,52 @@ function sanitizePromptVaultSnapshot(raw: unknown): PromptVaultSnapshot | null {
     cats: normalizedCats,
     favs,
     brightness,
+  };
+}
+
+const VAULT_IMAGE_MAX_DIMENSION = 1280;
+const VAULT_IMAGE_MAX_GIF_BYTES = 3 * 1024 * 1024;
+
+type VaultImageUploadPayload = {
+  fileName: string;
+  contentType: "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+  data: string;
+};
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function prepareImageUpload(file: File): Promise<VaultImageUploadPayload | null> {
+  if (!file.type.startsWith("image/")) return null;
+
+  // GIF : pas de redimensionnement (le canvas perdrait l'animation)
+  if (file.type === "image/gif") {
+    if (file.size > VAULT_IMAGE_MAX_GIF_BYTES) return null;
+    return { fileName: file.name, contentType: "image/gif", data: await blobToBase64(file) };
+  }
+
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, VAULT_IMAGE_MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+  if (!blob) return null;
+  return {
+    fileName: file.name.replace(/\.[^.]+$/, "") + ".webp",
+    contentType: "image/webp",
+    data: await blobToBase64(blob),
   };
 }
 
@@ -499,11 +549,19 @@ export default function PromptVault() {
   const [exp, setExp] = useState<number | null>(null);
   const [form, setForm] = useState(false);
   const [list, setList] = useState<Prompt[]>(initialSnapshot.list);
-  const [np, setNp] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "" });
+  const [np, setNp] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "", images: [] as string[] });
   const [editId, setEditId] = useState<number | null>(null);
-  const [editData, setEditData] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "" });
+  const [editData, setEditData] = useState({ title: "", cat: getDefaultPromptCategory(initialSnapshot.cats), tags: "", text: "", images: [] as string[] });
   const dragIdx = useRef<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
+
+  // Images : upload Vercel Blob + lightbox
+  const uploadImageMutation = trpc.vaultImages.upload.useMutation();
+  const removeImageMutation = trpc.vaultImages.remove.useMutation();
+  const [uploading, setUploading] = useState(false);
+  const [lightbox, setLightbox] = useState<{ promptId: number; index: number } | null>(null);
+  const editUploadsRef = useRef<string[]>([]);
+  const editRemovalsRef = useRef<string[]>([]);
 
   // Category management
   const [cats, setCats] = useState<Category[]>(initialSnapshot.cats);
@@ -608,32 +666,121 @@ export default function PromptVault() {
     return () => window.clearTimeout(timeout);
   }, [isAuthenticated, isCloudReady, user?.id, serializedSnapshot, savePromptVaultMutation]);
 
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        setLightbox(prev => {
+          if (!prev) return prev;
+          const imgs = list.find(p => p.id === prev.promptId)?.images ?? [];
+          if (imgs.length === 0) return prev;
+          const delta = e.key === "ArrowLeft" ? -1 : 1;
+          return { promptId: prev.promptId, index: (prev.index + delta + imgs.length) % imgs.length };
+        });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, list]);
+
   const copy = (id: number, txt: string) => {
     navigator.clipboard.writeText(txt);
     setCopied(id);
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const add = () => {
-    if (!np.title || !np.text) return;
-    setList(l => [...l, { ...np, id: Date.now(), tags: np.tags.split(",").map(t => t.trim()).filter(Boolean) }]);
-    setNp({ title: "", cat: cats.filter(c => c.id !== "all")[0]?.id || "tech", tags: "", text: "" });
+  const deleteBlobs = (urls: string[]) => {
+    if (!isAuthenticated) return;
+    for (const url of urls) {
+      removeImageMutation.mutate({ url });
+    }
+  };
+
+  const handleImageFiles = async (files: FileList | File[], target: "new" | "edit") => {
+    if (!isAuthenticated || uploading) return;
+    setUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        try {
+          const payload = await prepareImageUpload(file);
+          if (!payload) continue;
+          const { url } = await uploadImageMutation.mutateAsync(payload);
+          if (target === "new") {
+            setNp(p => ({ ...p, images: [...p.images, url] }));
+          } else {
+            editUploadsRef.current.push(url);
+            setEditData(d => ({ ...d, images: [...d.images, url] }));
+          }
+        } catch {
+          // upload raté pour ce fichier : on passe au suivant
+        }
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const resetNewForm = () => {
+    setNp({ title: "", cat: cats.filter(c => c.id !== "all")[0]?.id || "tech", tags: "", text: "", images: [] });
+  };
+
+  const cancelNewForm = () => {
+    deleteBlobs(np.images);
+    resetNewForm();
     setForm(false);
   };
 
-  const del = (id: number) => setList(l => l.filter(p => p.id !== id));
+  const add = () => {
+    if (!np.title || !np.text) return;
+    setList(l => [...l, { ...np, id: Date.now(), tags: np.tags.split(",").map(t => t.trim()).filter(Boolean) }]);
+    resetNewForm();
+    setForm(false);
+  };
+
+  const del = (id: number) => {
+    const target = list.find(p => p.id === id);
+    if (target?.images?.length) deleteBlobs(target.images);
+    setList(l => l.filter(p => p.id !== id));
+  };
 
   const startEdit = (p: Prompt) => {
     setEditId(p.id);
-    setEditData({ title: p.title, cat: p.cat, tags: p.tags.join(", "), text: p.text });
+    setEditData({ title: p.title, cat: p.cat, tags: p.tags.join(", "), text: p.text, images: p.images ?? [] });
+    editUploadsRef.current = [];
+    editRemovalsRef.current = [];
     setExp(null);
+  };
+
+  const cancelEdit = () => {
+    // les images uploadées pendant l'édition annulée seraient orphelines
+    deleteBlobs(editUploadsRef.current);
+    editUploadsRef.current = [];
+    editRemovalsRef.current = [];
+    setEditId(null);
+  };
+
+  const removeEditImage = (url: string) => {
+    setEditData(d => ({ ...d, images: d.images.filter(u => u !== url) }));
+    const uploadedIdx = editUploadsRef.current.indexOf(url);
+    if (uploadedIdx >= 0) {
+      // image ajoutée pendant cette édition : on peut la jeter tout de suite
+      editUploadsRef.current.splice(uploadedIdx, 1);
+      deleteBlobs([url]);
+    } else {
+      // image déjà sauvegardée : on ne la jette que si l'édition est confirmée
+      editRemovalsRef.current.push(url);
+    }
   };
 
   const saveEdit = (id: number) => {
     setList(l => l.map(p => p.id === id
-      ? { ...p, title: editData.title, cat: editData.cat, text: editData.text, tags: editData.tags.split(",").map(t => t.trim()).filter(Boolean) }
+      ? { ...p, title: editData.title, cat: editData.cat, text: editData.text, tags: editData.tags.split(",").map(t => t.trim()).filter(Boolean), images: editData.images }
       : p
     ));
+    deleteBlobs(editRemovalsRef.current);
+    editUploadsRef.current = [];
+    editRemovalsRef.current = [];
     setEditId(null);
   };
 
@@ -746,7 +893,7 @@ export default function PromptVault() {
         <div style={{ display: "flex", gap: "9px", marginBottom: "18px" }}>
           <input value={q} onChange={e => setQ(e.target.value)} placeholder="⌕  RECHERCHER..."
             style={{ flex: 1, background: "rgba(0,245,255,0.05)", border: "1px solid rgba(0,245,255,0.3)", borderRadius: "4px", padding: "12px 16px", color: "#e8e8ff", fontSize: "12px", outline: "none", fontFamily: "inherit" }} />
-          <button onClick={() => { setForm(!form); setManageCats(false); }}
+          <button onClick={() => { form ? cancelNewForm() : setForm(true); setManageCats(false); }}
             style={{ background: form ? "rgba(0,245,255,0.15)" : "rgba(0,245,255,0.05)", border: "1px solid rgba(0,245,255,0.35)", borderRadius: "10px", padding: "12px 16px", color: "#00f5ff", fontSize: "9px", letterSpacing: "2px", cursor: "pointer", fontFamily: "inherit", fontWeight: 700, whiteSpace: "nowrap", boxShadow: "0 2px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)" }}>
             {form ? "✕ ANNULER" : "+ NOUVEAU"}
           </button>
@@ -766,6 +913,31 @@ export default function PromptVault() {
             </select>
             <input value={np.tags} onChange={e => setNp(p => ({ ...p, tags: e.target.value }))} placeholder="TAGS (séparés par virgules)" style={inp} />
             <textarea value={np.text} onChange={e => setNp(p => ({ ...p, text: e.target.value }))} placeholder="TEXTE DU PROMPT..." rows={3} style={{ ...inp, resize: "vertical", lineHeight: 1.6 } as React.CSSProperties} />
+            {isAuthenticated && (
+              <>
+                <label
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={e => { e.preventDefault(); handleImageFiles(e.dataTransfer.files, "new"); }}
+                  style={{ display: "block", border: "2px dashed rgba(0,245,255,0.35)", borderRadius: "6px", padding: "18px", textAlign: "center", color: uploading ? "#00f5ff55" : "#00f5ffaa", fontSize: "11px", letterSpacing: "1px", marginBottom: "9px", background: "rgba(0,245,255,0.03)", cursor: uploading ? "wait" : "pointer" }}>
+                  <span style={{ fontSize: "20px", display: "block", marginBottom: "5px" }}>🖼</span>
+                  {uploading ? "UPLOAD EN COURS..." : "GLISSE TES IMAGES ICI OU CLIQUE POUR CHOISIR"}
+                  <span style={{ display: "block", color: "#ffffff55", fontSize: "9px", marginTop: "5px" }}>JPG / PNG / WebP / GIF — redimensionnées automatiquement</span>
+                  <input type="file" accept="image/*" multiple style={{ display: "none" }} disabled={uploading}
+                    onChange={e => { if (e.target.files?.length) handleImageFiles(e.target.files, "new"); e.target.value = ""; }} />
+                </label>
+                {np.images.length > 0 && (
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+                    {np.images.map(url => (
+                      <div key={url} style={{ position: "relative" }}>
+                        <img src={url} alt="" style={{ width: "64px", height: "64px", borderRadius: "6px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.2)" }} />
+                        <button onClick={() => { setNp(p => ({ ...p, images: p.images.filter(u => u !== url) })); deleteBlobs([url]); }}
+                          style={{ position: "absolute", top: "-6px", right: "-6px", width: "18px", height: "18px", borderRadius: "50%", background: "#ff5e57", color: "#fff", fontSize: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontWeight: 700, border: "2px solid #111827", padding: 0 }}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
             <button onClick={add} style={{ background: "rgba(0,245,255,0.12)", border: "1px solid rgba(0,245,255,0.4)", borderRadius: "10px", padding: "8px 18px", color: "#00f5ff", fontSize: "9px", letterSpacing: "2px", cursor: "pointer", fontFamily: "inherit", fontWeight: 700, boxShadow: "0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)" }}>
               ⬡ AJOUTER AU VAULT
             </button>
@@ -891,7 +1063,7 @@ export default function PromptVault() {
                     {catLabel}
                   </span>
                   <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                    <button onClick={e => { e.stopPropagation(); isEditing ? setEditId(null) : startEdit(p); }}
+                    <button onClick={e => { e.stopPropagation(); isEditing ? cancelEdit() : startEdit(p); }}
                       style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: isEditing ? c : "#ffffffaa", padding: 0 }} title="Modifier">✏</button>
                     <button onClick={e => { e.stopPropagation(); del(p.id); }}
                       style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#ffffff88", padding: 0 }} title="Supprimer">✕</button>
@@ -910,6 +1082,29 @@ export default function PromptVault() {
                     </select>
                     <input value={editData.tags} onChange={e => setEditData(d => ({ ...d, tags: e.target.value }))} placeholder="TAGS (séparés par virgules)" style={inp} />
                     <textarea value={editData.text} onChange={e => setEditData(d => ({ ...d, text: e.target.value }))} rows={4} style={{ ...inp, resize: "vertical", lineHeight: 1.6 } as React.CSSProperties} />
+                    {isAuthenticated && (
+                      <>
+                        <label
+                          onDragOver={e => e.preventDefault()}
+                          onDrop={e => { e.preventDefault(); handleImageFiles(e.dataTransfer.files, "edit"); }}
+                          style={{ display: "block", border: `2px dashed ${c}55`, borderRadius: "6px", padding: "12px", textAlign: "center", color: uploading ? `${c}55` : `${c}aa`, fontSize: "10px", letterSpacing: "1px", marginBottom: "9px", background: `${c}08`, cursor: uploading ? "wait" : "pointer" }}>
+                          🖼 {uploading ? "UPLOAD EN COURS..." : "AJOUTER DES IMAGES"}
+                          <input type="file" accept="image/*" multiple style={{ display: "none" }} disabled={uploading}
+                            onChange={e => { if (e.target.files?.length) handleImageFiles(e.target.files, "edit"); e.target.value = ""; }} />
+                        </label>
+                        {editData.images.length > 0 && (
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+                            {editData.images.map(url => (
+                              <div key={url} style={{ position: "relative" }}>
+                                <img src={url} alt="" style={{ width: "64px", height: "64px", borderRadius: "6px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.2)" }} />
+                                <button onClick={() => removeEditImage(url)}
+                                  style={{ position: "absolute", top: "-6px", right: "-6px", width: "18px", height: "18px", borderRadius: "50%", background: "#ff5e57", color: "#fff", fontSize: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontWeight: 700, border: "2px solid #111827", padding: 0 }}>✕</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
                     <button onClick={() => saveEdit(p.id)} style={{ background: `${c}22`, border: `1px solid ${c}55`, borderRadius: "4px", padding: "6px 14px", color: c, fontSize: "9px", letterSpacing: "2px", cursor: "pointer", fontFamily: "inherit", fontWeight: 700 }}>
                       ✓ SAUVEGARDER
                     </button>
@@ -923,6 +1118,25 @@ export default function PromptVault() {
                     <p style={{ fontSize: "12px", color: "#ffffffcc", margin: "0 0 13px", lineHeight: 1.75, whiteSpace: "pre-wrap", display: isE ? "block" : "-webkit-box", WebkitLineClamp: isE ? undefined : 3, WebkitBoxOrient: "vertical" as const, overflow: isE ? "visible" : "hidden" }}>
                       {p.text}
                     </p>
+                    {(p.images?.length ?? 0) > 0 && (() => {
+                      const imgs = p.images!;
+                      const visible = isE ? imgs : (imgs.length > 4 ? imgs.slice(0, 3) : imgs);
+                      return (
+                        <div style={{ display: "flex", gap: "6px", flexWrap: isE ? "wrap" : "nowrap", marginBottom: "12px" }}>
+                          {visible.map((url, i) => (
+                            <img key={url} src={url} alt="" loading="lazy"
+                              onClick={e => { e.stopPropagation(); setLightbox({ promptId: p.id, index: i }); }}
+                              style={{ width: "64px", height: "64px", borderRadius: "6px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.2)", cursor: "zoom-in" }} />
+                          ))}
+                          {!isE && imgs.length > 4 && (
+                            <div onClick={e => { e.stopPropagation(); setLightbox({ promptId: p.id, index: 3 }); }}
+                              style={{ width: "64px", height: "64px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#ffffff99", letterSpacing: "1px", cursor: "pointer", fontWeight: 700, flexShrink: 0 }}>
+                              +{imgs.length - 3}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                     <div style={{ display: "flex", gap: "7px", alignItems: "center" }}>
                       <button onClick={e => { e.stopPropagation(); copy(p.id, p.text); }}
                         style={{ background: isC ? `${c}30` : `${c}14`, border: `1px solid ${c}${isC ? "77" : "44"}`, borderRadius: "4px", padding: "5px 12px", color: isC ? c : `${c}cc`, fontSize: "9px", letterSpacing: "2px", cursor: "pointer", fontFamily: "inherit", fontWeight: 700, boxShadow: isC ? `0 0 10px ${c}44` : "none" }}>
@@ -948,6 +1162,35 @@ export default function PromptVault() {
           <div style={{ fontSize: "10px", letterSpacing: "1px", color: "#ffffff70" }}>Prompt Vault - vue pleine page</div>
         </div>
       </div>
+
+      {/* LIGHTBOX */}
+      {lightbox && (() => {
+        const prompt = list.find(p => p.id === lightbox.promptId);
+        const imgs = prompt?.images ?? [];
+        if (!prompt || imgs.length === 0) return null;
+        const index = Math.min(lightbox.index, imgs.length - 1);
+        const go = (delta: number) => setLightbox({ promptId: prompt.id, index: (index + delta + imgs.length) % imgs.length });
+        return (
+          <div onClick={() => setLightbox(null)}
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.88)", zIndex: 1000, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+            <button onClick={() => setLightbox(null)}
+              style={{ position: "absolute", top: "18px", right: "22px", background: "none", border: "none", color: "#ffffffaa", fontSize: "20px", cursor: "pointer", fontFamily: "inherit" }}>✕</button>
+            <img src={imgs[index]} alt="" onClick={e => e.stopPropagation()}
+              style={{ maxWidth: "90vw", maxHeight: "78vh", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.15)", boxShadow: "0 0 40px rgba(56,189,248,0.2)" }} />
+            <div onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: "18px", marginTop: "14px" }}>
+              {imgs.length > 1 && (
+                <button onClick={() => go(-1)} style={{ background: "none", border: "none", color: "#00f5ff", fontSize: "22px", cursor: "pointer", padding: "4px 12px", fontFamily: "inherit" }}>‹</button>
+              )}
+              <span style={{ fontSize: "10px", letterSpacing: "2px", color: "#ffffff99" }}>
+                IMAGE {index + 1} / {imgs.length} — {prompt.title.toUpperCase()}
+              </span>
+              {imgs.length > 1 && (
+                <button onClick={() => go(1)} style={{ background: "none", border: "none", color: "#00f5ff", fontSize: "22px", cursor: "pointer", padding: "4px 12px", fontFamily: "inherit" }}>›</button>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
