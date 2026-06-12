@@ -8,16 +8,16 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
-## 2026-06-12 - Images dans le Prompt Vault (session cloud, en attente de merge)
+## 2026-06-12 - Images dans le Prompt Vault LIVRÉES 🖼 (session cloud) + agent courrier décidé
 
 - **Décision agent courrier** : paw crée un schedule Cowork (Gmail déjà connecté, MCP `?secret=` déjà patché pour Cowork) — prompt fourni, rien à coder côté repo.
 - **Feature images Prompt Vault** codée après maquette HTML validée par paw : champ `images: string[]` par prompt (URLs dans le snapshot JSON existant — PAS de base64 dans le blob, ça aurait alourdi chaque sauvegarde auto), stockage **Vercel Blob** (`@vercel/blob` ajouté).
 - Serveur : routeur tRPC `vaultImages` (`upload` + `remove`, protectedProcedure, fail-closed si `BLOB_READ_WRITE_TOKEN` absent, max 3 Mo, chemin `prompt-vault/<userId>/`, remove refuse les URLs hors préfixe). 5 tests ajoutés (`server/vaultImages.test.ts`).
 - Client (`PromptVault.tsx`) : dropzone drag & drop dans les formulaires nouveau/édition (redimensionnement canvas 1280px → WebP avant upload, GIF passés tels quels), vignettes 64px sur les cartes (max 4 + tuile « +N »), lightbox plein écran avec navigation ‹ › et clavier, nettoyage des blobs orphelins (annulation de formulaire, retrait d'image, suppression de prompt).
-- `pnpm verify:full` vert : tsc + 32 tests (27→32) + build.
-- ⚠️ Particularité session : travail fait en session cloud Claude directement sur le repo GitHub (branche `claude/dev-session-startup-ykz37y`, PR draft) — pas depuis le clone Windows. **Rien sur `main`** tant que paw n'a pas donné le feu vert.
+- `pnpm verify:full` vert (tsc + 32 tests + build). Session cloud Claude : travail sur branche `claude/dev-session-startup-ykz37y`, **PR #23 mergée en squash sur main (`5fbf1f6`) sur feu vert de paw**, CI verte sur main.
+- **Blob store créé par paw dans Vercel** (accès public assumé — même modèle que l'URL MCP : URLs imprévisibles, write/delete derrière l'auth). **Testé et validé en prod par paw.**
 
-Prochaine étape : paw active le Blob store dans Vercel → feu vert → merge → test upload en prod. Ensuite : schedule Cowork de l'agent courrier.
+Prochaine étape : paw crée le schedule Cowork de l'agent courrier (prompt déjà fourni) — le widget 💌 de la Home attend.
 
 ---
 
