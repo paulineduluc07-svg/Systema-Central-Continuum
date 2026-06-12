@@ -73,12 +73,12 @@ Repères de panne :
 
 ---
 
-## Prompt Vault — images (2026-06-12, en attente de merge)
+## Prompt Vault — images (live depuis 2026-06-12)
 
 - Images stockées sur **Vercel Blob** (`@vercel/blob`), URLs référencées dans le champ `images` de chaque prompt du snapshot JSON. Jamais de base64 dans le snapshot (la sauvegarde auto renvoie tout le blob à chaque modif).
 - API : tRPC `vaultImages.upload` / `vaultImages.remove` (auth requise). Fail-closed si `BLOB_READ_WRITE_TOKEN` absent. Max 3 Mo, types jpeg/png/webp/gif, chemin `prompt-vault/<userId>/`.
 - Client : redimensionnement 1280px max → WebP AVANT upload (GIF non touchés pour garder l'animation). Vignettes visibles seulement — l'upload exige d'être connectée (pas de fallback localStorage pour les images).
-- **Prérequis prod : créer le Blob store dans le dashboard Vercel** (Storage → Create Blob store) pour que `BLOB_READ_WRITE_TOKEN` existe.
+- Blob store créé dans Vercel le 2026-06-12 ; accès **public assumé** (URLs imprévisibles, pas de listing — même modèle que l'URL MCP publique). Ne pas uploader d'image contenant une info sensible.
 
 ---
 
