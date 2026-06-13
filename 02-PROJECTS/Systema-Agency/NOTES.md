@@ -154,6 +154,7 @@ Notes :
 - Validation 2026-05-07 depuis PowerShell : `node -e "import('@neondatabase/serverless')"` OK, `node --env-file=.env scripts/apply-home-data-migration.mjs` OK, `pnpm check` OK, `pnpm test` OK, `pnpm build` OK.
 - `pnpm@10.4.1` est installe cote utilisateur dans `C:\Users\pauli\AppData\Local\pnpm`; ce dossier est dans le PATH utilisateur. Les shims `pnpm.ps1`/`pnpx.ps1` ont ete retires pour que PowerShell utilise `pnpm.cmd` sans changer l'execution policy.
 - Si `pnpm` n'est pas reconnu dans un terminal deja ouvert, fermer puis rouvrir PowerShell. Fallback toujours valide : `corepack pnpm <commande>`.
+- **2026-06-13 — colonne `quickLinks` (`text`, nullable) sur `user_preferences`** (raccourcis agence éditables) : schéma + `drizzle/0008_quick_links.sql`. Appliquée à la main dans Neon via un script `tsx` inline lisant le `DATABASE_URL` du `.env` local (`@neondatabase/serverless`, `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`). ⚠️ **Rappel critique** : `db.select().from(userPreferences)` sélectionne TOUTES les colonnes du schéma — si une colonne ajoutée au schéma n'existe pas encore dans Neon, la requête casse et la Home plante. Donc appliquer la colonne AVANT le deploy (ou immédiatement après le push). Le « go » de paw = « pousse », pas « j'ai passé le SQL » : vérifier l'état réel de la DB.
 
 ---
 

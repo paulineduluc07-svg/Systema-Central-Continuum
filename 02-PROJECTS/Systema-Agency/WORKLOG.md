@@ -8,6 +8,20 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-06-13 - Briefing Home épuré, page Agenda supprimée, raccourcis agence éditables
+
+- **Briefing du jour (`OracleBriefing.tsx`)** : à la demande de paw, retiré les bullets calculés (`b.phrases`) — la carte n'affiche plus que la lecture du jour de l'agent. Fallback cute quand pas de lecture (« ta météo cosmique du jour n'est pas encore prise… »). Commit `66f0b5b`.
+- **Page Agenda supprimée** : `pages/Agenda.tsx` retiré, icône calendrier hors navbar (`Navbar.tsx`), route `/agenda` → `Redirect` vers la Home (vieux bookmarks), bouton « ouvrir → » du panorama retiré. `agendaWeek.ts` gardé (partagé avec le panorama Home). Commit `09df463`.
+- **Raccourcis agence éditables + synchronisés (`QuickLinks.tsx`)** : bouton ✏️ → mode édition (emoji + nom + lien par ligne, 🗑️ supprimer, ➕ ajouter, max 20). Persistance cloud via nouveau champ `quickLinks` des préférences. Les 9 raccourcis d'origine restent le défaut tant que rien n'est configuré. Erreurs de sauvegarde affichées (jamais avalées). Commit `fd4029a`.
+- **Migration DB** : colonne `quickLinks text` ajoutée à `user_preferences` (schéma + `drizzle/0008_quick_links.sql`, idempotente). ⚠️ **Appliquée À LA MAIN dans Neon par l'agent via le `DATABASE_URL` du `.env` local** (petit script `tsx` + `@neondatabase/serverless`) — au départ oubliée, ce qui faisait échouer la sync ; appliquée après diagnostic, sync OK et testée par paw.
+- `pnpm check` + `pnpm test` (32) verts à chaque étape. **3 features LIVE et testées par paw en prod.**
+
+Prochaine étape : vérifier la CI verte sur les 3 pushs. Toujours en attente : agent courrier (schedule Cowork) + widget 💌, et l'« espace vide résiduel » du panorama (note du 8 juin).
+
+Leçon ops : pour tout changement de schéma, appliquer la colonne Neon (via `.env` local) AVANT/juste après le push — sinon `select` sur `user_preferences` casse la Home.
+
+---
+
 ## 2026-06-12 (2ᵉ session) - Flèches de navigation de semaine sur le panorama Home
 
 - **Origine** : paw avait rempli la semaine du 15-21 juin via MCP, invisible dans le widget Home (figé sur la semaine courante). Tâche P1 notée dans Todoist côté session perso — retrouvée et exécutée ici.

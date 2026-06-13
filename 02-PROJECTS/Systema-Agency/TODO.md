@@ -39,7 +39,7 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - Auth email/mot de passe fonctionnelle.
 - Sync cloud fonctionnelle apres login.
 - Notes volantes desktop `/notes` livrees, corrigees et validees visuellement.
-- Agenda hebdomadaire `/agenda` livre : evenements, objectifs et habitudes persistants par semaine.
+- Agenda hebdomadaire : le **panorama de la Home** (`AgendaPanorama`) porte événements + objectifs persistants par semaine (flèches de navigation). _La page dédiée `/agenda` a été supprimée le 2026-06-13 (route redirigée vers la Home) ; le modèle `lib/agendaWeek.ts` reste partagé._
 - Serveur MCP Systema expose `/mcp`; lecture sans secret, writes prod valides avec secret.
 - CustomTabs visibles dans la nav via `/tab/:tabId`; widgets tasks/notes fonctionnels.
 - Notes volantes : deux types `note` / `task` choisis au FAB; pastille rend uniquement le contenu pertinent (texte libre OU checklist).
@@ -66,6 +66,9 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 - [x] Écriture depuis la Home (événements ＋/×, objectifs éditables) + vérif tools MCP. — 2026-06-10
 - [ ] **Agent courrier quotidien** : lit les Gmail importants → dépose le résumé dans le tab `home-courrier` (via MCP `create_note`). _Le widget est prêt à recevoir._
 - [x] **Flèches de navigation de semaine** sur le panorama agenda (‹ › + label + retour « aujourd'hui »). — 2026-06-12
+- [x] **Briefing du jour épuré** : retiré les bullets calculés, garde seulement la lecture du jour de l'agent (+ fallback cute). — 2026-06-13
+- [x] **Page Agenda dédiée supprimée** : navbar + route (redirect vers Home) + page ; le panorama Home la remplace. — 2026-06-13
+- [x] **Raccourcis agence éditables + synchronisés** : mode édition (ajout/modif/suppr), champ `quickLinks` des préférences, colonne Neon ajoutée. — 2026-06-13
 
 ### Dashboard cosmos (`/cosmos`)
 
@@ -84,8 +87,9 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 
 ### Agenda
 
-- [ ] Ajouter un editeur detail evenement : heure, titre, couleur, suppression.
-- [ ] Ajouter une adaptation mobile complete pour `/agenda`.
+- _(Section close 2026-06-13 : la page dédiée `/agenda` a été supprimée — seul le panorama de la Home subsiste. Les anciens TODO d'éditeur détail/mobile `/agenda` n'ont plus lieu d'être ; si un besoin d'édition fine revient, ce sera sur le panorama.)_
+- ~~Ajouter un editeur detail evenement : heure, titre, couleur, suppression.~~ _(obsolète : page `/agenda` supprimée)_
+- ~~Ajouter une adaptation mobile complete pour `/agenda`.~~ _(obsolète : page `/agenda` supprimée)_
 - ~~Inclure les donnees Agenda dans le backup/export global~~ _(obsolète : backup export/import supprimé le 2026-06-10)_
 
 ### Notes volantes
