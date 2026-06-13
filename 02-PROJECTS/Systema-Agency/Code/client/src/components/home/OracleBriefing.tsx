@@ -62,21 +62,19 @@ export function OracleBriefing() {
           <p className="home-pixel mt-2 text-sm text-pink-500 capitalize">{dateLisible} · {b.ton.emoji} {b.ton.label}</p>
         </div>
 
-        <div className="mx-auto max-w-2xl space-y-3">
-          {b.phrases.map((phrase, i) => (
-            <p key={i} className="home-serif border-l-4 border-[#FFB7C5] pl-3 text-sm leading-relaxed text-gray-800 md:text-base">
-              {phrase}
-            </p>
-          ))}
-        </div>
-
-        {lectureSynthese?.texte && (
-          <div className="mx-auto mt-6 max-w-2xl border-4 border-black bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-[4px_4px_0px_#E6B3FF]">
+        {lectureSynthese?.texte ? (
+          <div className="mx-auto max-w-2xl border-4 border-black bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-[4px_4px_0px_#E6B3FF]">
             <p className="home-pixel mb-2 text-xs tracking-widest text-purple-600 uppercase">
               ✨ lecture du jour{lectureSynthese.titre ? ` — ${lectureSynthese.titre}` : ""}
             </p>
             <p className="home-serif text-sm leading-relaxed whitespace-pre-line text-gray-800 md:text-base">
               {lectureSynthese.texte}
+            </p>
+          </div>
+        ) : (
+          <div className="mx-auto max-w-2xl border-4 border-dashed border-[#FFB7C5] bg-pink-50/40 p-4 text-center">
+            <p className="home-serif text-sm leading-relaxed text-gray-600 md:text-base">
+              🔮 ta météo cosmique du jour n'est pas encore prise… elle infuse, reviens dans un petit moment ✨
             </p>
           </div>
         )}
