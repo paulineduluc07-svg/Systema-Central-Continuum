@@ -13,6 +13,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - **Origine** : paw avait rempli la semaine du 15-21 juin via MCP, invisible dans le widget Home (figé sur la semaine courante). Tâche P1 notée dans Todoist côté session perso — retrouvée et exécutée ici.
 - `AgendaPanorama.tsx` : `weekStart` passe en état navigable (même pattern que `Agenda.tsx`) — flèches ‹ › dans la barre de titre, label de semaine (`formatWeekLabel`, caché sur mobile), bouton rose « aujourd'hui » visible hors semaine courante. Changement de semaine = reset sur la version locale puis le tRPC `agenda.get` suit via sa clé.
 - Au passage : `corepack pnpm install --frozen-lockfile` requis en local (`@vercel/blob` ajouté par la session cloud du matin n'était pas installé). `pnpm verify:full` vert (tsc + 32 tests + build).
+- **Items d'objectifs éditables + supprimables** : avant, les items du panorama n'étaient que cochables (impossible de modifier le texte sans tout supprimer). Maintenant : texte en `<input>` éditable au blur, × rouge au survol pour retirer (vide le slot, réutilisé par `addGoalItem`). Même persistance localStorage + Neon. `pnpm verify:full` vert.
 
 Prochaine étape : toujours l'agent courrier (schedule Cowork côté paw) + vérif widget 💌.
 

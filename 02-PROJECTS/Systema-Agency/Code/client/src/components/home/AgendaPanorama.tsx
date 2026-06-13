@@ -110,6 +110,30 @@ export function AgendaPanorama() {
     });
   };
 
+  const setGoalItemText = (goalIndex: number, itemIndex: number, text: string) => {
+    persistWeek((current) => {
+      const item = current.goals[goalIndex]?.items[itemIndex];
+      if (item) {
+        item.text = text;
+        if (!text.trim()) item.done = false;
+      }
+      return current;
+    });
+  };
+
+  // Retirer = vider le slot (le rendu filtre les textes vides, et addGoalItem réutilise les slots libres).
+  const removeGoalItem = (goalIndex: number, itemIndex: number) => {
+    playClickSound();
+    persistWeek((current) => {
+      const item = current.goals[goalIndex]?.items[itemIndex];
+      if (item) {
+        item.text = "";
+        item.done = false;
+      }
+      return current;
+    });
+  };
+
   const addGoalItem = (goalIndex: number) => {
     const text = (newItemTexts[goalIndex] ?? "").trim();
     if (!text) return;
@@ -327,14 +351,34 @@ export function AgendaPanorama() {
                     <div className="space-y-2">
                       {items.map((item) => (
                         <div
-                          key={item.itemIndex}
-                          onClick={() => toggleGoalItem(goalIndex, item.itemIndex)}
-                          className={`flex cursor-pointer items-center gap-2.5 text-xs font-semibold select-none hover:opacity-80 ${theme.item}`}
+                          key={`${item.itemIndex}-${item.text}`}
+                          className={`group/item flex items-center gap-2.5 text-xs font-semibold select-none ${theme.item}`}
                         >
-                          <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-none border-2 border-black bg-white">
+                          <div
+                            onClick={() => toggleGoalItem(goalIndex, item.itemIndex)}
+                            title={item.done ? "Décocher" : "Cocher"}
+                            className="flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-none border-2 border-black bg-white hover:opacity-80"
+                          >
                             {item.done && <span className={`text-[10px] font-black ${theme.check}`}>✖</span>}
                           </div>
-                          <span className={item.done ? "line-through opacity-50" : ""}>{item.text}</span>
+                          <input
+                            type="text"
+                            defaultValue={item.text}
+                            onBlur={(e) => {
+                              if (e.target.value !== item.text) setGoalItemText(goalIndex, item.itemIndex, e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+                            }}
+                            className={`w-full bg-transparent focus:outline-none ${item.done ? "line-through opacity-50" : ""}`}
+                          />
+                          <button
+                            onClick={() => removeGoalItem(goalIndex, item.itemIndex)}
+                            title="Retirer cet item"
+                            className="hidden h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center border border-black bg-red-200 text-[8px] font-black text-black group-hover/item:flex hover:bg-red-300"
+                          >
+                            ×
+                          </button>
                         </div>
                       ))}
                     </div>
