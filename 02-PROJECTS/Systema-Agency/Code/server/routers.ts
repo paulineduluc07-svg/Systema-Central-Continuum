@@ -323,6 +323,7 @@ export const appRouter = router({
         widgetOrder: z.string().optional(),
         tabConfig: z.string().optional(),
         cycleJour1: z.string().optional(),
+        quickLinks: z.string().max(10_000, "La liste de raccourcis est trop longue.").optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         await db.upsertUserPreferences(ctx.user.id, input);

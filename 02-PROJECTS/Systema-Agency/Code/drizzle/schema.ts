@@ -55,6 +55,7 @@ export const userPreferences = pgTable("user_preferences", {
   widgetOrder: text("widgetOrder"),
   tabConfig: text("tabConfig"),
   cycleJour1: text("cycle_jour1"),
+  quickLinks: text("quickLinks"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
