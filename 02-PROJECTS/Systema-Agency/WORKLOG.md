@@ -14,6 +14,7 @@ Journal court. Garder seulement les faits utiles a la reprise.
 - `AgendaPanorama.tsx` : `weekStart` passe en état navigable (même pattern que `Agenda.tsx`) — flèches ‹ › dans la barre de titre, label de semaine (`formatWeekLabel`, caché sur mobile), bouton rose « aujourd'hui » visible hors semaine courante. Changement de semaine = reset sur la version locale puis le tRPC `agenda.get` suit via sa clé.
 - Au passage : `corepack pnpm install --frozen-lockfile` requis en local (`@vercel/blob` ajouté par la session cloud du matin n'était pas installé). `pnpm verify:full` vert (tsc + 32 tests + build).
 - **Items d'objectifs éditables + supprimables** : avant, les items du panorama n'étaient que cochables (impossible de modifier le texte sans tout supprimer). Maintenant : texte en `<input>` éditable au blur, × rouge au survol pour retirer (vide le slot, réutilisé par `addGoalItem`). Même persistance localStorage + Neon. `pnpm verify:full` vert.
+- **Post-it « priorités célestes » éditable + supprimable** : même correctif sur le widget tâches de la Home (`PostItPriorites` dans `Home.tsx`). Le hook `useSyncedTasks` exposait déjà `updateTaskTitle`/`deleteTask` — juste pas câblés. Titre en `<input>` éditable au blur, × rouge au survol. `pnpm verify:full` vert.
 
 Prochaine étape : toujours l'agent courrier (schedule Cowork côté paw) + vérif widget 💌.
 

@@ -22,7 +22,7 @@ import { useState } from "react";
 // Le post-it jaune « priorités célestes » — branché aux tâches synchronisées
 // (onglet dédié "home-priorites" : marche connecté comme en local).
 function PostItPriorites() {
-  const { tasks, toggleTask, addTask } = useSyncedTasks("home-priorites");
+  const { tasks, toggleTask, addTask, updateTaskTitle, deleteTask } = useSyncedTasks("home-priorites");
   const [newTask, setNewTask] = useState("");
 
   const handleAdd = (e: React.FormEvent) => {
@@ -52,9 +52,9 @@ function PostItPriorites() {
           <p className="text-xs text-yellow-800/60">rien d'urgent — ajoute une priorité ⤵</p>
         )}
         {tasks.map((task) => (
-          <label
+          <div
             key={task.id}
-            className="flex cursor-pointer items-center gap-2.5 text-xs font-semibold text-yellow-900/90 hover:text-black"
+            className="group/task flex items-center gap-2.5 text-xs font-semibold text-yellow-900/90"
           >
             <input
               type="checkbox"
@@ -63,10 +63,31 @@ function PostItPriorites() {
                 playClickSound();
                 void toggleTask(task.id);
               }}
-              className="accent-[#e85d97]"
+              title={task.completed ? "Décocher" : "Cocher"}
+              className="cursor-pointer accent-[#e85d97]"
             />
-            <span className={task.completed ? "line-through opacity-50" : ""}>{task.title}</span>
-          </label>
+            <input
+              type="text"
+              defaultValue={task.title}
+              onBlur={(e) => {
+                if (e.target.value.trim() && e.target.value !== task.title) void updateTaskTitle(task.id, e.target.value.trim());
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              }}
+              className={`w-full bg-transparent focus:outline-none ${task.completed ? "line-through opacity-50" : ""}`}
+            />
+            <button
+              onClick={() => {
+                playClickSound();
+                void deleteTask(task.id);
+              }}
+              title="Supprimer cette priorité"
+              className="hidden h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center border border-black bg-red-200 text-[8px] font-black text-black group-hover/task:flex hover:bg-red-300"
+            >
+              ×
+            </button>
+          </div>
         ))}
       </div>
 
