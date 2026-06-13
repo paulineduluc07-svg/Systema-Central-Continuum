@@ -64,11 +64,14 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 
 - [x] Porter le handoff `design_handoff_home_dollhouse` : page + données réelles (agenda partagé, post-it tâches, briefing). — 2026-06-10
 - [x] Écriture depuis la Home (événements ＋/×, objectifs éditables) + vérif tools MCP. — 2026-06-10
-- [ ] **Agent courrier quotidien** : lit les Gmail importants → dépose le résumé dans le tab `home-courrier` (via MCP `create_note`). _Le widget est prêt à recevoir._
+- [x] **Agent courrier quotidien** : RÉGLÉ (schedule Cowork, confirmé par paw le 2026-06-13).
 - [x] **Flèches de navigation de semaine** sur le panorama agenda (‹ › + label + retour « aujourd'hui »). — 2026-06-12
 - [x] **Briefing du jour épuré** : retiré les bullets calculés, garde seulement la lecture du jour de l'agent (+ fallback cute). — 2026-06-13
 - [x] **Page Agenda dédiée supprimée** : navbar + route (redirect vers Home) + page ; le panorama Home la remplace. — 2026-06-13
 - [x] **Raccourcis agence éditables + synchronisés** : mode édition (ajout/modif/suppr), champ `quickLinks` des préférences, colonne Neon ajoutée. — 2026-06-13
+- [x] **Navbar : Home via le logo seulement** — pastille « Accueil » retirée (doublon). — 2026-06-13
+- [x] **4 objectifs de la semaine** au lieu de 3 (4ᵉ colonne cyan, normalisation + grille adaptées). — 2026-06-13
+- [ ] **« Espace vide résiduel » du panorama** (note du 8 juin) : paw cherche quoi y mettre avant qu'on l'aménage.
 
 ### Dashboard cosmos (`/cosmos`)
 
@@ -110,6 +113,7 @@ Réparations exécutées par priorité (détail : `CORRECTIONS_A_FAIRE.md`, `AUD
 ### Prompt Vault
 
 - [x] **Ajouter les images associees aux prompts** — LIVE en prod, testé et validé par paw le 2026-06-12. PR #23 mergée (`5fbf1f6`), CI verte, Blob store Vercel créé. Détail : NOTES.md § Prompt Vault — images.
+- [x] **Nouveaux prompts en tête de liste** + inversion de l'ordre des 115 prompts existants (donnée prod, Neon). — 2026-06-13
 
 ### Plus tard
 

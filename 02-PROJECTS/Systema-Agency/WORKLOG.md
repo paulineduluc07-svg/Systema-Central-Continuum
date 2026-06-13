@@ -8,6 +8,21 @@ Journal court. Garder seulement les faits utiles a la reprise.
 
 ---
 
+## 2026-06-13 (2ᵉ session) - Navbar logo unique, 4 objectifs, Prompt Vault ordre récent-en-haut
+
+- **Navbar : Home accessible via le logo seulement** (`Navbar.tsx`) — retiré la pastille « Accueil » (doublon du logo qui pointe aussi vers `/`), retiré l'import `Home`. Commit `784c9d1`.
+- **4 objectifs de la semaine au lieu de 3** (`lib/agendaWeek.ts` + `home/AgendaPanorama.tsx`) : 4ᵉ colonne par défaut (accent cyan), `normalizeWeekData` porté à 4 via helper `padGoals` (coupe le surplus, complète les semaines déjà enregistrées qui n'avaient que 3), grille `md:grid-cols-4` (+ `sm:grid-cols-2`), 4ᵉ tagline. Serveur déjà permissif (`set_agenda_goals` accepte jusqu'à 10). Commit `a3a102b`.
+- **Prompt Vault : nouveaux prompts en tête** (`pages/PromptVault.tsx`) — `add()` insère en début de liste au lieu de la fin. L'ordre manuel (glisser-déposer) reste intact. Commit `e1866b9`.
+- **Inversion de l'ordre existant (donnée prod)** : à la demande de paw, inversé les **115 prompts** déjà enregistrés directement dans Neon (`prompt_vault_data`, userId=1) via script `tsx` jetable + `DATABASE_URL` du `.env` local — lecture, `list.reverse()`, réécriture (backup local fait puis supprimé après validation paw). « Fresh-Eyes Verifier » (le plus récent) est maintenant en tête. Au rechargement, le cloud écrase l'état local → ordre inversé visible.
+- **Agent courrier : RÉGLÉ** (confirmé par paw en début de session) — plus en attente.
+- `pnpm check` vert sur chaque changement de code. 3 commits LIVE, testés et validés par paw en prod (déployés un par un).
+
+Prochaine étape : reste seulement l'« espace vide résiduel » du panorama (note du 8 juin) — paw veut d'abord trouver quoi y mettre.
+
+Note ops : pour une mutation ponctuelle de donnée prod (ici inverser une liste), même pattern que les migrations — script `tsx` + `DATABASE_URL` du `.env` local, avec backup avant écriture. Le cloud gagne au rechargement (hydratation), donc penser à dire à paw de recharger sans éditer avant.
+
+---
+
 ## 2026-06-13 - Briefing Home épuré, page Agenda supprimée, raccourcis agence éditables
 
 - **Briefing du jour (`OracleBriefing.tsx`)** : à la demande de paw, retiré les bullets calculés (`b.phrases`) — la carte n'affiche plus que la lecture du jour de l'agent. Fallback cute quand pas de lecture (« ta météo cosmique du jour n'est pas encore prise… »). Commit `66f0b5b`.

@@ -28,10 +28,10 @@ Repères stables et décisions actives. Garder ce fichier court.
 
 | Route | Role | Navbar |
 |---|---|---|
-| `/` | Home Dollhouse Y2K (panorama agenda, objectifs, post-it, briefing, courrier, jouets) | Oui (Accueil) |
+| `/` | Home Dollhouse Y2K (panorama agenda, 4 objectifs, post-it, briefing, courrier, jouets) | **Logo seul** (pastille « Accueil » retirée le 2026-06-13) |
 | `/cosmos` | Dashboard cosmos « meteo cosmique & biologique » (8 cartes reelles) | Oui (✨) |
 | `/notes` | Notes volantes | Oui |
-| `/agenda` | Agenda hebdomadaire Liquid Week | Oui |
+| `/agenda` | _Supprimée le 2026-06-13_ — route redirigée vers `/` (le panorama Home la remplace) | Non |
 | `/prompt-vault` | Bibliotheque de prompts | Oui |
 | `/tab/:tabId` | Onglet custom tasks/notes | Oui dynamique |
 | `/mcp` | Serveur MCP docs + writes proteges | Non |
