@@ -13,7 +13,6 @@ const Home = lazy(() => import("./pages/Home"));
 const Cosmos = lazy(() => import("./pages/Cosmos"));
 const PromptVault = lazy(() => import("./pages/PromptVault"));
 const FloatingNotes = lazy(() => import("./pages/FloatingNotes"));
-const Agenda = lazy(() => import("./pages/Agenda"));
 const CustomTabPage = lazy(() => import("./pages/CustomTabPage"));
 
 function RouteLoadingFallback() {
@@ -46,7 +45,10 @@ function Router() {
           </Route>
           <Route path={"/prompt-vault"} component={PromptVault} />
           <Route path={"/notes"} component={FloatingNotes} />
-          <Route path={"/agenda"} component={Agenda} />
+          {/* Page Agenda supprimée → le panorama de la Home la remplace */}
+          <Route path={"/agenda"}>
+            <Redirect to="/" />
+          </Route>
           <Route path={"/tab/:tabId"} component={CustomTabPage} />
           <Route path={"/404"} component={NotFound} />
           <Route component={NotFound} />

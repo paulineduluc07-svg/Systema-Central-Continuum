@@ -2,7 +2,6 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import {
   BookOpen,
-  CalendarDays,
   Cloud,
   CloudOff,
   Home,
@@ -43,7 +42,6 @@ const PASTILLES: Array<{
   { href: "/", label: "Accueil", icon: Home },
   { href: "/cosmos", label: "Cosmos", icon: Sparkles },
   { href: "/notes", label: "Notes", icon: StickyNote },
-  { href: "/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
 ];
 

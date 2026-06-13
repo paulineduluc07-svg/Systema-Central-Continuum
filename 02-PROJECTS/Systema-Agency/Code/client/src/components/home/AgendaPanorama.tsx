@@ -23,7 +23,6 @@ import {
   type WeekData,
 } from "@/lib/agendaWeek";
 import { useEffect, useState } from "react";
-import { Link } from "wouter";
 import { playClickSound } from "./clickSound";
 
 const DAY_NAMES: Record<string, string> = {
@@ -225,11 +224,6 @@ export function AgendaPanorama() {
           )}
         </div>
         <div className="flex items-center gap-1.5">
-          <Link href="/agenda">
-            <span className="home-pixel cursor-pointer border-2 border-black bg-white px-1.5 text-[10px] font-bold text-black uppercase hover:bg-zinc-100">
-              ouvrir →
-            </span>
-          </Link>
           <span className="flex h-4 w-4 items-center justify-center border-2 border-black bg-white font-mono text-[9px] font-black text-black">_</span>
           <span className="flex h-4 w-4 items-center justify-center border-2 border-black bg-white font-mono text-[9px] font-black text-black">□</span>
           <span className="flex h-4 w-4 items-center justify-center border-2 border-black bg-white font-mono text-[9px] font-black text-black">X</span>
