@@ -1,7 +1,7 @@
 // AgendaPanorama.tsx — la grande fenêtre « agenda · vue panorama » de la Home.
 // Lit et écrit les MÊMES données que la page Agenda (module partagé
 // lib/agendaWeek) : les 7 jours avec leurs événements (ajout ＋ / retrait ×),
-// puis les 3 objectifs de la semaine — titre éditable, items cochables,
+// puis les 4 objectifs de la semaine — titre éditable, items cochables,
 // ajout rapide d'items. Tout persiste (localStorage + Neon si connectée).
 // Les agents MCP écrivent au même endroit (add_agenda_event, set_agenda_goals).
 
@@ -47,7 +47,7 @@ const GOAL_THEME: Record<AccentKey, { bg: string; title: string; item: string; c
   cyan: { bg: "bg-[#eaf6fe]", title: "text-sky-600", item: "text-sky-950", check: "text-sky-600", divider: "border-sky-200", tagline: "text-sky-400" },
 };
 
-const GOAL_TAGLINES = ["vibe check • optimal", "cpu load • active", "oracle level • high"];
+const GOAL_TAGLINES = ["vibe check • optimal", "cpu load • active", "oracle level • high", "flow state • synced"];
 
 export function AgendaPanorama() {
   const currentWeekStart = dateToIso(mondayOf(new Date()));
@@ -315,7 +315,7 @@ export function AgendaPanorama() {
             <div className="flex-grow border-t-2 border-dashed border-zinc-200"></div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
             {weekData.goals.map((goal, goalIndex) => {
               const theme = GOAL_THEME[goal.accent] ?? GOAL_THEME.pink;
               const items = goal.items

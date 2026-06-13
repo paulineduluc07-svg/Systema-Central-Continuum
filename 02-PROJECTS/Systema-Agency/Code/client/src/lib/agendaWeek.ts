@@ -83,6 +83,17 @@ export const defaultGoals = (): Goal[] => [
       { text: "", done: false },
     ],
   },
+  {
+    title: "",
+    accent: "cyan",
+    items: [
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+      { text: "", done: false },
+    ],
+  },
 ];
 
 export const defaultHabitsA = (): Habit[] => [
@@ -164,6 +175,18 @@ export function createDefaultWeek(weekStart: string): WeekData {
   };
 }
 
+// Toujours exposer exactement 4 objectifs : on coupe le surplus et on
+// complète les semaines plus anciennes (qui n'en avaient que 3) avec les
+// colonnes par défaut manquantes.
+const GOAL_COUNT = 4;
+function padGoals(goals: Goal[], fallback: Goal[]): Goal[] {
+  const next = goals.slice(0, GOAL_COUNT);
+  while (next.length < GOAL_COUNT) {
+    next.push(clone(fallback[next.length] ?? defaultGoals()[next.length]));
+  }
+  return next;
+}
+
 export function normalizeWeekData(input: unknown, weekStart: string): WeekData {
   const fallback = createDefaultWeek(weekStart);
   if (!input || typeof input !== "object") return fallback;
@@ -171,7 +194,7 @@ export function normalizeWeekData(input: unknown, weekStart: string): WeekData {
   return {
     weekLabel: typeof value.weekLabel === "string" ? value.weekLabel : fallback.weekLabel,
     events: { ...fallback.events, ...(value.events ?? {}) },
-    goals: Array.isArray(value.goals) ? value.goals.slice(0, 3) : fallback.goals,
+    goals: padGoals(Array.isArray(value.goals) ? value.goals : fallback.goals, fallback.goals),
     habitsA: Array.isArray(value.habitsA) ? value.habitsA : fallback.habitsA,
     habitsB: Array.isArray(value.habitsB) ? value.habitsB : fallback.habitsB,
     habitLabels:
