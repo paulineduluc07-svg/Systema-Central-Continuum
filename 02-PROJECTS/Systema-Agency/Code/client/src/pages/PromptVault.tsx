@@ -739,7 +739,7 @@ export default function PromptVault() {
 
   const add = () => {
     if (!np.title || !np.text) return;
-    setList(l => [...l, { ...np, id: Date.now(), tags: np.tags.split(",").map(t => t.trim()).filter(Boolean) }]);
+    setList(l => [{ ...np, id: Date.now(), tags: np.tags.split(",").map(t => t.trim()).filter(Boolean) }, ...l]);
     resetNewForm();
     setForm(false);
   };
