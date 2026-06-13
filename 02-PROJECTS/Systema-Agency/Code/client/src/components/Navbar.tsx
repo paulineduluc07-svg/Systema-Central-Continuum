@@ -4,7 +4,6 @@ import {
   BookOpen,
   Cloud,
   CloudOff,
-  Home,
   LogIn,
   LogOut,
   Sparkles,
@@ -39,7 +38,6 @@ const PASTILLES: Array<{
   label: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
-  { href: "/", label: "Accueil", icon: Home },
   { href: "/cosmos", label: "Cosmos", icon: Sparkles },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/prompt-vault", label: "Prompt Vault", icon: BookOpen },
